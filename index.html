@@ -125,7 +125,7 @@ input[type="date"]{color-scheme:dark}
   <header id="cHeader" class="sticky top-0 z-50 transition-all duration-300 border-b border-transparent">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px] gap-2">
       <a href="#/" class="flex items-center gap-2.5 min-w-0">
-        <img src="assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-11 h-11 object-contain shrink-0">
+        <img src="azzid-rentcar/assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-11 h-11 object-contain shrink-0">
         <span class="font-display font-bold tracking-wide text-[15px] leading-none hidden min-[420px]:block">AZZID <span class="text-maroon-400">RENTCAR</span>
           <span class="block text-[9px] font-medium tracking-[.28em] text-muted font-sans">PREMIUM CAR RENTAL</span></span>
       </a>
@@ -159,7 +159,7 @@ input[type="date"]{color-scheme:dark}
   <footer class="bg-ink-900 border-t border-white/5">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
       <div>
-        <div class="flex items-center gap-2.5 mb-4"><img src="assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-10 h-10 object-contain">
+        <div class="flex items-center gap-2.5 mb-4"><img src="azzid-rentcar/assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-10 h-10 object-contain">
         <span class="font-display font-bold">AZZID RENTCAR</span></div>
         <p class="text-sm text-muted leading-relaxed mb-4">Solusi rental mobil yang nyaman, mudah, dan terpercaya untuk kebutuhan perjalanan pribadi, bisnis, maupun wisata. <em class="text-zinc-300 not-italic font-semibold">“Mobil Siap Jalan, Perjalanan Lebih Nyaman.”</em></p>
         <div class="flex flex-wrap gap-2 text-[10px] font-bold tracking-wider text-zinc-400">
@@ -216,16 +216,16 @@ input[type="date"]{color-scheme:dark}
 /* ================= DEFAULT DATA ================= */
 const IMG={
 hero:'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1800&q=85',
-avanza:'./assets/images/cars/avanza.jpg',
-innova:'./assets/images/cars/innova.jpg',
-brio:'./assets/images/cars/brio.jpg',
-xpander:'./assets/images/cars/xpander.jpg',
-fortuner:'./assets/images/cars/fortuner.jpg',
-alphard:'./assets/images/cars/alphard.jpg',
-hrv:'./assets/images/cars/hrv.jpg',
-hiace:'./assets/images/cars/hiace.jpg',
-interior:'./assets/images/interior.jpg',
-dash:'./assets/images/dash.jpg',
+avanza:'./azzid-rentcar/assets/images/cars/avanza.jpg',
+innova:'./azzid-rentcar/assets/images/cars/innova.jpg',
+brio:'./azzid-rentcar/assets/images/cars/brio.jpg',
+xpander:'./azzid-rentcar/assets/images/cars/xpander.jpg',
+fortuner:'./azzid-rentcar/assets/images/cars/fortuner.jpg',
+alphard:'./azzid-rentcar/assets/images/cars/alphard.jpg',
+hrv:'./azzid-rentcar/assets/images/cars/hrv.jpg',
+hiace:'./azzid-rentcar/assets/images/cars/hiace.jpg',
+interior:'./azzid-rentcar/assets/images/interior.jpg',
+dash:'./azzid-rentcar/assets/images/dash.jpg',
 fleet:'https://images.unsplash.com/photo-1487754180451-c456f719a1fc?auto=format&fit=crop&w=1800&q=85'};
 
 const DEF_VEHICLES=[
@@ -1277,13 +1277,13 @@ app.innerHTML=`<div class="min-h-screen grid place-items-center relative overflo
  <div class="relative w-full max-w-4xl grid lg:grid-cols-2 card overflow-hidden bg-ink-800/90 backdrop-blur-xl rv on" id="loginCard">
   <div class="hidden lg:flex flex-col justify-between p-9 bg-gradient-to-br from-maroon-800 via-maroon-700 to-ink-900 relative overflow-hidden">
    <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-20">
-  <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-12 h-12 object-contain">
+  <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="azzid-rentcar/assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-12 h-12 object-contain">
    <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[10px] tracking-[.3em] text-red-200">ADMIN DASHBOARD</div></div></div>
    <h2 class="font-display font-extrabold text-3xl leading-tight">Dashboard Operasional Rental.</h2></div>
    <ul class="relative space-y-2.5 text-[13px] text-red-100">${['Overview · Booking · Calendar · Armada','Customer · Driver · Payment · Promo','Reports · CMS Website · Users & Roles · Settings','Kelola Sewa: mulai, perpanjang, pengembalian'].map(x=>`<li class="flex gap-2.5"><span class="mt-1">${ic('check','w-4 h-4')}</span>${x}</li>`).join('')}</ul>
   </div>
   <div class="p-7 sm:p-9">
-  <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-11 h-11 object-contain">
+  <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="azzid-rentcar/assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-11 h-11 object-contain">
    <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted">ADMIN DASHBOARD</div></div></div>
    <h3 class="font-display font-bold text-xl mb-1">Login Admin</h3>
    <p class="text-[12.5px] text-muted mb-6">Masuk untuk membuka dashboard pengelolaan rental.</p>
@@ -1308,7 +1308,7 @@ const pend=BOOKINGS.filter(b=>b.status==='Pending').length;
 const ong=ongoingCount();
 app.innerHTML=`<div class="min-h-screen bg-ink-950 flex">
  <aside id="aSb" class="fixed lg:static z-40 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
-  <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-10 h-10 object-contain">
+  <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="azzid-rentcar/assets/images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-10 h-10 object-contain">
   <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div></div>
   <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m=>`<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView===m[0]?'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow':'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2],'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0]==='rental'&&ong?`<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300">${ong}</span>`:''}${m[0]==='booking'&&pend?`<span class="badge bg-amber-400/20 border-amber-400/40 text-amber-300">${pend}</span>`:''}</button>`).join('')}</nav>
   <div class="p-4 border-t border-white/5 space-y-1">
