@@ -1,1 +1,0 @@
-# azzid-rental
