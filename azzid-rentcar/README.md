@@ -17,6 +17,8 @@ routing/
   utils.js                 # Helpers, icons, and shared UI utilities
   crud.js                  # Customer views, booking flow, admin views, and CRUD actions
 images/                    # Website and vehicle images
+assets/images/             # Image assets used by the application
+  cars/                    # Fleet and logo images
 modules/                   # Standalone feature pages and module directory
   index.html               # Module directory
   landing.html             # Landing module example
