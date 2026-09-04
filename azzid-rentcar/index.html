@@ -1556,6 +1556,7 @@ return `<div class="space-y-5">
 /* ================= ARMADA CRUD ================= */
 const FAC_OPTS=['AC Double Blower','AC Digital','USB Charging','USB-C Charging','Bluetooth Audio','Dual Airbag','Airbag 6 Titik','Sensor Parkir','Camera 360','Cruise Control','Keyless Start','Captain Seat','Sunroof','Ambient Light','Power Sliding Door','Hybrid Irit','4x4 Ready'];
 const PHOTO_OPTS=[['avanza','Avanza'],['innova','Innova'],['brio','Brio'],['xpander','Xpander'],['fortuner','Fortuner'],['alphard','Alphard'],['hrv','HR-V'],['hiace','Hiace'],['fleet','Garasi']];
+let pendingVehImage='';
 function vehStats(){return {total:VEHICLES.length,av:VEHICLES.filter(v=>v.status==='available').length,rt:VEHICLES.filter(v=>v.status==='rented').length,mt:VEHICLES.filter(v=>v.status==='maintenance').length};}
 function aArmada(){const st=vehStats();
 return `<div class="space-y-5">
@@ -1593,7 +1594,10 @@ function refreshVeh(){const tb=$('vehTbody');if(!tb)return;
  if(S._vc)list=list.filter(v=>v.cat===S._vc);
  tb.innerHTML=list.length?list.map(vehRowHtml).join(''):`<tr><td colspan="9" class="text-center py-10 text-muted">Tidak ada aset yang cocok.</td></tr>`;}
 function setVehStatus(id,val){const v=veh(id);v.status=val;addLog(`Status aset ${v.name} (${v.plate}) → ${val}`);persist();toast('Status '+v.name+' → '+val);renderAdminBody();}
+function selectVehImage(image,button){pendingVehImage=image;document.querySelectorAll('.ph-opt').forEach(x=>x.classList.remove('on'));button.classList.add('on');const preview=$('vf_img_preview');if(preview)preview.src=image;}
+function uploadVehImage(input){const file=input.files&&input.files[0];if(!file)return;if(!file.type.startsWith('image/')){toast('File harus berupa gambar','err');input.value='';return;}if(file.size>5*1024*1024){toast('Ukuran foto maksimal 5 MB','err');input.value='';return;}const reader=new FileReader();reader.onload=()=>{pendingVehImage=reader.result;const preview=$('vf_img_preview');if(preview)preview.src=pendingVehImage;document.querySelectorAll('.ph-opt').forEach(x=>x.classList.remove('on'));};reader.readAsDataURL(file);}
 function vehForm(id){const v=id?veh(id):null;
+pendingVehImage=v?v.img:IMG.avanza;
 const f=(k,val,lbl)=>`<div><label class="lbl">${lbl}</label><input id="vf_${k}" class="inp" value="${esc(val??'')}"></div>`;
 modal(`<div class="p-7"><div class="flex justify-between items-center mb-5 gap-3"><h3 class="font-display font-semibold text-lg">${v?'Edit Aset':'Tambah Aset Baru'}</h3><button onclick="closeModal()" class="text-muted hover:text-white shrink-0">${ic('x')}</button></div>
  <div class="grid sm:grid-cols-2 gap-4">
@@ -1609,7 +1613,8 @@ modal(`<div class="p-7"><div class="flex justify-between items-center mb-5 gap-3
   <div><label class="lbl">Harga Lepas Kunci (Rp/hari) *</label><input id="vf_harga" type="number" class="inp" value="${v?v.priceLK:400000}"></div>
   <div><label class="lbl">Harga Dengan Driver (Rp/hari)</label><input id="vf_hargadrv" type="number" class="inp" value="${v?(v.priceDrv||v.priceLK+150000):450000}"><p class="text-[10px] text-muted mt-1">Umumnya harga LK + Rp150.000</p></div>
   <div class="sm:col-span-2"><label class="lbl">Foto Unit — pilih dari galeri</label>
-   <div class="flex gap-2 flex-wrap">${PHOTO_OPTS.map(p=>`<button type="button" onclick="document.querySelectorAll('.ph-opt').forEach(x=>x.classList.remove('on'));this.classList.add('on')" data-img="${IMG[p[0]]}" class="ph-opt rounded-lg overflow-hidden w-16 h-12 ${(v?v.img:IMG.avanza)===IMG[p[0]]?'on':''}"><img src="${IMG[p[0]]}" class="w-full h-full object-cover"></button>`).join('')}</div></div>
+   <div class="flex items-center gap-3 mb-3"><img id="vf_img_preview" src="${esc(pendingVehImage)}" class="w-24 h-16 rounded-lg object-cover border border-white/10" alt="Pratinjau foto unit"><label class="btn btn-g btn-sm cursor-pointer">${ic('dl','w-4 h-4')} Upload Foto<input type="file" accept="image/*" class="hidden" onchange="uploadVehImage(this)"></label></div>
+   <div class="flex gap-2 flex-wrap">${PHOTO_OPTS.map(p=>`<button type="button" onclick="selectVehImage('${IMG[p[0]]}',this)" data-img="${IMG[p[0]]}" class="ph-opt rounded-lg overflow-hidden w-16 h-12 ${(v?v.img:IMG.avanza)===IMG[p[0]]?'on':''}"><img src="${IMG[p[0]]}" class="w-full h-full object-cover" alt="${p[1]}"></button>`).join('')}</div></div>
   <div class="sm:col-span-2"><label class="lbl">Fasilitas</label>
    <div class="flex flex-wrap gap-2">${FAC_OPTS.map(x=>`<label class="chip cursor-pointer ${v&&v.feats&&v.feats.includes(x)?'on':''}"><input type="checkbox" class="hidden fac-chk" value="${x}" ${v&&v.feats&&v.feats.includes(x)?'checked':''} onchange="this.parentElement.classList.toggle('on')">${x}</label>`).join('')}</div></div>
   <div class="sm:col-span-2"><label class="lbl">Deskripsi</label><textarea id="vf_desc" class="inp" rows="2" placeholder="Deskripsi singkat unit untuk halaman detail…">${esc(v?v.desc:'')}</textarea></div>
@@ -1620,7 +1625,7 @@ function saveVeh(id){const g=k=>{const e=$('vf_'+k);return e?e.value.trim():''};
  const nama=g('nama'),harga=+($('vf_harga')?$('vf_harga').value:0);
  if(!nama||!harga){toast('Nama mobil & harga wajib diisi','err');return;}
  const feats=Array.from(document.querySelectorAll('.fac-chk:checked')).map(x=>x.value);
- const imgSel=document.querySelector('.ph-opt.on');const img=imgSel?imgSel.dataset.img:IMG.avanza;
+ const imgSel=document.querySelector('.ph-opt.on');const img=pendingVehImage||(imgSel?imgSel.dataset.img:IMG.avanza);
  const data={name:nama,brand:g('brand'),model:g('model'),year:+g('tahun')||2024,plate:g('plate'),trans:$('vf_trans').value,seats:+$('vf_seats').value||7,color:g('warna'),fuel:$('vf_fuel').value,cat:$('vf_cat').value,priceLK:harga,priceDrv:+($('vf_hargadrv').value)||harga+150000,feats,desc:g('desc'),status:$('vf_status').value,img};
  if(id){const v=veh(id);const oldPlate=v.plate;Object.assign(v,data);if(!v.plate)v.plate=oldPlate;addLog(`Aset diperbarui: ${v.name} (${v.plate})`);toast('Perubahan aset tersimpan');}
  else{const nid='v'+Date.now();VEHICLES.push(Object.assign({id:nid,doors:5,bag:'2 Koper'},data));addLog(`Aset baru ditambahkan: ${data.name}`);toast('Aset baru berhasil ditambahkan');}
