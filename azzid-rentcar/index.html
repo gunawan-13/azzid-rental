@@ -67,8 +67,8 @@ select.inp option{background:#17171A}
 @keyframes kb{from{transform:scale(1)}to{transform:scale(1.08)}}
 .marquee-track{display:flex;gap:3.2rem;width:max-content;animation:marq 30s linear infinite}
 @keyframes marq{to{transform:translateX(-50%)}}
-.promo-scroll{display:flex;gap:4rem;width:max-content;animation:promo-slide 45s linear infinite;white-space:nowrap}
-@keyframes promo-slide{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.promo-scroll{display:flex;gap:4rem;width:max-content;animation:promo-slide 30s linear infinite;white-space:nowrap}
+@keyframes promo-slide{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 .promo-bar-container{overflow:hidden;width:100%;height:100%}
 #mobNav{display:none;flex-direction:column;gap:.75rem}
 #mobNav.mob-nav-open{display:flex}
@@ -1277,13 +1277,13 @@ app.innerHTML=`<div class="min-h-screen grid place-items-center relative overflo
  <div class="relative w-full max-w-4xl grid lg:grid-cols-2 card overflow-hidden bg-ink-800/90 backdrop-blur-xl rv on" id="loginCard">
   <div class="hidden lg:flex flex-col justify-between p-9 bg-gradient-to-br from-maroon-800 via-maroon-700 to-ink-900 relative overflow-hidden">
    <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-20">
-   <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="./images/logo.png" alt="AZZID RENTCAR" class="w-12 h-12 object-contain">
+  <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-12 h-12 object-contain">
    <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[10px] tracking-[.3em] text-red-200">ADMIN DASHBOARD</div></div></div>
    <h2 class="font-display font-extrabold text-3xl leading-tight">Dashboard Operasional Rental.</h2></div>
    <ul class="relative space-y-2.5 text-[13px] text-red-100">${['Overview · Booking · Calendar · Armada','Customer · Driver · Payment · Promo','Reports · CMS Website · Users & Roles · Settings','Kelola Sewa: mulai, perpanjang, pengembalian'].map(x=>`<li class="flex gap-2.5"><span class="mt-1">${ic('check','w-4 h-4')}</span>${x}</li>`).join('')}</ul>
   </div>
   <div class="p-7 sm:p-9">
-   <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="./images/logo.png" alt="AZZID RENTCAR" class="w-11 h-11 object-contain">
+  <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-11 h-11 object-contain">
    <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted">ADMIN DASHBOARD</div></div></div>
    <h3 class="font-display font-bold text-xl mb-1">Login Admin</h3>
    <p class="text-[12.5px] text-muted mb-6">Masuk untuk membuka dashboard pengelolaan rental.</p>
@@ -1308,7 +1308,7 @@ const pend=BOOKINGS.filter(b=>b.status==='Pending').length;
 const ong=ongoingCount();
 app.innerHTML=`<div class="min-h-screen bg-ink-950 flex">
  <aside id="aSb" class="fixed lg:static z-40 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
-  <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="./images/logo.png" alt="AZZID RENTCAR" class="w-10 h-10 object-contain">
+  <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="images/cars/azzid-logo.png" alt="AZZID RENTCAR" class="w-10 h-10 object-contain">
   <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div></div>
   <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m=>`<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView===m[0]?'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow':'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2],'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0]==='rental'&&ong?`<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300">${ong}</span>`:''}${m[0]==='booking'&&pend?`<span class="badge bg-amber-400/20 border-amber-400/40 text-amber-300">${pend}</span>`:''}</button>`).join('')}</nav>
   <div class="p-4 border-t border-white/5 space-y-1">
@@ -1743,15 +1743,17 @@ function aCms(){return `<div class="max-w-3xl space-y-5">
  <button onclick="saveCms()" class="btn btn-m">${ic('check','w-4 h-4')} Simpan & Terapkan ke Website</button></div></div>
  <div class="rv card p-6"><h3 class="font-display font-semibold mb-3">Kelola Konten Lain</h3>
  <div class="grid sm:grid-cols-2 gap-2.5">${['Banner Promo','Armada Unggulan','Tentang Kami','Layanan','FAQ','Testimonial','Footer','Kontak'].map(x=>`<button onclick="toast('Editor ${x} dibuka (demo)','info')" class="card !bg-ink-900 p-4 text-left text-[13px] font-semibold hover:border-maroon-500/40 transition flex justify-between items-center gap-2">${x}${ic('edit','w-4 h-4 text-muted shrink-0')}</button>`).join('')}</div></div></div>`;}
-function saveCms(){S.cms.head1=$('cm0').value;S.cms.head2=$('cm1').value;S.cms.sub=$('cm2').value;S.cms.ann=$('cm3').value;S.cms.wa=$('cm4').value;persist();applyCms();addLog('Konten CMS diperbarui');toast('Perubahan CMS diterapkan ke website!');}
+function saveCms(){S.cms.head1=$('cm0').value;S.cms.head2=$('cm1').value;S.cms.sub=$('cm2').value;S.cms.ann=$('cm3').value;S.cms.wa=$('cm4').value;persist();applyCms();addLog('Konten CMS diperbarui');toast('Perubahan CMS diterapkan ke website!');if(!location.hash.startsWith('#/admin'))renderC();}
 function applyCms(){
- const promoText='🇮🇩 Promo MERDEKA2026 — Diskon 10% untuk rental minimal 2 hari · Berlaku s/d 31 Agustus 2026';
+ const promoText=S.cms.ann;
  const annBar=$('annBar');
- annBar.innerHTML='';
- for(let i=0;i<3;i++){
-  const span=document.createElement('span');
-  span.textContent=promoText;
-  annBar.appendChild(span);
+ if(annBar){
+  annBar.innerHTML='';
+  for(let i=0;i<3;i++){
+   const span=document.createElement('span');
+   span.textContent=promoText;
+   annBar.appendChild(span);
+  }
  }
  const wl=waLink('Halo AZZID RENTCAR, saya ingin bertanya.');$('waFloat').href=wl;$('footWa').href=wl;
 }
