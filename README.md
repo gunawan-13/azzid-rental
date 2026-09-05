@@ -34,3 +34,13 @@ content/                   # Reserved for reusable content fragments
 Open `index.html` in a browser or serve the project with a local static server. The app uses the Tailwind CDN and Fontsource CDN, so an internet connection is required for the utility classes and fonts.
 
 The demo stores application data in browser `localStorage`.
+
+## Vehicle API
+
+Fleet data is loaded from `{{baseUrl}}/api/v1/vehicles` when an API base URL is configured. Set it before the inline application script, for example:
+
+```html
+<script>window.AZZID_API_BASE_URL = 'https://api.example.com';</script>
+```
+
+The app uses `GET` to load vehicles, `POST` to create, `PUT /{id}` to update, and `DELETE /{id}` to remove a vehicle. Responses may be a direct array or an array inside `data` or `vehicles`. If the URL is still the `{{baseUrl}}` placeholder, or the API is unavailable, the demo fleet remains available from `localStorage`.

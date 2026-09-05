@@ -294,6 +294,38 @@ const LS_KEY='azzid_rentcar_db_v9',LS_SES='azzid_rentcar_session',LS_CUST='azzid
 function loadDB(){try{const r=localStorage.getItem(LS_KEY);if(r)return JSON.parse(r);}catch(e){}return null;}
 const saved=loadDB()||{};
 let VEHICLES=saved.vehicles||JSON.parse(JSON.stringify(DEF_VEHICLES));
+const VEHICLES_API_URL=((window.AZZID_API_BASE_URL||'{{baseUrl}}').replace(/\/$/,'')+'/api/v1/vehicles');
+let VEHICLES_API_ONLINE=false;
+function apiConfigured(){return !VEHICLES_API_URL.startsWith('{{baseUrl}}');}
+function unwrapVehiclePayload(payload){
+ if(Array.isArray(payload))return payload;
+ if(Array.isArray(payload?.data))return payload.data;
+ if(Array.isArray(payload?.vehicles))return payload.vehicles;
+ if(Array.isArray(payload?.data?.vehicles))return payload.data.vehicles;
+ return null;
+}
+function normalizeVehicle(raw,index){
+ const v=raw||{};
+ return {id:String(v.id??v._id??v.vehicle_id??'v'+index),name:v.name??v.vehicle_name??v.title??'Unnamed Vehicle',brand:v.brand??v.make??'',model:v.model??'',cat:v.cat??v.category??'MPV',year:+(v.year??v.manufacture_year??2024),plate:v.plate??v.license_plate??v.registration_number??'',trans:v.trans??v.transmission??'Automatic',seats:+(v.seats??v.capacity??7),fuel:v.fuel??v.fuel_type??'Bensin',color:v.color??'',doors:+(v.doors??5),bag:v.bag??v.luggage??'2 Koper',priceLK:+(v.priceLK??v.price_lk??v.price??v.daily_price??0),priceDrv:+(v.priceDrv??v.price_drv??v.driver_price??0),status:String(v.status??'available').toLowerCase(),img:v.img??v.image??v.image_url??IMG.avanza,feats:Array.isArray(v.feats)?v.feats:(Array.isArray(v.features)?v.features:[]),desc:v.desc??v.description??''};
+}
+async function vehicleApiRequest(path='',options={}){
+ const response=await fetch(VEHICLES_API_URL+path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});
+ if(!response.ok)throw new Error(`Vehicles API ${response.status}`);
+ if(response.status===204)return null;
+ return response.json();
+}
+async function loadVehiclesFromApi(){
+ if(!apiConfigured())return false;
+ try{const payload=await vehicleApiRequest();const list=unwrapVehiclePayload(payload);if(!list)throw new Error('Format respons armada tidak dikenali');VEHICLES=list.map(normalizeVehicle);VEHICLES_API_ONLINE=true;persist();return true;}
+ catch(error){console.warn('Gagal memuat armada dari API, memakai data demo:',error);return false;}
+}
+async function saveVehicleToApi(vehicle,isNew=false){
+ if(!apiConfigured())return vehicle;
+ const payload=await vehicleApiRequest(isNew?'':`/${encodeURIComponent(vehicle.id)}`,{method:isNew?'POST':'PUT',body:JSON.stringify(vehicle)});
+ const list=unwrapVehiclePayload(payload);
+ return normalizeVehicle(list?list[0]:(payload?.data||payload||vehicle),vehicle.id);
+}
+async function deleteVehicleFromApi(id){if(apiConfigured())await vehicleApiRequest(`/${encodeURIComponent(id)}`,{method:'DELETE'});}
 let BOOKINGS=saved.bookings||JSON.parse(JSON.stringify(DEF_BOOKINGS));
 let CUSTOMERS=saved.customers||JSON.parse(JSON.stringify(DEF_CUSTOMERS));
 let DRIVERS=saved.drivers||JSON.parse(JSON.stringify(DEF_DRIVERS));
@@ -1593,7 +1625,9 @@ function refreshVeh(){const tb=$('vehTbody');if(!tb)return;
  if(S._vst)list=list.filter(v=>v.status===S._vst);
  if(S._vc)list=list.filter(v=>v.cat===S._vc);
  tb.innerHTML=list.length?list.map(vehRowHtml).join(''):`<tr><td colspan="9" class="text-center py-10 text-muted">Tidak ada aset yang cocok.</td></tr>`;}
-function setVehStatus(id,val){const v=veh(id);v.status=val;addLog(`Status aset ${v.name} (${v.plate}) → ${val}`);persist();toast('Status '+v.name+' → '+val);renderAdminBody();}
+async function setVehStatus(id,val){const v=veh(id);if(!v)return;const previous=v.status;v.status=val;
+ try{const synced=await saveVehicleToApi(v);Object.assign(v,synced);addLog(`Status aset ${v.name} (${v.plate}) → ${val}`);persist();toast('Status '+v.name+' → '+val);renderAdminBody();}
+ catch(error){v.status=previous;toast('Status armada gagal disimpan ke API','err');renderAdminBody();}}
 function selectVehImage(image,button){pendingVehImage=image;document.querySelectorAll('.ph-opt').forEach(x=>x.classList.remove('on'));button.classList.add('on');const preview=$('vf_img_preview');if(preview)preview.src=image;}
 function uploadVehImage(input){const file=input.files&&input.files[0];if(!file)return;if(!file.type.startsWith('image/')){toast('File harus berupa gambar','err');input.value='';return;}if(file.size>5*1024*1024){toast('Ukuran foto maksimal 5 MB','err');input.value='';return;}const reader=new FileReader();reader.onload=()=>{const image=new Image();image.onload=()=>{const max=1280,scale=Math.min(1,max/Math.max(image.width,image.height)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(image.width*scale));canvas.height=Math.max(1,Math.round(image.height*scale));canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);pendingVehImage=canvas.toDataURL('image/jpeg',.78);const preview=$('vf_img_preview');if(preview)preview.src=pendingVehImage;document.querySelectorAll('.ph-opt').forEach(x=>x.classList.remove('on'));};image.src=reader.result;};reader.readAsDataURL(file);}
 function vehForm(id){const v=id?veh(id):null;
@@ -1621,14 +1655,14 @@ modal(`<div class="p-7"><div class="flex justify-between items-center mb-5 gap-3
   <div><label class="lbl">Status</label><select id="vf_status" class="inp">${['available','rented','maintenance','inactive'].map(s=>`<option value="${s}" ${v&&v.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
  </div>
  <button onclick="saveVeh('${id||''}')" class="btn btn-m w-full mt-6">${ic('check','w-4 h-4')} Simpan Aset</button></div>`,1);}
-function saveVeh(id){const g=k=>{const e=$('vf_'+k);return e?e.value.trim():''};
+async function saveVeh(id){const g=k=>{const e=$('vf_'+k);return e?e.value.trim():''};
  const nama=g('nama'),harga=+($('vf_harga')?$('vf_harga').value:0);
  if(!nama||!harga){toast('Nama mobil & harga wajib diisi','err');return;}
  const feats=Array.from(document.querySelectorAll('.fac-chk:checked')).map(x=>x.value);
  const imgSel=document.querySelector('.ph-opt.on');const img=pendingVehImage||(imgSel?imgSel.dataset.img:IMG.avanza);
  const data={name:nama,brand:g('brand'),model:g('model'),year:+g('tahun')||2024,plate:g('plate'),trans:$('vf_trans').value,seats:+$('vf_seats').value||7,color:g('warna'),fuel:$('vf_fuel').value,cat:$('vf_cat').value,priceLK:harga,priceDrv:+($('vf_hargadrv').value)||harga+150000,feats,desc:g('desc'),status:$('vf_status').value,img};
- if(id){const v=veh(id);const oldPlate=v.plate;Object.assign(v,data);if(!v.plate)v.plate=oldPlate;addLog(`Aset diperbarui: ${v.name} (${v.plate})`);toast('Perubahan aset tersimpan');}
- else{const nid='v'+Date.now();VEHICLES.push(Object.assign({id:nid,doors:5,bag:'2 Koper'},data));addLog(`Aset baru ditambahkan: ${data.name}`);toast('Aset baru berhasil ditambahkan');}
+ if(id){const v=veh(id);const previous={...v};Object.assign(v,data);try{const synced=await saveVehicleToApi(v);Object.assign(v,synced);if(!v.plate)v.plate=previous.plate;addLog(`Aset diperbarui: ${v.name} (${v.plate})`);toast('Perubahan aset tersimpan');}catch(error){Object.assign(v,previous);toast('Perubahan armada gagal disimpan ke API','err');return;}}
+ else{const candidate=Object.assign({id:'v'+Date.now(),doors:5,bag:'2 Koper'},data);try{const created=await saveVehicleToApi(candidate,true);VEHICLES.push(created);addLog(`Aset baru ditambahkan: ${created.name}`);toast('Aset baru berhasil ditambahkan');}catch(error){toast('Aset baru gagal disimpan ke API','err');return;}}
  if(!persist()){toast('Data gagal disimpan. Hapus data demo lama atau gunakan foto yang lebih kecil.','err');return;}closeModal();renderAdminBody();}
 function vehDetail(id){const v=veh(id);const hist=BOOKINGS.filter(b=>b.veh===id);
  const rev=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);
@@ -1656,7 +1690,7 @@ modal(`<div class="p-7">
   <button onclick="closeModal();vehForm('${v.id}')" class="btn btn-g btn-sm">${ic('edit','w-4 h-4')} Edit Aset</button>
   <button onclick="closeModal();delVeh('${v.id}')" class="btn btn-d btn-sm">${ic('trash','w-4 h-4')} Hapus Aset</button>
  </div></div>`,1);}
-function dupVeh(id){const v=veh(id);const cp=JSON.parse(JSON.stringify(v));cp.id='v'+Date.now();cp.name=v.name+' (Copy)';cp.plate='';cp.status='inactive';VEHICLES.push(cp);addLog(`Aset diduplikasi: ${v.name} → ${cp.name}`);persist();toast('Aset diduplikasi (status inactive)');renderAdminBody();}
+async function dupVeh(id){const v=veh(id);const cp=JSON.parse(JSON.stringify(v));cp.id='v'+Date.now();cp.name=v.name+' (Copy)';cp.plate='';cp.status='inactive';try{const created=await saveVehicleToApi(cp,true);VEHICLES.push(created);addLog(`Aset diduplikasi: ${v.name} → ${created.name}`);persist();toast('Aset diduplikasi (status inactive)');renderAdminBody();}catch(error){toast('Duplikasi armada gagal disimpan ke API','err');}}
 function delVeh(id){const v=veh(id);const act=BOOKINGS.filter(b=>b.veh===id&&['Pending','Confirmed','Ongoing'].includes(b.status)).length;
 modal(`<div class="p-7 text-center">
  <span class="w-14 h-14 mx-auto rounded-full bg-red-500/15 border border-red-500/40 text-red-300 grid place-items-center mb-4">${ic('alert')}</span>
@@ -1668,8 +1702,8 @@ modal(`<div class="p-7 text-center">
   <button onclick="softDel('${v.id}')" class="btn btn-g btn-sm">Nonaktifkan</button>
   <button onclick="hardDel('${v.id}')" class="btn btn-d btn-sm col-span-2 ${act?'opacity-40 pointer-events-none':''}">${ic('trash','w-4 h-4')} Hapus Permanen</button>
  </div></div>`);}
-function softDel(id){const v=veh(id);v.status='inactive';addLog(`Aset dinonaktifkan: ${v.name}`);persist();closeModal();toast('Aset dinonaktifkan','info');renderAdminBody();}
-function hardDel(id){const v=veh(id);VEHICLES=VEHICLES.filter(x=>x.id!==id);addLog(`Aset dihapus permanen: ${v.name} (${v.plate})`);persist();closeModal();toast('Aset dihapus permanen','err');renderAdminBody();}
+async function softDel(id){const v=veh(id);if(!v)return;const previous=v.status;v.status='inactive';try{const synced=await saveVehicleToApi(v);Object.assign(v,synced);addLog(`Aset dinonaktifkan: ${v.name}`);persist();closeModal();toast('Aset dinonaktifkan','info');renderAdminBody();}catch(error){v.status=previous;toast('Aset gagal dinonaktifkan di API','err');}}
+async function hardDel(id){const v=veh(id);if(!v)return;try{await deleteVehicleFromApi(id);VEHICLES=VEHICLES.filter(x=>x.id!==id);addLog(`Aset dihapus permanen: ${v.name} (${v.plate})`);persist();closeModal();toast('Aset dihapus permanen','err');renderAdminBody();}catch(error){toast('Aset gagal dihapus dari API','err');}}
 
 /* ================= CUSTOMER / DRIVER / PAYMENT / PROMO / REPORTS / CMS / USERS / SETTINGS ================= */
 function aCustomers(){return `<div class="rv card overflow-x-auto"><table class="tbl min-w-[860px]"><thead><tr><th>ID</th><th>Nama</th><th>Kontak</th><th>Total Booking</th><th>Total Spending</th><th>Last Rental</th><th>Status</th><th></th></tr></thead><tbody>
@@ -1825,6 +1859,7 @@ renderC();}
 window.addEventListener('hashchange',route);
 window.addEventListener('scroll',()=>{const hd=$('cHeader');const on=window.scrollY>40;hd.style.background=on?'rgba(11,11,13,.92)':'transparent';hd.style.backdropFilter=on?'blur(14px)':'none';hd.style.borderColor=on?'rgba(255,255,255,.06)':'transparent';});
 applyCms();syncAdminBtns();route();
+loadVehiclesFromApi().then(loaded=>{if(loaded){if(location.hash.startsWith('#/admin'))renderA();else renderC();}});
 </script>
 </body>
 </html>
