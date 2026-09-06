@@ -37,10 +37,10 @@ The demo stores application data in browser `localStorage`.
 
 ## Vehicle API
 
-Fleet data is loaded from `{{baseUrl}}/api/v1/vehicles` when an API base URL is configured. Set it before the inline application script, for example:
+Fleet data is loaded by default from `http://localhost:3000/api/v1/vehicles`. To use another API base URL, set it before the inline application script, for example:
 
 ```html
 <script>window.AZZID_API_BASE_URL = 'https://api.example.com';</script>
 ```
 
-The app uses `GET` to load vehicles, `POST` to create, `PUT /{id}` to update, and `DELETE /{id}` to remove a vehicle. Responses may be a direct array or an array inside `data` or `vehicles`. If the URL is still the `{{baseUrl}}` placeholder, or the API is unavailable, the demo fleet remains available from `localStorage`.
+The app uses `GET` to load vehicles, `POST` to create, `PUT /{id}` to update, and `DELETE /{id}` to remove a vehicle. The current local API response shape (`{ "success": true, "data": [] }`) and snake_case fields such as `plate_number`, `price_lepas_kunci`, and `price_dengan_driver` are supported. If the API is unavailable, the demo fleet remains available from `localStorage`.

@@ -294,9 +294,9 @@ const LS_KEY='azzid_rentcar_db_v9',LS_SES='azzid_rentcar_session',LS_CUST='azzid
 function loadDB(){try{const r=localStorage.getItem(LS_KEY);if(r)return JSON.parse(r);}catch(e){}return null;}
 const saved=loadDB()||{};
 let VEHICLES=saved.vehicles||JSON.parse(JSON.stringify(DEF_VEHICLES));
-const VEHICLES_API_URL=((window.AZZID_API_BASE_URL||'{{baseUrl}}').replace(/\/$/,'')+'/api/v1/vehicles');
+const VEHICLES_API_URL=((window.AZZID_API_BASE_URL||'http://localhost:3000').replace(/\/$/,'')+'/api/v1/vehicles');
 let VEHICLES_API_ONLINE=false;
-function apiConfigured(){return !VEHICLES_API_URL.startsWith('{{baseUrl}}');}
+function apiConfigured(){return Boolean(VEHICLES_API_URL);}
 function unwrapVehiclePayload(payload){
  if(Array.isArray(payload))return payload;
  if(Array.isArray(payload?.data))return payload.data;
@@ -306,8 +306,10 @@ function unwrapVehiclePayload(payload){
 }
 function normalizeVehicle(raw,index){
  const v=raw||{};
- return {id:String(v.id??v._id??v.vehicle_id??'v'+index),name:v.name??v.vehicle_name??v.title??'Unnamed Vehicle',brand:v.brand??v.make??'',model:v.model??'',cat:v.cat??v.category??'MPV',year:+(v.year??v.manufacture_year??2024),plate:v.plate??v.license_plate??v.registration_number??'',trans:v.trans??v.transmission??'Automatic',seats:+(v.seats??v.capacity??7),fuel:v.fuel??v.fuel_type??'Bensin',color:v.color??'',doors:+(v.doors??5),bag:v.bag??v.luggage??'2 Koper',priceLK:+(v.priceLK??v.price_lk??v.price??v.daily_price??0),priceDrv:+(v.priceDrv??v.price_drv??v.driver_price??0),status:String(v.status??'available').toLowerCase(),img:v.img??v.image??v.image_url??IMG.avanza,feats:Array.isArray(v.feats)?v.feats:(Array.isArray(v.features)?v.features:[]),desc:v.desc??v.description??''};
+ let features=v.feats??v.features??[];if(typeof features==='string'){try{features=JSON.parse(features);}catch(error){features=[];}}
+ return {id:String(v.id??v._id??v.vehicle_id??'v'+index),name:v.name??v.vehicle_name??v.title??'Unnamed Vehicle',brand:v.brand??v.make??'',model:v.model??'',cat:v.cat??v.category??'MPV',year:+(v.year??v.manufacture_year??2024),plate:v.plate??v.plate_number??v.license_plate??v.registration_number??'',trans:v.trans??v.transmission??'Automatic',seats:+(v.seats??v.capacity??7),fuel:v.fuel??v.fuel_type??'Bensin',color:v.color??'',doors:+(v.doors??5),bag:v.bag??v.baggage??v.luggage??'2 Koper',priceLK:+(v.priceLK??v.price_lk??v.price_lepas_kunci??v.price??v.daily_price??0),priceDrv:+(v.priceDrv??v.price_drv??v.price_dengan_driver??v.driver_price??0),status:String(v.status??'available').toLowerCase(),img:v.img??v.image??v.image_url??IMG.avanza,feats:Array.isArray(features)?features:[],desc:v.desc??v.description??''};
 }
+function vehicleApiPayload(vehicle){return {id:vehicle.id,name:vehicle.name,brand:vehicle.brand,model:vehicle.model,category:vehicle.cat,year:vehicle.year,plate_number:vehicle.plate,transmission:vehicle.trans,seats:vehicle.seats,fuel:vehicle.fuel,color:vehicle.color,doors:vehicle.doors,baggage:vehicle.bag,price_lepas_kunci:vehicle.priceLK,price_dengan_driver:vehicle.priceDrv,status:vehicle.status,image_url:vehicle.img,description:vehicle.desc,features:vehicle.feats};}
 async function vehicleApiRequest(path='',options={}){
  const response=await fetch(VEHICLES_API_URL+path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});
  if(!response.ok)throw new Error(`Vehicles API ${response.status}`);
@@ -321,7 +323,7 @@ async function loadVehiclesFromApi(){
 }
 async function saveVehicleToApi(vehicle,isNew=false){
  if(!apiConfigured())return vehicle;
- const payload=await vehicleApiRequest(isNew?'':`/${encodeURIComponent(vehicle.id)}`,{method:isNew?'POST':'PUT',body:JSON.stringify(vehicle)});
+ const payload=await vehicleApiRequest(isNew?'':`/${encodeURIComponent(vehicle.id)}`,{method:isNew?'POST':'PUT',body:JSON.stringify(vehicleApiPayload(vehicle))});
  const list=unwrapVehiclePayload(payload);
  return normalizeVehicle(list?list[0]:(payload?.data||payload||vehicle),vehicle.id);
 }
