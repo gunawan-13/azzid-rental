@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "azzid-rentcar-api-collection",
+		"name": "AZZID RENTCAR API",
+		"description": "REST API Collection untuk AZZID RENTCAR (Node.js + Express + MariaDB)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/",
+					"host": ["{{base_url}}"],
+					"path": [""]
+				}
+			}
+		},
+		{
+			"name": "API Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api",
+					"host": ["{{base_url}}"],
+					"path": ["api"]
+				}
+			}
+		},
+		{
+			"name": "Vehicles",
+			"item": [
+				{
+					"name": "Get All Vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vehicles",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles"]
+						}
+					}
+				},
+				{
+					"name": "Get Vehicle Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vehicles/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles", "stats"]
+						}
+					}
+				},
+				{
+					"name": "Get Vehicle By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vehicles/avanza",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles", "avanza"]
+						}
+					}
+				},
+				{
+					"name": "Create Vehicle",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"yaris\",\n    \"name\": \"Toyota Yaris 1.5 S\",\n    \"brand\": \"Toyota\",\n    \"model\": \"Yaris\",\n    \"category\": \"City Car\",\n    \"year\": 2023,\n    \"plate_number\": \"B 5678 AZD\",\n    \"transmission\": \"Automatic\",\n    \"seats\": 5,\n    \"fuel\": \"Bensin\",\n    \"color\": \"Red\",\n    \"doors\": 5,\n    \"baggage\": \"2 Koper\",\n    \"price_lepas_kunci\": 320000,\n    \"price_dengan_driver\": 470000,\n    \"status\": \"available\",\n    \"description\": \"Hatchback sporty dan irit.\",\n    \"features\": [\"AC\", \"USB\", \"Bluetooth\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/vehicles",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles"]
+						}
+					}
+				},
+				{
+					"name": "Update Vehicle Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"maintenance\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/vehicles/avanza/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "vehicles", "avanza", "status"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customers",
+							"host": ["{{base_url}}"],
+							"path": ["api", "customers"]
+						}
+					}
+				},
+				{
+					"name": "Get Customer By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/customers/CST-001",
+							"host": ["{{base_url}}"],
+							"path": ["api", "customers", "CST-001"]
+						}
+					}
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Siti Aminah\",\n    \"whatsapp\": \"081299998888\",\n    \"email\": \"siti.aminah@gmail.com\",\n    \"address\": \"Jakarta Barat\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/customers",
+							"host": ["{{base_url}}"],
+							"path": ["api", "customers"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Rentals",
+			"item": [
+				{
+					"name": "Get All Rentals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rentals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "rentals"]
+						}
+					}
+				},
+				{
+					"name": "Get Rental Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rentals/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "rentals", "stats"]
+						}
+					}
+				},
+				{
+					"name": "Create Rental (Booking Baru)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customer_id\": \"CST-001\",\n    \"vehicle_id\": \"avanza\",\n    \"start_date\": \"2026-08-20\",\n    \"end_date\": \"2026-08-22\",\n    \"rental_type\": \"Lepas Kunci\",\n    \"pickup_location\": \"Kantor AZZID — Kemang\",\n    \"dropoff_location\": \"Kantor AZZID — Kemang\",\n    \"payment_method\": \"QRIS\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rentals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "rentals"]
+						}
+					}
+				},
+				{
+					"name": "Update Rental Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"Ongoing\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rentals/AZR-20260820-015/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "rentals", "AZR-20260820-015", "status"]
+						}
+					}
+				},
+				{
+					"name": "Update Payment Status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payment_status\": \"PAID\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rentals/AZR-20260820-015/payment",
+							"host": ["{{base_url}}"],
+							"path": ["api", "rentals", "AZR-20260820-015", "payment"]
+						}
+					}
+				},
+				{
+					"name": "Extend Rental (+1 Hari)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rentals/AZR-20260820-015/extend",
+							"host": ["{{base_url}}"],
+							"path": ["api", "rentals", "AZR-20260820-015", "extend"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
