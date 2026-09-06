@@ -44,3 +44,4 @@ Fleet data is loaded by default from `http://localhost:3000/api/v1/vehicles`. To
 ```
 
 The app uses `GET` to load vehicles, `POST` to create, `PUT /{id}` to update, and `DELETE /{id}` to remove a vehicle. The current local API response shape (`{ "success": true, "data": [] }`) and snake_case fields such as `plate_number`, `price_lepas_kunci`, and `price_dengan_driver` are supported. If the API is unavailable, the demo fleet remains available from `localStorage`.
+# azzid-rental
