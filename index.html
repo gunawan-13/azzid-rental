@@ -294,7 +294,7 @@ const LS_KEY='azzid_rentcar_db_v9',LS_SES='azzid_rentcar_session',LS_CUST='azzid
 function loadDB(){try{const r=localStorage.getItem(LS_KEY);if(r)return JSON.parse(r);}catch(e){}return null;}
 const saved=loadDB()||{};
 let VEHICLES=saved.vehicles||JSON.parse(JSON.stringify(DEF_VEHICLES));
-const VEHICLES_API_URL=((window.AZZID_API_BASE_URL||'http://localhost:3000').replace(/\/$/,'')+'/api/v1/vehicles');
+const VEHICLES_API_URL=((window.AZZID_API_BASE_URL||'https://azzid-rental.vercel.app/').replace(/\/$/,'')+'/api/v1/vehicles');
 let VEHICLES_API_ONLINE=false;
 function apiConfigured(){return Boolean(VEHICLES_API_URL);}
 function unwrapVehiclePayload(payload){
