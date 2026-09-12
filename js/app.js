@@ -992,7 +992,7 @@ function renderA() {
             <h2 class="font-display font-extrabold text-3xl leading-tight">Dashboard Operasional Rental.</h2></div>
           <ul class="relative space-y-2.5 text-[13px] text-red-100">${['Overview · Booking · Calendar · Armada', 'Customer · Driver · Payment · Promo', 'Reports · CMS Website · Users & Roles · Settings', 'Kelola Sewa: mulai, perpanjang, pengembalian'].map(x => `<li class="flex gap-2.5"><span class="mt-1">${ic('check', 'w-4 h-4')}</span>${x}</li>`).join('')}</ul>
         </div>
-        < class="p-7 sm:p-9">
+                <div class="p-7 sm:p-9">
           <div class="lg:hidden flex items-center gap-2.5 mb-6"><span class="w-10 h-10 rounded-lg bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-lg">A</span>
             <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted">ADMIN DASHBOARD</div></div></div>
           <h3 class="font-display font-bold text-xl mb-1">Login Admin</h3>
@@ -1000,7 +1000,9 @@ function renderA() {
           <div id="lgErr" class="hidden mb-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-2.5">Email atau password salah. Coba lagi.</div>
           <label class="lbl">Email Admin</label><input id="lgE" class="inp mb-4" autocomplete="username" placeholder="admin@perusahaan.com" onkeydown="if(event.key==='Enter')doLogin()">
           <label class="lbl">Password</label><input id="lgP" type="password" class="inp mb-5" autocomplete="current-password" placeholder="Masukkan password admin" onkeydown="if(event.key==='Enter')doLogin()">
-          <bu onclick="doLogin()" class="btn btn-g w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button></div></div><div class="flex mt-10 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
+          <button onclick="doLogin()" class="btn btn-g w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button>
+          <div class="flex mt-10 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
+        </div>
         </div>
       </div>
     </div>`;
