@@ -1000,7 +1000,7 @@ function renderA() {
           <div id="lgErr" class="hidden mb-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-2.5">Email atau password salah. Coba lagi.</div>
           <label class="lbl">Email Admin</label><input id="lgE" class="inp mb-4" autocomplete="username" placeholder="admin@perusahaan.com" onkeydown="if(event.key==='Enter')doLogin()">
           <label class="lbl">Password</label><input id="lgP" type="password" class="inp mb-5" autocomplete="current-password" placeholder="Masukkan password admin" onkeydown="if(event.key==='Enter')doLogin()">
-          <button onclick="doLogin()" class="btn btn-g w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button></<div class="flex mt-6 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
+          <button onclick="doLogin()" class="btn btn-g w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button></<div class="flex mt-6 text-[12px]"><a href="#/" class="text-muted hover:text-white">  ← Kembali ke Website</a></div>
         </div>
       </div>
     </div>`;
