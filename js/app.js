@@ -2261,5 +2261,5 @@ applyCms();
 syncAdminBtns();
 route();
 loadVehiclesFromAPI();
-restoreAuth();
+// restoreAuth();   // ← comment out supaya tidak auto-login
 const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
