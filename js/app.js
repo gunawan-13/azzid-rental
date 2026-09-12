@@ -5,7 +5,7 @@ const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '1086136614177-qve0n92loii40
 const VEHICLE_API_URL = window.VEHICLE_API_URL || `${API_BASE_URL}/vehicles`;
 const AUTH_API_URL = `${API_BASE_URL}/auth`;
 const USERS_API_URL = `${API_BASE_URL}/users`;
-let ADMIN_USERS = [];<p class="text-[12px] text-muted mt-0.5">Masuk untuk melanjutkan booking.</p>
+let ADMIN_USERS = [];
 
 /*
  * API helper dibuat toleran terhadap beberapa bentuk response backend:
