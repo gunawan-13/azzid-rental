@@ -1,6 +1,6 @@
 # Azzid-Rental-F
 
-Struktur folder hasil pemisahan dari **1 file HTML sumber** dengan route hash tetap dipertahankan dan data operasional diarahkan ke API.
+Struktur folder hasil pemisahan dari **1 file HTML sumber** tanpa mengubah desain, teks, route hash, data demo, atau perilaku JavaScript.
 
 ## Jalankan
 
@@ -38,7 +38,7 @@ Azzid-Rental-F/
 - `index.html` sekarang hanya menjadi shell/entry point.
 - CSS inline asli dipindahkan ke `assets/css/style.css`.
 - Konfigurasi Tailwind inline asli dipindahkan ke `js/tailwind.config.js`.
-- State frontend tetap berada di `js/data.js`; data operasional dimuat dari backend.
+- Data demo + persistence/state dipindahkan ke `js/data.js`.
 - Helper, icon, badge, dan customer-auth dipindahkan ke `js/utils.js`.
 - Logika view, booking, admin dashboard, CRUD kendaraan/booking, invoice, dan router dipertahankan di `js/app.js` **secara utuh** agar tidak mengubah hasil render.
 - `js/crud.js` dan file di `modules/` disiapkan sesuai struktur yang diminta, tetapi tidak digunakan sebagai partial/fetch karena memindahkan render ke partial HTML akan mengubah timing/behavior aplikasi sumber.
@@ -60,4 +60,3 @@ Customer:
 ## Verifikasi
 
 Target pemisahan ini adalah **behavior-preserving refactor**: kode aplikasi sumber tidak didesain ulang; hanya dipindahkan dari satu HTML ke file-file yang diminta.
-# azzid-rental

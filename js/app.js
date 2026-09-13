@@ -1,17 +1,11 @@
 /* ================= VEHICLE API ================= */
 
 const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3000/api';
-const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '1086136614177-qve0n92loii407in9iqvaefar84obqo5.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 const VEHICLE_API_URL = window.VEHICLE_API_URL || `${API_BASE_URL}/vehicles`;
 const AUTH_API_URL = `${API_BASE_URL}/auth`;
 const USERS_API_URL = `${API_BASE_URL}/users`;
-const BOOKING_API_URL = `${API_BASE_URL}/bookings`;
-const CUSTOMER_API_URL = `${API_BASE_URL}/customers`;
-const DRIVER_API_URL = `${API_BASE_URL}/drivers`;
-const SETTINGS_API_URL = `${API_BASE_URL}/settings`;
-const PROMO_API_URL = `${API_BASE_URL}/promos`;
 let ADMIN_USERS = [];
-let PAYMENT_ACCOUNTS = [];
 
 /*
  * API helper dibuat toleran terhadap beberapa bentuk response backend:
@@ -102,21 +96,31 @@ function normalizeVehicleFromAPI(v) {
   };
 }
 
-async function loadVehiclesFromAPI(){
- const payload=await vehicleApi();let raw=apiData(payload);if(raw&&!Array.isArray(raw)&&Array.isArray(raw.vehicles))raw=raw.vehicles;
- VEHICLES.length=0;VEHICLES.push(...(Array.isArray(raw)?raw.map(normalizeVehicleFromAPI).filter(Boolean):[]));persist();if(location.hash.startsWith('#/admin'))renderAdminBody();
+async function loadVehiclesFromAPI() {
+  try {
+    const payload = await vehicleApi();
+    let raw = apiData(payload);
+    if (raw && !Array.isArray(raw) && Array.isArray(raw.vehicles)) raw = raw.vehicles;
+    const list = Array.isArray(raw) ? raw : [];
+    const vehiclesFromAPI = list.map(normalizeVehicleFromAPI).filter(Boolean);
+
+    /* Jangan membuat halaman kosong bila database API masih kosong. */
+    if (vehiclesFromAPI.length) {
+      VEHICLES.length = 0;
+      VEHICLES.push(...vehiclesFromAPI);
+      persist();
+      console.log('Vehicle API berhasil:', VEHICLES.length, 'kendaraan');
+    } else {
+      console.warn('API kendaraan kosong — mempertahankan data demo/local.');
+    }
+
+    renderAdminBody();
+  } catch (error) {
+    console.warn('API kendaraan tidak dapat diakses, menggunakan data lokal:', error.message);
+    renderAdminBody();
+  }
 }
-async function jsonApi(url,options={}){
- const response=await fetch(url,{credentials:'include',...options,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...(options.headers||{})}});
- const raw=await response.text();let payload=null;try{payload=raw?JSON.parse(raw):null}catch(e){payload=raw}
- if(!response.ok||payload?.success===false)throw new Error(payload?.message||`HTTP ${response.status}`);return payload;
-}
-function normalizeBookingFromAPI(b){if(!b)return null;return {...b,id:String(b.id||b.booking_code),cust:b.cust||b.customer_name||'—',veh:b.veh??b.vehicle_id,driver:b.driver??b.driver_id??null,start:b.start||b.start_date,end:b.end||b.end_date,type:b.type||b.rental_type||'Lepas Kunci',pickup:b.pickup||b.pickup_location||'',drop:b.drop||b.dropoff_location||'',sub:Number(b.sub||b.subtotal||0),drv:Number(b.drv||b.driver_amount||0),disc:Number(b.disc||b.discount_amount||0),total:Number(b.total||b.total_amount||0),status:b.status||'Pending',pay:{m:b.pay?.m||b.payment_method||'—',s:String(b.pay?.s||b.payment_status||'UNPAID').toUpperCase(),tx:b.pay?.tx||b.transaction_id||'—',at:b.pay?.at||b.paid_at||null},user:b.user||b.user_email||null};}
-function normalizeCustomerFromAPI(c){if(!c)return null;return {...c,id:c.id,name:c.name||'',wa:c.wa||c.phone||'',email:c.email||'',addr:c.addr||c.address||'',ktp:c.ktp||c.ktp_number||'',ttl:c.ttl||c.birth_date||'',tujuan:c.tujuan||c.purpose||'',catatan:c.catatan||c.notes||'',total:Number(c.total||0),spend:Number(c.spend||0),last:c.last||'—',status:c.status||'New'};}
-function normalizeDriverFromAPI(d){if(!d)return null;return {...d,id:d.id,name:d.name||'',wa:d.wa||d.phone||'',sim:d.sim||d.license_no||'',rating:Number(d.rating||0),trips:Number(d.trips||0),status:d.status||'Available'};}
-async function loadOperationalData(){try{const [bv,bc,bd,bp]=await Promise.all([jsonApi(BOOKING_API_URL),jsonApi(CUSTOMER_API_URL),jsonApi(DRIVER_API_URL),jsonApi(PROMO_API_URL)]);BOOKINGS.length=0;BOOKINGS.push(...(Array.isArray(apiData(bv))?apiData(bv).map(normalizeBookingFromAPI):[]));CUSTOMERS.length=0;CUSTOMERS.push(...(Array.isArray(apiData(bc))?apiData(bc).map(normalizeCustomerFromAPI):[]));DRIVERS.length=0;DRIVERS.push(...(Array.isArray(apiData(bd))?apiData(bd).map(normalizeDriverFromAPI):[]));PROMOS.length=0;PROMOS.push(...(Array.isArray(apiData(bp))?apiData(bp):[]));persist();if(location.hash.startsWith('#/admin'))renderAdminBody();}catch(e){console.warn('Data operasional belum dapat dimuat:',e.message);}}
-async function loadPublicConfig(){try{const s=apiData(await jsonApi(`${SETTINGS_API_URL}/public`));if(s){S.cms={...S.cms,namaBisnis:s.business_name||'',email:s.email||'',telepon:s.phone||'',wa:s.whatsapp||'',alamat:s.address||'',head1:s.hero_title||'',sub:s.hero_subtitle||'',ann:s.announcement||''};applyCms();}const p=apiData(await jsonApi(`${SETTINGS_API_URL}/payments/public`));PAYMENT_ACCOUNTS.length=0;PAYMENT_ACCOUNTS.push(...(Array.isArray(p)?p:[]));}catch(e){console.warn('Pengaturan website belum dikonfigurasi:',e.message);}}
-async function loadAdminConfig(){try{const s=apiData(await jsonApi(SETTINGS_API_URL));if(s)S.cms={...S.cms,namaBisnis:s.business_name||'',email:s.email||'',telepon:s.phone||'',wa:s.whatsapp||'',alamat:s.address||'',head1:s.hero_title||'',sub:s.hero_subtitle||'',ann:s.announcement||''};const p=apiData(await jsonApi(`${SETTINGS_API_URL}/payments`));PAYMENT_ACCOUNTS.length=0;PAYMENT_ACCOUNTS.push(...(Array.isArray(p)?p:[]));}catch(e){console.warn('Konfigurasi admin belum tersedia:',e.message);}}
+
 /* ================= ARMADA MASTER OPTIONS ================= */
 const VEHICLE_BRANDS = [
   'Toyota', 'Honda', 'Mitsubishi', 'Suzuki', 'Daihatsu', 'Nissan',
@@ -229,8 +233,8 @@ function vHome() {
         </div>
         <form onsubmit="qbSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div class="col-span-full"><label class="lbl">Lokasi</label><select id="qbLoc" class="inp"><option>Kantor AZZID — Kemang</option><option>Bandara Soekarno-Hatta</option><option>Bandara Halim Perdanakusuma</option><option>Stasiun Gambir</option><option>Antar ke Alamat (Jabodetabek)</option></select></div>
-          <div><label class="lbl">Tanggal Mulai</label><input type="date" id="qbStart" class="inp" value="${new Date().toISOString().slice(0,10)}" min="${new Date().toISOString().slice(0,10)}" required></div>
-          <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="${new Date(Date.now()+86400000).toISOString().slice(0,10)}" min="${new Date().toISOString().slice(0,10)}" required></div>
+          <div><label class="lbl">Tanggal Mulai</label><input type="date" id="qbStart" class="inp" value="2026-08-14" min="2026-08-13" required></div>
+          <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="2026-08-16" min="2026-08-14" required></div>
           <div><label class="lbl">Jenis Rental</label><select id="qbType" class="inp"><option>Lepas Kunci</option><option>Dengan Driver</option></select></div>
           <div><label class="lbl">Mobil</label><select id="qbVeh" class="inp"><option value="">Semua kendaraan</option>${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select></div>
           <button class="col-span-full btn btn-m mt-1">${ic('search', 'w-4 h-4')} Cek Ketersediaan</button>
@@ -416,8 +420,8 @@ function vDetail(slug) {
             <div class="rounded-xl border border-maroon-500/40 bg-maroon-500/10 p-4 text-center"><div class="text-[10px] uppercase tracking-widest text-red-200 mb-1">Dengan Driver</div><div class="font-display font-extrabold text-white text-lg">${fmtIDR(v.priceDrv || v.priceLK + 150000)}</div></div>
           </div>
           <div class="grid grid-cols-2 gap-3 mb-4">
-            <div><label class="lbl">Mulai</label><input type="date" id="dtStart" class="inp" value="${new Date().toISOString().slice(0,10)}"></div>
-            <div><label class="lbl">Selesai</label><input type="date" id="dtEnd" class="inp" value="${new Date(Date.now()+86400000).toISOString().slice(0,10)}"></div>
+            <div><label class="lbl">Mulai</label><input type="date" id="dtStart" class="inp" value="2026-08-14"></div>
+            <div><label class="lbl">Selesai</label><input type="date" id="dtEnd" class="inp" value="2026-08-16"></div>
           </div>
           <select id="dtType" class="inp mb-4"><option>Lepas Kunci</option><option>Dengan Driver</option></select>
           <button onclick="openBookingFromDetail('${v.id}')" class="btn btn-m w-full">${ic('cal')} Booking Mobil Ini</button>
@@ -481,8 +485,7 @@ function vKontak() {
 
 /* ================= BOOKING FLOW ================= */
 function openBooking(vid) {
-  const today=new Date(), tomorrow=new Date(Date.now()+86400000);
-  S.draft = { veh: vid || null, start: today.toISOString().slice(0,10), end: tomorrow.toISOString().slice(0,10), type: 'Lepas Kunci', pickup: S.cms.alamat || '', drop: S.cms.alamat || '', cust: {}, promo: null, method: '' };
+  S.draft = { veh: vid || null, start: '2026-08-14', end: '2026-08-16', type: 'Lepas Kunci', pickup: 'Kantor AZZID — Kemang', drop: 'Kantor AZZID — Kemang', cust: {}, promo: null, method: '' };
   S.step = vid ? 1 : 0;
   location.hash = '#/booking';
 }
@@ -495,7 +498,6 @@ function openBookingFromDetail(vid) {
   S.step = 1;
   renderC();
   window.scrollTo({ top: 0 });
-  syncAdminBtns();
 }
 
 function qbSubmit(e) {
@@ -519,8 +521,7 @@ function setFilter(k, v) {
 function bkGo(n) {
   S.step = n;
   renderC();
-    window.scrollTo({ top: 0 });
-  syncAdminBtns();
+  window.scrollTo({ top: 0 });
 }
 
 function pickVeh(id) {
@@ -625,7 +626,47 @@ function upsertCustomer(name, wa, email) {
   return c;
 }
 
-async function doPay(){if(!S.draft.method){toast('Pilih metode pembayaran','err');return;}const c=bkCalc(),d=S.draft;if(!c?.v){toast('Data booking belum lengkap','err');return;}modal(`<div class="p-10 text-center"><div class="w-12 h-12 mx-auto rounded-full border-2 border-maroon-500 border-t-transparent spin mb-5"></div><h3 class="font-display font-semibold text-lg">Menyimpan booking…</h3><p class="text-sm text-muted mt-2">Booking dibuat dengan status menunggu pembayaran.</p></div>`);try{const cr=await jsonApi(CUSTOMER_API_URL,{method:'POST',body:JSON.stringify({name:d.cust.nama,email:d.cust.email,phone:d.cust.wa,address:d.cust.alamat,ktp_number:d.cust.ktp,birth_date:d.cust.ttl,purpose:d.cust.tujuan,notes:d.cust.catatan})});const cu=apiData(cr);const br=await jsonApi(BOOKING_API_URL,{method:'POST',body:JSON.stringify({booking_code:`AZR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${Date.now().toString().slice(-5)}`,vehicle_id:d.veh,customer_id:cu.id,start_date:d.start,end_date:d.end,rental_type:d.type,pickup_location:d.pickup,dropoff_location:d.drop||d.pickup,subtotal:c.rental,driver_amount:c.drv,discount_amount:c.disc,total_amount:c.total,status:'Pending',payment_status:'Unpaid',payment_method:d.method,user_email:S.custSession?.email||d.cust.email,notes:d.cust.catatan})});S.lastBooking=normalizeBookingFromAPI(apiData(br));S.step=5;closeModal();renderC();window.scrollTo({top:0});}catch(e){closeModal();toast(e.message||'Booking gagal disimpan','err');}}
+function doPay() {
+  if (!S.draft.method) { toast('Pilih metode pembayaran', 'err'); return; }
+  modal(`<div class="p-10 text-center"><div class="w-12 h-12 mx-auto rounded-full border-2 border-maroon-500 border-t-transparent spin mb-5"></div><h3 class="font-display font-semibold text-lg">Memproses Pembayaran…</h3><p class="text-sm text-muted mt-2">Menghubungi payment gateway · ${esc(S.draft.method)}</p></div>`);
+  setTimeout(() => {
+    closeModal();
+    const c = bkCalc();
+    const seq = String(BOOKINGS.length + 15).padStart(3, '0');
+    const id = `AZR-${TODAY.replaceAll('-', '')}-${seq}`;
+    const b = {
+      id,
+      cust: S.draft.cust.nama,
+      veh: S.draft.veh,
+      start: S.draft.start,
+      end: S.draft.end,
+      type: S.draft.type,
+      pickup: S.draft.pickup,
+      drop: S.draft.drop,
+      driver: null,
+      sub: c.rental,
+      drv: c.drv,
+      disc: c.disc,
+      total: c.total,
+      status: 'Confirmed',
+      pay: { m: S.draft.method, s: 'PAID', tx: 'TRX-' + Math.floor(88350 + Math.random() * 900), at: TODAY },
+      user: S.custSession ? S.custSession.email : null
+    };
+    BOOKINGS.push(b);
+    const cu = upsertCustomer(S.draft.cust.nama, S.draft.cust.wa, S.draft.cust.email);
+    cu.spend += c.total;
+    cu.last = c.v.name;
+    if (cu.total > 3) cu.status = 'VIP';
+    else if (cu.total > 1) cu.status = 'Regular';
+    addLog(`Booking baru ${id} · ${c.v.name} · ${fmtK(c.total)}`);
+    persist();
+    S.lastBooking = b;
+    S.step = 5;
+    renderC();
+    window.scrollTo({ top: 0 });
+  }, 1800);
+}
+
 function qrSVG(seed) {
   let s = 0;
   for (const ch of seed) s += ch.charCodeAt(0);
@@ -654,10 +695,10 @@ function vBooking() {
     body = `<div class="grid lg:grid-cols-[.9fr_1.1fr] gap-6">
       <div class="card p-5 flex gap-4 items-center"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0"><div class="min-w-0"><div class="font-display font-semibold truncate">${esc(v.name)}</div><div class="text-[12px] text-muted">${v.year} · ${v.trans} · ${v.seats} seats</div><button onclick="bkGo(0)" class="text-[12px] text-maroon-400 font-semibold mt-1">Ganti mobil</button></div></div>
       <div class="card p-6">
-        <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="${new Date().toISOString().slice(0,10)}" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
+        <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="2026-08-13" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
         <div class="grid sm:grid-cols-2 gap-3 mb-4">${['Lepas Kunci', 'Dengan Driver'].map(t => `<button onclick="S.draft.type='${t}';renderC()" class="rounded-xl border p-4 text-left transition ${d.type === t ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-sm">${ic(t === 'Lepas Kunci' ? 'key' : 'wheel', 'w-4 h-4 text-maroon-400')}${t}</div><div class="text-[11px] text-muted mt-1">${t === 'Lepas Kunci' ? 'Kendarai sendiri, lebih bebas' : 'Driver profesional +Rp150rb/hari'}</div></button>`).join('')}</div>
-        <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${[...(S.cms.alamat ? [S.cms.alamat] : []), 'Bandara Soekarno-Hatta', 'Bandara Halim Perdanakusuma', 'Stasiun Gambir', 'Antar ke Alamat (Jabodetabek)'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
-          <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${[...(S.cms.alamat ? [S.cms.alamat] : []), 'Bandara Soekarno-Hatta', 'Bandara Halim Perdanakusuma', 'Stasiun Gambir', 'Antar ke Alamat (Jabodetabek)'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
+        <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${['Kantor AZZID — Kemang', 'Bandara Soekarno-Hatta', 'Bandara Halim Perdanakusuma', 'Stasiun Gambir', 'Antar ke Alamat (Jabodetabek)'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+          <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${['Kantor AZZID — Kemang', 'Bandara Soekarno-Hatta', 'Bandara Halim Perdanakusuma', 'Stasiun Gambir', 'Antar ke Alamat (Jabodetabek)'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
         ${clash ? `<div class="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-3 flex gap-2">${ic('alert', 'w-4 h-4 shrink-0')} Unit ini sudah terbooking pada rentang tanggal pilihan Anda. Silakan ubah tanggal.</div>` : ''}
       </div>
     </div>`;
@@ -729,8 +770,8 @@ function vBooking() {
       </div>
       <div class="card p-6 h-fit min-w-0">
         <h4 class="font-display font-semibold mb-3">Kode Promo</h4>
-        <div class="flex gap-2"><input id="promoInp" class="inp uppercase" placeholder="KODEPROMO" value="${d.promo || ''}"><button onclick="applyPromo()" class="btn btn-g btn-sm shrink-0">Pakai</button></div>
-        <p class="text-[11px] text-muted mt-2">Masukkan kode promo yang diberikan admin</p>
+        <div class="flex gap-2"><input id="promoInp" class="inp uppercase" placeholder="MERDEKA2026" value="${d.promo || ''}"><button onclick="applyPromo()" class="btn btn-g btn-sm shrink-0">Pakai</button></div>
+        <p class="text-[11px] text-muted mt-2">Coba: MERDEKA2026 (10%, maks Rp100rb, min 2 hari)</p>
         <div class="mt-5 pt-5 border-t border-white/5 space-y-2 text-[12.5px] text-muted">
           <div class="flex gap-2 min-w-0">${ic('user', 'w-4 h-4 text-maroon-400 shrink-0')}<span class="truncate">${esc(d.cust.nama || '')} · ${esc(d.cust.wa || '')}</span></div>
           ${S.custSession ? `<div class="flex gap-2 text-emerald-300">${ic('check', 'w-4 h-4 shrink-0')}Booking terhubung ke akun ${esc(S.custSession.email)}</div>` : ''}
@@ -740,8 +781,24 @@ function vBooking() {
       </div>
     </div>`;
   } else if (S.step === 4) {
-    const m=d.method,pa=PAYMENT_ACCOUNTS.find(x=>x.method===m);
-    body=`<div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto"><div class="card p-6"><h3 class="font-display font-semibold text-lg mb-5">Pilih Metode Pembayaran</h3><div class="grid sm:grid-cols-2 gap-3">${PAYMENT_ACCOUNTS.length?PAYMENT_ACCOUNTS.map(x=>`<button onclick="chooseMethod('${esc(x.method)}')" class="rounded-xl border p-4 text-left ${m===x.method?'border-maroon-500 bg-maroon-500/10':'border-white/10'}"><b>${esc(x.method)}</b><div class="text-[11px] text-muted mt-1">${esc(x.provider||'')}</div></button>`).join(''):`<div class="sm:col-span-2 text-sm text-muted border border-dashed border-white/10 rounded-xl p-5">Belum ada metode pembayaran yang dikonfigurasi admin.</div>`}</div><div class="mt-5 rounded-xl bg-ink-900 p-4 flex justify-between gap-3"><span class="text-sm text-muted">Total</span><b class="text-maroon-400">${fmtIDR(c.total)}</b></div></div><div class="card p-6 flex items-center justify-center text-center min-h-[300px]">${pa?`<div><div class="text-sm text-muted">${esc(pa.provider||pa.method)}</div><div class="font-display font-extrabold text-2xl mt-2 break-all">${esc(pa.account_number||'')}</div><div class="text-sm text-muted mt-2">a.n. ${esc(pa.account_name||'')}</div>${pa.instructions?`<p class="text-xs text-muted whitespace-pre-line mt-4">${esc(pa.instructions)}</p>`:''}<button onclick="copyTxt('${String(pa.account_number||'').replace(/'/g,"\\\\'")}')" class="btn btn-g btn-sm mt-4">Salin Nomor</button><button onclick="doPay()" class="btn btn-m w-full mt-4">Buat Booking</button></div>`:`<p class="text-sm text-muted">Pilih metode pembayaran.</p>`}</div></div>`;
+    const m = d.method;
+    body = `<div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <div class="card p-6"><h3 class="font-display font-semibold text-lg mb-5">Pilih Metode Pembayaran</h3>
+        <div class="grid grid-cols-2 gap-3">${[
+          ['QRIS', 'Scan semua e-wallet & m-banking'],
+          ['VA BCA', 'Virtual Account BCA'],
+          ['VA Mandiri', 'Virtual Account Mandiri'],
+          ['GoPay', 'E-wallet GoPay'],
+          ['OVO', 'E-wallet OVO'],
+          ['Transfer Bank', 'Transfer manual BJB']
+        ].map(x => `<button onclick="chooseMethod('${x[0]}')" class="rounded-xl border p-4 text-left transition ${m === x[0] ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-[13px]">${ic('card', 'w-4 h-4 text-maroon-400')}${x[0]}</div><div class="text-[11px] text-muted mt-1">${x[1]}</div></button>`).join('')}</div>
+        <div class="mt-5 rounded-xl bg-ink-900 border border-white/5 p-4 flex justify-between items-center gap-3 flex-wrap"><span class="text-sm text-muted">Total tagihan</span><span class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.total)}</span></div>
+      </div>
+      <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
+        ${!m ? `<div class="text-muted">${ic('card', 'w-10 h-10 mx-auto mb-3 text-zinc-600')}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === 'QRIS' ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : m.startsWith('VA') ? `<p class="text-[12px] text-muted mb-2">Nomor Virtual Account</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2 break-all">8808 2608 1313 8899</div><button onclick="copyTxt('8808260813138899')" class="btn btn-g btn-sm mb-5">${ic('copy', 'w-4 h-4')} Salin Nomor</button>` : m === 'Transfer Bank' ? `<p class="text-[12px] text-muted mb-2">Rekening BJB a.n. AZZID RENTCAR</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">0123 4567 89</div><button onclick="copyTxt('0123456789')" class="btn btn-g btn-sm mb-5">${ic('copy', 'w-4 h-4')} Salin Rekening</button>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m} untuk menyelesaikan pembayaran.</p>`}
+        ${m ? `<button onclick="doPay()" class="btn btn-m w-full max-w-xs">${ic('zap', 'w-4 h-4')} Bayar ${fmtIDR(c.total)}</button>` : ''}
+      </div>
+    </div>`;
   } else {
     const b = S.lastBooking;
     const v = veh(b.veh);
@@ -752,7 +809,7 @@ function vBooking() {
       <div class="rounded-xl bg-ink-900 border border-maroon-500/30 p-5 text-left space-y-2 text-[13.5px] mb-3">
         <div class="flex justify-between gap-2"><span class="text-muted">Booking ID</span><b class="font-mono text-maroon-400">${b.id}</b></div>
         <div class="flex justify-between gap-2"><span class="text-muted">Mobil</span><b>${esc(v.name)}</b></div>
-        <div class="flex justify-between gap-2"><span class="text-muted">Tanggal</span><b>${dShort(b.start)} – ${dShort(b.end)}</b></div>
+        <div class="flex justify-between gap-2"><span class="text-muted">Tanggal</span><b>${dShort(b.start)} – ${dShort(b.end)} 2026</b></div>
         <div class="flex justify-between gap-2"><span class="text-muted">Total</span><b>${fmtIDR(b.total)}</b></div>
         <div class="flex justify-between items-center gap-2"><span class="text-muted">Status</span>${badge('PAID')}</div>
       </div>
@@ -793,7 +850,7 @@ async function bkReg() {
 }
 
 /* ================= CUSTOMER AUTH ================= */
-function openAuth(tab='in'){modal(`<div class="p-7"><div class="flex justify-between items-center mb-5"><div><h3 class="font-display font-bold text-lg">Akun Penyewa</h3></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-2 mb-5"><button id="atIn" onclick="showTabAuth('in')" class="chip justify-center">Masuk</button><button id="atReg" onclick="showTabAuth('reg')" class="chip justify-center">Daftar Baru</button></div><div id="mAuthIn"><div id="mErrIn" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Email</label><input id="cAuthE" class="inp mb-3" autocomplete="username" placeholder="email@anda.com"><label class="lbl">Password</label><input id="cAuthP" type="password" class="inp mb-4" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doCustLogin()"><button onclick="doCustLogin()" class="btn btn-m w-full">${ic('lock','w-4 h-4')} Masuk</button>${googleLoginMarkup()}<button onclick="openForgotPassword()" class="w-full text-center text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button></div><div id="mAuthReg" class="hidden"><div id="mErrReg" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Nama Lengkap</label><input id="rNama" class="inp mb-3" placeholder="Nama lengkap"><div class="grid grid-cols-2 gap-3 mb-3"><div><label class="lbl">Email</label><input id="rEmail" class="inp" placeholder="email@anda.com"></div><div><label class="lbl">No. WhatsApp</label><input id="rWa" class="inp" placeholder="08xx…"></div></div><label class="lbl">Password (min. 6 karakter)</label><input id="rPass" type="password" class="inp mb-4" placeholder="••••••••"><button onclick="doCustReg()" class="btn btn-m w-full">${ic('plus','w-4 h-4')} Buat Akun & Masuk</button></div><p class="text-[10.5px] text-zinc-500 text-center mt-5">Butuh bantuan? <a href="#" onclick="...">Hubungi kami</a></p></div>`);showTabAuth(tab); if(tab==='in') initGoogleButton()}
+function openAuth(tab='in'){modal(`<div class="p-7"><div class="flex justify-between items-center mb-5"><div><h3 class="font-display font-bold text-lg">Akun Penyewa</h3><p class="text-[12px] text-muted mt-0.5">Akun tersimpan di database MySQL.</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-2 mb-5"><button id="atIn" onclick="showTabAuth('in')" class="chip justify-center">Masuk</button><button id="atReg" onclick="showTabAuth('reg')" class="chip justify-center">Daftar Baru</button></div><div id="mAuthIn"><div id="mErrIn" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Email</label><input id="cAuthE" class="inp mb-3" autocomplete="username" placeholder="email@anda.com"><label class="lbl">Password</label><input id="cAuthP" type="password" class="inp mb-4" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doCustLogin()"><button onclick="doCustLogin()" class="btn btn-m w-full">${ic('lock','w-4 h-4')} Masuk</button>${googleLoginMarkup()}<button onclick="openForgotPassword()" class="w-full text-center text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button></div><div id="mAuthReg" class="hidden"><div id="mErrReg" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Nama Lengkap</label><input id="rNama" class="inp mb-3" placeholder="Nama lengkap"><div class="grid grid-cols-2 gap-3 mb-3"><div><label class="lbl">Email</label><input id="rEmail" class="inp" placeholder="email@anda.com"></div><div><label class="lbl">No. WhatsApp</label><input id="rWa" class="inp" placeholder="08xx…"></div></div><label class="lbl">Password (min. 6 karakter)</label><input id="rPass" type="password" class="inp mb-4" placeholder="••••••••"><button onclick="doCustReg()" class="btn btn-m w-full">${ic('plus','w-4 h-4')} Buat Akun & Masuk</button></div><p class="text-[10.5px] text-zinc-500 text-center mt-5">Tidak ada akun demo. Gunakan akun Anda sendiri.</p></div>`);showTabAuth(tab); if(tab==='in') initGoogleButton()}
 function showTabAuth(t){const i=$('mAuthIn'),r=$('mAuthReg'),a=$('atIn'),b=$('atReg');if(!i)return;i.classList.toggle('hidden',t!=='in');r.classList.toggle('hidden',t!=='reg');a.classList.toggle('on',t==='in');b.classList.toggle('on',t==='reg')}
 async function doCustLogin(){const e=($('cAuthE').value||'').trim().toLowerCase(),p=$('cAuthP').value;try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''};closeModal();toast('Selamat datang kembali, '+user.name.split(' ')[0]+'!');renderC()}catch(err){$('mErrIn').textContent=err.message||'Email atau password salah.';$('mErrIn').classList.remove('hidden')}}
 async function doCustReg(){const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');err.classList.add('hidden');if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}try{const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});const user=apiData(result)?.user||result?.user;if(!user)throw new Error('Registrasi gagal.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w};closeModal();toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!');renderC()}catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}}
@@ -803,10 +860,23 @@ function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.cust
 /* ================= TRACK ================= */
 function openTrack() {
   modal(`<div class="p-7"><div class="flex justify-between items-center mb-5"><h3 class="font-display font-semibold text-lg">Lacak Booking</h3><button onclick="closeModal()" class="text-muted hover:text-white">${ic('x')}</button></div>
-    <div class="flex gap-2"><input id="trkInp" class="inp" placeholder="Masukkan kode booking"><button onclick="doTrack()" class="btn btn-m btn-sm shrink-0">Cari</button></div><div id="trkRes" class="mt-5"></div></div>`);
+    <div class="flex gap-2"><input id="trkInp" class="inp" placeholder="Contoh: AZR-20260812-014"><button onclick="doTrack()" class="btn btn-m btn-sm shrink-0">Cari</button></div><div id="trkRes" class="mt-5"></div></div>`);
 }
 
-async function doTrack(){const id=$('trkInp').value.trim().toUpperCase();if(!id)return;try{const r=await jsonApi(`${BOOKING_API_URL}/track/${encodeURIComponent(id)}`);const b=apiData(r);$('trkRes').innerHTML=`<div class="rounded-xl bg-ink-900 border border-white/10 p-5"><div class="flex justify-between items-center mb-4 gap-2 flex-wrap"><b class="font-mono text-maroon-400 text-sm">${esc(b.id)}</b>${badge(b.status)}</div><div class="text-sm mb-1">${esc(b.vehicle_name||'—')} · ${dShort(b.start_date)}–${dShort(b.end_date)}</div><div class="text-[12px] text-muted">Pembayaran: ${badge(String(b.payment_status||'Unpaid').toUpperCase())}</div><div class="mt-4 font-display font-bold">${fmtIDR(Number(b.total_amount||0))}</div></div>`;}catch(e){$('trkRes').innerHTML=`<div class="text-sm text-red-300">${esc(e.message||'Booking tidak ditemukan.')}</div>`;}}
+function doTrack() {
+  const id = $('trkInp').value.trim().toUpperCase();
+  const b = BOOKINGS.find(x => x.id === id);
+  if (!b) { $('trkRes').innerHTML = `<div class="text-sm text-red-300">Booking ID tidak ditemukan.</div>`; return; }
+  const flow = ['Pending', 'Confirmed', 'Ongoing', 'Completed'];
+  const idx = flow.indexOf(b.status);
+  $('trkRes').innerHTML = `<div class="rounded-xl bg-ink-900 border border-white/10 p-5">
+    <div class="flex justify-between items-center mb-4 gap-2 flex-wrap"><b class="font-mono text-maroon-400 text-sm">${b.id}</b>${badge(b.status)}</div>
+    <div class="text-sm mb-1">${esc((veh(b.veh) || { name: '—' }).name)} · ${dShort(b.start)}–${dShort(b.end)} 2026</div>
+    <div class="text-[12px] text-muted mb-4 flex items-center gap-2">Pembayaran: ${badge(b.pay.s)}</div>
+    ${b.status === 'Cancelled' ? '<p class="text-[12px] text-red-300">Booking dibatalkan.</p>' : b.status === 'Expired' ? '<p class="text-[12px] text-zinc-400">Booking kedaluwarsa (belum dibayar).</p>' : `<div class="flex items-center gap-1.5">${flow.map((s, i) => `<div class="flex-1 min-w-0"><div class="h-1.5 rounded-full ${i <= idx ? 'bg-maroon-500' : 'bg-white/10'}"></div><div class="text-[9.5px] mt-1.5 text-muted ${i === idx ? '!text-white font-bold' : ''}">${s}</div></div>`).join('')}</div>`}
+  </div>`;
+}
+
 function copyTxt(t) {
   if (navigator.clipboard) navigator.clipboard.writeText(t);
   toast('Disalin ke clipboard', 'info');
@@ -827,20 +897,8 @@ function galSwap(i, slug) {
 
 function toggleMobNav(forceClose) {
   const n = $('mobNav');
-  if (!n) return;
-  if (forceClose) {
-    n.style.display = 'none';
-    n.classList.remove('flex');
-    return;
-  }
-  // Toggle
-  if (n.style.display === 'none' || n.style.display === '') {
-    n.style.display = 'flex';
-    n.classList.add('flex');
-  } else {
-    n.style.display = 'none';
-    n.classList.remove('flex');
-  }
+  if (forceClose) { n.classList.add('hidden'); return; }
+  n.classList.toggle('hidden');
 }
 
 /* ================= ADMIN ================= */
@@ -894,9 +952,9 @@ async function doResetPassword(token){
 }
 
 async function loadAdminUsers(){try{const result=await fetch(USERS_API_URL,{credentials:'include',headers:{Accept:'application/json'}}).then(async r=>{const p=await r.json();if(!r.ok||p.success===false)throw new Error(p.message||'Gagal memuat users');return p;});const data=apiData(result);ADMIN_USERS=Array.isArray(data)?data:[]}catch(err){ADMIN_USERS=[];console.warn('Data users tidak dapat dimuat:',err.message)}}
-async function doLogin(){const e=($('lgE').value||'').trim().toLowerCase(),p=$('lgP').value,box=$('loginCard'),errBox=$('lgErr');errBox.classList.add('hidden');try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='admin')throw new Error('Akun ini bukan akun admin.');S.session={id:user.id,name:user.name,email:user.email,role:user.role};S.adminView='overview';renderA();syncAdminBtns();loadAdminUsers();loadAdminConfig();loadVehiclesFromAPI().catch(()=>{});loadOperationalData().catch(()=>{});toast('Selamat datang, '+user.name+' — Dashboard Admin aktif.')}catch(error){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');errBox.textContent=error.message||'Login gagal. Periksa email dan password.';errBox.classList.remove('hidden')}}
+async function doLogin(){const e=($('lgE').value||'').trim().toLowerCase(),p=$('lgP').value,box=$('loginCard'),errBox=$('lgErr');errBox.classList.add('hidden');try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='admin')throw new Error('Akun ini bukan akun admin.');S.session={id:user.id,name:user.name,email:user.email,role:user.role};S.adminView='overview';await loadAdminUsers();renderA();syncAdminBtns();toast('Selamat datang, '+user.name+' — Dashboard Admin aktif.')}catch(error){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');errBox.textContent=error.message||'Login gagal. Periksa email dan password.';errBox.classList.remove('hidden')}}
 async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;renderA();syncAdminBtns();toast('Anda telah logout','info')}
-async function restoreAuth(){try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(_){S.session=null;S.custSession=null;syncAdminBtns();}}
+async function restoreAuth(){try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};await loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(_){S.session=null;S.custSession=null;syncAdminBtns();}}
 
 function setAdminView(v) {
   S.adminView = v;
@@ -934,7 +992,7 @@ function renderA() {
             <h2 class="font-display font-extrabold text-3xl leading-tight">Dashboard Operasional Rental.</h2></div>
           <ul class="relative space-y-2.5 text-[13px] text-red-100">${['Overview · Booking · Calendar · Armada', 'Customer · Driver · Payment · Promo', 'Reports · CMS Website · Users & Roles · Settings', 'Kelola Sewa: mulai, perpanjang, pengembalian'].map(x => `<li class="flex gap-2.5"><span class="mt-1">${ic('check', 'w-4 h-4')}</span>${x}</li>`).join('')}</ul>
         </div>
-                <div class="p-7 sm:p-9">
+        <div class="p-7 sm:p-9">
           <div class="lg:hidden flex items-center gap-2.5 mb-6"><span class="w-10 h-10 rounded-lg bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-lg">A</span>
             <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted">ADMIN DASHBOARD</div></div></div>
           <h3 class="font-display font-bold text-xl mb-1">Login Admin</h3>
@@ -942,9 +1000,7 @@ function renderA() {
           <div id="lgErr" class="hidden mb-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-2.5">Email atau password salah. Coba lagi.</div>
           <label class="lbl">Email Admin</label><input id="lgE" class="inp mb-4" autocomplete="username" placeholder="admin@perusahaan.com" onkeydown="if(event.key==='Enter')doLogin()">
           <label class="lbl">Password</label><input id="lgP" type="password" class="inp mb-5" autocomplete="current-password" placeholder="Masukkan password admin" onkeydown="if(event.key==='Enter')doLogin()">
-          <button onclick="doLogin()" class="btn btn-g w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button>
-          <div class="flex mt-10 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
-        </div>
+          <button onclick="doLogin()" class="btn btn-g w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button><p class="text-[11px] text-zinc-500 text-center mt-4">Gunakan akun admin yang terdaftar di database MySQL.</p><div class="flex mt-6 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
         </div>
       </div>
     </div>`;
@@ -985,7 +1041,20 @@ function closeSb() {
   if (window.innerWidth < 1024) $('aSb').classList.add('-translate-x-full');
 }
 
-function revSeries(days){const out=[],end=new Date(TODAY+'T00:00:00');for(let i=days-1;i>=0;i--){const d=new Date(end);d.setDate(d.getDate()-i);const key=d.toISOString().slice(0,10);const v=BOOKINGS.filter(b=>(b.pay?.s==='PAID'||b.status==='Completed')&&String(b.start||'').slice(0,10)===key).reduce((sum,b)=>sum+Number(b.total||0),0);out.push({d,v});}return out;}
+function revSeries(days) {
+  const out = [];
+  const t = dP(TODAY);
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(t);
+    d.setDate(d.getDate() - i);
+    const sd = d.getDate() + d.getMonth() * 31;
+    let v = 900000 + rnd(sd) * 1700000;
+    if (d.getDay() === 5 || d.getDay() === 6) v += 600000;
+    out.push({ d, v: Math.round(v / 50000) * 50000 });
+  }
+  return out;
+}
+
 function areaChart(data, h = 210) {
   const W = 720,
     max = Math.max(...data.map(x => x.v)) * 1.15;
@@ -1033,17 +1102,17 @@ function aOverview() {
         <button onclick="bookingForm()" class="btn btn-g btn-sm">${ic('plus', 'w-4 h-4')} Buat Booking</button>
       </div>
     </div>
-    <div class="rv flex flex-wrap items-center justify-between gap-3"><div class="min-w-0"><h2 class="font-display font-bold text-xl">Selamat datang, <span class="text-maroon-400 capitalize">${esc(S.session.name)}</span> 👋</h2><p class="text-[12.5px] text-muted mt-1">Ringkasan operasional berdasarkan data database.</p></div></div>
+    <div class="rv flex flex-wrap items-center justify-between gap-3"><div class="min-w-0"><h2 class="font-display font-bold text-xl">Selamat datang, <span class="text-maroon-400 capitalize">${esc(S.session.name)}</span> 👋</h2><p class="text-[12.5px] text-muted mt-1">Kamis, 13 Agustus 2026 · Ringkasan operasional hari ini.</p></div></div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${BOOKINGS.length}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] text-emerald-300 mt-1">Data aktual dari database</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${BOOKINGS.filter(b=>["Pending","Confirmed","Ongoing"].includes(b.status)).length}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] text-emerald-300 mt-1">Data aktual dari database</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] text-emerald-300 mt-1">Pendapatan tercatat</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span data-cu="128">0</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] text-emerald-300 mt-1">↑ 12% vs bulan lalu</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span data-cu="32">0</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] text-emerald-300 mt-1">↑ 8% vs bulan lalu</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] text-emerald-300 mt-1">↑ 18% vs periode sebelumnya</div></div>
       <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:240ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('car')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${avail}<span class="text-muted text-base">/${VEHICLES.length}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Armada Tersedia</div><div class="text-[11px] text-emerald-300 mt-1">Siap disewakan hari ini</div></div>
     </div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
       ${[
         ['PENDING PAYMENT', fmtK(pendAmt), 'bg-amber-400'],
-        ['BOOKING HARI INI', String(BOOKINGS.filter(b=>String(b.start).slice(0,10)===TODAY).length), 'bg-sky-400'],
+        ['BOOKING HARI INI', '2', 'bg-sky-400'],
         ['MOBIL DISEWA', String(VEHICLES.filter(v => v.status === 'rented').length), 'bg-orange-400'],
         ['MOBIL MAINTENANCE', String(VEHICLES.filter(v => v.status === 'maintenance').length), 'bg-red-400']
       ].map((x, i) => `<div class="rv card !bg-ink-800 px-5 py-4 flex items-center justify-between" style="transition-delay:${i * 70}ms"><div class="min-w-0"><div class="text-[10px] tracking-widest text-muted uppercase truncate">${x[0]}</div><div class="font-display font-bold text-lg mt-1 truncate">${x[1]}</div></div><span class="w-2 h-2 rounded-full ${x[2]} dot-live shrink-0"></span></div>`).join('')}
@@ -1140,8 +1209,31 @@ function aRental() {
   </div>`;
 }
 
-async function startRental(id){try{const r=await jsonApi(`${BOOKING_API_URL}/${encodeURIComponent(id)}`,{method:'PUT',body:JSON.stringify({status:'Ongoing'})});const b=normalizeBookingFromAPI(apiData(r));const i=BOOKINGS.findIndex(x=>x.id===id);if(i>=0)BOOKINGS[i]=b;toast('Sewa dimulai');renderAdminBody();}catch(e){toast(e.message||'Gagal memulai sewa','err');}}
-async function returnRental(id){try{const r=await jsonApi(`${BOOKING_API_URL}/${encodeURIComponent(id)}`,{method:'PUT',body:JSON.stringify({status:'Completed'})});const b=normalizeBookingFromAPI(apiData(r));const i=BOOKINGS.findIndex(x=>x.id===id);if(i>=0)BOOKINGS[i]=b;toast('Pengembalian selesai');renderAdminBody();}catch(e){toast(e.message||'Gagal memproses pengembalian','err');}}
+function startRental(id) {
+  const b = BOOKINGS.find(x => x.id === id);
+  if (!b) return;
+  b.status = 'Ongoing';
+  const v = veh(b.veh);
+  if (v) v.status = 'rented';
+  addLog(`Sewa dimulai: ${id} · ${v ? v.name : ''} (${b.cust})`);
+  persist();
+  toast('Sewa ' + id + ' dimulai — unit ditandai Rented');
+  renderAdminBody();
+}
+
+function returnRental(id) {
+  const b = BOOKINGS.find(x => x.id === id);
+  if (!b) return;
+  b.status = 'Completed';
+  const v = veh(b.veh);
+  const still = BOOKINGS.some(x => x.veh === b.veh && x.id !== id && ['Ongoing', 'Confirmed'].includes(x.status));
+  if (v && !still && v.status === 'rented') v.status = 'available';
+  addLog(`Pengembalian diproses: ${id} · ${v ? v.name : ''} — unit kembali Available`);
+  persist();
+  toast('Pengembalian ' + id + ' selesai. Terima kasih!');
+  renderAdminBody();
+}
+
 function extendRental(id) {
   const b = BOOKINGS.find(x => x.id === id);
   if (!b) return;
@@ -1177,8 +1269,8 @@ function bookingForm(id) {
       <div><label class="lbl">No. WhatsApp</label><input id="bf_wa" class="inp" value="${esc(b ? (CUSTOMERS.find(c => c.name === b.cust) || {}).wa || '' : '')}" placeholder="08xx…"></div>
       <div><label class="lbl">Kendaraan *</label><select id="bf_veh" class="inp" onchange="calcBf()">${VEHICLES.map(v => `<option value="${v.id}" ${b && b.veh === v.id ? 'selected' : ''}>${esc(v.name)} — ${fmtK(v.priceLK)}/hari</option>`).join('')}</select></div>
       <div><label class="lbl">Jenis Rental</label><select id="bf_type" class="inp" onchange="calcBf()"><option ${b && b.type === 'Lepas Kunci' ? 'selected' : ''}>Lepas Kunci</option><option ${b && b.type === 'Dengan Driver' ? 'selected' : ''}>Dengan Driver</option></select></div>
-      <div><label class="lbl">Tanggal Mulai *</label><input id="bf_start" type="date" class="inp" value="${b ? b.start : new Date().toISOString().slice(0,10)}" onchange="calcBf()"></div>
-      <div><label class="lbl">Tanggal Selesai *</label><input id="bf_end" type="date" class="inp" value="${b ? b.end : new Date(Date.now()+86400000).toISOString().slice(0,10)}" onchange="calcBf()"></div>
+      <div><label class="lbl">Tanggal Mulai *</label><input id="bf_start" type="date" class="inp" value="${b ? b.start : '2026-08-14'}" onchange="calcBf()"></div>
+      <div><label class="lbl">Tanggal Selesai *</label><input id="bf_end" type="date" class="inp" value="${b ? b.end : '2026-08-16'}" onchange="calcBf()"></div>
       <div class="sm:col-span-2"><label class="lbl">Lokasi Pickup</label><input id="bf_pickup" class="inp" value="${esc(b ? b.pickup : 'Kantor AZZID — Kemang')}"></div>
       <div><label class="lbl">Status Booking</label><select id="bf_status" class="inp">${['Pending', 'Confirmed', 'Ongoing', 'Completed', 'Cancelled', 'Expired'].map(s => `<option ${b && b.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div><label class="lbl">Status Pembayaran</label><select id="bf_pay" class="inp">${['UNPAID', 'PENDING', 'PAID', 'REFUNDED'].map(s => `<option ${b && b.pay.s === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
@@ -1189,7 +1281,56 @@ function bookingForm(id) {
   calcBf();
 }
 
-async function saveBooking(id){const nama=$('bf_nama').value.trim(),vid=$('bf_veh').value,s=$('bf_start').value,e=$('bf_end').value;if(!nama||!s||!e||e<s){toast('Nama & tanggal valid wajib diisi','err');return;}const v=veh(vid);if(!v){toast('Kendaraan belum tersedia','err');return;}const dur=daysDiff(s,e),type=$('bf_type').value,rental=dur*v.priceLK,drvC=type==='Dengan Driver'?dur*150000:0,total=rental+drvC;try{const cr=await jsonApi(CUSTOMER_API_URL,{method:'POST',body:JSON.stringify({name:nama,phone:$('bf_wa').value.trim(),email:'',address:''})});const cu=apiData(cr);const payload={vehicle_id:vid,customer_id:cu.id,start_date:s,end_date:e,rental_type:type,pickup_location:$('bf_pickup').value,dropoff_location:$('bf_pickup').value,subtotal:rental,driver_amount:drvC,discount_amount:0,total_amount:total,status:$('bf_status').value,payment_status:$('bf_pay').value==='PAID'?'Paid':$('bf_pay').value==='REFUNDED'?'Refunded':'Unpaid',payment_method:'Manual / Kantor'};const r=await jsonApi(id?`${BOOKING_API_URL}/${encodeURIComponent(id)}`:BOOKING_API_URL,{method:id?'PUT':'POST',body:JSON.stringify(id?payload:{...payload,booking_code:`AZR-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${Date.now().toString().slice(-5)}`})});const nb=normalizeBookingFromAPI(apiData(r));if(id){const i=BOOKINGS.findIndex(x=>x.id===id);if(i>=0)BOOKINGS[i]=nb;}else BOOKINGS.unshift(nb);closeModal();toast('Booking tersimpan');renderAdminBody();}catch(e){toast(e.message||'Gagal menyimpan booking','err');}}
+function saveBooking(id) {
+  const nama = $('bf_nama').value.trim(),
+    vid = $('bf_veh').value,
+    s = $('bf_start').value,
+    e = $('bf_end').value;
+  if (!nama || !s || !e || e < s) { toast('Nama & tanggal valid wajib diisi', 'err'); return; }
+  const v = veh(vid);
+  const dur = daysDiff(s, e);
+  const type = $('bf_type').value;
+  const rental = dur * v.priceLK;
+  const drvC = type === 'Dengan Driver' ? dur * 150000 : 0;
+  const total = rental + drvC;
+  const st = $('bf_status').value;
+  const ps = $('bf_pay').value;
+  if (id) {
+    const b = BOOKINGS.find(x => x.id === id);
+    Object.assign(b, { cust: nama, veh: vid, start: s, end: e, type, pickup: $('bf_pickup').value, status: st, sub: rental, drv: drvC, total });
+    b.pay.s = ps;
+    if (ps === 'PAID' && !b.pay.at) b.pay.at = TODAY;
+    addLog(`Booking ${id} diperbarui (${nama} · ${v.name})`);
+    toast('Booking diperbarui');
+  } else {
+    const nid = `AZR-${TODAY.replaceAll('-', '')}-${String(BOOKINGS.length + 15).padStart(3, '0')}`;
+    BOOKINGS.push({
+      id: nid,
+      cust: nama,
+      veh: vid,
+      start: s,
+      end: e,
+      type,
+      pickup: $('bf_pickup').value,
+      drop: $('bf_pickup').value,
+      driver: null,
+      sub: rental,
+      drv: drvC,
+      disc: 0,
+      total,
+      status: st,
+      pay: { m: 'Manual / Kantor', s: ps, tx: 'TRX-M' + Math.floor(1000 + Math.random() * 9000), at: ps === 'PAID' ? TODAY : null },
+      user: null
+    });
+    upsertCustomer(nama, $('bf_wa').value, '');
+    addLog(`Booking manual dibuat: ${nid} · ${v.name} · ${nama}`);
+    toast('Booking ' + nid + ' dibuat');
+  }
+  persist();
+  closeModal();
+  renderAdminBody();
+}
+
 function delBooking(id) {
   const b = BOOKINGS.find(x => x.id === id);
   if (!b) return;
@@ -1201,10 +1342,22 @@ function delBooking(id) {
   </div>`);
 }
 
-async function hardDelBooking(id){try{await jsonApi(`${BOOKING_API_URL}/${encodeURIComponent(id)}`,{method:'DELETE'});BOOKINGS=BOOKINGS.filter(x=>x.id!==id);closeModal();toast('Booking dihapus','err');renderAdminBody();}catch(e){toast(e.message||'Gagal menghapus booking','err');}}
+function hardDelBooking(id) {
+  const b = BOOKINGS.find(x => x.id === id);
+  BOOKINGS = BOOKINGS.filter(x => x.id !== id);
+  const v = veh(b.veh);
+  const still = BOOKINGS.some(x => x.veh === b.veh && ['Ongoing', 'Confirmed'].includes(x.status));
+  if (v && !still && v.status === 'rented') v.status = 'available';
+  addLog(`Booking dihapus permanen: ${id} (${b.cust})`);
+  persist();
+  closeModal();
+  toast('Booking dihapus', 'err');
+  renderAdminBody();
+}
+
 function bkRow(b) {
   const v = veh(b.veh);
-  return `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400 whitespace-nowrap">${b.id}</td><td class="whitespace-nowrap">${esc(b.cust)}${b.user ? `<span class="block text-[9.5px] text-emerald-300">via akun</span>` : ''}</td><td class="whitespace-nowrap">${esc(v ? v.name : '—')}</td><td class="whitespace-nowrap">${dShort(b.start)}–${dShort(b.end)}</td><td class="font-semibold whitespace-nowrap">${fmtK(b.total)}</td><td>${badge(b.pay.s)}</td><td>${badge(b.status)}</td><td><div class="flex gap-1 whitespace-nowrap" onclick="event.stopPropagation()">
+  return `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400 whitespace-nowrap">${b.id}</td><td class="whitespace-nowrap">${esc(b.cust)}${b.user ? `<span class="block text-[9.5px] text-emerald-300">via akun</span>` : ''}</td><td class="whitespace-nowrap">${esc(v ? v.name : '—')}</td><td class="whitespace-nowrap">${dShort(b.start)}–${dShort(b.end)} Agu</td><td class="font-semibold whitespace-nowrap">${fmtK(b.total)}</td><td>${badge(b.pay.s)}</td><td>${badge(b.status)}</td><td><div class="flex gap-1 whitespace-nowrap" onclick="event.stopPropagation()">
     <button onclick="bookingForm('${b.id}')" class="p-1.5 text-zinc-400 hover:text-white" title="Edit">${ic('edit', 'w-4 h-4')}</button>
     <button onclick="delBooking('${b.id}')" class="p-1.5 text-red-400/70 hover:text-red-300" title="Hapus">${ic('trash', 'w-4 h-4')}</button>
   </div></td></tr>`;
@@ -1263,7 +1416,22 @@ function openBookingDetail(id) {
   </div>`, 1);
 }
 
-async function bAct(id,act,val){const patch=act==='confirm'?{status:'Confirmed'}:act==='cancel'?{status:'Cancelled',payment_status:'Refunded'}:act==='status'?{status:val}:null;if(!patch)return;try{const r=await jsonApi(`${BOOKING_API_URL}/${encodeURIComponent(id)}`,{method:'PUT',body:JSON.stringify(patch)});const nb=normalizeBookingFromAPI(apiData(r));const i=BOOKINGS.findIndex(x=>x.id===id);if(i>=0)BOOKINGS[i]=nb;closeModal();toast('Booking diperbarui');renderAdminBody();}catch(e){toast(e.message||'Gagal memperbarui booking','err');}}
+function bAct(id, act, val) {
+  const b = BOOKINGS.find(x => x.id === id);
+  if (act === 'confirm') { b.status = 'Confirmed'; if (b.pay.s !== 'PAID') b.pay.s = 'PENDING';
+    toast('Booking ' + id + ' dikonfirmasi');
+    addLog('Booking ' + id + ' dikonfirmasi'); }
+  if (act === 'cancel') { b.status = 'Cancelled'; if (b.pay.s === 'PAID') b.pay.s = 'REFUNDED';
+    toast('Booking dibatalkan' + (b.pay.s === 'REFUNDED' ? ' & refund diproses' : ''), 'err');
+    addLog('Booking ' + id + ' dibatalkan'); }
+  if (act === 'status') { b.status = val;
+    toast('Status diperbarui → ' + val);
+    addLog('Booking ' + id + ' → ' + val); }
+  persist();
+  closeModal();
+  renderAdminBody();
+}
+
 function openAssignDriver(id) {
   const b = BOOKINGS.find(x => x.id === id);
   modal(`<div class="p-7"><h3 class="font-display font-semibold text-lg mb-1">Assign Driver</h3><p class="text-[12px] text-muted mb-5">Untuk booking <b class="font-mono text-maroon-400">${id}</b></p>
@@ -1271,7 +1439,16 @@ function openAssignDriver(id) {
   </div>`);
 }
 
-async function assignDrv(id,did){try{const r=await jsonApi(`${BOOKING_API_URL}/${encodeURIComponent(id)}`,{method:'PUT',body:JSON.stringify({driver_id:did})});const nb=normalizeBookingFromAPI(apiData(r));const i=BOOKINGS.findIndex(x=>x.id===id);if(i>=0)BOOKINGS[i]=nb;closeModal();toast('Driver ditugaskan');renderAdminBody();}catch(e){toast(e.message||'Gagal assign driver','err');}}
+function assignDrv(id, did) {
+  const b = BOOKINGS.find(x => x.id === id);
+  b.driver = did;
+  addLog('Driver ' + drv(did).name + ' ditugaskan ke ' + id);
+  persist();
+  toast('Driver ' + drv(did).name + ' ditugaskan');
+  closeModal();
+  renderAdminBody();
+}
+
 function aCalendar() {
   const y = S.calY,
     m = S.calM;
@@ -1281,7 +1458,7 @@ function aCalendar() {
   let head = '';
   for (let d = 1; d <= dim; d++) {
     const wd = (first + d - 1) % 7;
-    const isT = y === new Date(TODAY).getFullYear() && m === new Date(TODAY).getMonth() && d === new Date(TODAY).getDate();
+    const isT = y === 2026 && m === 7 && d === 13;
     head += `<div class="w-9 shrink-0 text-center"><div class="text-[9px] text-muted">${['M', 'S', 'S', 'R', 'K', 'J', 'S'][wd]}</div><div class="text-[11px] font-semibold ${isT ? 'w-6 h-6 mx-auto rounded-full bg-maroon-600 grid place-items-center text-white' : 'text-zinc-300'}">${d}</div></div>`;
   }
   const rows = VEHICLES.filter(v => v.status !== 'inactive').map(v => {
@@ -1295,7 +1472,7 @@ function aCalendar() {
     }).join('');
     const maint = v.status === 'maintenance' ? `<div class="absolute top-1/2 -translate-y-1/2 h-7 rounded-md bg-amber-400/20 border border-amber-400/40 text-[9px] font-bold text-amber-300 flex items-center px-2" style="left:${9 * 36}px;width:${9 * 36}px" title="Maintenance s/d 18 Agu">SERVICE</div>` : '';
     return `<div class="flex items-center border-t border-white/5"><div class="w-40 sm:w-44 shrink-0 sticky left-0 bg-ink-800 z-10 px-3 sm:px-4 py-3 flex items-center gap-2.5 border-r border-white/5"><img src="${v.img}" class="w-9 h-7 rounded object-cover shrink-0"><div class="min-w-0"><div class="text-[12px] font-semibold leading-none truncate">${esc(v.name)}</div><div class="text-[9.5px] text-muted mt-0.5 truncate">${v.plate}</div></div></div>
-      <div class="relative h-12 shrink-0" style="width:${dim * 36}px">${Array.from({ length: dim }, (_, i) => `<div class="absolute top-0 bottom-0 w-9 ${(first + i) % 7 > 4 ? 'bg-white/[.025]' : ''} ${y === new Date(TODAY).getFullYear() && m === new Date(TODAY).getMonth() && i + 1 === new Date(TODAY).getDate() ? 'bg-maroon-500/10' : ''}" style="left:${i * 36}px"></div>`).join('')}${bars}${maint}</div>
+      <div class="relative h-12 shrink-0" style="width:${dim * 36}px">${Array.from({ length: dim }, (_, i) => `<div class="absolute top-0 bottom-0 w-9 ${(first + i) % 7 > 4 ? 'bg-white/[.025]' : ''} ${y === 2026 && m === 7 && i + 1 === 13 ? 'bg-maroon-500/10' : ''}" style="left:${i * 36}px"></div>`).join('')}${bars}${maint}</div>
     </div>`;
   }).join('');
   return `<div class="space-y-5">
@@ -1443,7 +1620,22 @@ function refreshVeh() {
   tb.innerHTML = list.length ? list.map(vehRowHtml).join('') : `<tr><td colspan="10" class="text-center py-10 text-muted">Tidak ada aset yang cocok.</td></tr>`;
 }
 
-async function setVehStatus(id,val){const v=veh(id);if(!v)return toast('Kendaraan tidak ditemukan','err');try{const r=await vehicleApi('/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify({status:val})});Object.assign(v,normalizeVehicleFromAPI(apiData(r)));toast('Status kendaraan diperbarui');renderAdminBody();}catch(e){toast(e.message||'Gagal memperbarui status','err');}}
+async function setVehStatus(id, val) {
+  const v = veh(id);
+  if (!v) return toast('Kendaraan tidak ditemukan', 'err');
+  try {
+    const payload = await vehicleApi('/' + encodeURIComponent(id), { method: 'PUT', body: JSON.stringify({ status: val }) });
+    const returned = normalizeVehicleFromAPI(apiData(payload));
+    if (returned) Object.assign(v, returned); else v.status = val;
+    addLog(`Status aset ${v.name} (${v.plate}) → ${val}`);
+    persist(); toast('Status ' + v.name + ' → ' + val); renderAdminBody();
+  } catch (error) {
+    console.warn('Status API gagal:', error.message);
+    v.status = val; addLog(`Status aset lokal ${v.name} → ${val}`); persist();
+    toast('Status diperbarui di browser. API belum tersambung.', 'info'); renderAdminBody();
+  }
+}
+
 function vehForm(id) {
   const v = id ? veh(id) : null;
   const f = (k, val, lbl) => `<div><label class="lbl">${lbl}</label><input id="vf_${k}" class="inp" value="${esc(val ?? '')}"></div>`;
@@ -1499,8 +1691,181 @@ function vehForm(id) {
   </div>`, 1);
 }
 
-async function saveVeh(id){const g=k=>document.getElementById('vf_'+k)?.value.trim()||'',nama=g('nama'),harga=Number($('vf_harga')?.value||0);if(!nama||harga<=0){toast('Nama mobil & harga wajib diisi','err');return;}const feats=Array.from(document.querySelectorAll('.fac-chk:checked')).map(x=>x.value),imgSel=document.querySelector('.ph-opt.on'),old=id?veh(id):null;const data={name:nama,brand:g('brand'),model:g('model'),type:g('cat'),year:Number(g('tahun'))||null,plate:g('plate'),transmission:$('vf_trans')?.value||null,seats:Number($('vf_seats')?.value||0)||null,fuel:$('vf_fuel')?.value||null,color:g('warna'),doors:Number($('vf_doors')?.value||0)||null,bag:g('bag'),price_lk:harga,price_driver:Number($('vf_hargadrv')?.value||0)||harga+150000,image:imgSel?.dataset.img||old?.img||'',features:feats,description:g('desc'),status:$('vf_status')?.value||'available'};try{const r=await vehicleApi(id?'/'+encodeURIComponent(id):'',{method:id?'PUT':'POST',body:JSON.stringify(data)});const v=normalizeVehicleFromAPI(apiData(r));if(id){const i=VEHICLES.findIndex(x=>String(x.id)===String(id));if(i>=0)VEHICLES[i]=v;}else VEHICLES.unshift(v);closeModal();toast('Data kendaraan tersimpan');renderAdminBody();}catch(e){toast(e.message||'Gagal menyimpan kendaraan','err');}}
-async function dupVeh(id){const v=veh(id);if(!v)return;const data={...v,id:undefined,name:v.name+' (Copy)',plate:'',status:'inactive',price_lk:v.priceLK,price_driver:v.priceDrv,image:v.img,features:v.feats};try{const r=await vehicleApi('',{method:'POST',body:JSON.stringify(data)});VEHICLES.unshift(normalizeVehicleFromAPI(apiData(r)));toast('Aset berhasil diduplikasi');renderAdminBody();}catch(e){toast(e.message||'Gagal menduplikasi aset','err');}}
+async function saveVeh(id) {
+  const g = k => {
+    const e = document.getElementById('vf_' + k);
+    return e ? e.value.trim() : '';
+  };
+  const nama = g('nama');
+  const harga = Number(document.getElementById('vf_harga')?.value || 0);
+  if (!nama || harga <= 0) {
+    toast('Nama mobil & harga wajib diisi', 'err');
+    return;
+  }
+
+  const feats = Array.from(document.querySelectorAll('.fac-chk:checked')).map(x => x.value);
+  const imgSel = document.querySelector('.ph-opt.on');
+  const old = id ? veh(id) : null;
+  const data = {
+    name: nama,
+    brand: g('brand') || 'Toyota',
+    model: g('model') || '',
+    type: g('cat') || 'City Car',
+    year: Number(g('tahun')) || 2024,
+    plate: g('plate'),
+    transmission: $('vf_trans')?.value || 'Automatic',
+    seats: Number($('vf_seats')?.value || 7),
+    fuel: $('vf_fuel')?.value || 'Bensin',
+    color: g('warna') || 'Black',
+    doors: Number($('vf_doors')?.value || 5),
+    bag: g('bag') || '2 Koper',
+    price_lk: harga,
+    price_driver: Number($('vf_hargadrv')?.value || 0) || harga + 150000,
+    image: imgSel?.dataset.img || old?.img || IMG.avanza,
+    features: JSON.stringify(feats),
+    description: g('desc'),
+    status: $('vf_status')?.value || 'available'
+  };
+
+  try {
+    const payload = await vehicleApi(id ? '/' + encodeURIComponent(id) : '', {
+      method: id ? 'PUT' : 'POST',
+      body: JSON.stringify(data)
+    });
+    const raw = apiData(payload);
+    const returnedVehicle = raw && typeof raw === 'object' && (raw.id != null || raw.name || raw.brand) ? raw : null;
+    const vehicle = normalizeVehicleFromAPI(returnedVehicle || { ...data, id: id || `local-${Date.now()}` });
+
+    if (id) {
+      const index = VEHICLES.findIndex(v => String(v.id) === String(id));
+      if (index !== -1) VEHICLES[index] = vehicle;
+      else VEHICLES.unshift(vehicle);
+      addLog(`Aset diperbarui: ${vehicle.name} (${vehicle.plate})`);
+      toast('Perubahan aset tersimpan');
+    } else {
+      VEHICLES.unshift(vehicle);
+      addLog(`Aset baru ditambahkan: ${vehicle.name}`);
+      toast('Aset baru berhasil ditambahkan');
+    }
+    persist();
+    closeModal();
+    renderAdminBody();
+  } catch (error) {
+    /* Fallback lokal agar UI tetap bisa digunakan saat API belum hidup/CORS belum siap. */
+    console.warn('CRUD API gagal, menyimpan ke localStorage:', error.message);
+    const localVehicle = normalizeVehicleFromAPI({ ...data, id: id || `local-${Date.now()}` });
+    if (id) {
+      const index = VEHICLES.findIndex(v => String(v.id) === String(id));
+      if (index !== -1) VEHICLES[index] = localVehicle;
+      else VEHICLES.unshift(localVehicle);
+      addLog(`Aset diperbarui secara lokal: ${localVehicle.name}`);
+    } else {
+      VEHICLES.unshift(localVehicle);
+      addLog(`Aset baru disimpan secara lokal: ${localVehicle.name}`);
+    }
+    persist();
+    closeModal();
+    toast('Tersimpan di browser. Hubungkan API untuk sinkronisasi database.', 'info');
+    renderAdminBody();
+  }
+}
+
+function vehDetail(id) {
+  const v = veh(id);
+  const hist = BOOKINGS.filter(b => b.veh === id);
+  const rev = hist.filter(b => b.pay.s === 'PAID').reduce((a, b) => a + b.total, 0);
+  modal(`<div class="p-7">
+    <div class="flex justify-between items-start gap-3 mb-5">
+      <div class="min-w-0">
+        <h3 class="font-display font-bold text-xl truncate">${esc(v.name)}</h3>
+        <p class="text-[12.5px] text-muted mt-1">${v.brand} ${esc(v.model || '')} · ${v.year} · ${v.plate} · ${v.color}</p>
+        <div class="mt-2">${badge(v.status)}</div>
+      </div>
+      <button onclick="closeModal()" class="text-muted hover:text-white shrink-0">${ic('x')}</button>
+    </div>
+    <div class="grid sm:grid-cols-[200px_1fr] gap-5">
+      <img src="${v.img}" class="rounded-xl object-cover h-32 sm:h-full w-full border border-white/10">
+      <div class="min-w-0">
+        <div class="grid grid-cols-2 gap-2.5 text-[12.5px] mb-4">
+          ${[
+            ['Transmisi', v.trans],
+            ['Kapasitas', v.seats + ' seats'],
+            ['Bahan Bakar', v.fuel],
+            ['Pintu', v.doors],
+            ['Bagasi', v.bag],
+            ['Kategori', v.cat]
+          ].map(x => `<div class="bg-ink-900 rounded-lg px-3 py-2 border border-white/5">
+            <span class="text-[9.5px] uppercase tracking-wider text-muted block">${x[0]}</span>${x[1]}</div>`).join('')}
+        </div>
+        <div class="grid grid-cols-2 gap-2.5 text-center mb-4">
+          <div class="rounded-lg border border-white/10 p-3">
+            <div class="text-[9.5px] uppercase tracking-widest text-muted">Lepas Kunci</div>
+            <div class="font-display font-bold text-maroon-400">${fmtIDR(v.priceLK)}</div>
+          </div>
+          <div class="rounded-lg border border-maroon-500/40 bg-maroon-500/10 p-3">
+            <div class="text-[9.5px] uppercase tracking-widest text-red-200">Dengan Driver</div>
+            <div class="font-display font-bold">${fmtIDR(v.priceDrv || v.priceLK + 150000)}</div>
+          </div>
+        </div>
+        <div class="flex flex-wrap gap-1.5 mb-1">${(v.feats || []).map(x => `<span class="badge bg-white/5 border-white/10 text-zinc-300">${x}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-3 mt-5 text-center">
+      ${[
+        ['Total Booking', hist.length],
+        ['Revenue Unit', fmtK(rev)],
+        ['Utilisasi', Math.min(99, Math.round(hist.length * 9 + rev / 3e5)) + '%']
+      ].map(x => `<div class="card !bg-ink-900 p-3 min-w-0">
+        <div class="font-display font-bold text-maroon-400 truncate">${x[1]}</div>
+        <div class="text-[9.5px] uppercase tracking-wider text-muted mt-1">${x[0]}</div>
+      </div>`).join('')}
+    </div>
+    <h4 class="lbl mt-5">Riwayat Booking Unit Ini</h4>
+    <div class="max-h-40 overflow-y-auto space-y-2">
+      ${hist.length ? hist.slice().reverse().map(b => `<div class="flex items-center justify-between gap-2 text-[12px] bg-ink-900 rounded-lg px-3.5 py-2">
+        <span class="font-mono text-maroon-400 shrink-0">${b.id.slice(-9)}</span>
+        <span class="text-muted truncate">${esc(b.cust)} · ${dShort(b.start)}</span>${badge(b.status)}</div>`).join('') : '<p class="text-[12.5px] text-muted">Belum ada booking untuk unit ini.</p>'}
+    </div>
+    <div class="grid grid-cols-2 gap-2.5 mt-5">
+      <button onclick="closeModal();vehForm('${v.id}')" class="btn btn-g btn-sm">${ic('edit', 'w-4 h-4')} Edit Aset</button>
+      <button onclick="closeModal();delVeh('${v.id}')" class="btn btn-d btn-sm">${ic('trash', 'w-4 h-4')} Hapus Aset</button>
+    </div>
+  </div>`, 1);
+}
+
+async function dupVeh(id) {
+  const v = veh(id);
+  if (!v) return toast('Kendaraan tidak ditemukan', 'err');
+
+  const data = {
+    name: v.name + ' (Copy)',
+    brand: v.brand || 'Toyota', model: v.model || '', type: v.cat || 'City Car',
+    year: v.year || 2024, plate: '', transmission: v.trans || 'Automatic',
+    seats: v.seats || 7, fuel: v.fuel || 'Bensin', color: v.color || 'Black',
+    doors: v.doors || 5, bag: v.bag || '2 Koper', price_lk: v.priceLK || 0,
+    price_driver: v.priceDrv || v.priceLK + 150000, image: v.img || IMG.avanza,
+    features: JSON.stringify(v.feats || []), description: v.desc || '', status: 'inactive'
+  };
+
+  try {
+    const payload = await vehicleApi('', { method: 'POST', body: JSON.stringify(data) });
+    const raw = apiData(payload);
+    const vehicle = normalizeVehicleFromAPI(raw && typeof raw === 'object' && (raw.id != null || raw.name || raw.brand) ? raw : { ...data, id: `local-${Date.now()}` });
+    VEHICLES.unshift(vehicle);
+    addLog(`Aset diduplikasi: ${v.name} → ${vehicle.name}`);
+    persist();
+    toast('Aset berhasil diduplikasi');
+  } catch (error) {
+    console.warn('Duplikasi API gagal, menggunakan localStorage:', error.message);
+    const vehicle = normalizeVehicleFromAPI({ ...data, id: `local-${Date.now()}` });
+    VEHICLES.unshift(vehicle);
+    addLog(`Aset diduplikasi secara lokal: ${v.name} → ${vehicle.name}`);
+    persist();
+    toast('Duplikat dibuat di browser. API belum tersambung.', 'info');
+  }
+  renderAdminBody();
+}
+
 function delVeh(id) {
   const v = veh(id);
   const act = BOOKINGS.filter(b => b.veh === id && ['Pending', 'Confirmed', 'Ongoing'].includes(b.status)).length;
@@ -1517,9 +1882,40 @@ function delVeh(id) {
   </div>`);
 }
 
-async function softDel(id){try{const r=await vehicleApi('/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify({status:'inactive'})});const v=veh(id);if(v)Object.assign(v,normalizeVehicleFromAPI(apiData(r)));closeModal();toast('Aset dinonaktifkan');renderAdminBody();}catch(e){toast(e.message||'Gagal menonaktifkan aset','err');}}
-async function hardDel(id){try{await vehicleApi('/'+encodeURIComponent(id),{method:'DELETE'});VEHICLES=VEHICLES.filter(x=>String(x.id)!==String(id));closeModal();toast('Aset dihapus permanen','err');renderAdminBody();}catch(e){toast(e.message||'Gagal menghapus aset','err');}}
-/* ================= CUSTOMER / DRIVER / PAYMENT / PROMO / REPORTS / CMS / USERS / SETTINGS ================= */
+async function softDel(id) {
+  const v = veh(id);
+  if (!v) return toast('Kendaraan tidak ditemukan', 'err');
+  try {
+    const payload = await vehicleApi('/' + encodeURIComponent(id), { method: 'PUT', body: JSON.stringify({ status: 'inactive' }) });
+    const returned = normalizeVehicleFromAPI(apiData(payload));
+    if (returned) Object.assign(v, returned);
+    else v.status = 'inactive';
+    addLog(`Aset dinonaktifkan: ${v.name}`);
+    persist(); closeModal(); toast('Aset dinonaktifkan', 'info'); renderAdminBody();
+  } catch (error) {
+    console.warn('Nonaktifkan API gagal:', error.message);
+    v.status = 'inactive';
+    addLog(`Aset dinonaktifkan secara lokal: ${v.name}`);
+    persist(); closeModal(); toast('Aset dinonaktifkan di browser. API belum tersambung.', 'info'); renderAdminBody();
+  }
+}
+
+async function hardDel(id) {
+  const v = veh(id);
+  if (!v) return toast('Kendaraan tidak ditemukan', 'err');
+  try {
+    await vehicleApi('/' + encodeURIComponent(id), { method: 'DELETE' });
+    VEHICLES = VEHICLES.filter(x => String(x.id) !== String(id));
+    addLog(`Aset dihapus permanen: ${v.name} (${v.plate})`);
+    persist(); closeModal(); toast('Aset dihapus permanen', 'err'); renderAdminBody();
+  } catch (error) {
+    console.warn('Hapus API gagal:', error.message);
+    VEHICLES = VEHICLES.filter(x => String(x.id) !== String(id));
+    addLog(`Aset dihapus secara lokal: ${v.name} (${v.plate})`);
+    persist(); closeModal(); toast('Aset dihapus dari browser. API belum tersambung.', 'info'); renderAdminBody();
+  }
+}
+
 /* ================= CUSTOMER / DRIVER / PAYMENT / PROMO / REPORTS / CMS / USERS / SETTINGS ================= */
 function aCustomers() {
   return `<div class="rv card overflow-x-auto"><table class="tbl min-w-[860px]"><thead><tr><th>ID</th><th>Nama</th><th>Kontak</th><th>Total Booking</th><th>Total Spending</th><th>Last Rental</th><th>Status</th><th></th></tr></thead><tbody>
@@ -1558,7 +1954,13 @@ function aDrivers() {
   </div>`).join('')}</div>`;
 }
 
-async function setDrvStatus(id,val){try{const r=await jsonApi(`${DRIVER_API_URL}/${encodeURIComponent(id)}`,{method:'PUT',body:JSON.stringify({status:val})});const d=normalizeDriverFromAPI(apiData(r));const i=DRIVERS.findIndex(x=>String(x.id)===String(id));if(i>=0)DRIVERS[i]=d;toast('Status driver diperbarui');renderAdminBody();}catch(e){toast(e.message||'Gagal memperbarui driver','err');}}
+function setDrvStatus(id, val) {
+  drv(id).status = val;
+  persist();
+  toast('Status ' + drv(id).name + ' → ' + val);
+  renderAdminBody();
+}
+
 function aPayments() {
   const paid = BOOKINGS.filter(b => b.pay.s === 'PAID').reduce((a, b) => a + b.total, 0);
   const pend = BOOKINGS.filter(b => b.pay.s === 'PENDING').reduce((a, b) => a + b.total, 0);
@@ -1581,7 +1983,17 @@ function aPayments() {
   </div>`;
 }
 
-async function markPaid(id){try{const r=await jsonApi(`${BOOKING_API_URL}/${encodeURIComponent(id)}`,{method:'PUT',body:JSON.stringify({payment_status:'Paid',paid_at:new Date().toISOString().slice(0,19).replace('T',' ')})});const b=normalizeBookingFromAPI(apiData(r));const i=BOOKINGS.findIndex(x=>x.id===id);if(i>=0)BOOKINGS[i]=b;toast('Pembayaran ditandai lunas');renderAdminBody();}catch(e){toast(e.message||'Gagal memperbarui pembayaran','err');}}
+function markPaid(id) {
+  const b = BOOKINGS.find(x => x.id === id);
+  b.pay.s = 'PAID';
+  b.pay.at = TODAY;
+  if (b.status === 'Pending') b.status = 'Confirmed';
+  addLog(`Pembayaran ${id} diverifikasi lunas (${fmtK(b.total)})`);
+  persist();
+  toast('Pembayaran ' + id + ' lunas · ' + fmtIDR(b.total));
+  renderAdminBody();
+}
+
 function aPromo() {
   return `<div class="space-y-5">
     <div class="rv card p-4 flex justify-end"><button onclick="promoForm()" class="btn btn-m btn-sm">${ic('plus', 'w-4 h-4')} Buat Promo</button></div>
@@ -1604,10 +2016,10 @@ function togglePromo(id) {
 
 function promoForm() {
   modal(`<div class="p-7"><h3 class="font-display font-semibold text-lg mb-5">Buat Promo Baru</h3>
-    <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Promo Name</label><input id="pf0" class="inp uppercase" placeholder="KODEPROMO"></div><div><label class="lbl">Tipe</label><select id="pf1" class="inp"><option value="percent">Percent %</option><option value="flat">Flat Rp</option></select></div>
+    <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Promo Name</label><input id="pf0" class="inp uppercase" placeholder="MERDEKA2026"></div><div><label class="lbl">Tipe</label><select id="pf1" class="inp"><option value="percent">Percent %</option><option value="flat">Flat Rp</option></select></div>
     <div><label class="lbl">Discount Value</label><input id="pf2" class="inp" type="number" value="10"></div><div><label class="lbl">Maximum Discount</label><input id="pf3" class="inp" type="number" value="100000"></div>
     <div><label class="lbl">Minimum Rental (hari)</label><input id="pf4" class="inp" type="number" value="2"></div><div><label class="lbl">Status</label><select id="pf5" class="inp"><option>Active</option><option>Expired</option></select></div>
-    <div><label class="lbl">Start Date</label><input id="pf6" type="date" class="inp" value="${new Date().toISOString().slice(0,10)}"></div><div><label class="lbl">End Date</label><input id="pf7" type="date" class="inp" value="${new Date(Date.now()+30*86400000).toISOString().slice(0,10)}"></div></div>
+    <div><label class="lbl">Start Date</label><input id="pf6" type="date" class="inp" value="2026-08-13"></div><div><label class="lbl">End Date</label><input id="pf7" type="date" class="inp" value="2026-09-30"></div></div>
     <button onclick="savePromo()" class="btn btn-m w-full mt-5">Simpan Promo</button>
   </div>`);
 }
@@ -1633,9 +2045,106 @@ function savePromo() {
   renderAdminBody();
 }
 
-function aReports(){const rows=BOOKINGS.reduce((m,b)=>{const k=String(b.start||'').slice(0,7);if(k)m[k]=(m[k]||0)+Number(b.total||0);return m},{});const months=Object.entries(rows).sort();return `<div class="space-y-5"><div class="card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Revenue Aktual</h3>${areaChart(revSeries(S.revRange))}</div><div class="card overflow-x-auto"><table class="tbl min-w-[620px]"><thead><tr><th>Periode</th><th>Pendapatan</th></tr></thead><tbody>${months.length?months.map(([k,v])=>`<tr><td>${k}</td><td class="font-semibold text-maroon-400">${fmtIDR(v)}</td></tr>`).join(''):`<tr><td colspan="2" class="text-center py-10 text-muted">Belum ada transaksi.</td></tr>`}</tbody></table></div></div>`;}
-function aCms(){return `<div class="max-w-3xl space-y-5"><div class="rv card p-6"><h3 class="font-display font-semibold mb-4">${ic('globe','w-4 h-4 inline mr-2 text-maroon-400')}Konten Homepage</h3><div class="space-y-4"><div><label class="lbl">Headline Baris 1</label><input id="cm0" class="inp" value="${esc(S.cms.head1||'')}"></div><div><label class="lbl">Headline Baris 2</label><input id="cm1" class="inp" value="${esc(S.cms.head2||'')}"></div><div><label class="lbl">Subheadline</label><textarea id="cm2" class="inp" rows="3">${esc(S.cms.sub||'')}</textarea></div><div><label class="lbl">Announcement Bar</label><input id="cm3" class="inp" value="${esc(S.cms.ann||'')}"></div><div><label class="lbl">Nomor WhatsApp</label><input id="cm4" class="inp" value="${esc(S.cms.wa||'')}"></div><button onclick="saveCms()" class="btn btn-m">${ic('check','w-4 h-4')} Simpan & Terapkan</button></div></div><div class="rv card p-6"><h3 class="font-display font-semibold mb-3">Konten lainnya</h3><p class="text-sm text-muted">Armada, Booking, Customer, Payment, Promo, Footer, FAQ, dan Kontak dikelola melalui modul database masing-masing.</p></div></div>`;}
-async function saveCms(){const payload={business_name:S.cms.namaBisnis||'',email:S.cms.email||'',phone:S.cms.telepon||'',whatsapp:$('cm4').value.trim(),address:S.cms.alamat||'',hero_title:$('cm0').value.trim(),hero_subtitle:$('cm2').value.trim(),announcement:$('cm3').value.trim()};try{const r=await jsonApi(SETTINGS_API_URL,{method:'PUT',body:JSON.stringify(payload)});const s=apiData(r);S.cms={...S.cms,namaBisnis:s.business_name||'',email:s.email||'',telepon:s.phone||'',wa:s.whatsapp||'',alamat:s.address||'',head1:s.hero_title||'',sub:s.hero_subtitle||'',ann:s.announcement||''};applyCms();toast('CMS tersimpan');renderAdminBody();}catch(e){toast(e.message||'Gagal menyimpan CMS','err');}}
+function aReports() {
+  const t = S.repTab;
+  const tabs = [
+    ['rev', 'Revenue Report'],
+    ['ren', 'Rental Report'],
+    ['cus', 'Customer Report'],
+    ['fin', 'Financial']
+  ];
+  let body = '';
+  if (t === 'rev') {
+    const rows = [
+      ['Februari 2026', 38500000],
+      ['Maret 2026', 41200000],
+      ['April 2026', 39800000],
+      ['Mei 2026', 44600000],
+      ['Juni 2026', 46900000],
+      ['Juli 2026', 51300000],
+      ['Agustus 2026 (berjalan)', 24800000]
+    ];
+    body = `<div class="card p-6 min-w-0">${areaChart(revSeries(30))}</div><div class="card overflow-x-auto mt-5"><table class="tbl"><thead><tr><th>Periode</th><th>Pendapatan</th><th>Trend</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtIDR(r[1])}</td><td class="text-emerald-300">↑</td></tr>`).join('')}</tbody></table></div><button onclick="exportCSV(${JSON.stringify(rows).replace(/"/g, '&quot;')})" class="btn btn-g btn-sm mt-4">${ic('dl', 'w-4 h-4')} Export CSV</button>`;
+  }
+  if (t === 'ren') {
+    const util = VEHICLES.map(v => ({ n: v.name, u: v.status === 'inactive' ? 18 : 55 + Math.floor(rnd(v.name.length * 7) * 40) }));
+    body = `<div class="card p-6 min-w-0"><h4 class="font-display font-semibold mb-5">Utilisasi Kendaraan (Agustus)</h4><div class="space-y-4">${util.map(u => `<div><div class="flex justify-between text-[12px] mb-1.5 gap-3"><span class="truncate">${u.n}</span><b class="text-maroon-400 shrink-0">${u.u}%</b></div><div class="h-2.5 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-maroon-800 to-maroon-400" style="width:${u.u}%"></div></div></div>`).join('')}</div></div>
+    <div class="card p-6 mt-5 min-w-0"><h4 class="font-display font-semibold mb-4">Mobil Paling Sering Disewa</h4><div class="space-y-2">${[
+      ['Toyota Avanza', 42],
+      ['Honda Brio RS', 35],
+      ['Toyota Innova Zenix', 31],
+      ['Mitsubishi Xpander', 27],
+      ['Toyota Fortuner', 19]
+    ].map((x, i) => `<div class="flex items-center gap-3 text-[13px] bg-ink-900 rounded-lg px-4 py-2.5"><span class="font-display font-bold text-maroon-400 w-6 shrink-0">#${i + 1}</span><span class="grow truncate">${x[0]}</span><b class="shrink-0">${x[1]} rental</b></div>`).join('')}</div></div>`;
+  }
+  if (t === 'cus') {
+    body = `<div class="grid sm:grid-cols-3 gap-4 mb-5">${[
+      ['Customer Baru (30 hari)', '18'],
+      ['Repeat Customer', '64%'],
+      ['Akun Penyewa', ACCOUNTS.length]
+    ].map((x, i) => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-bold text-lg text-maroon-400 truncate">${x[1]}</div></div>`).join('')}</div>
+    <div class="card overflow-x-auto"><table class="tbl"><thead><tr><th>Customer</th><th>Total Booking</th><th>Total Spending</th></tr></thead><tbody>${[...CUSTOMERS].sort((a, b) => b.spend - a.spend).slice(0, 6).map(c => `<tr><td>${esc(c.name)}</td><td>${c.total}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtIDR(c.spend)}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  if (t === 'fin') {
+    const rev = 48500000,
+      disc = 850000,
+      ref = 1300000;
+    body = `<div class="grid grid-cols-2 xl:grid-cols-4 gap-4">${[
+      ['Revenue', fmtIDR(rev), 'text-emerald-300'],
+      ['Discount', fmtIDR(disc), 'text-amber-300'],
+      ['Refund', fmtIDR(ref), 'text-red-300'],
+      ['Net Revenue', fmtIDR(rev - disc - ref), 'text-maroon-400']
+    ].map(x => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-extrabold text-base sm:text-xl ${x[2]} break-all">${x[1]}</div></div>`).join('')}</div>
+    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button onclick="toast('Laporan ${f} diunduh','info')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
+  }
+  return `<div class="space-y-5"><div class="rv flex flex-wrap gap-2">${tabs.map(x => `<button onclick="S.repTab='${x[0]}';renderAdminBody()" class="chip ${t === x[0] ? 'on' : ''}">${x[1]}</button>`).join('')}</div><div class="rv min-w-0">${body}</div></div>`;
+}
+
+function exportCSV(rows) {
+  let csv = 'Periode;Pendapatan\n' + rows.map(r => r[0] + ';' + r[1]).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+  a.download = 'azzid-revenue.csv';
+  a.click();
+  toast('CSV diunduh', 'info');
+}
+
+function aCms() {
+  return `<div class="max-w-3xl space-y-5">
+    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">${ic('globe', 'w-4 h-4 inline mr-2 text-maroon-400')}Konten Homepage</h3>
+      <div class="space-y-4"><div><label class="lbl">Headline Baris 1</label><input id="cm0" class="inp" value="${esc(S.cms.head1)}"></div>
+        <div><label class="lbl">Headline Baris 2</label><input id="cm1" class="inp" value="${esc(S.cms.head2)}"></div>
+        <div><label class="lbl">Subheadline</label><textarea id="cm2" class="inp" rows="3">${esc(S.cms.sub)}</textarea></div>
+        <div><label class="lbl">Announcement Bar</label><input id="cm3" class="inp" value="${esc(S.cms.ann)}"></div>
+        <div><label class="lbl">Nomor WhatsApp</label><input id="cm4" class="inp" value="${S.cms.wa}"></div>
+        <button onclick="saveCms()" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan & Terapkan ke Website</button>
+      </div>
+    </div>
+    <div class="rv card p-6"><h3 class="font-display font-semibold mb-3">Kelola Konten Lain</h3>
+      <div class="grid sm:grid-cols-2 gap-2.5">${['Banner Promo', 'Armada Unggulan', 'Tentang Kami', 'Layanan', 'FAQ', 'Testimonial', 'Footer', 'Kontak'].map(x => `<button onclick="toast('Editor ${x} dibuka (demo)','info')" class="card !bg-ink-900 p-4 text-left text-[13px] font-semibold hover:border-maroon-500/40 transition flex justify-between items-center gap-2">${x}${ic('edit', 'w-4 h-4 text-muted shrink-0')}</button>`).join('')}</div>
+    </div>
+  </div>`;
+}
+
+function saveCms() {
+  S.cms.head1 = $('cm0').value;
+  S.cms.head2 = $('cm1').value;
+  S.cms.sub = $('cm2').value;
+  S.cms.ann = $('cm3').value;
+  S.cms.wa = $('cm4').value;
+  persist();
+  applyCms();
+  addLog('Konten CMS diperbarui');
+  toast('Perubahan CMS diterapkan ke website!');
+}
+
+function applyCms() {
+  $('annBar').textContent = S.cms.ann;
+  const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
+  $('waFloat').href = wl;
+  $('footWa').href = wl;
+}
+
 function aUsers() {
   return `<div class="space-y-6">
     <div class="rv card overflow-x-auto"><table class="tbl min-w-[680px]"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th></tr></thead><tbody>
@@ -1657,18 +2166,32 @@ function aUsers() {
   </div>`;
 }
 
-function aSettings(){return `<div class="max-w-4xl space-y-5"><div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Informasi Bisnis</h3><div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Nama Bisnis *</label><input id="bizNama" class="inp" value="${esc(S.cms.namaBisnis||'')}"></div><div><label class="lbl">Email</label><input id="bizEmail" type="email" class="inp" value="${esc(S.cms.email||'')}"></div><div><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'')}"></div><div><label class="lbl">WhatsApp</label><input id="bizWa" class="inp" value="${esc(S.cms.wa||'')}"></div><div class="sm:col-span-2"><label class="lbl">Alamat</label><textarea id="bizAlamat" class="inp" rows="2">${esc(S.cms.alamat||'')}</textarea></div></div></div><div class="rv card p-6"><div class="flex flex-wrap justify-between gap-3 items-center mb-4"><h3 class="font-display font-semibold">Rekening & Metode Pembayaran</h3><button onclick="paymentAccountForm()" class="btn btn-m btn-sm">${ic('plus','w-4 h-4')} Tambah Rekening</button></div><div class="space-y-3">${PAYMENT_ACCOUNTS.length?PAYMENT_ACCOUNTS.map(p=>`<div class="rounded-xl border border-white/10 p-4 flex flex-wrap items-center gap-3"><div class="grow min-w-0"><b>${esc(p.method)}</b><span class="text-muted text-xs"> · ${esc(p.provider||'')}</span><div class="text-sm mt-1">${esc(p.account_number||'Belum diisi')} · a.n. ${esc(p.account_name||'')}</div></div><span class="badge ${p.active?'bg-emerald-400/10 border-emerald-400/30 text-emerald-300':'bg-zinc-500/10 border-zinc-500/30 text-zinc-400'}">${p.active?'Aktif':'Nonaktif'}</span><button onclick="paymentAccountForm(${p.id})" class="btn btn-g btn-sm">Edit</button><button onclick="deletePaymentAccount(${p.id})" class="btn btn-d btn-sm">Hapus</button></div>`).join(''):`<div class="text-sm text-muted rounded-xl border border-dashed border-white/10 p-5">Belum ada rekening/metode pembayaran. Tambahkan rekening resmi sebelum menerima pembayaran.</div>`}</div></div><button onclick="saveSettings()" class="btn btn-m">${ic('check','w-4 h-4')} Simpan Pengaturan</button></div>`;}
-async function saveSettings(){const payload={business_name:$('bizNama')?.value.trim(),email:$('bizEmail')?.value.trim(),phone:$('bizTelepon')?.value.trim(),whatsapp:$('bizWa')?.value.trim(),address:$('bizAlamat')?.value.trim(),hero_title:S.cms.head1||'',hero_subtitle:S.cms.sub||'',announcement:S.cms.ann||''};if(!payload.business_name){toast('Nama bisnis wajib diisi','err');return;}try{const r=await jsonApi(SETTINGS_API_URL,{method:'PUT',body:JSON.stringify(payload)});const s=apiData(r);S.cms={...S.cms,namaBisnis:s.business_name||'',email:s.email||'',telepon:s.phone||'',wa:s.whatsapp||'',alamat:s.address||''};applyCms();toast('Pengaturan tersimpan');renderAdminBody();}catch(e){toast(e.message||'Gagal menyimpan pengaturan','err');}}
-function paymentAccountForm(id){const p=id?PAYMENT_ACCOUNTS.find(x=>String(x.id)===String(id)):null;modal(`<div class="p-7"><h3 class="font-display font-semibold text-lg mb-5">${p?'Edit':'Tambah'} Rekening Pembayaran</h3><div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Metode *</label><input id="pa_method" class="inp" value="${esc(p?.method||'Transfer Bank')}"></div><div><label class="lbl">Bank / Provider</label><input id="pa_provider" class="inp" value="${esc(p?.provider||'')}"></div><div><label class="lbl">Nama Pemilik *</label><input id="pa_name" class="inp" value="${esc(p?.account_name||'')}"></div><div><label class="lbl">Nomor Rekening / ID *</label><input id="pa_number" class="inp" value="${esc(p?.account_number||'')}"></div><div class="sm:col-span-2"><label class="lbl">Instruksi Pembayaran</label><textarea id="pa_notes" class="inp" rows="3">${esc(p?.instructions||'')}</textarea></div><label class="sm:col-span-2 flex items-center gap-2 text-sm"><input id="pa_active" type="checkbox" ${p?.active!==false?'checked':''}> Aktif dan tampil di pembayaran</label></div><button onclick="savePaymentAccount('${id||''}')" class="btn btn-m w-full mt-5">Simpan</button></div>`);}
-async function savePaymentAccount(id){const payload={method:$('pa_method').value.trim(),provider:$('pa_provider').value.trim(),account_name:$('pa_name').value.trim(),account_number:$('pa_number').value.trim(),instructions:$('pa_notes').value.trim(),active:$('pa_active').checked};if(!payload.method||!payload.account_name||!payload.account_number){toast('Metode, nama pemilik, dan nomor wajib diisi','err');return;}if(id)payload.id=id;try{const r=await jsonApi(`${SETTINGS_API_URL}/payments`,{method:'POST',body:JSON.stringify(payload)});PAYMENT_ACCOUNTS.length=0;PAYMENT_ACCOUNTS.push(...(apiData(r)||[]));closeModal();toast('Rekening tersimpan');renderAdminBody();}catch(e){toast(e.message||'Gagal menyimpan rekening','err');}}
-async function deletePaymentAccount(id){if(!confirm('Hapus metode pembayaran ini?'))return;try{await jsonApi(`${SETTINGS_API_URL}/payments/${id}`,{method:'DELETE'});PAYMENT_ACCOUNTS=PAYMENT_ACCOUNTS.filter(x=>String(x.id)!==String(id));toast('Rekening dihapus');renderAdminBody();}catch(e){toast(e.message||'Gagal menghapus rekening','err');}}
+function aSettings() {
+  return `<div class="max-w-3xl space-y-5">
+    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Informasi Bisnis</h3>
+      <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Nama Bisnis</label><input class="inp" value="AZZID RENTCAR"></div><div><label class="lbl">Email</label><input class="inp" value="halo@azzidrentcar.id"></div><div class="sm:col-span-2"><label class="lbl">Alamat</label><input class="inp" value="Jl. Raya Kemang No. 88, Jakarta Selatan"></div></div>
+    </div>
+    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Metode Pembayaran Aktif</h3>
+      <div class="flex flex-wrap gap-2.5">${['QRIS', 'VA BCA', 'VA Mandiri', 'GoPay', 'OVO', 'Transfer Bank'].map((m, i) => `<label class="chip cursor-pointer ${i < 5 ? 'on' : ''}"><input type="checkbox" class="hidden" ${i < 5 ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on')">${m}</label>`).join('')}</div>
+    </div>
+    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Notifikasi</h3>
+      <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan', 'Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" class="accent-[#991B1B] w-4 h-4 shrink-0" ${i < 4 ? 'checked' : ''}></label>`).join('')}</div>
+    </div>
+    <div class="rv card p-6 border-red-500/20"><h3 class="font-display font-semibold mb-2 text-red-300">Zona Pemeliharaan Data</h3>
+      <p class="text-[12.5px] text-muted mb-4">Kembalikan seluruh data (armada, sewa, booking, customer, akun, promo) ke kondisi demo awal. Data yang tersimpan di browser akan dihapus.</p>
+      <button onclick="resetDemo()" class="btn btn-d btn-sm">${ic('alert', 'w-4 h-4')} Reset Data Demo</button>
+    </div>
+    <button onclick="toast('Pengaturan tersimpan')" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan Pengaturan</button>
+  </div>`;
+}
+
 /* ================= INVOICE ================= */
 function openInvoice(id) {
   const b = BOOKINGS.find(x => x.id === id);
   const v = veh(b.veh) || { name: '—' };
   $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0 auto;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur, Jakarta, Indonesia 13840 · +62 878-5886-1303 · halo@azzidrentcar.id</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Raya Kemang No. 88, Jakarta Selatan · +62 812-3456-7890 · halo@azzidrentcar.id</div></div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
     </div>
     <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
@@ -1710,8 +2233,7 @@ function renderC() {
     const cur = p[0] || '';
     a.classList.toggle('!text-maroon-400', (t === 'armada' && cur === 'armada') || (t === 'layanan' && cur === 'layanan') || (t === 'tentang' && cur === 'tentang') || (t === 'faq' && cur === 'faq') || (t === 'kontak' && cur === 'kontak') || (t === '' && cur === ''));
   });
-    window.scrollTo({ top: 0 });
-  syncAdminBtns();
+  window.scrollTo({ top: 0 });
 }
 
 function route() {
@@ -1738,7 +2260,6 @@ window.addEventListener('scroll', () => {
 applyCms();
 syncAdminBtns();
 route();
-loadPublicConfig().catch(()=>{});
-loadVehiclesFromAPI().catch(e=>console.warn('API kendaraan belum tersedia:',e.message));
+loadVehiclesFromAPI();
 restoreAuth();
 const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
