@@ -2147,8 +2147,8 @@ function applyCms() {
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
-  const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Raya Kemang No. 88, Jakarta Selatan 12730';
-  const elTelp = $('footTelepon'); if (elTelp) elTelp.textContent = S.cms.telepon || '+62 812-3456-7890';
+  const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur, Jakarta, Indonesia 13840';
+  const elTelp = $('footTelepon'); if (elTelp) elTelp.textContent = S.cms.telepon || '+62 878-5886-1303';
   const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'halo@azzidrentcar.id';
 }
 
@@ -2199,7 +2199,7 @@ function aSettings() {
       <p class="text-[12.5px] text-muted mb-4">Kembalikan seluruh data (armada, sewa, booking, customer, akun, promo) ke kondisi demo awal. Data yang tersimpan di browser akan dihapus.</p>
       <button onclick="resetDemo()" class="btn btn-d btn-sm">${ic('alert', 'w-4 h-4')} Reset Data Demo</button>
     </div>
-    <button onclick="saveSettings()" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan Pengaturan</button>
+    <button onclick="saveSettings()" class="btn btn-m">${ic('check', 'w-4 h-4')} saveSettings()</button>
   </div>`;
 }
 
@@ -2209,7 +2209,7 @@ function openInvoice(id) {
   const v = veh(b.veh) || { name: '—' };
   $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0 auto;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Raya Kemang No. 88, Jakarta Selatan · +62 812-3456-7890 · halo@azzidrentcar.id</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur, Jakarta, Indonesia 13840 · +62 878-5886-1303 · halo@azzidrentcar.id</div></div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
     </div>
     <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
