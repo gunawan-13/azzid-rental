@@ -899,9 +899,20 @@ function galSwap(i, slug) {
 
 function toggleMobNav(forceClose) {
   const n = $('mobNav');
-  if (forceClose) { n.classList.add('hidden'); n.classList.remove('flex'); return; }
-  n.classList.toggle('hidden');
-  n.classList.toggle('flex');
+  if (!n) return;
+  if (forceClose) {
+    n.style.display = 'none';
+    n.classList.remove('flex');
+    return;
+  }
+  // Toggle
+  if (n.style.display === 'none' || n.style.display === '') {
+    n.style.display = 'flex';
+    n.classList.add('flex');
+  } else {
+    n.style.display = 'none';
+    n.classList.remove('flex');
+  }
 }
 
 /* ================= ADMIN ================= */
