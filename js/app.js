@@ -498,6 +498,7 @@ function openBookingFromDetail(vid) {
   S.step = 1;
   renderC();
   window.scrollTo({ top: 0 });
+  syncAdminBtns();
 }
 
 function qbSubmit(e) {
@@ -521,7 +522,8 @@ function setFilter(k, v) {
 function bkGo(n) {
   S.step = n;
   renderC();
-  window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
+  syncAdminBtns();
 }
 
 function pickVeh(id) {
@@ -2235,7 +2237,8 @@ function renderC() {
     const cur = p[0] || '';
     a.classList.toggle('!text-maroon-400', (t === 'armada' && cur === 'armada') || (t === 'layanan' && cur === 'layanan') || (t === 'tentang' && cur === 'tentang') || (t === 'faq' && cur === 'faq') || (t === 'kontak' && cur === 'kontak') || (t === '' && cur === ''));
   });
-  window.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
+  syncAdminBtns();
 }
 
 function route() {
