@@ -899,8 +899,9 @@ function galSwap(i, slug) {
 
 function toggleMobNav(forceClose) {
   const n = $('mobNav');
-  if (forceClose) { n.classList.add('hidden'); return; }
+  if (forceClose) { n.classList.add('hidden'); n.classList.remove('flex'); return; }
   n.classList.toggle('hidden');
+  n.classList.toggle('flex');
 }
 
 /* ================= ADMIN ================= */
