@@ -2,3 +2,26 @@
    Intentionally empty: the original single-file design has no additional custom CSS.
    Keeping this file in the requested structure avoids changing the rendered page.
 */
+
+/* Production responsive hardening */
+*,*::before,*::after{box-sizing:border-box}
+body{min-width:320px}
+button,input,select,textarea{max-width:100%}
+table{max-width:100%}
+.modal-panel,.modal-in{max-width:calc(100vw - 24px)}
+@media (max-width:1023px){
+  #aBody{padding:1rem!important}
+  .tbl{font-size:.78rem}
+}
+@media (max-width:640px){
+  .btn{padding:.62rem .9rem;font-size:.82rem}
+  .btn-sm{padding:.42rem .68rem;font-size:.74rem}
+  .card{border-radius:.8rem}
+  .modal-panel{width:calc(100vw - 20px)!important}
+  #toasts{width:calc(100vw - 24px);max-width:calc(100vw - 24px)}
+  #toasts>div{max-width:100%;white-space:normal}
+  .gantt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}
+}
