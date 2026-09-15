@@ -2144,6 +2144,9 @@ function applyCms() {
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
+  const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Raya Kemang No. 88, Jakarta Selatan';
+  const elTelp = $('footTelepon'); if (elTelp) elTelp.textContent = S.cms.telepon || '+62 812-3456-7890';
+  const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'halo@azzidrentcar.id';
 }
 
 function aUsers() {
@@ -2170,20 +2173,40 @@ function aUsers() {
 function aSettings() {
   return `<div class="max-w-3xl space-y-5">
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Informasi Bisnis</h3>
-      <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Nama Bisnis</label><input class="inp" value="AZZID RENTCAR"></div><div><label class="lbl">Email</label><input class="inp" value="halo@azzidrentcar.id"></div><div class="sm:col-span-2"><label class="lbl">Alamat</label><input class="inp" value="Jl. Raya Kemang No. 88, Jakarta Selatan"></div></div>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div><label class="lbl">Nama Bisnis</label><input id="bizNama" class="inp" value="${esc(S.cms.namaBisnis||'AZZID RENTCAR')}"></div>
+        <div><label class="lbl">Email</label><input id="bizEmail" class="inp" value="${esc(S.cms.email||'halo@azzidrentcar.id')}"></div>
+        <div class="sm:col-span-2"><label class="lbl">Alamat</label><input id="bizAlamat" class="inp" value="${esc(S.cms.alamat||'Jl. Raya Kemang No. 88, Jakarta Selatan')}"></div>
+        <div class="sm:col-span-2"><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'+62 812-3456-7890')}"></div>
+      </div>
     </div>
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Metode Pembayaran Aktif</h3>
       <div class="flex flex-wrap gap-2.5">${['QRIS', 'VA BCA', 'VA Mandiri', 'GoPay', 'OVO', 'Transfer Bank'].map((m, i) => `<label class="chip cursor-pointer ${i < 5 ? 'on' : ''}"><input type="checkbox" class="hidden" ${i < 5 ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on')">${m}</label>`).join('')}</div>
     </div>
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Notifikasi</h3>
-      <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan', 'Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" class="accent-[#991B1B] w-4 h-4 shrink-0" ${i < 4 ? 'checked' : ''}></label>`).join('')}</div>
+      <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan','Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" class="accent-[#991B1B] w-4 h-4 shrink-0" ${i < 4 ? 'checked' : ''}></label>`).join('')}</div>
     </div>
     <div class="rv card p-6 border-red-500/20"><h3 class="font-display font-semibold mb-2 text-red-300">Zona Pemeliharaan Data</h3>
       <p class="text-[12.5px] text-muted mb-4">Kembalikan seluruh data (armada, sewa, booking, customer, akun, promo) ke kondisi demo awal. Data yang tersimpan di browser akan dihapus.</p>
       <button onclick="resetDemo()" class="btn btn-d btn-sm">${ic('alert', 'w-4 h-4')} Reset Data Demo</button>
     </div>
-    <button onclick="toast('Pengaturan tersimpan')" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan Pengaturan</button>
+    <button onclick="saveSettings()" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan Pengaturan</button>
   </div>`;
+}
+
+function saveSettings() {
+  const nama = document.getElementById('bizNama');
+  const email = document.getElementById('bizEmail');
+  const alamat = document.getElementById('bizAlamat');
+  const telepon = document.getElementById('bizTelepon');
+  if (nama) S.cms.namaBisnis = nama.value.trim() || S.cms.namaBisnis;
+  if (email) S.cms.email = email.value.trim() || S.cms.email;
+  if (alamat) S.cms.alamat = alamat.value.trim() || S.cms.alamat;
+  if (telepon) S.cms.telepon = telepon.value.trim() || S.cms.telepon;
+  persist();
+  applyCms();
+  addLog('Pengaturan bisnis diperbarui');
+  toast('Pengaturan tersimpan & diterapkan ke website!');
 }
 
 /* ================= INVOICE ================= */
