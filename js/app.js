@@ -498,6 +498,7 @@ function openBookingFromDetail(vid) {
   S.step = 1;
   renderC();
   window.scrollTo({ top: 0 });
+  syncAdminBtns();
 }
 
 function qbSubmit(e) {
@@ -952,9 +953,9 @@ async function doResetPassword(token){
 }
 
 async function loadAdminUsers(){try{const result=await fetch(USERS_API_URL,{credentials:'include',headers:{Accept:'application/json'}}).then(async r=>{const p=await r.json();if(!r.ok||p.success===false)throw new Error(p.message||'Gagal memuat users');return p;});const data=apiData(result);ADMIN_USERS=Array.isArray(data)?data:[]}catch(err){ADMIN_USERS=[];console.warn('Data users tidak dapat dimuat:',err.message)}}
-async function doLogin(){const e=($('lgE').value||'').trim().toLowerCase(),p=$('lgP').value,box=$('loginCard'),errBox=$('lgErr');errBox.classList.add('hidden');try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='admin')throw new Error('Akun ini bukan akun admin.');S.session={id:user.id,name:user.name,email:user.email,role:user.role};S.adminView='overview';await loadAdminUsers();renderA();syncAdminBtns();toast('Selamat datang, '+user.name+' — Dashboard Admin aktif.')}catch(error){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');errBox.textContent=error.message||'Login gagal. Periksa email dan password.';errBox.classList.remove('hidden')}}
+async function doLogin(){const e=($('lgE').value||'').trim().toLowerCase(),p=$('lgP').value,box=$('loginCard'),errBox=$('lgErr');errBox.classList.add('hidden');try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='admin')throw new Error('Akun ini bukan akun admin.');S.session={id:user.id,name:user.name,email:user.email,role:user.role};S.adminView='overview';renderA();syncAdminBtns();loadAdminUsers();toast('Selamat datang, '+user.name+' — Dashboard Admin aktif.')}catch(error){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');errBox.textContent=error.message||'Login gagal. Periksa email dan password.';errBox.classList.remove('hidden')}}
 async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;renderA();syncAdminBtns();toast('Anda telah logout','info')}
-async function restoreAuth(){try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};await loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(_){S.session=null;S.custSession=null;syncAdminBtns();}}
+async function restoreAuth(){try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(_){S.session=null;S.custSession=null;syncAdminBtns();}}
 
 function setAdminView(v) {
   S.adminView = v;
@@ -2234,6 +2235,7 @@ function renderC() {
     a.classList.toggle('!text-maroon-400', (t === 'armada' && cur === 'armada') || (t === 'layanan' && cur === 'layanan') || (t === 'tentang' && cur === 'tentang') || (t === 'faq' && cur === 'faq') || (t === 'kontak' && cur === 'kontak') || (t === '' && cur === ''));
   });
   window.scrollTo({ top: 0 });
+  syncAdminBtns();
 }
 
 function route() {
