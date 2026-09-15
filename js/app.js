@@ -1,6 +1,6 @@
 /* ================= VEHICLE API ================= */
 
-const API_BASE_URL = window.API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = window.API_BASE_URL || 'https://azzid-rental-api-production.up.railway.app/api';
 const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 const VEHICLE_API_URL = window.VEHICLE_API_URL || `${API_BASE_URL}/vehicles`;
 const AUTH_API_URL = `${API_BASE_URL}/auth`;
