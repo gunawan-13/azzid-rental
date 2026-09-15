@@ -2181,10 +2181,22 @@ function aSettings() {
       </div>
     </div>
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Metode Pembayaran Aktif</h3>
-      <div class="flex flex-wrap gap-2.5">${['QRIS', 'VA BCA', 'VA Mandiri', 'GoPay', 'OVO', 'Transfer Bank'].map((m, i) => `<label class="chip cursor-pointer ${i < 5 ? 'on' : ''}"><input type="checkbox" class="hidden" ${i < 5 ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on')">${m}</label>`).join('')}</div>
+  <div class="flex flex-wrap gap-2.5 mb-5">${['QRIS', 'VA BCA', 'VA Mandiri', 'GoPay', 'OVO', 'Transfer Bank'].map((m, i) => `<label class="chip cursor-pointer ${i < 5 ? 'on' : ''}"><input type="checkbox" class="hidden" ${i < 5 ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on')">${m}</label>`).join('')}</div>
+  <div class="space-y-3 border-t border-white/10 pt-5">
+    <div><label class="lbl">QRIS — Nama Merchant / NMID</label><input id="payQris" class="inp" value="${esc(S.cms.payments?.qris||'')}" placeholder="Contoh: AZZID RENTCAR · QRIS GPN"></div>
+    <div><label class="lbl">VA BCA — Nomor Virtual Account</label><input id="payVaBca" class="inp" value="${esc(S.cms.payments?.va_bca||'')}" placeholder="Contoh: 8808260813138899"></div>
+    <div><label class="lbl">VA Mandiri — Nomor Virtual Account</label><input id="payVaMandiri" class="inp" value="${esc(S.cms.payments?.va_mandiri||'')}" placeholder="Contoh: 8880812345678"></div>
+    <div><label class="lbl">GoPay — Nomor HP</label><input id="payGopay" class="inp" value="${esc(S.cms.payments?.gopay||'')}" placeholder="Contoh: 081234567890"></div>
+    <div><label class="lbl">OVO — Nomor HP</label><input id="payOvo" class="inp" value="${esc(S.cms.payments?.ovo||'')}" placeholder="Contoh: 081234567890"></div>
+    <div class="grid sm:grid-cols-3 gap-3">
+      <div><label class="lbl">Bank — Nama Bank</label><input id="payBankNama" class="inp" value="${esc(S.cms.payments?.bank?.nama||'BJB')}"></div>
+      <div><label class="lbl">Bank — Nomor Rekening</label><input id="payBankNorek" class="inp" value="${esc(S.cms.payments?.bank?.norek||'')}" placeholder="Contoh: 0123456789"></div>
+      <div><label class="lbl">Bank — Atas Nama</label><input id="payBankPemilik" class="inp" value="${esc(S.cms.payments?.bank?.pemilik||'AZZID RENTCAR')}"></div>
     </div>
+  </div>
+</div>
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Notifikasi</h3>
-      <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan','Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" class="accent-[#991B1B] w-4 h-4 shrink-0" ${i < 4 ? 'checked' : ''}></label>`).join('')}</div>
+      <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan','Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" id="notif_${i}" class="accent-[#991B1B] w-4 h-4 shrink-0" ${(S.cms.notifications?.[i] !== false) ? 'checked' : ''}></label>`).join('')}</div>
     </div>
     <div class="rv card p-6 border-red-500/20"><h3 class="font-display font-semibold mb-2 text-red-300">Zona Pemeliharaan Data</h3>
       <p class="text-[12.5px] text-muted mb-4">Kembalikan seluruh data (armada, sewa, booking, customer, akun, promo) ke kondisi demo awal. Data yang tersimpan di browser akan dihapus.</p>
@@ -2195,17 +2207,22 @@ function aSettings() {
 }
 
 function saveSettings() {
-  const nama = document.getElementById('bizNama');
-  const email = document.getElementById('bizEmail');
-  const alamat = document.getElementById('bizAlamat');
-  const telepon = document.getElementById('bizTelepon');
-  if (nama) S.cms.namaBisnis = nama.value.trim() || S.cms.namaBisnis;
-  if (email) S.cms.email = email.value.trim() || S.cms.email;
-  if (alamat) S.cms.alamat = alamat.value.trim() || S.cms.alamat;
-  if (telepon) S.cms.telepon = telepon.value.trim() || S.cms.telepon;
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : undefined; };
+  const nama = g('bizNama'); if (nama !== undefined) S.cms.namaBisnis = nama;
+  const email = g('bizEmail'); if (email !== undefined) S.cms.email = email;
+  const alamat = g('bizAlamat'); if (alamat !== undefined) S.cms.alamat = alamat;
+  const telepon = g('bizTelepon'); if (telepon !== undefined) S.cms.telepon = telepon;
+  if (!S.cms.payments) S.cms.payments = {};
+  const payKeys = { payQris:'qris', payVaBca:'va_bca', payVaMandiri:'va_mandiri', payGopay:'gopay', payOvo:'ovo' };
+  Object.keys(payKeys).forEach(id => { const v = g(id); if (v !== undefined) S.cms.payments[payKeys[id]] = v; });
+  if (!S.cms.payments.bank) S.cms.payments.bank = {};
+  const bankNama = g('payBankNama'); if (bankNama !== undefined) S.cms.payments.bank.nama = bankNama;
+  const bankNorek = g('payBankNorek'); if (bankNorek !== undefined) S.cms.payments.bank.norek = bankNorek;
+  const bankPemilik = g('payBankPemilik'); if (bankPemilik !== undefined) S.cms.payments.bank.pemilik = bankPemilik;
+  S.cms.notifications = [0,1,2,3,4,5].map(i => { const el = document.getElementById('notif_' + i); return el ? el.checked : true; });
   persist();
   applyCms();
-  addLog('Pengaturan bisnis diperbarui');
+  addLog('Pengaturan diperbarui');
   toast('Pengaturan tersimpan & diterapkan ke website!');
 }
 
@@ -2286,5 +2303,5 @@ applyCms();
 syncAdminBtns();
 route();
 loadVehiclesFromAPI();
-restoreAuth();
+// restoreAuth();
 const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
