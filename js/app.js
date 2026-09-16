@@ -485,9 +485,22 @@ function vKontak() {
 
 /* ================= BOOKING FLOW ================= */
 function openBooking(vid) {
-  S.draft = { veh: vid || null, start: '2026-08-14', end: '2026-08-16', type: 'Lepas Kunci', pickup: 'Kantor - Cipayung Jakarta Timur', drop: 'Kantor - Cipayung Jakarta Timur', cust: {}, promo: null, method: '' };
+  const start = (S.draft && S.draft.start) || '2026-08-14';
+  const end = (S.draft && S.draft.end) || '2026-08-16';
+  const type = (S.draft && S.draft.type) || 'Lepas Kunci';
+  const pickup = (S.draft && S.draft.pickup) || 'Kantor - Cipayung Jakarta Timur';
+  const drop = (S.draft && S.draft.drop) || 'Kantor - Cipayung Jakarta Timur';
+  S.draft = {
+    veh: vid || null,
+    start: start,
+    end: end,
+    type: type,
+    pickup: pickup,
+    drop: drop,
+    cust: {}, promo: null, method: ''
+  };
   S.step = vid ? 1 : 0;
-  location.hash = '#/armada';
+  location.hash = '#/booking';
 }
 
 function openBookingFromDetail(vid) {
