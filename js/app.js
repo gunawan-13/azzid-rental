@@ -487,7 +487,7 @@ function vKontak() {
 function openBooking(vid) {
   S.draft = { veh: vid || null, start: '2026-08-14', end: '2026-08-16', type: 'Lepas Kunci', pickup: 'Kantor - Cipayung Jakarta Timur', drop: 'Kantor - Cipayung Jakarta Timur', cust: {}, promo: null, method: '' };
   S.step = vid ? 1 : 0;
-  location.hash = '#/booking';
+  location.hash = '#/armada';
 }
 
 function openBookingFromDetail(vid) {
@@ -510,8 +510,13 @@ function qbSubmit(e) {
   S.draft.drop = $('qbLoc').value;
   const vv = $('qbVeh').value;
   S.draft.veh = vv || null;
-  S.step = vv ? 1 : 0;
-  location.hash = '#/booking';
+  if (vv) {
+    toast('Silakan cek ketersediaan & lanjut booking', 'info');
+    location.hash = '#/armada/' + vv;
+  } else {
+    toast('Silakan pilih mobil yang tersedia', 'info');
+    location.hash = '#/armada';
+  }
 }
 
 function setFilter(k, v) {
