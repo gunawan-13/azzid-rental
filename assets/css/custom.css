@@ -12,3 +12,17 @@
 #annBar.animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* WhatsApp float pulse animation */
+@keyframes waPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+  70%  { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+#waFloat {
+  animation: waPulse 2s infinite;
+}
+#waFloat:hover {
+  animation-play-state: paused;
+  transform: scale(1.1);
+}
