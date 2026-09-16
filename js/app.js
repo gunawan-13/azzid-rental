@@ -475,9 +475,9 @@ function vKontak() {
     </div>
     <form class="card p-7 rv" onsubmit="event.preventDefault();toast('Pesan terkirim! Kami akan segera menghubungi Anda.');this.reset()">
       <h3 class="font-display font-semibold text-lg mb-5">Kirim Pesan</h3>
-      <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Nama</label><input class="inp" required placeholder="Nama Anda"></div><div><label class="lbl">No. WhatsApp</label><input class="inp" required placeholder="08xx-xxxx-xxxx"></div></div>
-      <div class="mb-4"><label class="lbl">Email</label><input type="email" class="inp" placeholder="email@anda.com"></div>
-      <div class="mb-5"><label class="lbl">Pesan</label><textarea class="inp" rows="5" required placeholder="Ceritakan kebutuhan rental Anda…"></textarea></div>
+      <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Nama</label><input id="cf_nama_kontak" class="inp" required placeholder="Nama Anda"></div><div><label class="lbl">No. WhatsApp</label><input id="cf_wa_kontak" class="inp" required placeholder="08xx-xxxx-xxxx"></div></div>
+      <div class="mb-4"><label class="lbl">Email</label><input id="cf_email_kontak" type="email" class="inp" placeholder="email@anda.com"></div>
+      <div class="mb-5"><label class="lbl">Pesan</label><textarea id="cf_pesan_kontak" class="inp" rows="5" required placeholder="Ceritakan kebutuhan rental Anda…"></textarea></div>
       <button class="btn btn-m w-full">${ic('send', 'w-4 h-4')} Kirim Pesan</button>
     </form>
   </section>`;
