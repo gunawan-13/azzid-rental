@@ -4,7 +4,7 @@
   100% { transform: translateX(-100%); }
 }
 #annBar.animate-marquee {
-  animation: marqueeScroll 30s linear infinite;
+  animation: marqueeScroll 45s linear infinite;
   display: inline-block;
   will-change: transform;
   white-space: nowrap;
