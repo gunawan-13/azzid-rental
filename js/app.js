@@ -2400,6 +2400,7 @@ function renderC() {
   });
   window.scrollTo({ top: 0 });
   syncAdminBtns();
+  setTimeout(() => { if (S.step === 2 && location.hash === '#/booking') initGoogleButton(); }, 100);
 }
 
 function route() {
