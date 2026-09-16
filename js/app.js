@@ -233,8 +233,8 @@ function vHome() {
         </div>
         <form onsubmit="qbSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div class="col-span-full"><label class="lbl">Lokasi</label><select id="qbLoc" class="inp"><option>Kantor - Cipayung Jakarta Timur</option></select></div>
-          <div><label class="lbl">Tanggal Mulai</label><input type="date" id="qbStart" class="inp" value="2026-08-14" min="2026-08-13" required></div>
-          <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="2026-08-16" min="2026-08-14" required></div>
+          <div><label class="lbl">Tanggal Mulai</label><input type="date" id="qbStart" class="inp" value="${TODAY}" min="${TODAY}" required></div>
+          <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="${addDays(TODAY,2)}" min="${addDays(TODAY,1)}" required></div>
           <div><label class="lbl">Jenis Rental</label><select id="qbType" class="inp"><option>Lepas Kunci</option><option>Dengan Driver</option></select></div>
           <div><label class="lbl">Mobil</label><select id="qbVeh" class="inp"><option value="">Semua kendaraan</option>${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select></div>
           <button class="col-span-full btn btn-m mt-1">${ic('search', 'w-4 h-4')} Cek Ketersediaan</button>
@@ -420,8 +420,8 @@ function vDetail(slug) {
             <div class="rounded-xl border border-maroon-500/40 bg-maroon-500/10 p-4 text-center"><div class="text-[10px] uppercase tracking-widest text-red-200 mb-1">Dengan Driver</div><div class="font-display font-extrabold text-white text-lg">${fmtIDR(v.priceDrv || v.priceLK + 150000)}</div></div>
           </div>
           <div class="grid grid-cols-2 gap-3 mb-4">
-            <div><label class="lbl">Mulai</label><input type="date" id="dtStart" class="inp" value="2026-08-14"></div>
-            <div><label class="lbl">Selesai</label><input type="date" id="dtEnd" class="inp" value="2026-08-16"></div>
+            <div><label class="lbl">Mulai</label><input type="date" id="dtStart" class="inp" value="${TODAY}"></div>
+            <div><label class="lbl">Selesai</label><input type="date" id="dtEnd" class="inp" value="${addDays(TODAY,2)}"></div>
           </div>
           <select id="dtType" class="inp mb-4"><option>Lepas Kunci</option><option>Dengan Driver</option></select>
           <button onclick="openBookingFromDetail('${v.id}')" class="btn btn-m w-full">${ic('cal')} Booking Mobil Ini</button>
@@ -485,8 +485,8 @@ function vKontak() {
 
 /* ================= BOOKING FLOW ================= */
 function openBooking(vid) {
-  const start = (S.draft && S.draft.start) || '2026-08-14';
-  const end = (S.draft && S.draft.end) || '2026-08-16';
+  const start = (S.draft && S.draft.start) || TODAY;
+  const end = (S.draft && S.draft.end) || addDays(TODAY,2);
   const type = (S.draft && S.draft.type) || 'Lepas Kunci';
   const pickup = (S.draft && S.draft.pickup) || 'Kantor - Cipayung Jakarta Timur';
   const drop = (S.draft && S.draft.drop) || 'Kantor - Cipayung Jakarta Timur';
@@ -714,7 +714,7 @@ function vBooking() {
     body = `<div class="grid lg:grid-cols-[.9fr_1.1fr] gap-6">
       <div class="card p-5 flex gap-4 items-center"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0"><div class="min-w-0"><div class="font-display font-semibold truncate">${esc(v.name)}</div><div class="text-[12px] text-muted">${v.year} · ${v.trans} · ${v.seats} seats</div><button onclick="bkGo(0)" class="text-[12px] text-maroon-400 font-semibold mt-1">Ganti mobil</button></div></div>
       <div class="card p-6">
-        <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="2026-08-13" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
+        <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="${TODAY}" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
         <div class="grid sm:grid-cols-2 gap-3 mb-4">${['Lepas Kunci', 'Dengan Driver'].map(t => `<button onclick="S.draft.type='${t}';renderC()" class="rounded-xl border p-4 text-left transition ${d.type === t ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-sm">${ic(t === 'Lepas Kunci' ? 'key' : 'wheel', 'w-4 h-4 text-maroon-400')}${t}</div><div class="text-[11px] text-muted mt-1">${t === 'Lepas Kunci' ? 'Kendarai sendiri, lebih bebas' : 'Driver profesional +Rp150rb/hari'}</div></button>`).join('')}</div>
         <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
           <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
@@ -1296,8 +1296,8 @@ function bookingForm(id) {
       <div><label class="lbl">No. WhatsApp</label><input id="bf_wa" class="inp" value="${esc(b ? (CUSTOMERS.find(c => c.name === b.cust) || {}).wa || '' : '')}" placeholder="08xx…"></div>
       <div><label class="lbl">Kendaraan *</label><select id="bf_veh" class="inp" onchange="calcBf()">${VEHICLES.map(v => `<option value="${v.id}" ${b && b.veh === v.id ? 'selected' : ''}>${esc(v.name)} — ${fmtK(v.priceLK)}/hari</option>`).join('')}</select></div>
       <div><label class="lbl">Jenis Rental</label><select id="bf_type" class="inp" onchange="calcBf()"><option ${b && b.type === 'Lepas Kunci' ? 'selected' : ''}>Lepas Kunci</option><option ${b && b.type === 'Dengan Driver' ? 'selected' : ''}>Dengan Driver</option></select></div>
-      <div><label class="lbl">Tanggal Mulai *</label><input id="bf_start" type="date" class="inp" value="${b ? b.start : '2026-08-14'}" onchange="calcBf()"></div>
-      <div><label class="lbl">Tanggal Selesai *</label><input id="bf_end" type="date" class="inp" value="${b ? b.end : '2026-08-16'}" onchange="calcBf()"></div>
+      <div><label class="lbl">Tanggal Mulai *</label><input id="bf_start" type="date" class="inp" value="${b ? b.start : TODAY}" onchange="calcBf()"></div>
+      <div><label class="lbl">Tanggal Selesai *</label><input id="bf_end" type="date" class="inp" value="${b ? b.end : addDays(TODAY,2)}" onchange="calcBf()"></div>
       <div class="sm:col-span-2"><label class="lbl">Lokasi Pickup</label><input id="bf_pickup" class="inp" value="${esc(b ? b.pickup : 'Kantor - Cipayung Jakarta Timur')}"></div>
       <div><label class="lbl">Status Booking</label><select id="bf_status" class="inp">${['Pending', 'Confirmed', 'Ongoing', 'Completed', 'Cancelled', 'Expired'].map(s => `<option ${b && b.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div><label class="lbl">Status Pembayaran</label><select id="bf_pay" class="inp">${['UNPAID', 'PENDING', 'PAID', 'REFUNDED'].map(s => `<option ${b && b.pay.s === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
@@ -2046,7 +2046,7 @@ function promoForm() {
     <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Promo Name</label><input id="pf0" class="inp uppercase" placeholder="MERDEKA2026"></div><div><label class="lbl">Tipe</label><select id="pf1" class="inp"><option value="percent">Percent %</option><option value="flat">Flat Rp</option></select></div>
     <div><label class="lbl">Discount Value</label><input id="pf2" class="inp" type="number" value="10"></div><div><label class="lbl">Maximum Discount</label><input id="pf3" class="inp" type="number" value="100000"></div>
     <div><label class="lbl">Minimum Rental (hari)</label><input id="pf4" class="inp" type="number" value="2"></div><div><label class="lbl">Status</label><select id="pf5" class="inp"><option>Active</option><option>Expired</option></select></div>
-    <div><label class="lbl">Start Date</label><input id="pf6" type="date" class="inp" value="2026-08-13"></div><div><label class="lbl">End Date</label><input id="pf7" type="date" class="inp" value="2026-09-30"></div></div>
+    <div><label class="lbl">Start Date</label><input id="pf6" type="date" class="inp" value="${TODAY}"></div><div><label class="lbl">End Date</label><input id="pf7" type="date" class="inp" value="2026-09-30"></div></div>
     <button onclick="savePromo()" class="btn btn-m w-full mt-5">Simpan Promo</button>
   </div>`);
 }
