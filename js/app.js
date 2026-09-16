@@ -2456,5 +2456,10 @@ applyCms();
 syncAdminBtns();
 route();
 loadVehiclesFromAPI();
-// restoreAuth();
+window.addEventListener('DOMContentLoaded', () => {
+  restoreAuth().then(() => {
+    if (location.hash.startsWith('#/admin')) renderA();
+    else renderC();
+  });
+});
 const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
