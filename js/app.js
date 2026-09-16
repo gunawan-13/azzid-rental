@@ -232,7 +232,7 @@ function vHome() {
           <h3 class="font-display font-bold">Quick Booking</h3><span class="ml-auto badge bg-emerald-400/10 border-emerald-400/30 text-emerald-300"><i class="w-1.5 h-1.5 rounded-full bg-emerald-400 dot-live"></i>Real-time</span>
         </div>
         <form onsubmit="qbSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <div class="col-span-full"><label class="lbl">Lokasi</label><select id="qbLoc" class="inp"><option>Kantor AZZID — Kemang</option><option>Bandara Soekarno-Hatta</option><option>Bandara Halim Perdanakusuma</option><option>Stasiun Gambir</option><option>Antar ke Alamat (Jabodetabek)</option></select></div>
+          <div class="col-span-full"><label class="lbl">Lokasi</label><select id="qbLoc" class="inp"><option>Kantor - Cipayung Jakarta Timur</option></select></div>
           <div><label class="lbl">Tanggal Mulai</label><input type="date" id="qbStart" class="inp" value="2026-08-14" min="2026-08-13" required></div>
           <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="2026-08-16" min="2026-08-14" required></div>
           <div><label class="lbl">Jenis Rental</label><select id="qbType" class="inp"><option>Lepas Kunci</option><option>Dengan Driver</option></select></div>
@@ -466,12 +466,12 @@ function vFaq() {
 function vKontak() {
   return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Kontak</span><h1 class="font-display font-extrabold text-4xl mt-2">Hubungi Kami</h1></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid lg:grid-cols-2 gap-8">
     <div class="space-y-4 rv min-w-0">${[
-      ['pin', 'Kantor Pusat', 'Jl. Raya Kemang No. 88, Jakarta Selatan 12730'],
+      ['pin', 'Kantor Pusat', 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur, Jakarta, Indonesia 13840'],
       ['phone', 'Telepon / WhatsApp', '+62 812-3456-7890 · 24/7'],
       ['mail', 'Email', 'halo@azzidrentcar.id · booking@azzidrentcar.id'],
       ['clock', 'Jam Operasional', 'Booking online 24 jam · Kantor 07.00–22.00 WIB']
     ].map(x => `<div class="card p-5 flex gap-4 items-start hover:border-maroon-500/40 transition"><span class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span><div class="min-w-0"><h3 class="font-display font-semibold text-sm">${x[1]}</h3><p class="text-[13px] text-muted mt-1 break-words">${x[2]}</p></div></div>`).join('')}
-      <div class="card overflow-hidden h-56 relative"><img src="${IMG.fleet}" class="w-full h-full object-cover opacity-40"><div class="absolute inset-0 grid place-items-center"><span class="badge bg-black/70 border-maroon-500/50 text-white px-4 py-2">${ic('pin', 'w-4 h-4')} Kemang, Jakarta Selatan</span></div></div>
+      <div class="card overflow-hidden h-56 relative"><img src="${IMG.fleet}" class="w-full h-full object-cover opacity-40"><div class="absolute inset-0 grid place-items-center"><span class="badge bg-black/70 border-maroon-500/50 text-white px-4 py-2">${ic('pin', 'w-4 h-4')} Cipayung, Jakarta Timur</span></div></div>
     </div>
     <form class="card p-7 rv" onsubmit="event.preventDefault();toast('Pesan terkirim! Kami akan segera menghubungi Anda.');this.reset()">
       <h3 class="font-display font-semibold text-lg mb-5">Kirim Pesan</h3>
@@ -485,7 +485,7 @@ function vKontak() {
 
 /* ================= BOOKING FLOW ================= */
 function openBooking(vid) {
-  S.draft = { veh: vid || null, start: '2026-08-14', end: '2026-08-16', type: 'Lepas Kunci', pickup: 'Kantor AZZID — Kemang', drop: 'Kantor AZZID — Kemang', cust: {}, promo: null, method: '' };
+  S.draft = { veh: vid || null, start: '2026-08-14', end: '2026-08-16', type: 'Lepas Kunci', pickup: 'Kantor - Cipayung Jakarta Timur', drop: 'Kantor - Cipayung Jakarta Timur', cust: {}, promo: null, method: '' };
   S.step = vid ? 1 : 0;
   location.hash = '#/booking';
 }
@@ -698,8 +698,8 @@ function vBooking() {
       <div class="card p-6">
         <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="2026-08-13" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
         <div class="grid sm:grid-cols-2 gap-3 mb-4">${['Lepas Kunci', 'Dengan Driver'].map(t => `<button onclick="S.draft.type='${t}';renderC()" class="rounded-xl border p-4 text-left transition ${d.type === t ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-sm">${ic(t === 'Lepas Kunci' ? 'key' : 'wheel', 'w-4 h-4 text-maroon-400')}${t}</div><div class="text-[11px] text-muted mt-1">${t === 'Lepas Kunci' ? 'Kendarai sendiri, lebih bebas' : 'Driver profesional +Rp150rb/hari'}</div></button>`).join('')}</div>
-        <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${['Kantor AZZID — Kemang', 'Bandara Soekarno-Hatta', 'Bandara Halim Perdanakusuma', 'Stasiun Gambir', 'Antar ke Alamat (Jabodetabek)'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
-          <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${['Kantor AZZID — Kemang', 'Bandara Soekarno-Hatta', 'Bandara Halim Perdanakusuma', 'Stasiun Gambir', 'Antar ke Alamat (Jabodetabek)'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
+        <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+          <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
         ${clash ? `<div class="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-3 flex gap-2">${ic('alert', 'w-4 h-4 shrink-0')} Unit ini sudah terbooking pada rentang tanggal pilihan Anda. Silakan ubah tanggal.</div>` : ''}
       </div>
     </div>`;
@@ -1272,7 +1272,7 @@ function bookingForm(id) {
       <div><label class="lbl">Jenis Rental</label><select id="bf_type" class="inp" onchange="calcBf()"><option ${b && b.type === 'Lepas Kunci' ? 'selected' : ''}>Lepas Kunci</option><option ${b && b.type === 'Dengan Driver' ? 'selected' : ''}>Dengan Driver</option></select></div>
       <div><label class="lbl">Tanggal Mulai *</label><input id="bf_start" type="date" class="inp" value="${b ? b.start : '2026-08-14'}" onchange="calcBf()"></div>
       <div><label class="lbl">Tanggal Selesai *</label><input id="bf_end" type="date" class="inp" value="${b ? b.end : '2026-08-16'}" onchange="calcBf()"></div>
-      <div class="sm:col-span-2"><label class="lbl">Lokasi Pickup</label><input id="bf_pickup" class="inp" value="${esc(b ? b.pickup : 'Kantor AZZID — Kemang')}"></div>
+      <div class="sm:col-span-2"><label class="lbl">Lokasi Pickup</label><input id="bf_pickup" class="inp" value="${esc(b ? b.pickup : 'Kantor - Cipayung Jakarta Timur')}"></div>
       <div><label class="lbl">Status Booking</label><select id="bf_status" class="inp">${['Pending', 'Confirmed', 'Ongoing', 'Completed', 'Cancelled', 'Expired'].map(s => `<option ${b && b.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div><label class="lbl">Status Pembayaran</label><select id="bf_pay" class="inp">${['UNPAID', 'PENDING', 'PAID', 'REFUNDED'].map(s => `<option ${b && b.pay.s === s ? 'selected' : ''}>${s}</option>`).join('')}</select></div>
       <div class="sm:col-span-2 rounded-xl bg-ink-900 border border-maroon-500/30 px-4 py-3 flex justify-between items-center gap-3"><span class="text-[12px] text-muted">Estimasi total (otomatis)</span><b id="bfTotal" class="font-display text-maroon-400">—</b></div>
@@ -2144,7 +2144,7 @@ function applyCms() {
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
-  const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Raya Kemang No. 88, Jakarta Selatan';
+  const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur';
   const elTelp = $('footTelepon'); if (elTelp) elTelp.textContent = S.cms.telepon || '+62 812-3456-7890';
   const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'halo@azzidrentcar.id';
 }
@@ -2176,7 +2176,7 @@ function aSettings() {
       <div class="grid sm:grid-cols-2 gap-4">
         <div><label class="lbl">Nama Bisnis</label><input id="bizNama" class="inp" value="${esc(S.cms.namaBisnis||'AZZID RENTCAR')}"></div>
         <div><label class="lbl">Email</label><input id="bizEmail" class="inp" value="${esc(S.cms.email||'halo@azzidrentcar.id')}"></div>
-        <div class="sm:col-span-2"><label class="lbl">Alamat</label><input id="bizAlamat" class="inp" value="${esc(S.cms.alamat||'Jl. Raya Kemang No. 88, Jakarta Selatan')}"></div>
+        <div class="sm:col-span-2"><label class="lbl">Alamat</label><input id="bizAlamat" class="inp" value="${esc(S.cms.alamat||'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur')}"></div>
         <div class="sm:col-span-2"><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'+62 812-3456-7890')}"></div>
       </div>
     </div>
@@ -2232,7 +2232,7 @@ function openInvoice(id) {
   const v = veh(b.veh) || { name: '—' };
   $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0 auto;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Raya Kemang No. 88, Jakarta Selatan · +62 812-3456-7890 · halo@azzidrentcar.id</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 812-3456-7890 · halo@azzidrentcar.id</div></div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
     </div>
     <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
