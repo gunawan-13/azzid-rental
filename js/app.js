@@ -572,7 +572,7 @@ function bkAuthTab(t) {
   r.classList.toggle('hidden', t !== 'reg');
   a.classList.toggle('on', t === 'in');
   b.classList.toggle('on', t === 'reg');
-  if(t === 'in') initGoogleButton();
+  if (t === 'in') setTimeout(initGoogleButton, 50);   
 }
 
 function bkNext() {
