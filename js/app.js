@@ -2096,7 +2096,7 @@ function aReports() {
       ['Refund', fmtIDR(ref), 'text-red-300'],
       ['Net Revenue', fmtIDR(rev - disc - ref), 'text-maroon-400']
     ].map(x => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-extrabold text-base sm:text-xl ${x[2]} break-all">${x[1]}</div></div>`).join('')}</div>
-    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button onclick="toast('Laporan ${f} diunduh','info')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
+    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button onclick="openCmsEditor('${x}')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
   }
   return `<div class="space-y-5"><div class="rv flex flex-wrap gap-2">${tabs.map(x => `<button onclick="S.repTab='${x[0]}';renderAdminBody()" class="chip ${t === x[0] ? 'on' : ''}">${x[1]}</button>`).join('')}</div><div class="rv min-w-0">${body}</div></div>`;
 }
@@ -2109,6 +2109,121 @@ function exportCSV(rows) {
   a.click();
   toast('CSV diunduh', 'info');
 }
+function openCmsEditor(type){
+  const c=S.cms||{};
+  let body='';
+  if(type==='Banner Promo'){
+    const b=c.bannerPromo||{aktif:true,teks:'',link:''};
+    body=`
+      <div class="p-7">
+        <div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg">Banner Promo</h3><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div>
+        <label class="lbl">Teks Banner</label>
+        <input id="cms_bp_teks" class="inp mb-3" value="${esc(b.teks)}" placeholder="🎉 Promo MERDEKA2026 — Diskon 10%">
+        <label class="lbl">Link (opsional)</label>
+        <input id="cms_bp_link" class="inp mb-3" value="${esc(b.link)}" placeholder="#/promo">
+        <label class="flex items-center gap-2 text-[13px] mb-5 cursor-pointer"><input type="checkbox" id="cms_bp_aktif" ${b.aktif?'checked':''}> Tampilkan banner di website</label>
+        <button onclick="saveCmsEditor('Banner Promo')" class="btn btn-m w-full">${ic('check','w-4 h-4')} Simpan</button>
+      </div>`;
+  }
+  else if(type==='Tentang Kami'){
+    const t=c.tentangKami||{judul:'',p1:'',p2:'',visi:'',misi:''};
+    body=`
+      <div class="p-7">
+        <div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg">Tentang Kami</h3><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div>
+        <label class="lbl">Judul</label>
+        <input id="cms_tk_judul" class="inp mb-3" value="${esc(t.judul)}">
+        <label class="lbl">Paragraf 1</label>
+        <textarea id="cms_tk_p1" class="inp mb-3" rows="3">${esc(t.p1)}</textarea>
+        <label class="lbl">Paragraf 2</label>
+        <textarea id="cms_tk_p2" class="inp mb-3" rows="3">${esc(t.p2)}</textarea>
+        <label class="lbl">Visi</label>
+        <input id="cms_tk_visi" class="inp mb-3" value="${esc(t.visi)}">
+        <label class="lbl">Misi</label>
+        <input id="cms_tk_misi" class="inp mb-5" value="${esc(t.misi)}">
+        <button onclick="saveCmsEditor('Tentang Kami')" class="btn btn-m w-full">${ic('check','w-4 h-4')} Simpan</button>
+      </div>`;
+  }
+  else if(type==='Footer'){
+    const f=c.footer||{alamat:'',telepon:'',email:''};
+    body=`
+      <div class="p-7">
+        <div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg">Footer</h3><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div>
+        <label class="lbl">Alamat</label>
+        <input id="cms_ft_alamat" class="inp mb-3" value="${esc(f.alamat)}">
+        <label class="lbl">Telepon</label>
+        <input id="cms_ft_telepon" class="inp mb-3" value="${esc(f.telepon)}">
+        <label class="lbl">Email</label>
+        <input id="cms_ft_email" class="inp mb-5" value="${esc(f.email)}">
+        <button onclick="saveCmsEditor('Footer')" class="btn btn-m w-full">${ic('check','w-4 h-4')} Simpan</button>
+      </div>`;
+  }
+  else if(type==='Kontak'){
+    const k=c.kontak||{alamat:'',telepon:'',email:'',jam:''};
+    body=`
+      <div class="p-7">
+        <div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg">Kontak</h3><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div>
+        <label class="lbl">Alamat</label>
+        <input id="cms_kt_alamat" class="inp mb-3" value="${esc(k.alamat)}">
+        <label class="lbl">Telepon / WhatsApp</label>
+        <input id="cms_kt_telepon" class="inp mb-3" value="${esc(k.telepon)}">
+        <label class="lbl">Email</label>
+        <input id="cms_kt_email" class="inp mb-3" value="${esc(k.email)}">
+        <label class="lbl">Jam Operasional</label>
+        <input id="cms_kt_jam" class="inp mb-5" value="${esc(k.jam)}">
+        <button onclick="saveCmsEditor('Kontak')" class="btn btn-m w-full">${ic('check','w-4 h-4')} Simpan</button>
+      </div>`;
+  }
+  else {
+    body=`
+      <div class="p-7">
+        <div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg">${esc(type)}</h3><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div>
+        <p class="text-muted text-sm mb-5">Editor untuk <b>${esc(type)}</b> sedang dalam pengembangan. Sementara ini hanya Banner Promo, Tentang Kami, Footer, dan Kontak yang bisa diedit.</p>
+        <button onclick="closeModal()" class="btn btn-g w-full">Tutup</button>
+      </div>`;
+  }
+  modal(body);
+}
+
+function saveCmsEditor(type){
+  S.cms=S.cms||{};
+  if(type==='Banner Promo'){
+    S.cms.bannerPromo={
+      aktif:$('cms_bp_aktif').checked,
+      teks:$('cms_bp_teks').value,
+      link:$('cms_bp_link').value
+    };
+  }
+  else if(type==='Tentang Kami'){
+    S.cms.tentangKami={
+      judul:$('cms_tk_judul').value,
+      p1:$('cms_tk_p1').value,
+      p2:$('cms_tk_p2').value,
+      visi:$('cms_tk_visi').value,
+      misi:$('cms_tk_misi').value
+    };
+  }
+  else if(type==='Footer'){
+    S.cms.footer={
+      alamat:$('cms_ft_alamat').value,
+      telepon:$('cms_ft_telepon').value,
+      email:$('cms_ft_email').value
+    };
+  }
+  else if(type==='Kontak'){
+    S.cms.kontak={
+      alamat:$('cms_kt_alamat').value,
+      telepon:$('cms_kt_telepon').value,
+      email:$('cms_kt_email').value,
+      jam:$('cms_kt_jam').value
+    };
+  }
+  persist();
+  applyCms();
+  addLog('Konten CMS '+type+' diperbarui');
+  toast(type+' berhasil disimpan!');
+  closeModal();
+}
+
 
 function aCms() {
   return `<div class="max-w-3xl space-y-5">
@@ -2122,7 +2237,7 @@ function aCms() {
       </div>
     </div>
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-3">Kelola Konten Lain</h3>
-      <div class="grid sm:grid-cols-2 gap-2.5">${['Banner Promo', 'Armada Unggulan', 'Tentang Kami', 'Layanan', 'FAQ', 'Testimonial', 'Footer', 'Kontak'].map(x => `<button onclick="toast('Editor ${x} dibuka (demo)','info')" class="card !bg-ink-900 p-4 text-left text-[13px] font-semibold hover:border-maroon-500/40 transition flex justify-between items-center gap-2">${x}${ic('edit', 'w-4 h-4 text-muted shrink-0')}</button>`).join('')}</div>
+      <div class="grid sm:grid-cols-2 gap-2.5">${['Banner Promo', 'Armada Unggulan', 'Tentang Kami', 'Layanan', 'FAQ', 'Testimonial', 'Footer', 'Kontak'].map(x => `<button onclick="openCmsEditor('${x}')" class="card !bg-ink-900 p-4 text-left text-[13px] font-semibold hover:border-maroon-500/40 transition flex justify-between items-center gap-2">${x}${ic('edit', 'w-4 h-4 text-muted shrink-0')}</button>`).join('')}</div>
     </div>
   </div>`;
 }
@@ -2140,7 +2255,8 @@ function saveCms() {
 }
 
 function applyCms() {
-  $('annBar').textContent = S.cms.ann;
+  const bp = S.cms.bannerPromo;
+  $('annBar').textContent = (bp && bp.aktif && bp.teks) ? bp.teks : S.cms.ann;
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
