@@ -786,13 +786,21 @@ function vBooking() {
     body = `<div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
       <div class="card p-6"><h3 class="font-display font-semibold text-lg mb-5">Pilih Metode Pembayaran</h3>
         <div class="grid grid-cols-2 gap-3">${[
-          ['QRIS', 'Scan semua e-wallet & m-banking'],
-          ['VA BCA', 'Virtual Account BCA'],
-          ['VA Mandiri', 'Virtual Account Mandiri'],
-          ['GoPay', 'E-wallet GoPay'],
-          ['OVO', 'E-wallet OVO'],
-          ['Transfer Bank', 'Transfer manual BJB']
-        ].map(x => `<button onclick="chooseMethod('${x[0]}')" class="rounded-xl border p-4 text-left transition ${m === x[0] ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-[13px]">${ic('card', 'w-4 h-4 text-maroon-400')}${x[0]}</div><div class="text-[11px] text-muted mt-1">${x[1]}</div></button>`).join('')}</div>
+          ['QRIS', 'Dalam Pengembangan', false],
+          ['GoPay', 'Dalam Pengembangan', false],
+          ['OVO', 'Dalam Pengembangan', false],
+          ['Transfer Bank', 'Transfer manual BJB', true]
+        ].map(x => {
+  const aktif = x[2] !== false;
+  const onclick = aktif ? `chooseMethod('${x[0]}')` : `toast('${x[0]} — Dalam Pengembangan','info')`;
+  const cls = aktif 
+    ? (m === x[0] ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25')
+    : 'border-white/5 opacity-50 cursor-not-allowed';
+  return `<button onclick="${onclick}" class="rounded-xl border p-4 text-left transition ${cls}">
+    <div class="flex items-center gap-2 font-semibold text-[13px]">${ic('card', 'w-4 h-4 ' + (aktif ? 'text-maroon-400' : 'text-muted'))}${x[0]}</div>
+    <div class="text-[11px] ${aktif ? 'text-muted' : 'text-amber-300/70'} mt-1">${x[1]}</div>
+  </button>`;
+}).join('')}</div>
         <div class="mt-5 rounded-xl bg-ink-900 border border-white/5 p-4 flex justify-between items-center gap-3 flex-wrap"><span class="text-sm text-muted">Total tagihan</span><span class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
       <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
