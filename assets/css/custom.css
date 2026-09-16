@@ -1,16 +1,11 @@
-/* AZZID RENTCAR custom overrides
-   Intentionally empty: the original single-file design has no additional custom CSS.
-   Keeping this file in the requested structure avoids changing the rendered page.
-*/
-
 /* Marquee animation */
 @keyframes marqueeScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-100%); }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
 #annBar.animate-marquee {
-  animation: marqueeScroll 60s linear infinite;
-  display: inline-flex;
+  animation: marqueeScroll 25s linear infinite;
+  display: inline-block;
   will-change: transform;
   white-space: nowrap;
 }
