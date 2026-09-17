@@ -269,7 +269,7 @@ function vHome() {
           <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="${addDays(TODAY,2)}" min="${addDays(TODAY,1)}" required></div>
           <div><label class="lbl">Jenis Rental</label><select id="qbType" class="inp"><option>Lepas Kunci</option><option>Dengan Driver</option></select></div>
           <div><label class="lbl">Mobil</label><select id="qbVeh" class="inp"><option value="">Semua kendaraan</option>${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select></div>
-          <button class="col-span-full btn btn-m mt-1">${ic('search', 'w-4 h-4')} Booking Sekarang</button>
+          <button class="col-span-full btn btn-m mt-1">${ic('cal', 'w-4 h-4')} Booking Sekarang</button>
         </form>
         <p class="text-[11px] text-muted mt-3 text-center">Konfirmasi instan via WhatsApp · Tanpa biaya tersembunyi</p>
       </div>
