@@ -2022,7 +2022,6 @@ function setDrvStatus(id, val) {
 
 function aPayments() {
   const paid = BOOKINGS.filter(b => b.pay.s === 'PAID').reduce((a, b) => a + b.total, 0);
-  const pend = BOOKINGS.filter(b => b.pay.s === 'PENDING').reduce((a, b) => a + b.total, 0);
   const ref = BOOKINGS.filter(b => b.pay.s === 'REFUNDED').reduce((a, b) => a + b.total, 0);
   const tot = paid + pend + ref;
   return `<div class="space-y-5">
