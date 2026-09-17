@@ -1,4 +1,4 @@
-/* ================= VEHICLE API ================= */
+if(!nama||!wa||!pesan){toast("Lengkapi nama, WA, dan pesan","err");return}NOTIFS.unshift({ic:"mail",t:"Pesan dari "+nama+": "+(pesan.length>60?pesan.slice(0,60)+"...":pesan),w:"Baru saja",cl:"text-emerald-300",pesan:pesan,wa:wa,email:email,at:new Date().toISOString(),dibaca:false});if(typeof persist==="function")persist();/* ================= VEHICLE API ================= */
 
 const API_BASE_URL = window.API_BASE_URL || 'https://azzid-rental-api-production.up.railway.app/api';
 const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
