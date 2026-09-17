@@ -2475,7 +2475,6 @@ window.addEventListener('scroll', () => {
 });
 
 applyCms();
-syncAdminBtns();
 route();
 loadVehiclesFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
