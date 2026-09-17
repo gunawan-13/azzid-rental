@@ -967,7 +967,7 @@ async function authApi(path='',options={}){
   try {
     response=await fetch(AUTH_API_URL+path,{credentials:'include',...options,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...(options.headers||{})}});
   } catch (e) {
-    throw new Error('API tidak dapat dihubungi. Pastikan backend npm start berjalan di http://localhost:3000 dan halaman dibuka lewat Live Server (bukan file://).');
+    throw new Error('API tidak dapat dihubungi: ' + AUTH_API_URL + ' — ' + (e && e.message ? e.message : 'network error'));
   }
   const raw=await response.text(); let payload=null;
   try{payload=raw?JSON.parse(raw):null}catch(_){payload=raw}
