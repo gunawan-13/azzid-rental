@@ -244,7 +244,7 @@ function vHome() {
         </h1>
         <p class="mt-5 text-zinc-300 max-w-xl text-[15px] sm:text-base leading-relaxed">${esc(S.cms.sub)}</p>
         <div class="mt-8 flex flex-wrap gap-4">
-          <a href="#/booking" class="btn btn-m">${ic('cal')} Booking Sekarang</a>
+          <a href="https://wa.me/6281291663498?text=Halo%20AZZID%20RENTCAR%2C%20saya%20ingin%20bertanya" target="_blank" class="btn btn-m">${ic("phone")} Hubungi Kami</a>
           <a href="#/armada" class="btn btn-g">${ic('car')} Lihat Armada</a>
         </div>
         <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-lg">
