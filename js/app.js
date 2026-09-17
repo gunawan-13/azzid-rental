@@ -121,6 +121,38 @@ async function loadVehiclesFromAPI() {
   }
 }
 
+const BOOKING_API_URL = `${API_BASE_URL}/bookings`;
+
+async function loadBookingsFromAPI() {
+  try {
+    const res = await fetch(BOOKING_API_URL, { credentials: "include" });
+    const payload = await res.json();
+    const list = Array.isArray(payload && payload.data) ? payload.data : [];
+    if (list.length === 0) return;
+    BOOKINGS.length = 0;
+    BOOKINGS.push(...list.map(normalizeBookingFromAPI));
+    persist();
+    console.log("Bookings dari API:", BOOKINGS.length);
+    if (S.session) renderAdminBody();
+  } catch (err) { console.warn("API bookings gagal:", err.message); }
+}
+
+function normalizeBookingFromAPI(b) {
+  return { id: b.booking_code || ("AZR-" + b.id), cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: "QRIS", s: b.payment_status || "UNPAID", tx: "-", at: null }, user: null };
+}
+
+function buildNotifs() {
+  const list = [];
+  BOOKINGS.slice(0, 5).forEach(b => {
+    const v = (typeof veh === "function" ? veh(b.veh) : null) || { name: b.veh };
+    const icons = { Pending: { ic: "clock", cl: "text-amber-300" }, Confirmed: { ic: "check", cl: "text-sky-300" }, Ongoing: { ic: "car", cl: "text-orange-300" }, Completed: { ic: "check", cl: "text-emerald-300" }, Cancelled: { ic: "x", cl: "text-red-300" } };
+    const meta = icons[b.status] || icons.Pending;
+    list.push({ ic: meta.ic, t: "Booking " + b.id + " — " + b.cust + " · " + v.name + " (" + b.status + ")", w: b.start ? dShort(b.start) : "Baru", cl: meta.cl });
+  });
+  if (list.length === 0) list.push({ ic: "info", t: "Belum ada aktivitas baru", w: "Baru saja", cl: "text-zinc-400" });
+  return list;
+}
+
 /* ================= ARMADA MASTER OPTIONS ================= */
 const VEHICLE_BRANDS = [
   'Toyota', 'Honda', 'Mitsubishi', 'Suzuki', 'Daihatsu', 'Nissan',
