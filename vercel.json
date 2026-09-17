@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "https://azzid-rental-api-production.up.railway.app/api/:path*" }
+  ]
+}
