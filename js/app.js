@@ -2427,17 +2427,7 @@ function route() {
     $('custApp').classList.add('hidden');
     $('adminApp').classList.remove('hidden');
     renderA();
-   function route() {
-  const h = location.hash;
-  if (h.startsWith('#/admin')) {
-    $('custApp').classList.add('hidden');
-    $('adminApp').classList.remove('hidden');
-    renderA();
-    syncAdminBtns();
-    return;
-  }
-  renderC();
-} syncAdminBtns();
+   
     return;
   }
   renderC();
