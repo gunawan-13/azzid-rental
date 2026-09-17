@@ -1,3 +1,4 @@
+window.__authReady = false;
 /* ================= VEHICLE API ================= */
 
 const API_BASE_URL = window.API_BASE_URL || 'https://azzid-rental-api-production.up.railway.app/api';
