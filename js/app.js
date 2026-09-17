@@ -1048,13 +1048,13 @@ function renderA() {
       <div class="relative w-full max-w-4xl grid lg:grid-cols-2 card overflow-hidden bg-ink-800/90 backdrop-blur-xl rv on" id="loginCard">
         <div class="hidden lg:flex flex-col justify-between p-9 bg-gradient-to-br from-maroon-800 via-maroon-700 to-ink-900 relative overflow-hidden">
           <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-20">
-          <div class="relative"><div class="flex items-center gap-3 mb-10"><span class="w-11 h-11 rounded-xl bg-white/10 border border-white/20 grid place-items-center font-display font-extrabold text-xl">A</span>
+          <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-11 h-11 rounded-xl shadow-glow shrink-0 object-cover">
             <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[10px] tracking-[.3em] text-red-200">ADMIN DASHBOARD</div></div></div>
             <h2 class="font-display font-extrabold text-3xl leading-tight">Dashboard Operasional Rental.</h2></div>
           <ul class="relative space-y-2.5 text-[13px] text-red-100">${['Overview · Booking · Calendar · Armada', 'Customer · Driver · Payment · Promo', 'Reports · CMS Website · Users & Roles · Settings', 'Kelola Sewa: mulai, perpanjang, pengembalian'].map(x => `<li class="flex gap-2.5"><span class="mt-1">${ic('check', 'w-4 h-4')}</span>${x}</li>`).join('')}</ul>
         </div>
         <div class="p-7 sm:p-9">
-          <div class="lg:hidden flex items-center gap-2.5 mb-6"><span class="w-10 h-10 rounded-lg bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-lg">A</span>
+          <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-10 h-10 rounded-lg shadow-glow shrink-0 object-cover">
             <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted">ADMIN DASHBOARD</div></div></div>
           <h3 class="font-display font-bold text-xl mb-1">Login Admin</h3>
           <p class="text-[12.5px] text-muted mb-6">Masuk untuk membuka dashboard pengelolaan rental.</p>
