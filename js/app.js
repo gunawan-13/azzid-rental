@@ -2479,7 +2479,7 @@ syncAdminBtns();
 route();
 loadVehiclesFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
-  restoreAuth().then(() => {
+  restoreAuth().then(() => { syncAdminBtns();
     if (location.hash.startsWith('#/admin')) renderA();
     else renderC();
   });
