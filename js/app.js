@@ -1038,6 +1038,7 @@ const AMENU = [
 ];
 
 function renderA() {
+  if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
   const app = $('adminApp');
   if (!S.session) {
     app.innerHTML = `<div class="min-h-screen grid place-items-center relative overflow-hidden bg-ink-950 px-4 py-10">
