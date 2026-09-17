@@ -1086,7 +1086,7 @@ function renderA() {
         <button class="lg:hidden p-2" onclick="document.getElementById('aSb').classList.toggle('-translate-x-full')">${ic('grid')}</button>
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('bellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
-          <div id="bellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${NOTIFS.map(n => `<div class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w}</p></div></div>`).join('')}</div></div>
+          <div id="bellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(typeof buildNotifs === "function" ? buildNotifs() : NOTIFS).map(n => `<div class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w}</p></div></div>`).join('')}</div></div>
         <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><span class="w-9 h-9 rounded-full bg-maroon-600 grid place-items-center font-display font-bold text-sm shrink-0">${(S.session.name[0] || 'A').toUpperCase()}</span>
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
@@ -1196,7 +1196,7 @@ function aOverview() {
         </div>
       </div>
       <div class="rv card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
-        <div class="space-y-4">${NOTIFS.map(n => `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl} shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w}</p></div></div>`).join('')}</div>
+        <div class="space-y-4">${(typeof buildNotifs === "function" ? buildNotifs() : NOTIFS).map(n => `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl} shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w}</p></div></div>`).join('')}</div>
         <h3 class="font-display font-semibold mt-6 mb-3">Status Armada</h3>
         <div class="space-y-2">${VEHICLES.slice(0, 5).map(v => `<div class="flex items-center justify-between gap-2 text-[12.5px] bg-ink-900 rounded-lg px-3 py-2"><span class="truncate">${esc(v.name)}</span>${badge(v.status)}</div>`).join('')}</div>
       </div>
