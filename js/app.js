@@ -2480,7 +2480,7 @@ loadVehiclesFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
   window.__authReady = false;
   restoreAuth().then(() => {
-    window.__authReady = true;
+    window.__authReady = true;document.body.classList.add('ready');
     syncAdminBtns();
     if (location.hash.startsWith('#/admin')) renderA();
     else renderC();
