@@ -1047,6 +1047,8 @@ const AMENU = [
 ];
 
 function renderA() {
+  $('custApp').classList.remove('visible');
+  $('adminApp').classList.add('visible');
   try{window.scrollTo({ top: 0, behavior: "instant" });}catch(_){}
   if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
   const app = $('adminApp');
@@ -2436,6 +2438,8 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  $('custApp').classList.add('visible');
+  $('adminApp').classList.remove('visible');
   if(location.hash.startsWith("#/admin"))return;
   const h = location.hash.replace(/^#\/?/, '');
   const p = h.split('/');
@@ -2489,6 +2493,11 @@ applyCms();
 loadVehiclesFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
   window.__authReady = false;
+  // Langsung sembunyikan custApp kalau di #/admin
+  if (location.hash.startsWith('#/admin')) {
+    const ca = document.getElementById('custApp');
+    if (ca) ca.classList.remove('visible');
+  }
   restoreAuth().then(() => {
     window.__authReady = true;document.body.classList.add('ready');
     syncAdminBtns();
