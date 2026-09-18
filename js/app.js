@@ -1047,6 +1047,7 @@ const AMENU = [
 ];
 
 function renderA() {
+  try{window.scrollTo({ top: 0, behavior: "instant" });}catch(_){}
   if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
   const app = $('adminApp');
   if (!S.session) {
@@ -2435,6 +2436,7 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  if(location.hash.startsWith("#/admin"))return;
   const h = location.hash.replace(/^#\/?/, '');
   const p = h.split('/');
   const main = $('cMain');
