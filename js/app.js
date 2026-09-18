@@ -284,7 +284,7 @@ function vHome() {
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       ${[
-        ['shield', 'Armada Terawat', 'Servis berkala & inspeksi 21 titik sebelum unit diserahkan kepada Anda.'],
+        ['shield', 'Armada Terawat', 'Servis berkala & inspeksi menyeluruh sebelum unit diserahkan kepada Anda.'],
         ['tag', 'Harga Transparan', 'Semua biaya tampil di depan. , tanpa kejutan di akhir.'],
         ['zap', 'Proses Cepat', 'Booking online 3 menit, konfirmasi instan, mobil siap jalan sesuai jadwal.'],
         ['headset', 'Support 24/7', 'Tim siaga penuh untuk rescue, pertanyaan, dan perpanjangan rental kapan saja.']
@@ -315,7 +315,7 @@ function vHome() {
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
     <div class="rv relative"><img src="${IMG.fleet}" alt="Garasi AZZID RENTCAR" class="rounded-2xl border border-white/10 w-full object-cover h-[420px]">
-      <div class="absolute bottom-6 right-4 card bg-maroon-600 border-maroon-500/50 px-6 py-4 floaty shadow-glow"><div class="font-display font-extrabold text-2xl">21 Titik</div><div class="text-[11px] tracking-widest uppercase text-red-200">Inspeksi Setiap Unit</div></div>
+      <div class="absolute bottom-6 right-4 card bg-maroon-600 border-maroon-500/50 px-6 py-4 floaty shadow-glow"><div class="font-display font-extrabold text-2xl">inspeksi</div><div class="text-[11px] tracking-widest uppercase text-red-200">Inspeksi Setiap Unit</div></div>
     </div>
     <div class="min-w-0"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Keunggulan AZZID</span> <h2 class="font-display font-bold text-3xl mt-2 mb-6">Bukan Sekadar Rental, <span class="text-maroon-400">Partner Perjalanan.</span></h2>
       <ul class="space-y-3.5 text-[14.5px]">${['Unit tahun muda (2022–2024), interior selalu detail & wangi', 'Driver bersertifikat, seragam rapi, dan hafal rute Jabodetabek', 'Asuransi all-risk di setiap perjalanan', 'Reschedule gratis hingga H-2', 'Unit pengganti maksimal 3 jam jika kendala', 'Harga final di depan — sudah termasuk layanan antar'].map((x, i) => `<li class="rv flex gap-3" style="transition-delay:${i * 70}ms"><span class="w-5 h-5 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center shrink-0 mt-0.5">${ic('check', 'w-3 h-3')}</span>${x}</li>`).join('')}</ul>
@@ -475,7 +475,7 @@ function vTentang() {
     <div class="rv"><img src="${IMG.fleet}" class="rounded-2xl border border-white/10 h-[420px] w-full object-cover" alt="Garasi AZZID"></div>
     <div class="rv min-w-0"><h2 class="font-display font-bold text-3xl mb-5">Nyaman Berkendara, <span class="text-maroon-400">Tenang Bepergian.</span></h2>
       <p class="text-muted text-[14.5px] leading-relaxed mb-4">AZZID RENTCAR berdiri sejak 2021 di Jakarta Selatan, dimulai dari 3 unit mobil dan satu keyakinan sederhana: rental mobil seharusnya mudah, transparan, dan bisa dipercaya.</p>
-      <p class="text-muted text-[14.5px] leading-relaxed mb-6">Kini kami melayani lebih dari 1.200 pelanggan — keluarga, pebisnis, perusahaan, hingga event organizer — dengan armada tahun muda yang diinspeksi 21 titik sebelum setiap perjalanan.</p>
+      <p class="text-muted text-[14.5px] leading-relaxed mb-6">Kini kami melayani lebih dari 1.200 pelanggan — keluarga, pebisnis, perusahaan, hingga event organizer — dengan armada tahun muda yang diinspeksi menyeluruh sebelum setiap perjalanan.</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">${[
         ['Visi', 'Menjadi standar rental mobil premium paling terpercaya di Indonesia.'],
         ['Misi', 'Layanan transparan, armada prima, dan respons tercepat di industri.']
