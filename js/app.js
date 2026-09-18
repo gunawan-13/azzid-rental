@@ -2476,7 +2476,6 @@ window.addEventListener('scroll', () => {
 });
 
 applyCms();
-route();
 loadVehiclesFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
   window.__authReady = false;
