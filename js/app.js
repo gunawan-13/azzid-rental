@@ -359,7 +359,7 @@ function vHome() {
       <h2 class="font-display font-extrabold text-3xl sm:text-4xl leading-tight">Mobil Siap Jalan,<br>Perjalanan Lebih Nyaman.</h2>
       <p class="mt-4 text-red-100/90">Booking sekarang dan rasakan standar baru rental mobil premium.</p>
       <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <button onclick="window.scrollTo({top:0,behavior:'smooth'});setTimeout(()=>{const el=document.getElementById('qbStart');if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'})}},400)" class="btn bg-white text-maroon-700 font-bold hover:bg-zinc-100">${ic('cal')} Booking Sekarang</button>
+        <button onclick="document.getElementById('qbStart').scrollIntoView({behavior:'smooth',block:'center'})" class="btn bg-white text-maroon-700 font-bold hover:bg-zinc-100">${ic('cal')} Booking Sekarang</button>
         <a href="${waLink('Halo AZZID RENTCAR, saya ingin bertanya tentang layanan rental.')}" target="_blank" class="btn btn-g border-white/40">${ic('phone')} Chat WhatsApp</a>
       </div>
     </div>
