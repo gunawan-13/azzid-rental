@@ -338,7 +338,15 @@ function vHome() {
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
     <div class="text-center mb-12 rv"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Testimonial</span> <h2 class="font-display font-bold text-3xl mt-2">Kata Mereka yang Sudah Berkendara</h2></div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${TESTIMONIALS.map((t, i) => `<div class="rv card p-6 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms">
+    <div class="text-center mb-10 rv">
+      <a href="https://www.google.com/maps/place/Azzid+Rent+Car+(+Garasi+)/@-6.3225178,106.9022553,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69ed00686f257f:0x816dc002336941d!8m2!3d-6.3225178!4d106.9048302!16s%2Fg%2F11zbpryvqq" target="_blank" rel="noopener" class="inline-flex items-center gap-3 btn btn-g hover:border-maroon-500/40 transition">
+        <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        <span class="font-semibold">Review Kami di Google</span>
+        <span class="badge bg-amber-400/10 border-amber-400/30 text-amber-300">5.0 ★</span>
+      </a>
+      <p class="text-[11.5px] text-muted mt-3">Bantu kami berkembang — tulis pengalaman Anda di Google Maps</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${TESTIMONIALS.slice(0,3).map((t, i) => `<div class="rv card p-6 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms">
       <div class="flex gap-1 mb-3">${[1, 1, 1, 1, 1].map(x => starIc(x)).join('')}</div>
       <p class="text-[13.5px] text-zinc-300 leading-relaxed mb-5">“${t.t}”</p>
       <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center font-display font-bold">${t.n[0]}</span>
@@ -402,14 +410,6 @@ function vArmada() {
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="card p-5 mb-8 rv">
       <div class="flex flex-wrap gap-2 mb-4">${['Semua', 'City Car', 'MPV', 'SUV', 'Premium', 'Commercial'].map(c => `<button class="chip ${f.cat === c ? 'on' : ''}" onclick="setFilter('cat','${c}')">${c}</button>`).join('')}</div>
-    <div class="text-center mt-10 rv">
-      <a href="https://www.google.com/maps/place/Azzid+Rent+Car+(+Garasi+)/@-6.3225178,106.9022553,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69ed00686f257f:0x816dc002336941d!8m2!3d-6.3225178!4d106.9048302!16s%2Fg%2F11zbpryvqq" target="_blank" rel="noopener" class="inline-flex items-center gap-3 btn btn-g hover:border-maroon-500/40 transition">
-        <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-        <span class="font-semibold">Review Kami di Google</span>
-        <span class="badge bg-amber-400/10 border-amber-400/30 text-amber-300">5.0 ★</span>
-      </a>
-      <p class="text-[11.5px] text-muted mt-3">Bantu kami berkembang — tulis pengalaman Anda di Google Maps</p>
-    </div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">${ic('search', 'w-4 h-4')}</span>
           <input class="inp pl-9" placeholder="Cari mobil…" value="${esc(f.q)}" oninput="setFilter('q',this.value)">
