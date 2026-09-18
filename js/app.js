@@ -308,7 +308,7 @@ function vHome() {
       <div class="text-center mb-12 rv"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan Rental</span> <h2 class="font-display font-bold text-3xl mt-2">Solusi Lengkap Setiap Perjalanan</h2></div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="rv card p-6 bg-ink-800 hover:-translate-y-1.5 hover:border-maroon-500/40 transition duration-300" style="transition-delay:${i * 80}ms">
         <div class="flex items-start justify-between gap-2"><div class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(s.ic)}</div>
-        <span class="badge bg-white/5 border-white/10 text-zinc-300">${s.p}</span></div>
+        </div>
         <h3 class="font-display font-semibold mt-4 mb-1.5">${s.t}</h3><p class="text-[13px] text-muted leading-relaxed">${s.d}</p>
       </div>`).join('')}
     </div></div>
@@ -467,7 +467,7 @@ function vDetail(slug) {
 }
 
 function vLayanan() {
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><p class="text-muted mt-2 text-sm max-w-2xl">Dari perjalanan harian hingga event premium — semua dilayani dengan standar yang sama: tepat waktu, terawat, transparan.</p></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="rv card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><p class="text-[13.5px] text-muted leading-relaxed mb-4">${s.d}</p><span class="badge bg-white/5 border-white/10 text-zinc-300">${s.p}</span><button onclick="openBooking()" class="btn btn-g btn-sm mt-5 w-full">Booking Layanan</button></div>`).join('')}</section>`;
+  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><p class="text-muted mt-2 text-sm max-w-2xl">Dari perjalanan harian hingga event premium — semua dilayani dengan standar yang sama: tepat waktu, terawat, transparan.</p></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="rv card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><p class="text-[13.5px] text-muted leading-relaxed mb-4">${s.d}</p><button onclick="openBooking()" class="btn btn-g btn-sm mt-5 w-full">Booking Layanan</button></div>`).join('')}</section>`;
 }
 
 function vTentang() {
