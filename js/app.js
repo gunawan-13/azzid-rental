@@ -345,6 +345,14 @@ function vHome() {
         <div class="min-w-0"><div class="font-semibold text-sm">${t.n}</div><div class="text-[11px] text-muted">${t.r}</div></div>
       </div>
     </div>`).join('')}
+  <div class="text-center mt-10 rv">
+    <a href="https://www.google.com/maps/place/Azzid+Rent+Car+(+Garasi+)/@-6.3225178,106.9022553,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69ed00686f257f:0x816dc002336941d!8m2!3d-6.3225178!4d106.9048302!16s%2Fg%2F11zbpryvqq" target="_blank" rel="noopener" class="inline-flex items-center gap-3 btn btn-g hover:border-maroon-500/40 transition">
+      <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      <span class="font-semibold">Review Kami di Google</span>
+      <span class="badge bg-amber-400/10 border-amber-400/30 text-amber-300">5.0 ★</span>
+    </a>
+    <p class="text-[11.5px] text-muted mt-3">Bantu kami berkembang — tulis pengalaman Anda di Google Maps</p>
+  </div>
   </div></section>
   <section class="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
     <div class="text-center mb-10 rv"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">FAQ</span> <h2 class="font-display font-bold text-3xl mt-2">Pertanyaan yang Sering Diajukan</h2></div>
