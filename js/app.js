@@ -272,7 +272,7 @@ function vHome() {
           <div><label class="lbl">Mobil</label><select id="qbVeh" class="inp"><option value="">Semua kendaraan</option>${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select></div>
           <button class="col-span-full btn btn-m mt-1">${ic('cal', 'w-4 h-4')} Booking Sekarang</button>
         </form>
-        <p class="text-[11px] text-muted mt-3 text-center">Konfirmasi instan via WhatsApp · Tanpa biaya tersembunyi</p>
+        <p class="text-[11px] text-muted mt-3 text-center">Konfirmasi instan via WhatsApp</p>
       </div>
     </div>
   </section>
@@ -285,7 +285,7 @@ function vHome() {
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       ${[
         ['shield', 'Armada Terawat', 'Servis berkala & inspeksi 21 titik sebelum unit diserahkan kepada Anda.'],
-        ['tag', 'Harga Transparan', 'Semua biaya tampil di depan. Tanpa biaya tersembunyi, tanpa kejutan di akhir.'],
+        ['tag', 'Harga Transparan', 'Semua biaya tampil di depan. , tanpa kejutan di akhir.'],
         ['zap', 'Proses Cepat', 'Booking online 3 menit, konfirmasi instan, mobil siap jalan sesuai jadwal.'],
         ['headset', 'Support 24/7', 'Tim siaga penuh untuk rescue, pertanyaan, dan perpanjangan rental kapan saja.']
       ]
