@@ -1047,6 +1047,7 @@ const AMENU = [
 ];
 
 function renderA() {
+  try{const _hca=document.getElementById("custApp");if(_hca)_hca.style.display="none";const _haa=document.getElementById("adminApp");if(_haa){_haa.classList.remove("hidden");_haa.style.display="block";}}catch(_){}
   try{window.scrollTo({ top: 0, behavior: "instant" });}catch(_){}
   if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
   const app = $('adminApp');
@@ -2437,6 +2438,7 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  try{const _sca=document.getElementById("custApp");if(_sca)_sca.style.display="block";const _saa=document.getElementById("adminApp");if(_saa)_saa.style.display="none";}catch(_){}
   if(location.hash.startsWith("#/admin"))return;
   const h = location.hash.replace(/^#\/?/, '');
   const p = h.split('/');
