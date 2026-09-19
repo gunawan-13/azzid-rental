@@ -777,7 +777,7 @@ function vBooking() {
     const v = veh(d.veh);
     const clash = isClash(d.veh, d.start, d.end);
     body = `<div class="grid lg:grid-cols-[.9fr_1.1fr] gap-6">
-      <div class="card p-5 flex gap-4 items-center"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0"><div class="min-w-0"><div class="font-display font-semibold truncate">${esc(v.name)}</div><div class="text-[12px] text-muted">${v.year} · ${v.trans} · ${v.seats} seats</div><button onclick="bkGo(0)" class="text-[12px] text-maroon-400 font-semibold mt-1">Ganti mobil</button></div></div>
+      <div class="card p-5 flex gap-4 items-center"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0"><div class="min-w-0"><div class="font-display font-semibold truncate">${esc(v.name)}</div><div class="text-[12px] text-muted">${v.year} · ${v.trans} · ${v.seats} seats</div><button onclick="location.hash='#/armada'" class="text-[12px] text-maroon-400 font-semibold mt-1">Ganti mobil</button></div></div>
       <div class="card p-6">
         <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="${TODAY}" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
         <div class="grid sm:grid-cols-2 gap-3 mb-4">${['Lepas Kunci', 'Dengan Driver'].map(t => `<button onclick="S.draft.type='${t}';renderC()" class="rounded-xl border p-4 text-left transition ${d.type === t ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-sm">${ic(t === 'Lepas Kunci' ? 'key' : 'wheel', 'w-4 h-4 text-maroon-400')}${t}</div><div class="text-[11px] text-muted mt-1">${t === 'Lepas Kunci' ? 'Kendarai sendiri, lebih bebas' : 'Driver profesional +Rp150rb/hari'}</div></button>`).join('')}</div>
@@ -921,7 +921,7 @@ function vBooking() {
       </button> ${i < steps.length - 1 ? '<div class="w-5 sm:w-10 h-px bg-white/10 mx-2 shrink-0"></div>' : ''}
     </div>`).join('')}</div>
     ${body}
-    ${S.step < 4 && S.step > 0 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkGo(${S.step - 1})" class="btn btn-g">← Kembali</button><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
+    ${S.step < 4 && S.step > 0 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="location.hash='#/armada'" class="btn btn-g">← Kembali</button><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
     ${S.step === 0 ? `<div class="flex justify-center mt-8"><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
     ${S.step === 3 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkGo(2)" class="btn btn-g">← Kembali</button><button onclick="bkGo(4)" class="btn btn-m">${ic('card', 'w-4 h-4')} Lanjut Pembayaran</button></div>` : ''}
   </section>`;
