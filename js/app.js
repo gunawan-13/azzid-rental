@@ -1082,7 +1082,7 @@ function renderA() {
   const ong = ongoingCount();
   app.innerHTML = `<div class="min-h-screen bg-ink-950 flex">
     <aside id="aSb" class="fixed lg:static z-40 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
-      <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><span class="w-9 h-9 rounded-lg bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold">A</span>
+      <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
       <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m => `<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView === m[0] ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2], 'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0] === 'rental' && ong ? `<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300">${ong}</span>` : ''}${m[0] === 'booking' && pend ? `<span class="badge bg-amber-400/20 border-amber-400/40 text-amber-300">${pend}</span>` : ''}</button>`).join('')}</nav>
@@ -1097,7 +1097,7 @@ function renderA() {
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('bellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
           <div id="bellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(typeof buildNotifs === "function" ? buildNotifs() : NOTIFS).map(n => `<div class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w}</p></div></div>`).join('')}</div></div>
-        <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><span class="w-9 h-9 rounded-full bg-maroon-600 grid place-items-center font-display font-bold text-sm shrink-0">${(S.session.name[0] || 'A').toUpperCase()}</span>
+        <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shadow-glow shrink-0 object-cover">
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
       </header>
