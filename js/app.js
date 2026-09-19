@@ -634,6 +634,21 @@ function bkAuthTab(t) {
   if (t === 'in') setTimeout(initGoogleButton, 50);   
 }
 
+function previewKtp(input){
+  const file = input.files && input.files[0];
+  if (!file) { window._ktpBase64 = ''; const p = document.getElementById('ktpPreview'); if (p) p.classList.add('hidden'); return; }
+  if (file.size > 5 * 1024 * 1024) { toast('File maksimal 5 MB', 'err'); input.value = ''; window._ktpBase64 = ''; return; }
+  if (!['image/jpeg','image/jpg','image/png'].includes(file.type)) { toast('Format harus JPG/PNG', 'err'); input.value = ''; window._ktpBase64 = ''; return; }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    window._ktpBase64 = e.target.result;
+    const prev = document.getElementById('ktpPreview');
+    const img = document.getElementById('ktpPreviewImg');
+    if (prev && img) { img.src = e.target.result; prev.classList.remove('hidden'); }
+  };
+  reader.readAsDataURL(file);
+}
+
 function bkNext() {
   const d = S.draft;
   if (S.step === 0 && !d.veh) { toast('Pilih mobil terlebih dahulu', 'err'); return; }
@@ -642,17 +657,17 @@ function bkNext() {
     if (isClash(d.veh, d.start, d.end)) { toast('Mobil sedang terbooking pada tanggal tersebut', 'err'); return; }
   }
   if (S.step === 2) {
-    const req = ['nama', 'wa', 'email', 'alamat', 'ktp', 'ttl', 'tujuan'];
+    const req = ['nama', 'wa', 'email', 'alamat', 'tujuan'];
     const ok = req.every(k => $('cf_' + k) && $('cf_' + k).value.trim());
     if (!ok) { toast('Lengkapi semua data wajib', 'err'); return; }
+    if (!window._ktpBase64) { toast('Upload foto identitas wajib', 'err'); return; }
     d.cust = {
       nama: $('cf_nama').value,
       wa: $('cf_wa').value,
       email: $('cf_email').value,
       alamat: $('cf_alamat').value,
-      ktp: $('cf_ktp').value,
-      ttl: $('cf_ttl').value,
       tujuan: $('cf_tujuan').value,
+      ktp_file: (window._ktpBase64 || ""),
       catatan: $('cf_catatan') ? $('cf_catatan').value : ''
     };
     if (S.custSession) {
@@ -807,9 +822,9 @@ function vBooking() {
           <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" class="inp" value="${esc(cu.nama || '')}" placeholder="Sesuai KTP"></div>
           <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || '')}" placeholder="08xx-xxxx-xxxx"></div>
           <div><label class="lbl">Email *</label><input id="cf_email" type="email" class="inp" value="${esc(cu.email || '')}" placeholder="email@anda.com"></div>
-          <div><label class="lbl">Nomor Identitas (KTP/SIM) *</label><input id="cf_ktp" class="inp" value="${esc(cu.ktp || '')}" placeholder="16 digit"></div>
+          <div class="sm:col-span-2"><label class="lbl">Upload Foto Identitas (KTP/SIM) *</label><input id="cf_ktp_file" type="file" accept="image/jpeg,image/png,image/jpg" class="inp" required onchange="previewKtp(this)"><p class="text-[11px] text-muted mt-1">Format: JPG, JPEG, PNG · Maks 5 MB</p><div id="ktpPreview" class="mt-3 hidden"><img id="ktpPreviewImg" src="" class="max-w-xs rounded-lg border border-white/10" alt="Preview KTP"></div></div>
           <div class="sm:col-span-2"><label class="lbl">Alamat *</label><input id="cf_alamat" class="inp" value="${esc(cu.alamat || '')}" placeholder="Alamat domisili"></div>
-          <div><label class="lbl">Tanggal Lahir *</label><input id="cf_ttl" type="date" class="inp" value="${esc(cu.ttl || '')}"></div>
+          
           <div><label class="lbl">Alamat Tujuan *</label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || '')}" placeholder="Contoh: Bandung / dalam kota"></div>
           <div class="sm:col-span-2"><label class="lbl">Catatan Tambahan</label><textarea id="cf_catatan" class="inp" rows="3" placeholder="Opsional: permintaan kursi bayi, jam penjemputan, dll.">${esc(cu.catatan || '')}</textarea></div>
         </div>
