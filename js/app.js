@@ -922,7 +922,7 @@ function openAuth(tab='in'){modal(`<div class="p-7"><div class="flex justify-bet
 function showTabAuth(t){const i=$('mAuthIn'),r=$('mAuthReg'),a=$('atIn'),b=$('atReg');if(!i)return;i.classList.toggle('hidden',t!=='in');r.classList.toggle('hidden',t!=='reg');a.classList.toggle('on',t==='in');b.classList.toggle('on',t==='reg')}
 async function doCustLogin(){const e=($('cAuthE').value||'').trim().toLowerCase(),p=$('cAuthP').value;try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''};closeModal();toast('Selamat datang kembali, '+user.name.split(' ')[0]+'!');renderC()}catch(err){$('mErrIn').textContent=err.message||'Email atau password salah.';$('mErrIn').classList.remove('hidden')}}
 async function doCustReg(){const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');err.classList.add('hidden');if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}try{const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});const user=apiData(result)?.user||result?.user;if(!user)throw new Error('Registrasi gagal.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w};closeModal();toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!');renderC()}catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}}
-async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;localStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderC()}
+async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;sessionStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderC()}
 function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.custSession;const hist=BOOKINGS.filter(b=>b.user===acc.email);const spend=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);modal(`<div class="p-7"><div class="flex justify-between items-start gap-4 mb-6"><div><h3 class="font-display font-bold text-xl">${esc(acc.nama)}</h3><p class="text-[12px] text-muted mt-1">${esc(acc.email)} · ${esc(acc.phone||'-')}</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-3 mb-5"><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${hist.length}</b><div class="text-[10px] text-muted uppercase">Total Booking</div></div><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${fmtK(spend)}</b><div class="text-[10px] text-muted uppercase">Pengeluaran</div></div></div><div class="space-y-2 max-h-52 overflow-y-auto">${hist.length?hist.map(b=>`<div class="bg-ink-900 rounded-lg p-3 text-[12px] flex justify-between gap-2"><span>${esc(b.id)}</span>${badge(b.status)}</div>`).join(''):'<p class="text-sm text-muted">Belum ada booking.</p>'}</div><button onclick="custLogout()" class="btn btn-d btn-sm w-full mt-5">${ic('logout','w-4 h-4')} Logout</button></div>`,1)}
 
 /* ================= TRACK ================= */
@@ -1020,9 +1020,9 @@ async function doResetPassword(token){
 }
 
 async function loadAdminUsers(){try{const result=await fetch(USERS_API_URL,{credentials:'include',headers:{Accept:'application/json'}}).then(async r=>{const p=await r.json();if(!r.ok||p.success===false)throw new Error(p.message||'Gagal memuat users');return p;});const data=apiData(result);ADMIN_USERS=Array.isArray(data)?data:[]}catch(err){ADMIN_USERS=[];console.warn('Data users tidak dapat dimuat:',err.message)}}
-async function doLogin(){const e=($('lgE').value||'').trim().toLowerCase(),p=$('lgP').value,box=$('loginCard'),errBox=$('lgErr');errBox.classList.add('hidden');try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='admin')throw new Error('Akun ini bukan akun admin.');S.session={id:user.id,name:user.name,email:user.email,role:user.role};localStorage.setItem('azzid_has_session','1');localStorage.setItem('azzid_session',JSON.stringify(S.session));window.__authReady=true;S.adminView='overview';renderA();syncAdminBtns();loadAdminUsers();toast('Selamat datang, '+user.name+' — Dashboard Admin aktif.')}catch(error){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');errBox.textContent=error.message||'Login gagal. Periksa email dan password.';errBox.classList.remove('hidden')}}
-async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;localStorage.removeItem('azzid_has_session');localStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
-async function restoreAuth(){if(!localStorage.getItem('azzid_has_session')){S.session=null;S.custSession=null;syncAdminBtns();return}try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(err){S.session=null;S.custSession=null;if(err&&err.message&&(err.message.includes("401")||err.message.includes("Unauthorized"))){localStorage.removeItem("azzid_has_session")}syncAdminBtns();}}
+async function doLogin(){const e=($('lgE').value||'').trim().toLowerCase(),p=$('lgP').value,box=$('loginCard'),errBox=$('lgErr');errBox.classList.add('hidden');try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='admin')throw new Error('Akun ini bukan akun admin.');S.session={id:user.id,name:user.name,email:user.email,role:user.role};sessionStorage.setItem('azzid_has_session','1');sessionStorage.setItem('azzid_session',JSON.stringify(S.session));window.__authReady=true;S.adminView='overview';renderA();syncAdminBtns();loadAdminUsers();toast('Selamat datang, '+user.name+' — Dashboard Admin aktif.')}catch(error){box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake');errBox.textContent=error.message||'Login gagal. Periksa email dan password.';errBox.classList.remove('hidden')}}
+async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;sessionStorage.removeItem('azzid_has_session');sessionStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
+async function restoreAuth(){if(!sessionStorage.getItem('azzid_has_session')){S.session=null;S.custSession=null;syncAdminBtns();return}try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(err){S.session=null;S.custSession=null;if(err&&err.message&&(err.message.includes("401")||err.message.includes("Unauthorized"))){localStorage.removeItem("azzid_has_session")}syncAdminBtns();}}
 
 function setAdminView(v) {
   S.adminView = v;
@@ -1047,6 +1047,10 @@ const AMENU = [
 ];
 
 function renderA() {
+  const aa = document.getElementById("adminApp");
+  if (aa) aa.style.display = "block";
+  const ca = document.getElementById("custApp");
+  if (ca) ca.style.display = "none";
   $('custApp').classList.remove('visible');
   $('adminApp').classList.add('visible');
   try{window.scrollTo({ top: 0, behavior: "instant" });}catch(_){}
@@ -2438,6 +2442,10 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  const ca = document.getElementById("custApp");
+  if (ca) ca.style.display = "block";
+  const aa = document.getElementById("adminApp");
+  if (aa) aa.style.display = "none";
   $('custApp').classList.add('visible');
   $('adminApp').classList.remove('visible');
   if(location.hash.startsWith("#/admin"))return;
@@ -2469,6 +2477,12 @@ function renderC() {
 }
 
 function route() {
+  if (location.hash.startsWith("#/admin")) {
+    const ca = document.getElementById("custApp");
+    if (ca) ca.style.display = "none";
+    const aa = document.getElementById("adminApp");
+    if (aa) aa.classList.remove("hidden");
+  }
   const h = location.hash;
   if (h.startsWith('#/admin')) {
     $('custApp').classList.add('hidden');
