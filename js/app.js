@@ -725,6 +725,7 @@ function doPay() {
       total: c.total,
       status: 'Confirmed',
       pay: { m: S.draft.method, s: 'PAID', tx: 'TRX-' + Math.floor(88350 + Math.random() * 900), at: TODAY },
+      ktp_file: S.draft.cust.ktp_file || "",
       user: S.custSession ? S.custSession.email : null
     };
     BOOKINGS.push(b);
@@ -1484,7 +1485,7 @@ function openBookingDetail(id) {
   modal(`<div class="p-7">
     <div class="flex items-start justify-between mb-6 gap-3"><div class="min-w-0"><div class="font-mono text-maroon-400 text-[13px]">${b.id}</div><h3 class="font-display font-bold text-xl mt-1 truncate">${esc(v.name)}</h3><div class="flex gap-2 mt-2 flex-wrap">${badge(b.status)}${badge(b.pay.s)}${b.user ? '<span class="badge bg-emerald-400/10 border-emerald-400/30 text-emerald-300">Akun Penyewa</span>' : ''}</div></div> <button onclick="closeModal()" class="text-muted hover:text-white shrink-0">${ic('x')}</button></div>
     <div class="grid sm:grid-cols-2 gap-4 mb-6 text-[13px]">
-      <div class="card !bg-ink-900 p-4 min-w-0"><h4 class="lbl !mb-3">Customer</h4><p class="font-semibold truncate">${esc(b.cust)}</p><p class="text-muted mt-1 truncate">${cu.wa || '0812-0000-0000'} · ${cu.email || b.user || '-'}</p><p class="text-muted text-[11px] mt-1">KTP: •••• •••• ${String(Math.abs((b.id.charCodeAt(6) || 4) * 731) % 9000 + 1000)} <span class="badge bg-white/5 border-white/10 ml-1">TERBATAS</span></p></div>
+      <div class="card !bg-ink-900 p-4 min-w-0"><h4 class="lbl !mb-3">Customer</h4><p class="font-semibold truncate">${esc(b.cust)}</p><p class="text-muted mt-1 truncate">${cu.wa || '0812-0000-0000'} · ${cu.email || b.user || '-'}</p><div class="mt-3">${b.ktp_file ? `<img src="${b.ktp_file}" alt="KTP" class="max-w-full sm:max-w-xs rounded-lg border border-white/10 cursor-pointer hover:border-maroon-500 transition" onclick="window.open(this.src)"><p class="text-[11px] text-emerald-300 mt-1">✓ Foto identitas terupload — klik untuk perbesar</p>` : '<p class="text-muted text-[11px] mt-1">📷 Belum ada foto identitas</p>'}</div></div>
       <div class="card !bg-ink-900 p-4 min-w-0"><h4 class="lbl !mb-3">Rental</h4><p>${dLong(b.start)} → ${dLong(b.end)}</p><p class="text-muted mt-1">${daysDiff(b.start, b.end)} hari · ${b.type}</p><p class="text-muted mt-1 break-words">${esc(b.pickup)}</p><p class="text-muted">Driver: <b class="text-zinc-200">${b.driver && drv(b.driver) ? drv(b.driver).name : '—'}</b></p></div>
       <div class="card !bg-ink-900 p-4 sm:col-span-2"><h4 class="lbl !mb-3">Payment</h4><div class="flex flex-wrap justify-between gap-2"><span class="text-muted">Metode: <b class="text-zinc-200">${b.pay.m}</b> · TX: <b class="text-zinc-200">${b.pay.tx}</b></span><span class="font-display font-bold text-maroon-400">${fmtIDR(b.total)}</span></div></div>
     </div>
