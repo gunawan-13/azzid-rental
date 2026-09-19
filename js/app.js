@@ -2118,6 +2118,43 @@ function savePromo() {
 
 function setRepTab(v){S.repTab=v;renderAdminBody();}
 
+function exportFin(format){
+  const rev = 48500000, disc = 850000, ref = 1300000, net = rev - disc - ref;
+  const rows = [["Revenue", rev], ["Discount", disc], ["Refund", ref], ["Net Revenue", net]];
+  if (format === "CSV") {
+    let csv = "Kategori;Jumlah\n" + rows.map(r => r[0] + ";" + r[1]).join("\n");
+    const blob = new Blob([csv], {type: "text/csv;charset=utf-8"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "azzid-financial-" + new Date().toISOString().slice(0,10) + ".csv";
+    a.click();
+    toast("Export CSV berhasil", "info");
+    return;
+  }
+  if (format === "Excel") {
+    let html = "<table><tr><th>Kategori</th><th>Jumlah</th></tr>";
+    rows.forEach(r => { html += "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>"; });
+    html += "</table>";
+    const blob = new Blob([html], {type: "application/vnd.ms-excel"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "azzid-financial-" + new Date().toISOString().slice(0,10) + ".xls";
+    a.click();
+    toast("Export Excel berhasil", "info");
+    return;
+  }
+  if (format === "PDF") {
+    const w = window.open("", "_blank");
+    w.document.write("<h1>AZZID RENTCAR - Financial Report</h1><p>" + new Date().toLocaleString("id-ID") + "</p><table border=1 cellpadding=8><tr><th>Kategori</th><th>Jumlah</th></tr>");
+    rows.forEach(r => { w.document.write("<tr><td>" + r[0] + "</td><td>Rp" + r[1].toLocaleString("id-ID") + "</td></tr>"); });
+    w.document.write("</table>");
+    w.document.close();
+    w.print();
+    toast("Membuka dialog print untuk PDF", "info");
+    return;
+  }
+}
+
 function aReports() {
   const t = S.repTab;
   const tabs = [
@@ -2168,7 +2205,7 @@ function aReports() {
       ['Refund', fmtIDR(ref), 'text-red-300'],
       ['Net Revenue', fmtIDR(rev - disc - ref), 'text-maroon-400']
     ].map(x => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-extrabold text-base sm:text-xl ${x[2]} break-all">${x[1]}</div></div>`).join('')}</div>
-    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button onclick="toast('Export ${f} segera hadir','info')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
+    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button onclick="exportFin('')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
   }
   return `<div class="space-y-5"><div class="rv flex flex-wrap gap-2">${tabs.map(x => `<button onclick="S.repTab='${x[0]}';renderAdminBody()" class="chip ${t === x[0] ? 'on' : ''}">${x[1]}</button>`).join('')}</div><div class="rv min-w-0">${body}</div></div>`;
 }
