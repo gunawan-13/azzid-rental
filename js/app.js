@@ -1335,10 +1335,7 @@ function aOverview() {
         </div>
       </div>
       <div class="rv card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
-        <div class="space-y-4">${[...BOOKINGS].slice(0,5).map(b => { const v = (typeof veh === "function" ? veh(b.veh) : null) || {name:b.veh}; const sc = {Confirmed:"text-emerald-300",Ongoing:"text-orange-300",Completed:"text-emerald-300",Cancelled:"text-red-300",Pending:"text-amber-300"}; const st = sc[b.status] || "text-zinc-400"; return `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${st} shrink-0">${ic("file", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">Booking ${b.id} — ${esc(b.cust)} · ${esc(v.name)} (${b.status})</p><p class="text-[10.5px] text-muted mt-0.5">${dShort(b.start)}</p></div></div>`; }).join("")}</div>
-      </div>
-    </div>
-    <div class="rv card overflow-x-auto"><div class="flex items-center justify-between p-5 pb-0 gap-3"><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
+        <div class="space-y-4">${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS.slice(0,5) : []).map(n => `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl || "text-sky-300"} shrink-0">${ic(n.ic || "bell", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${esc(n.t)}</p><p class="text-[10.5px] text-muted mt-0.5">${esc(n.w)}</p></div></div>`).join("")}</div><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
       <table class="tbl min-w-[720px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Status</th></tr></thead><tbody>
         ${BOOKINGS.slice(-6).reverse().map(b => `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400">${b.id.slice(-9)}</td><td>${esc(b.cust)}</td><td>${esc((veh(b.veh) || { name: '—' }).name)}</td><td>${dShort(b.start)}–${dShort(b.end)}</td><td>${fmtK(b.total)}</td><td>${badge(b.status)}</td></tr>`).join('')}
       </tbody></table>
