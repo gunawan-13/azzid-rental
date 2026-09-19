@@ -817,6 +817,28 @@ function doPay() {
       user: S.custSession ? S.custSession.email : null
     };
     BOOKINGS.push(b);
+    // SINKRON KE BACKEND
+    try {
+      fetch(API_BASE_URL + '/bookings', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          booking_code: b.id,
+          vehicle_id: b.veh,
+          customer_id: null,
+          start_date: b.start,
+          end_date: b.end,
+          rental_type: b.type,
+          pickup_location: b.pickup,
+          dropoff_location: b.drop,
+          total_amount: b.total,
+          status: b.status
+        })
+      }).then(r => r.json()).then(res => {
+        console.log('Booking saved to backend:', res);
+      }).catch(e => console.warn('POST booking error:', e.message));
+    } catch (e) { console.warn('POST booking fail:', e.message); }
     if(typeof addAdminNotif==='function')addAdminNotif('booking','Booking baru '+b.id+' dari '+b.cust);
     if(typeof addUserNotif==='function')addUserNotif(b.user||S.draft.cust.email,'info','Booking '+b.id+' berhasil dibuat — menunggu konfirmasi admin');
     const cu = upsertCustomer(S.draft.cust.nama, S.draft.cust.wa, S.draft.cust.email);
