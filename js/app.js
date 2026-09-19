@@ -2205,7 +2205,7 @@ function aReports() {
       ['Refund', fmtIDR(ref), 'text-red-300'],
       ['Net Revenue', fmtIDR(rev - disc - ref), 'text-maroon-400']
     ].map(x => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-extrabold text-base sm:text-xl ${x[2]} break-all">${x[1]}</div></div>`).join('')}</div>
-    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button onclick="exportFin('')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
+    <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button data-export-fmt="Excel" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
   }
   return `<div class="space-y-5"><div class="rv flex flex-wrap gap-2">${tabs.map(x => `<button onclick="S.repTab='${x[0]}';renderAdminBody()" class="chip ${t === x[0] ? 'on' : ''}">${x[1]}</button>`).join('')}</div><div class="rv min-w-0">${body}</div></div>`;
 }
@@ -2536,6 +2536,16 @@ window.addEventListener('scroll', () => {
 applyCms();
 loadVehiclesFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
+  window.__exportBtnAttached = true;
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-export-fmt]');
+    if (btn) {
+      e.preventDefault();
+      const fmt = btn.getAttribute('data-export-fmt');
+      if (typeof exportFin === 'function') exportFin(fmt);
+    }
+  });
+
   window.__authReady = false;
   restoreAuth().then(() => {
     window.__authReady = true;document.body.classList.add('ready');
