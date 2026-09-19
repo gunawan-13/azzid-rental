@@ -142,6 +142,86 @@ function normalizeBookingFromAPI(b) {
   return { id: b.booking_code || ("AZR-" + b.id), cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: "QRIS", s: b.payment_status || "UNPAID", tx: "-", at: null }, user: null };
 }
 
+function addUserNotif(email, type, message){
+  const icons = { confirm: 'check', cancel: 'x', payment: 'card', info: 'bell' };
+  const colors = { confirm: 'text-emerald-300', cancel: 'text-red-300', payment: 'text-sky-300', info: 'text-amber-300' };
+  USER_NOTIFS.unshift({
+    id: 'UN-' + Date.now() + '-' + Math.random().toString(36).slice(2,6),
+    email: email,
+    type: type,
+    message: message,
+    at: new Date().toISOString(),
+    dibaca: false
+  });
+  USER_NOTIFS = USER_NOTIFS.slice(0, 50);
+  if (typeof persist === 'function') persist();
+  updateUserBellBadge();
+  if (typeof window !== 'undefined' && window.renderC) window.renderC();
+}
+
+function addAdminNotif(type, message){
+  const icons = { booking: 'file', payment: 'card', cancel: 'x', info: 'bell' };
+  const colors = { booking: 'text-sky-300', payment: 'text-emerald-300', cancel: 'text-red-300', info: 'text-amber-300' };
+  ADMIN_NOTIFS.unshift({
+    id: 'AN-' + Date.now() + '-' + Math.random().toString(36).slice(2,6),
+    type: type,
+    ic: icons[type] || 'bell',
+    cl: colors[type] || 'text-zinc-400',
+    t: message,
+    w: 'Baru saja',
+    at: new Date().toISOString(),
+    dibaca: false
+  });
+  ADMIN_NOTIFS = ADMIN_NOTIFS.slice(0, 50);
+  if (typeof persist === 'function') persist();
+  updateAdminBellBadge();
+  if (S.session && typeof renderA === 'function') renderA();
+}
+
+function updateUserBellBadge(){
+  const badge = document.getElementById('userNotifBadge');
+  if (!badge) return;
+  const email = S.custSession ? S.custSession.email : '';
+  const unread = USER_NOTIFS.filter(n => n.email === email && !n.dibaca).length;
+  if (unread > 0) { badge.textContent = unread > 9 ? '9+' : unread; badge.classList.remove('hidden'); }
+  else badge.classList.add('hidden');
+}
+
+function updateAdminBellBadge(){
+  const badge = document.getElementById('adminNotifBadge');
+  if (!badge) return;
+  const unread = ADMIN_NOTIFS.filter(n => !n.dibaca).length;
+  if (unread > 0) { badge.textContent = unread > 9 ? '9+' : unread; badge.classList.remove('hidden'); }
+  else badge.classList.add('hidden');
+}
+
+function toggleUserNotif(){
+  const d = document.getElementById('userNotifD');
+  if (!d) return;
+  d.classList.toggle('hidden');
+  if (!d.classList.contains('hidden')) {
+    const email = S.custSession ? S.custSession.email : '';
+    USER_NOTIFS.forEach(n => { if (n.email === email) n.dibaca = true; });
+    persist();
+    updateUserBellBadge();
+    renderUserNotifList();
+  }
+}
+
+function renderUserNotifList(){
+  const el = document.getElementById('userNotifList');
+  if (!el) return;
+  const email = S.custSession ? S.custSession.email : '';
+  const list = USER_NOTIFS.filter(n => n.email === email).slice(0, 10);
+  if (!list.length) {
+    el.innerHTML = '<div class="px-3 py-4 text-[12px] text-muted text-center">Belum ada notifikasi</div>';
+    return;
+  }
+  const icons = { confirm: 'check', cancel: 'x', payment: 'card', info: 'bell' };
+  const colors = { confirm: 'text-emerald-300', cancel: 'text-red-300', payment: 'text-sky-300', info: 'text-amber-300' };
+  el.innerHTML = list.map(n => '<div class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5"><span class="' + (colors[n.type] || 'text-zinc-400') + ' mt-0.5 shrink-0">' + ic(icons[n.type] || 'bell', 'w-4 h-4') + '</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">' + esc(n.message) + '</p><p class="text-[10.5px] text-muted mt-0.5">' + new Date(n.at).toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) + '</p></div></div>').join('');
+}
+
 function buildNotifs() {
   const list = [];
   BOOKINGS.slice(0, 5).forEach(b => {
@@ -737,6 +817,8 @@ function doPay() {
       user: S.custSession ? S.custSession.email : null
     };
     BOOKINGS.push(b);
+    if(typeof addAdminNotif==='function')addAdminNotif('booking','Booking baru '+b.id+' dari '+b.cust);
+    if(typeof addUserNotif==='function')addUserNotif(b.user||S.draft.cust.email,'info','Booking '+b.id+' berhasil dibuat — menunggu konfirmasi admin');
     const cu = upsertCustomer(S.draft.cust.nama, S.draft.cust.wa, S.draft.cust.email);
     cu.spend += c.total;
     cu.last = c.v.name;
@@ -1514,12 +1596,15 @@ function openBookingDetail(id) {
 function bAct(id, act, val) {
   const b = BOOKINGS.find(x => x.id === id);
   if (act === 'confirm') { b.status = 'Confirmed'; if (b.pay.s !== 'PAID') b.pay.s = 'PENDING';
+    if(typeof addUserNotif==='function')addUserNotif(b.user||'', 'confirm', 'Booking ' + b.id + ' telah DIKONFIRMASI admin — cek jadwal Anda');
     toast('Booking ' + id + ' dikonfirmasi');
     addLog('Booking ' + id + ' dikonfirmasi'); }
   if (act === 'cancel') { b.status = 'Cancelled'; if (b.pay.s === 'PAID') b.pay.s = 'REFUNDED';
+    if(typeof addUserNotif==='function')addUserNotif(b.user||'', 'cancel', 'Booking ' + b.id + ' DIBATALKAN oleh admin' + (b.pay.s === 'REFUNDED' ? ' — refund akan diproses' : ''));
     toast('Booking dibatalkan' + (b.pay.s === 'REFUNDED' ? ' & refund diproses' : ''), 'err');
     addLog('Booking ' + id + ' dibatalkan'); }
   if (act === 'status') { b.status = val;
+    if(typeof addUserNotif==='function')addUserNotif(b.user||'', 'info', 'Status booking ' + b.id + ' berubah menjadi ' + val);
     toast('Status diperbarui → ' + val);
     addLog('Booking ' + id + ' → ' + val); }
   persist();
