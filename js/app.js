@@ -634,6 +634,14 @@ function bkAuthTab(t) {
   if (t === 'in') setTimeout(initGoogleButton, 50);   
 }
 
+function validateWa(input){
+  const digits = (input.value || '').replace(/\D/g, '');
+  if (digits.length > 12) {
+    input.value = input.value.slice(0, input.value.length - 1);
+    toast('No. WhatsApp maksimal 12 angka', 'err');
+  }
+}
+
 function previewKtp(input){
   const file = input.files && input.files[0];
   if (!file) { window._ktpBase64 = ''; const p = document.getElementById('ktpPreview'); if (p) p.classList.add('hidden'); return; }
@@ -643,8 +651,8 @@ function previewKtp(input){
   reader.onload = (e) => {
     window._ktpBase64 = e.target.result;
     const prev = document.getElementById('ktpPreview');
-    const img = document.getElementById('ktpPreviewImg');
-    if (prev && img) { img.src = e.target.result; prev.classList.remove('hidden'); }
+    const nameEl = document.getElementById('ktpFileName');
+    if (prev && nameEl) { nameEl.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)'; prev.classList.remove('hidden'); }
   };
   reader.readAsDataURL(file);
 }
@@ -821,9 +829,9 @@ function vBooking() {
         <p class="text-[12.5px] text-muted mb-6">Data sensitif (identitas) disimpan terenkripsi dan hanya dapat diakses admin berwenang.</p>
         <div class="grid sm:grid-cols-2 gap-4">
           <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" class="inp" value="${esc(cu.nama || '')}" placeholder="Sesuai KTP"></div>
-          <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || '')}" placeholder="08xx-xxxx-xxxx"></div>
+          <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || '')}" placeholder="08xx-xxxx-xxxx" maxlength="15" oninput="validateWa(this)" type="tel"></div>
           <div><label class="lbl">Email *</label><input id="cf_email" type="email" class="inp" value="${esc(cu.email || '')}" placeholder="email@anda.com"></div>
-          <div class="sm:col-span-2"><label class="lbl">Upload Foto Identitas (KTP/SIM) *</label><input id="cf_ktp_file" type="file" accept="image/jpeg,image/png,image/jpg" class="inp" required onchange="previewKtp(this)"><p class="text-[11px] text-muted mt-1">Format: JPG, JPEG, PNG · Maks 5 MB</p><div id="ktpPreview" class="mt-3 hidden"><img id="ktpPreviewImg" src="" class="max-w-xs rounded-lg border border-white/10" alt="Preview KTP"></div></div>
+          <div class="sm:col-span-2"><label class="lbl">Upload Foto Identitas (KTP/SIM) *</label><input id="cf_ktp_file" type="file" accept="image/jpeg,image/png,image/jpg" class="inp" required onchange="previewKtp(this)"><p class="text-[11px] text-muted mt-1">Format: JPG, JPEG, PNG · Maks 5 MB</p><div id="ktpPreview" class="mt-2 hidden"><p class="text-[11.5px] text-emerald-300">✓ <span id="ktpFileName"></span></p></div></div>
           <div class="sm:col-span-2"><label class="lbl">Alamat *</label><input id="cf_alamat" class="inp" value="${esc(cu.alamat || '')}" placeholder="Alamat domisili"></div>
           
           <div><label class="lbl">Alamat Tujuan *</label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || '')}" placeholder="Contoh: Bandung / dalam kota"></div>
