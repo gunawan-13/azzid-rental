@@ -168,7 +168,7 @@ function addAdminNotif(type, message){
     ic: icons[type] || 'bell',
     cl: colors[type] || 'text-zinc-400',
     t: message,
-    w: 'Baru saja',
+    w: new Date().toLocaleString('id-ID', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
     at: new Date().toISOString(),
     dibaca: false
   });
