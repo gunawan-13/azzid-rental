@@ -1313,7 +1313,7 @@ function aOverview() {
         </div>
       </div>
       <div class="rv card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
-        <div class="space-y-4">${(typeof buildNotifs === "function" ? buildNotifs() : NOTIFS).map(n => `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl} shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w}</p></div></div>`).join('')}</div>
+        <div class="space-y-4">${[...BOOKINGS].slice(0,5).map(b => { const v = (typeof veh === "function" ? veh(b.veh) : null) || {name:b.veh}; const sc = {Confirmed:"text-emerald-300",Ongoing:"text-orange-300",Completed:"text-emerald-300",Cancelled:"text-red-300",Pending:"text-amber-300"}; const st = sc[b.status] || "text-zinc-400"; return `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${st} shrink-0">${ic("file", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">Booking ${b.id} — ${esc(b.cust)} · ${esc(v.name)} (${b.status})</p><p class="text-[10.5px] text-muted mt-0.5">${dShort(b.start)}</p></div></div>`; }).join("")}</div>
         <h3 class="font-display font-semibold mt-6 mb-3">Status Armada</h3>
         <div class="space-y-2">${VEHICLES.slice(0, 5).map(v => `<div class="flex items-center justify-between gap-2 text-[12.5px] bg-ink-900 rounded-lg px-3 py-2"><span class="truncate">${esc(v.name)}</span>${badge(v.status)}</div>`).join('')}</div>
       </div>
