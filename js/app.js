@@ -662,7 +662,7 @@ function bkNext() {
   if (S.step === 0 && !d.veh) { toast('Pilih mobil terlebih dahulu', 'err'); return; }
   if (S.step === 1) {
     if (!d.start || !d.end || d.end < d.start) { toast('Tanggal tidak valid', 'err'); return; }
-    if (isClash(d.veh, d.start, d.end)) { toast('Mobil sedang terbooking pada tanggal tersebut', 'err'); return; }
+    
   }
   if (S.step === 2) {
     const req = ['nama', 'wa', 'email', 'alamat', 'tujuan'];
@@ -783,7 +783,7 @@ function vBooking() {
         <div class="grid sm:grid-cols-2 gap-3 mb-4">${['Lepas Kunci', 'Dengan Driver'].map(t => `<button onclick="S.draft.type='${t}';renderC()" class="rounded-xl border p-4 text-left transition ${d.type === t ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-sm">${ic(t === 'Lepas Kunci' ? 'key' : 'wheel', 'w-4 h-4 text-maroon-400')}${t}</div><div class="text-[11px] text-muted mt-1">${t === 'Lepas Kunci' ? 'Kendarai sendiri, lebih bebas' : 'Driver profesional +Rp150rb/hari'}</div></button>`).join('')}</div>
         <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
           <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
-        ${clash ? `<div class="mt-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-3 flex gap-2">${ic('alert', 'w-4 h-4 shrink-0')} Unit ini sudah terbooking pada rentang tanggal pilihan Anda. Silakan ubah tanggal.</div>` : ''}
+        ${clash ? `<div class="mt-4 rounded-lg border border-sky-500/40 bg-sky-500/10 text-sky-300 text-[12.5px] px-4 py-3 flex gap-2">${ic('bell', 'w-4 h-4 shrink-0')} Mobil ini sudah ada booking di tanggal tersebut. Anda tetap bisa memesan — admin akan konfirmasi ketersediaan unit.</div>` : ''}
       </div>
     </div>`;
   } else if (S.step === 2) {
