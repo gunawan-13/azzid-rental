@@ -1383,7 +1383,7 @@ function aRental() {
     ${overdue.length ? `<div class="rv rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-[13px] text-red-300 flex gap-2.5">${ic('alert', 'w-5 h-5 shrink-0')}<div><b>${overdue.length} sewa melewati tanggal pengembalian.</b> Segera hubungi customer atau proses perpanjangan.</div></div>` : ''}
     <div class="rv card overflow-x-auto">
       <div class="p-5 pb-0 flex items-center justify-between gap-3"><h3 class="font-display font-semibold">Sedang Berjalan (Ongoing)</h3><span class="badge bg-orange-400/10 border-orange-400/30 text-orange-300">${ongoing.length}</span></div>
-      <table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Periode</th><th>Driver</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
+      <div class="overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Periode</th><th>Driver</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
         ${ongoing.length ? ongoing.map(b => { const v = veh(b.veh) || { name: '—' }; return `<tr>
           <td class="font-mono text-maroon-400 whitespace-nowrap">${b.id.slice(-9)}</td><td class="whitespace-nowrap">${esc(b.cust)}</td>
           <td class="whitespace-nowrap"><div class="flex items-center gap-2"><img src="${v.img || IMG.fleet}" class="w-9 h-7 rounded object-cover">${esc(v.name)}</div></td>
@@ -1395,11 +1395,11 @@ function aRental() {
             <button onclick="returnRental('${b.id}')" class="btn btn-m btn-sm !py-1">${ic('back', 'w-3.5 h-3.5')} Pengembalian</button>
           </div></td>
         </tr>`; }).join('') : `<tr><td colspan="7" class="text-center py-10 text-muted">Tidak ada sewa yang sedang berjalan.</td></tr>`}
-      </tbody></table>
+      </tbody></table></div>
     </div>
     <div class="rv card overflow-x-auto">
       <div class="p-5 pb-0 flex items-center justify-between gap-3"><h3 class="font-display font-semibold">Akan Datang (Confirmed) — jadwal pickup</h3><span class="badge bg-sky-400/10 border-sky-400/30 text-sky-300">${upcoming.length}</span></div>
-      <table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Mulai</th><th>Pickup</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
+      <div class="overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Mulai</th><th>Pickup</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
         ${upcoming.length ? upcoming.map(b => { const v = veh(b.veh) || { name: '—' }; return `<tr>
           <td class="font-mono text-maroon-400 whitespace-nowrap">${b.id.slice(-9)}</td><td class="whitespace-nowrap">${esc(b.cust)}</td>
           <td class="whitespace-nowrap"><div class="flex items-center gap-2"><img src="${v.img || IMG.fleet}" class="w-9 h-7 rounded object-cover">${esc(v.name)}</div></td>
@@ -1411,7 +1411,7 @@ function aRental() {
             <button onclick="startRental('${b.id}')" class="btn btn-m btn-sm !py-1">${ic('key', 'w-3.5 h-3.5')} Mulai Sewa</button>
           </div></td>
         </tr>`; }).join('') : `<tr><td colspan="7" class="text-center py-10 text-muted">Tidak ada jadwal yang akan datang.</td></tr>`}
-      </tbody></table>
+      </tbody></table></div>
     </div>
     <div class="rv card p-5"><h3 class="font-display font-semibold mb-3">Jadwal Pengembalian Terdekat</h3>
       <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">${ongoing.slice().sort((a, b) => a.end.localeCompare(b.end)).slice(0, 6).map(b => { const v = veh(b.veh) || { name: '—' }; return `<div class="bg-ink-900 rounded-xl px-4 py-3 border border-white/5 flex items-center gap-3 min-w-0"><span class="w-9 h-9 rounded-lg bg-orange-400/10 text-orange-300 grid place-items-center shrink-0">${ic('back', 'w-4 h-4')}</span><div class="min-w-0"><div class="text-[12.5px] font-semibold truncate">${esc(v.name)} · ${esc(b.cust)}</div><div class="text-[11px] text-muted">Kembali ${dLong(b.end)}</div></div></div>`; }).join('') || '<p class="text-[12.5px] text-muted">Tidak ada jadwal pengembalian.</p>'}</div>
