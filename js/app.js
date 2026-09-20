@@ -2184,7 +2184,7 @@ function driverForm(id){
     <label class="lbl">Nama Lengkap *</label>
     <input id="df_name" class="inp mb-3" value="${d ? esc(d.name) : ''}" placeholder="Nama driver">
     <label class="lbl">No. WhatsApp *</label>
-    <input id="df_wa" class="inp mb-3" value="${d ? esc(d.wa || '') : ''}" placeholder="0812-xxxx-xxxx">
+    <input id="df_wa" class="inp mb-3" value="${d ? esc(d.wa || '') : ''}" placeholder="0812xxxxxxxx" maxlength="12" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,12)">
     <label class="lbl">SIM</label>
     <input id="df_sim" class="inp mb-3" value="${d ? esc(d.sim || '') : 'SIM A Umum · s/d 2028'}" placeholder="SIM A Umum · s/d 2028">
     <div class="grid grid-cols-2 gap-3 mb-5">
@@ -2201,6 +2201,8 @@ function saveDriver(id){
   const name = $('df_name').value.trim();
   const wa = $('df_wa').value.trim();
   if (!name) { toast('Nama wajib diisi', 'err'); return; }
+  const waDigits = (wa || '').replace(/\\D/g, '');
+  if (waDigits.length !== 12) { toast('No. WhatsApp harus 12 angka (contoh: 081234567890)', 'err'); return; }
   const data = {
     name: name,
     wa: wa,
