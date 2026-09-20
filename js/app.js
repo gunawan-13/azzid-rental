@@ -1327,7 +1327,7 @@ function aOverview() {
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
       ${[
         ['PENDING PAYMENT', fmtK(pendAmt), 'bg-amber-400'],
-        ['BOOKING HARI INI', '2', 'bg-sky-400'],
+        ['BOOKING HARI INI', String(BOOKINGS.filter(b => b.start === TODAY).length), 'bg-sky-400'],
         ['MOBIL DISEWA', String(VEHICLES.filter(v => v.status === 'rented').length), 'bg-orange-400'],
         ['MOBIL MAINTENANCE', String(VEHICLES.filter(v => v.status === 'maintenance').length), 'bg-red-400']
       ].map((x, i) => `<div class="rv card !bg-ink-800 px-5 py-4 flex items-center justify-between" style="transition-delay:${i * 70}ms"><div class="min-w-0"><div class="text-[10px] tracking-widest text-muted uppercase truncate">${x[0]}</div><div class="font-display font-bold text-lg mt-1 truncate">${x[1]}</div></div><span class="w-2 h-2 rounded-full ${x[2]} dot-live shrink-0"></span></div>`).join('')}
