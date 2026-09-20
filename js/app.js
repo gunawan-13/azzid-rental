@@ -1648,7 +1648,7 @@ function bAct(id, act, val) {
 function openAssignDriver(id) {
   const b = BOOKINGS.find(x => x.id === id);
   modal(`<div class="p-7"><h3 class="font-display font-semibold text-lg mb-1">Assign Driver</h3><p class="text-[12px] text-muted mb-5">Untuk booking <b class="font-mono text-maroon-400">${id}</b></p>
-    <div class="space-y-2.5">${DRIVERS.map(d => `<button onclick="assignDrv('${id}','${d.id}')" class="w-full card !bg-ink-900 p-4 flex items-center gap-3 hover:border-maroon-500/50 transition text-left ${b.driver === d.id ? '!border-maroon-500' : ''}"><span class="w-10 h-10 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center font-bold shrink-0">${d.name[0]}</span><span class="grow min-w-0"><span class="block text-sm font-semibold truncate">${d.name}</span><span class="text-[11px] text-muted">★ ${d.rating} · ${d.trips} perjalanan</span></span>${badge(d.status)}</button>`).join('')}</div>
+    <div class="space-y-2.5">${DRIVERS.map(d => `<button onclick="assignDrv('${id}','${d.id}')" class="w-full card !bg-ink-900 p-4 flex items-center gap-3 hover:border-maroon-500/50 transition text-left ${b.driver === d.id ? '!border-maroon-500' : ''}"><span class="w-10 h-10 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center font-bold shrink-0">${(d.name || "D")[0]}</span><span class="grow min-w-0"><span class="block text-sm font-semibold truncate">${d.name}</span><span class="text-[11px] text-muted">★ ${d.rating || 0} · ${d.trips || 0} perjalanan</span></span>${badge(d.status)}</button>`).join('')}</div>
   </div>`);
 }
 
@@ -2158,11 +2158,13 @@ function custDetail(id) {
 }
 
 function aDrivers() {
+  if (typeof DRIVERS === "undefined" || !Array.isArray(DRIVERS)) return "<div class=\"p-8 text-center text-muted\">Data driver tidak tersedia.</div>";
+  if (DRIVERS.length === 0) return '<div class="card p-8 text-center"><p class="text-muted text-sm">Belum ada driver terdaftar. Tambahkan driver baru untuk memulai.</p></div>';
   return `<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">${DRIVERS.map((d, i) => `<div class="rv card p-6" style="transition-delay:${i * 70}ms">
-    <div class="flex items-center gap-4 mb-4"><span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-xl shrink-0">${d.name[0]}</span>
+    <div class="flex items-center gap-4 mb-4"><span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-xl shrink-0">${(d.name || "D")[0]}</span>
       <div class="min-w-0"><h3 class="font-display font-semibold truncate">${d.name}</h3><div class="flex items-center gap-1 text-[12px] text-amber-300">${starIc(1)} ${d.rating} · ${d.trips} perjalanan</div></div>
     </div>
-    <div class="text-[12px] text-muted space-y-1 mb-4"><p>${ic('phone', 'w-3.5 h-3.5 inline mr-1')}${d.wa}</p><p>${ic('card', 'w-3.5 h-3.5 inline mr-1')}${d.sim}</p></div>
+    <div class="text-[12px] text-muted space-y-1 mb-4"><p>${ic('phone', 'w-3.5 h-3.5 inline mr-1')}${d.wa || "-"}</p><p>${ic('card', 'w-3.5 h-3.5 inline mr-1')}${d.sim || "-"}</p></div>
     <div class="flex gap-2 items-center"><select class="inp !py-1.5 text-[12px]" onchange="setDrvStatus('${d.id}',this.value)">${['Available', 'Assigned', 'On Trip', 'Off Duty'].map(s => `<option ${d.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>${badge(d.status)}</div>
   </div>`).join('')}</div>`;
 }
