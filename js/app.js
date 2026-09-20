@@ -139,7 +139,7 @@ async function loadBookingsFromAPI() {
 }
 
 function normalizeBookingFromAPI(b) {
-  return { id: b.booking_code || ("AZR-" + b.id), cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: "QRIS", s: b.payment_status || "UNPAID", tx: "-", at: null }, user: null };
+  return { id: b.booking_code || ("AZR-" + b.id), backendId: b.id, cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: "QRIS", s: b.payment_status || "UNPAID", tx: "-", at: null }, user: null };
 }
 
 function addUserNotif(email, type, message){
@@ -837,6 +837,7 @@ function doPay() {
         })
       }).then(r => r.json()).then(res => {
         console.log('Booking saved to backend:', res);
+        if (res && res.data && res.data.id && b) { b.backendId = res.data.id; persist(); }
       }).catch(e => console.warn('POST booking error:', e.message));
     } catch (e) { console.warn('POST booking fail:', e.message); }
     if(typeof addAdminNotif==='function')addAdminNotif('booking','Booking baru '+b.id+' dari '+b.cust);
@@ -1539,6 +1540,21 @@ function delBooking(id) {
 function hardDelBooking(id) {
   const b = BOOKINGS.find(x => x.id === id);
   BOOKINGS = BOOKINGS.filter(x => x.id !== id);
+  // SINKRON DELETE KE BACKEND
+  try {
+    const backendId = (b && b.backendId) ? b.backendId : null;
+    if (backendId) {
+      fetch(API_BASE_URL + '/bookings/' + backendId, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: { 'Accept': 'application/json' }
+      }).then(r => r.json()).then(res => {
+        console.log('DELETE response:', res);
+      }).catch(e => console.warn('DELETE error:', e.message));
+    } else {
+      console.warn('Booking tidak punya backendId — skip DELETE backend');
+    }
+  } catch (e) { console.warn('DELETE fail:', e.message); }
   const v = veh(b.veh);
   const still = BOOKINGS.some(x => x.veh === b.veh && ['Ongoing', 'Confirmed'].includes(x.status));
   if (v && !still && v.status === 'rented') v.status = 'available';
