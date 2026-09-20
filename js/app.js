@@ -1244,13 +1244,21 @@ function closeSb() {
 function revSeries(days) {
   const out = [];
   const t = dP(TODAY);
+  // Kelompokkan revenue booking real per tanggal
+  const map = {};
+  if (Array.isArray(BOOKINGS)) {
+    BOOKINGS.forEach(b => {
+      if (b && b.start && b.pay && b.pay.s === 'PAID') {
+        map[b.start] = (map[b.start] || 0) + (Number(b.total) || 0);
+      }
+    });
+  }
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(t);
     d.setDate(d.getDate() - i);
-    const sd = d.getDate() + d.getMonth() * 31;
-    let v = 900000 + rnd(sd) * 1700000;
-    if (d.getDay() === 5 || d.getDay() === 6) v += 600000;
-    out.push({ d, v: Math.round(v / 50000) * 50000 });
+    const dateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const v = map[dateStr] || 0;   // ← ambil real, kalau tidak ada = 0
+    out.push({ d, v });
   }
   return out;
 }
