@@ -2400,7 +2400,18 @@ function aReports() {
     body = `<div class="card p-6 min-w-0">${areaChart(revSeries(30))}</div><div class="card overflow-x-auto mt-5"><table class="tbl"><thead><tr><th>Periode</th><th>Pendapatan</th><th>Trend</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtIDR(r[1])}</td><td class="text-emerald-300">↑</td></tr>`).join('')}</tbody></table></div><button onclick="exportCSV(${JSON.stringify(rows).replace(/"/g, '&quot;')})" class="btn btn-g btn-sm mt-4">${ic('dl', 'w-4 h-4')} Export CSV</button>`;
   }
   if (t === 'ren') {
-    const util = VEHICLES.map(v => ({ n: v.name, u: v.status === 'inactive' ? 18 : 55 + Math.floor(rnd(v.name.length * 7) * 40) }));
+    const util = VEHICLES.map(v => {
+      const vBookings = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => String(b.veh) === String(v.id)) : [];
+      const totalDays = vBookings.reduce((sum, b) => {
+        if (!b.start || !b.end) return sum;
+        const s = new Date(b.start), e = new Date(b.end);
+        const diff = Math.max(0, Math.round((e - s) / 86400000));
+        return sum + diff;
+      }, 0);
+      const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+      const u = Math.min(100, Math.round((totalDays / daysInMonth) * 100));
+      return { n: v.name, u: u };
+    });
     body = `<div class="card p-6 min-w-0"><h4 class="font-display font-semibold mb-5">Utilisasi Kendaraan (${["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][new Date().getMonth()]})</h4><div class="space-y-4">${util.map(u => `<div><div class="flex justify-between text-[12px] mb-1.5 gap-3"><span class="truncate">${u.n}</span><b class="text-maroon-400 shrink-0">${u.u}%</b></div><div class="h-2.5 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-maroon-800 to-maroon-400" style="width:${u.u}%"></div></div></div>`).join('')}</div></div>
     <div class="card p-6 mt-5 min-w-0"><h4 class="font-display font-semibold mb-4">Mobil Paling Sering Disewa</h4><div class="space-y-2">${[
       ['Toyota Avanza', 42],
