@@ -2159,13 +2159,14 @@ function custDetail(id) {
 
 function aDrivers() {
   if (typeof DRIVERS === "undefined" || !Array.isArray(DRIVERS)) return "<div class=\"p-8 text-center text-muted\">Data driver tidak tersedia.</div>";
-  if (DRIVERS.length === 0) return '<div class="card p-8 text-center"><p class="text-muted text-sm">Belum ada driver terdaftar. Tambahkan driver baru untuk memulai.</p></div>';
-  return `<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">${DRIVERS.map((d, i) => `<div class="rv card p-6" style="transition-delay:${i * 70}ms">
+  const header = '<div class="flex items-center justify-between mb-5"><h2 class="font-display font-bold text-lg">Daftar Driver</h2><button onclick="driverForm()" class="btn btn-m btn-sm">+ Tambah Driver</button></div>';
+  if (DRIVERS.length === 0) return header + '<div class="card p-8 text-center"><p class="text-muted text-sm">Belum ada driver terdaftar. Klik "Tambah Driver" untuk memulai.</p></div>';
+  return header + `<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">${DRIVERS.map((d, i) => `<div class="rv card p-6" style="transition-delay:${i * 70}ms">
     <div class="flex items-center gap-4 mb-4"><span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-xl shrink-0">${(d.name || "D")[0]}</span>
       <div class="min-w-0"><h3 class="font-display font-semibold truncate">${d.name}</h3><div class="flex items-center gap-1 text-[12px] text-amber-300">${starIc(1)} ${d.rating} · ${d.trips} perjalanan</div></div>
     </div>
     <div class="text-[12px] text-muted space-y-1 mb-4"><p>${ic('phone', 'w-3.5 h-3.5 inline mr-1')}${d.wa || "-"}</p><p>${ic('card', 'w-3.5 h-3.5 inline mr-1')}${d.sim || "-"}</p></div>
-    <div class="flex gap-2 items-center"><select class="inp !py-1.5 text-[12px]" onchange="setDrvStatus('${d.id}',this.value)">${['Available', 'Assigned', 'On Trip', 'Off Duty'].map(s => `<option ${d.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>${badge(d.status)}</div>
+    <div class="flex gap-2 items-center flex-wrap"><button onclick="driverForm('${d.id}')" class="btn btn-g btn-sm !py-1">Edit</button><button onclick="delDriver('${d.id}')" class="btn btn-d btn-sm !py-1">Hapus</button><select class="inp !py-1.5 text-[12px]" onchange="setDrvStatus('${d.id}',this.value)">${['Available', 'Assigned', 'On Trip', 'Off Duty'].map(s => `<option ${d.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>${badge(d.status)}</div>
   </div>`).join('')}</div>`;
 }
 
@@ -2173,6 +2174,64 @@ function setDrvStatus(id, val) {
   drv(id).status = val;
   persist();
   toast('Status ' + drv(id).name + ' → ' + val);
+  renderAdminBody();
+}
+
+function driverForm(id){
+  const d = id ? DRIVERS.find(x => x.id === id) : null;
+  modal(`<div class="p-7">
+    <div class="flex justify-between items-center mb-5"><h3 class="font-display font-bold text-lg">${d ? 'Edit' : 'Tambah'} Driver</h3><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div>
+    <label class="lbl">Nama Lengkap *</label>
+    <input id="df_name" class="inp mb-3" value="${d ? esc(d.name) : ''}" placeholder="Nama driver">
+    <label class="lbl">No. WhatsApp *</label>
+    <input id="df_wa" class="inp mb-3" value="${d ? esc(d.wa || '') : ''}" placeholder="0812-xxxx-xxxx">
+    <label class="lbl">SIM</label>
+    <input id="df_sim" class="inp mb-3" value="${d ? esc(d.sim || '') : 'SIM A Umum · s/d 2028'}" placeholder="SIM A Umum · s/d 2028">
+    <div class="grid grid-cols-2 gap-3 mb-5">
+      <div><label class="lbl">Rating</label><input id="df_rating" type="number" step="0.1" min="0" max="5" class="inp" value="${d ? d.rating : 5.0}"></div>
+      <div><label class="lbl">Total Trip</label><input id="df_trips" type="number" min="0" class="inp" value="${d ? d.trips : 0}"></div>
+    </div>
+    <label class="lbl">Status</label>
+    <select id="df_status" class="inp mb-5">${['Available','Assigned','On Trip','Off Duty'].map(s => `<option ${d && d.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>
+    <button onclick="saveDriver('${id || ''}')" class="btn btn-m w-full">${ic('check', 'w-4 h-4')} ${d ? 'Update' : 'Tambah'} Driver</button>
+  </div>`);
+}
+
+function saveDriver(id){
+  const name = $('df_name').value.trim();
+  const wa = $('df_wa').value.trim();
+  if (!name) { toast('Nama wajib diisi', 'err'); return; }
+  const data = {
+    name: name,
+    wa: wa,
+    sim: $('df_sim').value.trim() || 'SIM A Umum · s/d 2028',
+    rating: parseFloat($('df_rating').value) || 5.0,
+    trips: parseInt($('df_trips').value) || 0,
+    status: $('df_status').value
+  };
+  if (id) {
+    const d = DRIVERS.find(x => x.id === id);
+    if (d) Object.assign(d, data);
+    toast('Driver diperbarui');
+  } else {
+    const newId = 'DRV-' + String(DRIVERS.length + 1).padStart(2, '0');
+    DRIVERS.push({ id: newId, ...data });
+    toast('Driver ditambahkan');
+  }
+  persist();
+  addLog('Driver ' + name + ' ' + (id ? 'diperbarui' : 'ditambahkan'));
+  closeModal();
+  renderAdminBody();
+}
+
+function delDriver(id){
+  const d = DRIVERS.find(x => x.id === id);
+  if (!d) return;
+  if (!confirm('Hapus driver ' + d.name + '?')) return;
+  DRIVERS = DRIVERS.filter(x => x.id !== id);
+  persist();
+  addLog('Driver ' + d.name + ' dihapus');
+  toast('Driver dihapus', 'info');
   renderAdminBody();
 }
 
