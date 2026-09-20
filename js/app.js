@@ -2339,7 +2339,10 @@ function savePromo() {
 function setRepTab(v){S.repTab=v;renderAdminBody();}
 
 function exportFin(format){
-  const rev = 48500000, disc = 850000, ref = 1300000, net = rev - disc - ref;
+  const rev = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => b.pay && b.pay.s === 'PAID').reduce((a,b) => a + (Number(b.total)||0), 0) : 0;
+    const disc = Array.isArray(BOOKINGS) ? BOOKINGS.reduce((a,b) => a + (Number(b.disc)||0), 0) : 0;
+    const ref = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => b.pay && b.pay.s === 'REFUNDED').reduce((a,b) => a + (Number(b.total)||0), 0) : 0;
+    const net = rev - disc - ref;
   const rows = [["Revenue", rev], ["Discount", disc], ["Refund", ref], ["Net Revenue", net]];
   if (format === "CSV") {
     let csv = "Kategori;Jumlah\n" + rows.map(r => r[0] + ";" + r[1]).join("\n");
@@ -2398,7 +2401,7 @@ function aReports() {
   }
   if (t === 'ren') {
     const util = VEHICLES.map(v => ({ n: v.name, u: v.status === 'inactive' ? 18 : 55 + Math.floor(rnd(v.name.length * 7) * 40) }));
-    body = `<div class="card p-6 min-w-0"><h4 class="font-display font-semibold mb-5">Utilisasi Kendaraan (Agustus)</h4><div class="space-y-4">${util.map(u => `<div><div class="flex justify-between text-[12px] mb-1.5 gap-3"><span class="truncate">${u.n}</span><b class="text-maroon-400 shrink-0">${u.u}%</b></div><div class="h-2.5 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-maroon-800 to-maroon-400" style="width:${u.u}%"></div></div></div>`).join('')}</div></div>
+    body = `<div class="card p-6 min-w-0"><h4 class="font-display font-semibold mb-5">Utilisasi Kendaraan (${["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][new Date().getMonth()]})</h4><div class="space-y-4">${util.map(u => `<div><div class="flex justify-between text-[12px] mb-1.5 gap-3"><span class="truncate">${u.n}</span><b class="text-maroon-400 shrink-0">${u.u}%</b></div><div class="h-2.5 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-maroon-800 to-maroon-400" style="width:${u.u}%"></div></div></div>`).join('')}</div></div>
     <div class="card p-6 mt-5 min-w-0"><h4 class="font-display font-semibold mb-4">Mobil Paling Sering Disewa</h4><div class="space-y-2">${[
       ['Toyota Avanza', 42],
       ['Honda Brio RS', 35],
