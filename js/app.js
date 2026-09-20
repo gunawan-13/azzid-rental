@@ -2621,10 +2621,31 @@ function applyCms() {
   const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'halo@azzidrentcar.id';
 }
 
+function deleteUser(id, email){
+  if (!confirm('Hapus user ' + email + '?\n\nData akan dihapus dari local + backend.')) return;
+  
+  // Hapus dari local
+  ADMIN_USERS = ADMIN_USERS.filter(u => String(u.id) !== String(id));
+  if (typeof persist === 'function') persist();
+  toast('User ' + email + ' dihapus', 'info');
+  renderAdminBody();
+  
+  // Sinkron ke backend
+  try {
+    fetch(API_BASE_URL + '/users/' + id, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    }).then(r => r.json()).then(res => {
+      console.log('DELETE user response:', res);
+    }).catch(e => console.warn('DELETE user error:', e.message));
+  } catch (e) { console.warn('DELETE user fail:', e.message); }
+}
+
 function aUsers() {
   return `<div class="space-y-6">
-    <div class="rv card overflow-x-auto"><table class="tbl min-w-[680px]"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th></tr></thead><tbody>
-      ${ADMIN_USERS.map(u => `<tr><td class="font-semibold whitespace-nowrap">${esc(u.name)}</td><td class="text-muted whitespace-nowrap">${esc(u.email)}</td><td><select class="inp !w-36 !py-1.5 text-[12px]" onchange="updateUserRole(${u.id},this.value)"><option value="admin" ${u.role === "admin" ? "selected" : ""}>Admin</option><option value="user" ${u.role === "user" ? "selected" : ""}>User</option></select></td><td>${badge(u.status)}</td></tr>`).join('')}
+    <div class="rv card overflow-x-auto"><table class="tbl min-w-[680px]"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
+      ${ADMIN_USERS.map(u => `<tr><td class="font-semibold whitespace-nowrap">${esc(u.name)}</td><td class="text-muted whitespace-nowrap">${esc(u.email)}</td><td><select class="inp !w-36 !py-1.5 text-[12px]" onchange="updateUserRole(${u.id},this.value)"><option value="admin" ${u.role === "admin" ? "selected" : ""}>Admin</option><option value="user" ${u.role === "user" ? "selected" : ""}>User</option></select></td><td>${badge(u.status)}</td><td><button onclick="deleteUser(${u.id},'${esc(u.email)}')" class="btn btn-d btn-sm !py-1 !px-2" title="Hapus">${ic('trash', 'w-3.5 h-3.5')}</button></td></tr>`).join('')}
     </tbody></table></div>
     <div class="rv card p-6 overflow-x-auto"><h3 class="font-display font-semibold mb-4">Role Permission Matrix</h3>
       <table class="tbl min-w-[680px]"><thead><tr><th>Modul</th><th>Super Admin</th><th>Admin</th><th>Staff</th><th>Finance</th><th>Driver</th></tr></thead><tbody>
