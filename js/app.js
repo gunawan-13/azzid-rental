@@ -2412,9 +2412,13 @@ function aReports() {
   }
   if (t === 'cus') {
     body = `<div class="grid sm:grid-cols-3 gap-4 mb-5">${[
-      ['Customer Baru (30 hari)', '18'],
-      ['Repeat Customer', '64%'],
-      ['Akun Penyewa', ACCOUNTS.length]
+      ['Customer Baru (30 hari)', String(Array.isArray(CUSTOMERS) ? CUSTOMERS.filter(x => x.status === 'New').length : 0)],
+      ['Repeat Customer', (() => {
+        if (!Array.isArray(CUSTOMERS) || CUSTOMERS.length === 0) return '0%';
+        const repeat = CUSTOMERS.filter(x => Number(x.total) > 1).length;
+        return Math.round((repeat / CUSTOMERS.length) * 100) + '%';
+      })()],
+      ['Akun Penyewa', String(Array.isArray(ACCOUNTS) ? ACCOUNTS.length : 0)]
     ].map((x, i) => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-bold text-lg text-maroon-400 truncate">${x[1]}</div></div>`).join('')}</div>
     <div class="card overflow-x-auto"><table class="tbl"><thead><tr><th>Customer</th><th>Total Booking</th><th>Total Spending</th></tr></thead><tbody>${[...CUSTOMERS].sort((a, b) => b.spend - a.spend).slice(0, 6).map(c => `<tr><td>${esc(c.name)}</td><td>${c.total}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtIDR(c.spend)}</td></tr>`).join('')}</tbody></table></div>`;
   }
