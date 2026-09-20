@@ -2413,13 +2413,17 @@ function aReports() {
       return { n: v.name, u: u };
     });
     body = `<div class="card p-6 min-w-0"><h4 class="font-display font-semibold mb-5">Utilisasi Kendaraan (${["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"][new Date().getMonth()]})</h4><div class="space-y-4">${util.map(u => `<div><div class="flex justify-between text-[12px] mb-1.5 gap-3"><span class="truncate">${u.n}</span><b class="text-maroon-400 shrink-0">${u.u}%</b></div><div class="h-2.5 rounded-full bg-white/5"><div class="h-full rounded-full bg-gradient-to-r from-maroon-800 to-maroon-400" style="width:${u.u}%"></div></div></div>`).join('')}</div></div>
-    <div class="card p-6 mt-5 min-w-0"><h4 class="font-display font-semibold mb-4">Mobil Paling Sering Disewa</h4><div class="space-y-2">${[
-      ['Toyota Avanza', 42],
-      ['Honda Brio RS', 35],
-      ['Toyota Innova Zenix', 31],
-      ['Mitsubishi Xpander', 27],
-      ['Toyota Fortuner', 19]
-    ].map((x, i) => `<div class="flex items-center gap-3 text-[13px] bg-ink-900 rounded-lg px-4 py-2.5"><span class="font-display font-bold text-maroon-400 w-6 shrink-0">#${i + 1}</span><span class="grow truncate">${x[0]}</span><b class="shrink-0">${x[1]} rental</b></div>`).join('')}</div></div>`;
+    <div class="card p-6 mt-5 min-w-0"><h4 class="font-display font-semibold mb-4">Mobil Paling Sering Disewa</h4><div class="space-y-2">${(function(){
+      const counts = {};
+      if (Array.isArray(BOOKINGS)) {
+        BOOKINGS.forEach(b => {
+          const v = (typeof veh === 'function' ? veh(b.veh) : null) || { name: b.veh };
+          const k = v.name || b.veh;
+          counts[k] = (counts[k] || 0) + 1;
+        });
+      }
+      return Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0,5);
+    })().map((x, i) => `<div class="flex items-center gap-3 text-[13px] bg-ink-900 rounded-lg px-4 py-2.5"><span class="font-display font-bold text-maroon-400 w-6 shrink-0">#${i + 1}</span><span class="grow truncate">${x[0]}</span><b class="shrink-0">${x[1]} rental</b></div>`).join('')}</div></div>`;
   }
   if (t === 'cus') {
     body = `<div class="grid sm:grid-cols-3 gap-4 mb-5">${[
@@ -2434,9 +2438,9 @@ function aReports() {
     <div class="card overflow-x-auto"><table class="tbl"><thead><tr><th>Customer</th><th>Total Booking</th><th>Total Spending</th></tr></thead><tbody>${[...CUSTOMERS].sort((a, b) => b.spend - a.spend).slice(0, 6).map(c => `<tr><td>${esc(c.name)}</td><td>${c.total}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtIDR(c.spend)}</td></tr>`).join('')}</tbody></table></div>`;
   }
   if (t === 'fin') {
-    const rev = 48500000,
-      disc = 850000,
-      ref = 1300000;
+    const rev = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => b.pay && b.pay.s === 'PAID').reduce((a,b) => a + (Number(b.total)||0), 0) : 0,
+      disc = Array.isArray(BOOKINGS) ? BOOKINGS.reduce((a,b) => a + (Number(b.disc)||0), 0) : 0,
+      ref = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => b.pay && b.pay.s === 'REFUNDED').reduce((a,b) => a + (Number(b.total)||0), 0) : 0;
     body = `<div class="grid grid-cols-2 xl:grid-cols-4 gap-4">${[
       ['Revenue', fmtIDR(rev), 'text-emerald-300'],
       ['Discount', fmtIDR(disc), 'text-amber-300'],
