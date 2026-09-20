@@ -2388,15 +2388,20 @@ function aReports() {
   ];
   let body = '';
   if (t === 'rev') {
-    const rows = [
-      ['Februari 2026', 38500000],
-      ['Maret 2026', 41200000],
-      ['April 2026', 39800000],
-      ['Mei 2026', 44600000],
-      ['Juni 2026', 46900000],
-      ['Juli 2026', 51300000],
-      ['Agustus 2026 (berjalan)', 24800000]
-    ];
+    const rows = (function(){
+      const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+      const map = {};
+      if (Array.isArray(BOOKINGS)) {
+        BOOKINGS.forEach(b => {
+          if (!b.start || !b.pay || b.pay.s !== 'PAID') return;
+          const d = new Date(b.start);
+          if (isNaN(d.getTime())) return;
+          const key = months[d.getMonth()] + ' ' + d.getFullYear();
+          map[key] = (map[key] || 0) + (Number(b.total) || 0);
+        });
+      }
+      return Object.entries(map).map(([k, v]) => [k, v]);
+    })();
     body = `<div class="card p-6 min-w-0">${areaChart(revSeries(30))}</div><div class="card overflow-x-auto mt-5"><table class="tbl"><thead><tr><th>Periode</th><th>Pendapatan</th><th>Trend</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtIDR(r[1])}</td><td class="text-emerald-300">↑</td></tr>`).join('')}</tbody></table></div><button onclick="exportCSV(${JSON.stringify(rows).replace(/"/g, '&quot;')})" class="btn btn-g btn-sm mt-4">${ic('dl', 'w-4 h-4')} Export CSV</button>`;
   }
   if (t === 'ren') {
