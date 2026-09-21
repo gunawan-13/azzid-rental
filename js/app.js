@@ -351,7 +351,7 @@ function vHome() {
           <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="${addDays(TODAY,2)}" min="${addDays(TODAY,1)}" required></div>
           <div><label class="lbl">Jenis Rental</label><select id="qbType" class="inp"><option>Lepas Kunci</option><option>Dengan Driver</option></select></div>
           <div><label class="lbl">Mobil</label><select id="qbVeh" class="inp"><option value="">Semua kendaraan</option>${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select></div>
-          <button class="col-span-full btn btn-m mt-1">${ic('cal', 'w-4 h-4')} Booking Sekarang</button>
+          <button onclick="openBooking()" class="col-span-full btn btn-m mt-1">${ic('cal', 'w-4 h-4')} Booking Sekarang</button>
         </form>
         <p class="text-[11px] text-muted mt-3 text-center">Konfirmasi instan via WhatsApp</p>
       </div>
@@ -541,9 +541,10 @@ function vDetail(slug) {
             <div class="rounded-xl border border-white/10 p-4 text-center"><div class="text-[10px] uppercase tracking-widest text-muted mb-1">Lepas Kunci</div><div class="font-display font-extrabold text-maroon-400 text-lg">${fmtIDR(v.priceLK)}</div></div>
             <div class="rounded-xl border border-maroon-500/40 bg-maroon-500/10 p-4 text-center"><div class="text-[10px] uppercase tracking-widest text-red-200 mb-1">Dengan Driver</div><div class="font-display font-extrabold text-white text-lg">${fmtIDR(v.priceDrv || v.priceLK + 150000)}</div></div>
           </div>
+          ${S.draft?.start && S.draft?.start !== TODAY ? `<div class="text-[11px] text-emerald-300 bg-emerald-400/10 border border-emerald-400/30 rounded-lg px-3 py-2 mb-3 text-center">✓ Tanggal dari Quick Booking — tinggal klik Booking</div>` : ""}
           <div class="grid grid-cols-2 gap-3 mb-4">
-            <div><label class="lbl">Mulai</label><input type="date" id="dtStart" class="inp" value="${TODAY}"></div>
-            <div><label class="lbl">Selesai</label><input type="date" id="dtEnd" class="inp" value="${addDays(TODAY,2)}"></div>
+            <div><label class="lbl">Mulai</label><input type="date" id="dtStart" class="inp" value="${S.draft?.start || TODAY}"></div>
+            <div><label class="lbl">Selesai</label><input type="date" id="dtEnd" class="inp" value="${S.draft?.end || addDays(TODAY,2)}"></div>
           </div>
           <select id="dtType" class="inp mb-4"><option>Lepas Kunci</option><option>Dengan Driver</option></select>
           <button onclick="openBookingFromDetail('${v.id}')" class="btn btn-m w-full">${ic('cal')} Booking Mobil Ini</button>
@@ -627,8 +628,8 @@ function openBooking(vid) {
 
 function openBookingFromDetail(vid) {
   S.draft.veh = vid;
-  S.draft.start = $('dtStart').value;
-  S.draft.end = $('dtEnd').value;
+  S.draft.start = $('dtStart')?.value || S.draft.start || TODAY;
+  S.draft.end = $('dtEnd')?.value || S.draft.end || addDays(TODAY,2);
   S.draft.type = $('dtType').value;
   S.step = 1;
   renderC();
