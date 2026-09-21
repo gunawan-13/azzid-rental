@@ -2996,14 +2996,23 @@ window.addEventListener('DOMContentLoaded', () => {
 const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
 // force redeploy Mon, Sep 21, 2026 10:45:25 AM
 
-// === Auto-close dropdown bell saat klik di mana saja ===
+// === Auto-close dropdown bell saat klik di mana saja (capture phase) ===
 document.addEventListener('click', function(e) {
-  const bellD = document.getElementById('bellD');
-  if (!bellD || bellD.classList.contains('hidden')) return;
-  // Jangan nutup kalau klik di dalam dropdown
-  if (e.target.closest('#bellD')) return;
-  // Jangan nutup kalau klik tombol bell (biar toggle)
-  if (e.target.closest('button') && e.target.closest('button').getAttribute('onclick') && e.target.closest('button').getAttribute('onclick').includes('bellD')) return;
-  // Nutup
-  bellD.classList.add('hidden');
-});
+  try {
+    var bellD = document.getElementById('bellD');
+    if (!bellD) return;
+    if (bellD.classList.contains('hidden')) return;
+    // Klik di dalam dropdown? biarkan
+    if (e.target.closest('#bellD')) return;
+    // Klik tombol bell? biarkan (biar toggle)
+    var btn = e.target.closest('button');
+    if (btn) {
+      var oc = btn.getAttribute('onclick') || '';
+      if (oc.indexOf('bellD') !== -1) return;
+    }
+    // Nutup
+    bellD.classList.add('hidden');
+  } catch (err) {
+    console.warn('auto-close bell error:', err);
+  }
+}, true); // capture phase — jalan duluan
