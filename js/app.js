@@ -735,7 +735,7 @@ function bkAuthTab(t) {
       regTab.classList.add("hidden");
       if (btIn) btIn.classList.add("on");
       if (btReg) btReg.classList.remove("on");
-      if (typeof initGoogleButton === "function") setTimeout(initGoogleButton, 100);
+      
     }
   } catch (e) { console.error("bkAuthTab error:", e); }
 }
@@ -1171,25 +1171,38 @@ async function authApi(path='',options={}){
 }
 
 function googleLoginMarkup(){
-  return `<div class="my-4"><div class="flex items-center gap-3 text-[10px] text-zinc-500 uppercase tracking-widest"><span class="h-px bg-white/10 flex-1"></span><span>atau</span><span class="h-px bg-white/10 flex-1"></span></div><div id="googleLoginBtn" class="mt-4 flex justify-center min-h-[44px]"></div></div>`;
+  return `<div class="my-4"><div class="flex items-center gap-3 text-[10px] text-zinc-500 uppercase tracking-widest"><span class="h-px bg-white/10 flex-1"></span><span>atau</span><span class="h-px bg-white/10 flex-1"></span></div><div id="googleLoginBtn" class="mt-4 flex justify-center min-h-[44px]" data-g-rendered="0"></div></div>`;
 }
 function initGoogleButton(){
-  const el=$('googleLoginBtn'); if(!el) return;
-  if(!GOOGLE_CLIENT_ID){el.innerHTML='<div class="text-[11px] text-zinc-500 text-center border border-white/10 rounded-lg px-3 py-2">Login Google siap digunakan setelah GOOGLE_CLIENT_ID dikonfigurasi.</div>';return;}
-  // Kalau sudah dirender untuk container ini, skip (anti-flicker)
-  if (el.dataset.gRendered === "1" && el.querySelector("div[role=button]")) return;
-  // Cegah render ganda dalam 1 detik
-  if (el._lastInit && Date.now() - el._lastInit < 1000) return;
-  el._lastInit = Date.now();
-  const draw=()=>{
-    if(!window.google?.accounts?.id) return false;
-    window.google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:credential=>doGoogleLogin(credential.credential)});
-    el.innerHTML='';
-    window.google.accounts.id.renderButton(el,{theme:'outline',size:'large',shape:'rectangular',width:360,text:'signin_with'});
-    el.dataset.gRendered = "1";
-    return true;
+  const el = $("googleLoginBtn"); if (!el) return;
+  if (!GOOGLE_CLIENT_ID) return;
+
+  // Sudah ada tombol? skip total
+  if (el.dataset.gRendered === "1" && (el.querySelector("div[role=button]") || el.querySelector("iframe"))) return;
+
+  // Lock global 3 detik
+  if (window._gLock && Date.now() - window._gLock < 3000) return;
+  window._gLock = Date.now();
+
+  const draw = () => {
+    if (!window.google?.accounts?.id) return false;
+    if (el.dataset.gRendered === "1" && (el.querySelector("div[role=button]") || el.querySelector("iframe"))) return true;
+    try {
+      window.google.accounts.id.initialize({client_id: GOOGLE_CLIENT_ID, callback: credential => doGoogleLogin(credential.credential)});
+      el.innerHTML = "";
+      window.google.accounts.id.renderButton(el, {theme: "outline", size: "large", shape: "rectangular", width: 360, text: "signin_with"});
+      el.dataset.gRendered = "1";
+      return true;
+    } catch (e) { console.warn("initGoogleButton draw error:", e); return false; }
   };
-  if(!draw()) setTimeout(draw,300);
+
+  if (!draw()) {
+    let retry = 0;
+    const t = setInterval(() => {
+      retry++;
+      if (draw() || retry > 15) clearInterval(t);
+    }, 200);
+  }
 }
 async function doGoogleLogin(credential){
   try{
@@ -2950,7 +2963,7 @@ function renderC() {
   });
   window.scrollTo({ top: 0 });
   syncAdminBtns();
-  setTimeout(() => { if ((S.step === 3 || S.step === 2) && location.hash === '#/booking') initGoogleButton(); }, 150);
+  // trigger initGoogleButton dihapus — pakai MutationObserver
 }
 
 function route() {
