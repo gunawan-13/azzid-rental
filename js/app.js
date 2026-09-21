@@ -6,6 +6,7 @@ const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 const VEHICLE_API_URL = window.VEHICLE_API_URL || `${API_BASE_URL}/vehicles`;
 const AUTH_API_URL = `${API_BASE_URL}/auth`;
 const USERS_API_URL = `${API_BASE_URL}/users`;
+const DRIVER_API_URL = `${API_BASE_URL}/drivers`;
 let ADMIN_USERS = [];
 
 /*
@@ -1176,6 +1177,7 @@ const AMENU = [
 ];
 
 function renderA() {
+  if (typeof loadDriversFromAPI === "function") loadDriversFromAPI();
   try{const _hca=document.getElementById("custApp");if(_hca)_hca.style.display="none";const _haa=document.getElementById("adminApp");if(_haa){_haa.classList.remove("hidden");_haa.style.display="block";}}catch(_){}
   try{window.scrollTo({ top: 0, behavior: "instant" });}catch(_){}
   if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
@@ -2172,6 +2174,31 @@ function custDetail(id) {
   </div>`, 1);
 }
 
+async function loadDriversFromAPI(){
+  try {
+    const res = await fetch(DRIVER_API_URL, { credentials: 'include', headers: { Accept: 'application/json' } });
+    const payload = await res.json();
+    const list = Array.isArray(payload && payload.data) ? payload.data : [];
+    if (!list.length) { console.log('Drivers API: kosong'); return; }
+    DRIVERS.length = 0;
+    list.forEach(d => {
+      DRIVERS.push({
+        id: d.id,
+        name: d.name || 'Driver',
+        wa: d.phone || '',
+        sim: d.license_number || '',
+        rating: Number(d.rating) || 5.0,
+        trips: Number(d.trips) || 0,
+        status: d.status || 'Available'
+      });
+    });
+    if (typeof persist === 'function') persist();
+    console.log('Drivers dari API:', DRIVERS.length);
+  } catch (err) {
+    console.warn('API drivers gagal:', err.message);
+  }
+}
+
 function aDrivers() {
   if (typeof DRIVERS === "undefined" || !Array.isArray(DRIVERS)) return "<div class=\"p-8 text-center text-muted\">Data driver tidak tersedia.</div>";
   const header = '<div class="flex items-center justify-between mb-5"><h2 class="font-display font-bold text-lg">Daftar Driver</h2><button onclick="driverForm()" class="btn btn-m btn-sm">+ Tambah Driver</button></div>';
@@ -2233,6 +2260,16 @@ function saveDriver(id){
   } else {
     const newId = 'DRV-' + String(DRIVERS.length + 1).padStart(2, '0');
     DRIVERS.push({ id: newId, ...data });
+  // Sinkron ke backend
+  fetch(DRIVER_API_URL, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ name: data.name, phone: data.wa, license_number: data.sim, status: data.status })
+  }).then(r => r.json()).then(res => {
+    console.log('Driver saved:', res);
+    if (res && res.data && res.data.id) { loadDriversFromAPI(); }
+  }).catch(e => console.warn('POST driver error:', e.message));
     toast('Driver ditambahkan');
   }
   persist();
@@ -2246,6 +2283,11 @@ function delDriver(id){
   if (!d) return;
   if (!confirm('Hapus driver ' + d.name + '?')) return;
   DRIVERS = DRIVERS.filter(x => x.id !== id);
+  // Sinkron DELETE ke backend
+  fetch(DRIVER_API_URL + '/' + id, {
+    method: 'DELETE',
+    credentials: 'include'
+  }).catch(e => console.warn('DELETE driver error:', e.message));
   persist();
   addLog('Driver ' + d.name + ' dihapus');
   toast('Driver dihapus', 'info');
@@ -2803,6 +2845,7 @@ window.addEventListener('scroll', () => {
 
 applyCms();
 loadVehiclesFromAPI();
+loadDriversFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
   window.__exportBtnAttached = true;
   document.addEventListener('click', (e) => {
