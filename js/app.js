@@ -753,24 +753,31 @@ function previewKtp(input){
 
 function bkNext() {
   const d = S.draft;
-  if (S.step === 0 && !d.veh) { toast('Pilih mobil terlebih dahulu', 'err'); return; }
-  if (S.step === 1) {
-    if (!d.start || !d.end || d.end < d.start) { toast('Tanggal tidak valid', 'err'); return; }
-    
-  }
+  // Validasi step 2 (Jadwal & Jenis)
   if (S.step === 2) {
-    const req = ['nama', 'wa', 'email', 'alamat', 'tujuan'];
-    const ok = req.every(k => $('cf_' + k) && $('cf_' + k).value.trim());
-    if (!ok) { toast('Lengkapi semua data wajib', 'err'); return; }
-    if (!window._ktpBase64) { toast('Upload foto identitas wajib', 'err'); return; }
+    const start = $("bkStart")?.value;
+    const end = $("bkEnd")?.value;
+    if (start) d.start = start;
+    if (end) d.end = end;
+    if (!d.start || !d.end || d.end < d.start) { toast("Tanggal tidak valid", "err"); return; }
+    const t = $("bkType")?.value; if (t) d.type = t;
+    const p = $("bkPickup")?.value; if (p) d.pickup = p;
+  }
+  // Step 3 (Akun): login opsional, tidak ada validasi
+  // Validasi step 4 (Ringkasan): Data Penyewa wajib
+  if (S.step === 4) {
+    const req = ["nama", "wa", "email", "alamat", "tujuan"];
+    const ok = req.every(k => $("cf_" + k) && $("cf_" + k).value.trim());
+    if (!ok) { toast("Lengkapi semua data wajib", "err"); return; }
+    if (!window._ktpBase64) { toast("Upload foto identitas wajib", "err"); return; }
     d.cust = {
-      nama: $('cf_nama').value,
-      wa: $('cf_wa').value,
-      email: $('cf_email').value,
-      alamat: $('cf_alamat').value,
-      tujuan: $('cf_tujuan').value,
+      nama: $("cf_nama").value,
+      wa: $("cf_wa").value,
+      email: $("cf_email").value,
+      alamat: $("cf_alamat").value,
+      tujuan: $("cf_tujuan").value,
       ktp_file: (window._ktpBase64 || ""),
-      catatan: $('cf_catatan') ? $('cf_catatan').value : ''
+      catatan: $("cf_catatan") ? $("cf_catatan").value : ""
     };
     if (S.custSession) {
       const acc = curAccount();
@@ -780,10 +787,13 @@ function bkNext() {
         acc.email = d.cust.email;
         acc.alamat = d.cust.alamat;
         acc.ktp = d.cust.ktp;
-        acc.ttl = d.cust.ttl;
         persist();
       }
     }
+  }
+  // Step 5 (Pembayaran)
+  if (S.step === 5) {
+    if (!d.method) { toast("Pilih metode pembayaran", "err"); return; }
   }
   bkGo(S.step + 1);
 }
