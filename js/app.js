@@ -716,23 +716,28 @@ function applyPromo() {
 }
 
 function bkAuthTab(t) {
-  const inTab = document.getElementById("bkAuthIn");
-  const regTab = document.getElementById("bkAuthReg");
-  const btIn = document.getElementById("btIn");
-  const btReg = document.getElementById("btReg");
-  if (!inTab || !regTab) return;
-  if (t === "reg") {
-    inTab.classList.add("hidden");
-    regTab.classList.remove("hidden");
-    if (btIn) btIn.classList.remove("on");
-    if (btReg) btReg.classList.add("on");
-  } else {
-    inTab.classList.remove("hidden");
-    regTab.classList.add("hidden");
-    if (btIn) btIn.classList.add("on");
-    if (btReg) btReg.classList.remove("on");
-    if (typeof initGoogleButton === "function") setTimeout(initGoogleButton, 100);
-  }
+  try {
+    const inTab = document.getElementById("bkAuthIn");
+    const regTab = document.getElementById("bkAuthReg");
+    const btIn = document.getElementById("btIn");
+    const btReg = document.getElementById("btReg");
+    if (!inTab || !regTab) { console.warn("bkAuthTab: tab tidak ketemu"); return; }
+    if (t === "reg") {
+      inTab.style.display = "none";
+      regTab.style.display = "";
+      regTab.classList.remove("hidden");
+      if (btIn) btIn.classList.remove("on");
+      if (btReg) btReg.classList.add("on");
+    } else {
+      inTab.style.display = "";
+      inTab.classList.remove("hidden");
+      regTab.style.display = "none";
+      regTab.classList.add("hidden");
+      if (btIn) btIn.classList.add("on");
+      if (btReg) btReg.classList.remove("on");
+      if (typeof initGoogleButton === "function") setTimeout(initGoogleButton, 100);
+    }
+  } catch (e) { console.error("bkAuthTab error:", e); }
 }
 
 function validateWa(input){
@@ -976,8 +981,8 @@ function vBooking() {
         <div class="flex items-center gap-2.5 mb-1">${ic("lock", "w-5 h-5 text-maroon-400")}<h3 class="font-display font-semibold text-lg">Login Penyewa</h3></div>
         <p class="text-[12.5px] text-muted mb-4">Masuk agar data terisi otomatis & riwayat booking tersimpan. Bisa juga lanjut sebagai tamu.</p>
         <div class="grid grid-cols-2 gap-2 mb-4 max-w-xs">
-          <button id="btIn" onclick="bkAuthTab("in")" class="chip on justify-center">Masuk</button>
-          <button id="btReg" onclick="bkAuthTab("reg")" class="chip justify-center">Daftar Baru</button>
+          <button type="button" id="btIn" onclick="bkAuthTab(&quot;in&quot;)" class="chip on justify-center cursor-pointer">Masuk</button>
+          <button type="button" id="btReg" onclick="bkAuthTab(&quot;reg&quot;)" class="chip justify-center cursor-pointer">Daftar Baru</button>
         </div>
         <div id="bkAuthIn">
           <div class="grid sm:grid-cols-2 gap-3 mb-3">
