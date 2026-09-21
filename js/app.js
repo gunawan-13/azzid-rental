@@ -1866,7 +1866,28 @@ async function setVehStatus(id, val) {
   }
 }
 
+window._vehImgBase64 = '';
+
+function onVehImgChange(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { toast('Ukuran gambar maksimal 5 MB', 'err'); input.value = ''; return; }
+  if (!['image/jpeg','image/jpg','image/png','image/webp'].includes(file.type)) { toast('Format harus JPG/PNG/WEBP', 'err'); input.value = ''; return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    window._vehImgBase64 = e.target.result;
+    const wrap = document.getElementById('vf_img_preview_wrap');
+    const img  = document.getElementById('vf_img_preview');
+    const nm   = document.getElementById('vf_img_name');
+    if (wrap) wrap.classList.remove('hidden');
+    if (img)  img.src = e.target.result;
+    if (nm)   nm.textContent = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
 function vehForm(id) {
+  window._vehImgBase64 = '';
   const v = id ? veh(id) : null;
   const f = (k, val, lbl) => `<div><label class="lbl">${lbl}</label><input id="vf_${k}" class="inp" value="${esc(val ?? '')}"></div>`;
   const brand = v ? v.brand : 'Toyota';
@@ -1905,8 +1926,13 @@ function vehForm(id) {
       <div><label class="lbl">Harga Dengan Driver (Rp/hari)</label><input id="vf_hargadrv" type="number" min="0" class="inp" value="${v ? (v.priceDrv || v.priceLK + 150000) : 450000}">
         <p class="text-[10px] text-muted mt-1">Umumnya harga LK + Rp150.000</p>
       </div>
-      <div class="sm:col-span-2"><label class="lbl">Foto Unit — pilih dari galeri</label>
-        <div class="flex gap-2 flex-wrap">${PHOTO_OPTS.map(p => `<button type="button" onclick="document.querySelectorAll('.ph-opt').forEach(x=>x.classList.remove('on'));this.classList.add('on')" data-img="${IMG[p[0]]}" class="ph-opt rounded-lg overflow-hidden w-16 h-12 ${(v ? v.img : IMG.avanza) === IMG[p[0]] ? 'on' : ''}"><img src="${IMG[p[0]]}" class="w-full h-full object-cover"></button>`).join('')}</div>
+      <div class="sm:col-span-2"><label class="lbl">Foto Unit — Upload Gambar</label>
+        <input id="vf_img_file" type="file" accept="image/jpeg,image/png,image/jpg,image/webp" class="inp" onchange="onVehImgChange(this)">
+        <p class="text-[11px] text-muted mt-1">Format: JPG, PNG, WEBP · Maks 5 MB.</p>
+        <div id="vf_img_preview_wrap" class="mt-3 ${v && v.img ? '' : 'hidden'}">
+          <img id="vf_img_preview" src="${v && v.img ? v.img : ''}" class="w-40 h-28 object-cover rounded-lg border border-white/10">
+          <p class="text-[11px] text-emerald-300 mt-1">✓ <span id="vf_img_name">${v && v.img ? 'Foto saat ini' : ''}</span></p>
+        </div>
       </div>
       <div class="sm:col-span-2"><label class="lbl">Fasilitas</label>
         <div class="flex flex-wrap gap-2">${FAC_OPTS.map(x => `<label class="chip cursor-pointer ${v && v.feats && v.feats.includes(x) ? 'on' : ''}">
@@ -1934,7 +1960,7 @@ async function saveVeh(id) {
   }
 
   const feats = Array.from(document.querySelectorAll('.fac-chk:checked')).map(x => x.value);
-  const imgSel = document.querySelector('.ph-opt.on');
+  const uploadedImg = window._vehImgBase64 || '';
   const old = id ? veh(id) : null;
   const data = {
     name: nama,
@@ -1951,7 +1977,7 @@ async function saveVeh(id) {
     bag: g('bag') || '2 Koper',
     price_lk: harga,
     price_driver: Number($('vf_hargadrv')?.value || 0) || harga + 150000,
-    image: imgSel?.dataset.img || old?.img || IMG.avanza,
+    image: uploadedImg || old?.img || IMG.avanza,
     features: JSON.stringify(feats),
     description: g('desc'),
     status: $('vf_status')?.value || 'available'
@@ -1978,6 +2004,7 @@ async function saveVeh(id) {
       toast('Aset baru berhasil ditambahkan');
     }
     persist();
+    window._vehImgBase64 = '';
     closeModal();
     renderAdminBody();
   } catch (error) {
@@ -1994,6 +2021,7 @@ async function saveVeh(id) {
       addLog(`Aset baru disimpan secara lokal: ${localVehicle.name}`);
     }
     persist();
+    window._vehImgBase64 = '';
     closeModal();
     toast('Tersimpan di browser. Hubungkan API untuk sinkronisasi database.', 'info');
     renderAdminBody();

@@ -10,3 +10,7 @@ Thumbs.db
 dist/
 build/
 .cache/
+
+# Backup files
+*.bak
+*.bak-*
