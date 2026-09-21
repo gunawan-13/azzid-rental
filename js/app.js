@@ -2863,7 +2863,7 @@ function renderC() {
   if (!p[0]) html = vHome();
   else if (p[0] === 'armada' && !p[1]) html = vArmada();
   else if (p[0] === 'armada') html = vDetail(p[1]);
-  else if (p[0] === 'booking') html = vBooking();
+  else if (p[0] === 'booking') { if (S.step === 1 && S.draft?.veh) { S.step = 2; } html = vBooking(); }
   else if (p[0] === 'layanan') html = vLayanan();
   else if (p[0] === 'tentang') html = vTentang();
   else if (p[0] === 'faq') html = vFaq();
