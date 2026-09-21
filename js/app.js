@@ -1053,7 +1053,7 @@ function vBooking() {
           ["Transfer Bank", `Transfer manual ${S.cms.payments?.bank?.nama || "Bank"}`, true]
         ].map(x => {
           const aktif = x[2] !== false;
-          const onclick = aktif ? `chooseMethod("${x[0]}")` : `toast("${x[0]} — Dalam Pengembangan","info")`;
+          const onclick = aktif ? `chooseMethod('${x[0]}')` : `toast('${x[0]} — Dalam Pengembangan','info')`;
           const cls = aktif ? (m === x[0] ? "border-maroon-500 bg-maroon-500/10" : "border-white/10 hover:border-white/25") : "border-white/5 opacity-50 cursor-not-allowed";
           return `<button onclick="${onclick}" class="rounded-xl border p-4 text-left transition ${cls}">
             <div class="flex items-center gap-2 font-semibold text-[13px]">${ic("card", "w-4 h-4 " + (aktif ? "text-maroon-400" : "text-muted"))}${x[0]}</div>
