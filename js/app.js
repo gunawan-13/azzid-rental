@@ -671,6 +671,14 @@ function bkGo(n) {
   window.scrollTo({ top: 0 });
 }
 
+function bkBack() {
+  if (S.draft?.veh) {
+    location.hash = '#/armada/' + S.draft.veh;
+  } else {
+    location.hash = '#/armada';
+  }
+}
+
 function pickVeh(id) {
   S.draft.veh = id;
   renderC();
@@ -1033,7 +1041,7 @@ function vBooking() {
       </button> ${i < steps.length - 1 ? '<div class="w-5 sm:w-10 h-px bg-white/10 mx-2 shrink-0"></div>' : ''}
     </div>`).join('')}</div>
     ${body}
-    ${S.step < 4 && S.step > 0 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="location.hash='#/armada'" class="btn btn-g">← Kembali</button><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
+    ${S.step < 4 && S.step > 0 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkBack()" class="btn btn-g">← Kembali</button><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
     ${S.step === 0 ? `<div class="flex justify-center mt-8"><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
     ${S.step === 3 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkGo(2)" class="btn btn-g">← Kembali</button><button onclick="bkGo(4)" class="btn btn-m">${ic('card', 'w-4 h-4')} Lanjut Pembayaran</button></div>` : ''}
   </section>`;
