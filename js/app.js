@@ -1070,9 +1070,9 @@ function vBooking() {
   }
   return `<section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="flex items-center justify-start sm:justify-center gap-0 mb-10 overflow-x-auto pb-2">${steps.map((s, i) => `<div class="flex items-center shrink-0">
-      <button onclick="${i < S.step && S.step < 5 ? `bkGo(${i})` : ''}" class="flex items-center gap-2 ${i <= S.step ? '' : 'opacity-40'}">
-        <span class="w-8 h-8 rounded-full grid place-items-center text-[12px] font-bold shrink-0 ${i < S.step ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : i === S.step ? 'bg-gradient-to-br from-maroon-500 to-maroon-800 text-white shadow-glow' : 'bg-ink-700 border border-white/10 text-muted'}">${i < S.step ? '✓' : i + 1}</span>
-        <span class="text-[12px] font-semibold hidden md:block ${i === S.step ? 'text-white' : 'text-muted'}">${s}</span>
+      <button onclick="${i < S.step - 2 && S.step < 7 ? `bkGo(${i + 2})` : ''}" class="flex items-center gap-2 ${i <= S.step - 2 ? '' : 'opacity-40'}">
+        <span class="w-8 h-8 rounded-full grid place-items-center text-[12px] font-bold shrink-0 ${i < S.step ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : i === S.step ? 'bg-gradient-to-br from-maroon-500 to-maroon-800 text-white shadow-glow' : 'bg-ink-700 border border-white/10 text-muted'}">${i < S.step - 2 ? '✓' : i + 1}</span>
+        <span class="text-[12px] font-semibold hidden md:block ${i === S.step - 2 ? 'text-white' : 'text-muted'}">${s}</span>
       </button> ${i < steps.length - 1 ? '<div class="w-5 sm:w-10 h-px bg-white/10 mx-2 shrink-0"></div>' : ''}
     </div>`).join('')}</div>
     ${body}
