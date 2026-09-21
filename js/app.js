@@ -2951,13 +2951,16 @@ loadDriversFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
   window.__exportBtnAttached = true;
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('[data-export-fmt]');
-    if (btn) {
-      e.preventDefault();
-      const fmt = btn.getAttribute('data-export-fmt');
-      if (typeof exportFin === 'function') exportFin(fmt);
+  // Tutup dropdown bell hanya kalau klik DI LUAR
+  const bellD = document.getElementById('bellD');
+  if (bellD && !bellD.classList.contains('hidden')) {
+    const insideBell = e.target.closest('#bellD');
+    const bellBtn = e.target.closest('[onclick*="bellD"]') || e.target.closest('[data-bell-toggle]');
+    if (!insideBell && !bellBtn) {
+      bellD.classList.add('hidden');
     }
-  });
+  }
+});
 
   window.__authReady = false;
   restoreAuth().then(() => {
