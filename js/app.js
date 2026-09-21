@@ -716,16 +716,23 @@ function applyPromo() {
 }
 
 function bkAuthTab(t) {
-  const i = $('bkAuthIn'),
-    r = $('bkAuthReg'),
-    a = $('btIn'),
-    b = $('btReg');
-  if (!i) return;
-  i.classList.toggle('hidden', t !== 'in');
-  r.classList.toggle('hidden', t !== 'reg');
-  a.classList.toggle('on', t === 'in');
-  b.classList.toggle('on', t === 'reg');
-  if (t === 'in') setTimeout(initGoogleButton, 50);   
+  const inTab = document.getElementById("bkAuthIn");
+  const regTab = document.getElementById("bkAuthReg");
+  const btIn = document.getElementById("btIn");
+  const btReg = document.getElementById("btReg");
+  if (!inTab || !regTab) return;
+  if (t === "reg") {
+    inTab.classList.add("hidden");
+    regTab.classList.remove("hidden");
+    if (btIn) btIn.classList.remove("on");
+    if (btReg) btReg.classList.add("on");
+  } else {
+    inTab.classList.remove("hidden");
+    regTab.classList.add("hidden");
+    if (btIn) btIn.classList.add("on");
+    if (btReg) btReg.classList.remove("on");
+    if (typeof initGoogleButton === "function") setTimeout(initGoogleButton, 100);
+  }
 }
 
 function validateWa(input){
@@ -1085,7 +1092,7 @@ function vBooking() {
     ${body}
     ${S.step >= 2 && S.step < 6 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkBack()" class="btn btn-g">← Kembali</button><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
     ${S.step === 0 ? `<div class="flex justify-center mt-8"><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
-    ${S.step === 3 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkGo(2)" class="btn btn-g">← Kembali</button><button onclick="bkGo(4)" class="btn btn-m">${ic('card', 'w-4 h-4')} Lanjut Pembayaran</button></div>` : ''}
+    
   </section>`;
 }
 
