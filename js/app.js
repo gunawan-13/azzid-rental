@@ -548,7 +548,6 @@ function vDetail(slug) {
           </div>
           <select id="dtType" class="inp mb-4">${["Lepas Kunci", "Dengan Driver"].map(t => `<option ${S.draft?.type === t ? "selected" : ""}>${t}</option>`).join("")}</select>
           <button onclick="openBookingFromDetail('${v.id}')" class="btn btn-m w-full">${ic('cal')} Booking Mobil Ini</button>
-          <p class="text-[11px] text-muted text-center mt-3">Gratis antar-jemput radius 10 km · Asuransi termasuk</p>
         </div>
       </div>
     </div>
