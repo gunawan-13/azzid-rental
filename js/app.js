@@ -800,7 +800,14 @@ function bkNext() {
 
 function chooseMethod(m) {
   S.draft.method = m;
+  S.step = 5; // pastikan tetap di step pembayaran
   renderC();
+  setTimeout(() => {
+    const el = document.getElementById("payDetail");
+    if (el && m === "Transfer Bank") {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, 50);
 }
 
 function upsertCustomer(name, wa, email) {
