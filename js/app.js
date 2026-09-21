@@ -900,28 +900,63 @@ function vBooking() {
       <a href="#/armada" class="btn btn-m w-full">${ic('arrR', 'w-4 h-4')} Buka Halaman Armada</a>
     </div>`;
   } else if (S.step === 2) {
-    const src = acc ? { nama: acc.nama, wa: acc.wa, email: acc.email, alamat: acc.alamat, ktp: acc.ktp, ttl: acc.ttl } : d.cust;
-    const cu = Object.keys(d.cust).length ? d.cust : src;
+    // ============ STEP 2: JADWAL & JENIS ============
     body = `<div class="max-w-3xl mx-auto">
-      ${acc ? `<div class="card p-5 mb-5 border-emerald-500/30 bg-emerald-500/5 flex flex-wrap items-center gap-3">
-        <span class="w-10 h-10 rounded-full bg-maroon-600 grid place-items-center font-display font-bold shrink-0">${esc(acc.nama[0])}</span>
-        <div class="grow min-w-0"><div class="text-[13px] font-semibold">Masuk sebagai ${esc(acc.nama)}</div><div class="text-[11.5px] text-muted truncate">${acc.email} · riwayat booking tersimpan otomatis</div></div>
+      <div class="card p-6 sm:p-8">
+        <h3 class="font-display font-semibold text-lg mb-1">Jadwal & Jenis Rental</h3>
+        <p class="text-[12.5px] text-muted mb-6">Tentukan tanggal, jenis rental, dan lokasi pengambilan.</p>
+        <div class="grid sm:grid-cols-2 gap-4 mb-5">
+          <div><label class="lbl">Tanggal Mulai *</label><input type="date" id="bkStart" class="inp" value="${d.start}" min="${TODAY}" required></div>
+          <div><label class="lbl">Tanggal Selesai *</label><input type="date" id="bkEnd" class="inp" value="${d.end}" min="${d.start}" required></div>
+        </div>
+        <div class="mb-5">
+          <label class="lbl">Jenis Rental</label>
+          <select id="bkType" class="inp">
+            ${["Lepas Kunci", "Dengan Driver"].map(t => `<option ${d.type === t ? "selected" : ""}>${t}</option>`).join("")}
+          </select>
+        </div>
+        <div class="mb-5">
+          <label class="lbl">Lokasi Pengambilan</label>
+          <input id="bkPickup" class="inp" value="${esc(d.pickup || "Kantor - Cipayung Jakarta Timur")}">
+        </div>
+        <div class="rounded-xl bg-ink-900 border border-white/5 p-4">
+          <div class="text-[11px] uppercase tracking-widest text-muted mb-2">Mobil Dipilih</div>
+          <div class="flex items-center gap-3">
+            <img src="${c.v?.img || ""}" class="w-16 h-12 rounded-lg object-cover shrink-0">
+            <div class="min-w-0">
+              <div class="font-semibold text-[13px] truncate">${esc(c.v?.name || "-")}</div>
+              <div class="text-[11px] text-muted">${c.v?.trans || ""} · ${c.v?.seats || ""} seats</div>
+            </div>
+            <a href="#/armada" class="ml-auto text-[11.5px] text-maroon-400 font-semibold shrink-0">Ganti →</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  } else if (S.step === 3) {
+    // ============ STEP 3: AKUN (Login only) ============
+    const src = acc ? { nama: acc.nama, wa: acc.wa, email: acc.email, alamat: acc.alamat } : (d.cust || {});
+    const cu = Object.keys(d.cust || {}).length ? d.cust : src;
+    body = `<div class="max-w-xl mx-auto">
+      ${acc ? `<div class="card p-6 mb-5 border-emerald-500/30 bg-emerald-500/5">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="w-12 h-12 rounded-full bg-maroon-600 grid place-items-center font-display font-bold shrink-0 text-lg">${esc(acc.nama[0])}</span>
+          <div class="min-w-0 grow"><div class="text-[14px] font-semibold">Masuk sebagai ${esc(acc.nama)}</div><div class="text-[12px] text-muted truncate">${acc.email}</div></div>
+        </div>
+        <p class="text-[12px] text-muted mb-3">Data penyewa akan terisi otomatis dari akun Anda.</p>
         <button onclick="custLogout();renderC()" class="btn btn-g btn-sm">Ganti Akun</button>
       </div>` : `<div class="card p-6 mb-5">
-        <div class="flex items-center gap-2.5 mb-1">${ic('lock', 'w-5 h-5 text-maroon-400')}<h3 class="font-display font-semibold text-lg">Login Penyewa</h3></div>
-        <p class="text-[12.5px] text-muted mb-4">Masuk agar data terisi otomatis & riwayat booking tersimpan. Bisa juga lanjut sebagai tamu di bawah.</p>
+        <div class="flex items-center gap-2.5 mb-1">${ic("lock", "w-5 h-5 text-maroon-400")}<h3 class="font-display font-semibold text-lg">Login Penyewa</h3></div>
+        <p class="text-[12.5px] text-muted mb-4">Masuk agar data terisi otomatis & riwayat booking tersimpan. Bisa juga lanjut sebagai tamu.</p>
         <div class="grid grid-cols-2 gap-2 mb-4 max-w-xs">
-          <button id="btIn" onclick="bkAuthTab('in')" class="chip on justify-center">Masuk</button>
-          <button id="btReg" onclick="bkAuthTab('reg')" class="chip justify-center">Daftar Baru</button>
+          <button id="btIn" onclick="bkAuthTab("in")" class="chip on justify-center">Masuk</button>
+          <button id="btReg" onclick="bkAuthTab("reg")" class="chip justify-center">Daftar Baru</button>
         </div>
         <div id="bkAuthIn">
           <div class="grid sm:grid-cols-2 gap-3 mb-3">
             <div><label class="lbl">Email</label><input id="bAuthE" class="inp" placeholder="email@anda.com"></div>
             <div><label class="lbl">Password</label><input id="bAuthP" type="password" class="inp" placeholder="••••••••"></div>
           </div>
-          <div class="flex flex-wrap gap-2.5">
-            <button onclick="bkLogin()" class="btn btn-m btn-sm">${ic('lock', 'w-4 h-4')} Masuk</button>
-          </div>
+          <button onclick="bkLogin()" class="btn btn-m btn-sm">${ic("lock", "w-4 h-4")} Masuk</button>
           ${googleLoginMarkup()}
           <button onclick="openForgotPassword()" class="w-full text-left text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button>
           <p id="bkAuthErr" class="hidden text-[12px] text-red-300 mt-2.5">Email atau password salah.</p>
@@ -933,75 +968,72 @@ function vBooking() {
             <div><label class="lbl">Email</label><input id="bRegE" class="inp" placeholder="email@anda.com"></div>
             <div><label class="lbl">Password (min. 6)</label><input id="bRegP" type="password" class="inp" placeholder="••••••••"></div>
           </div>
-          <button onclick="bkReg()" class="btn btn-m btn-sm">${ic('plus', 'w-4 h-4')} Buat Akun & Masuk</button>
+          <button onclick="bkReg()" class="btn btn-m btn-sm">${ic("plus", "w-4 h-4")} Buat Akun & Masuk</button>
           <p id="bkRegErr" class="hidden text-[12px] text-red-300 mt-2.5"></p>
         </div>
-      </div>`}
-      <div class="card p-6 sm:p-8">
-        <div class="flex items-center justify-between gap-3 mb-1 flex-wrap"><h3 class="font-display font-semibold text-lg">Data Penyewa</h3>${acc ? '<span class="badge bg-emerald-400/10 border-emerald-400/30 text-emerald-300">Terisi dari akun</span>' : ''}</div>
-        <p class="text-[12.5px] text-muted mb-6">Data sensitif (identitas) disimpan terenkripsi dan hanya dapat diakses admin berwenang.</p>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" class="inp" value="${esc(cu.nama || '')}" placeholder="Sesuai KTP"></div>
-          <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || '')}" placeholder="08xx-xxxx-xxxx" maxlength="15" oninput="validateWa(this)" type="tel"></div>
-          <div><label class="lbl">Email *</label><input id="cf_email" type="email" class="inp" value="${esc(cu.email || '')}" placeholder="email@anda.com"></div>
-          <div class="sm:col-span-2"><label class="lbl">Upload Foto Identitas (KTP/SIM) *</label><input id="cf_ktp_file" type="file" accept="image/jpeg,image/png,image/jpg" class="inp" required onchange="previewKtp(this)"><p class="text-[11px] text-muted mt-1">Format: JPG, JPEG, PNG · Maks 5 MB</p><div id="ktpPreview" class="mt-2 hidden"><p class="text-[11.5px] text-emerald-300">✓ <span id="ktpFileName"></span></p></div></div>
-          <div class="sm:col-span-2"><label class="lbl">Alamat *</label><input id="cf_alamat" class="inp" value="${esc(cu.alamat || '')}" placeholder="Alamat domisili"></div>
-          
-          <div><label class="lbl">Alamat Tujuan *</label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || '')}" placeholder="Contoh: Bandung / dalam kota"></div>
-          <div class="sm:col-span-2"><label class="lbl">Catatan Tambahan</label><textarea id="cf_catatan" class="inp" rows="3" placeholder="Opsional: permintaan kursi bayi, jam penjemputan, dll.">${esc(cu.catatan || '')}</textarea></div>
-        </div>
       </div>
+      <div class="card p-4 text-center text-[12px] text-muted">
+        <button onclick="bkGo(4)" class="text-maroon-400 font-semibold hover:underline">Lanjut sebagai tamu →</button>
+      </div>`}
     </div>`;
-  } else if (S.step === 3) {
+  } else if (S.step === 4) {
+    // ============ STEP 4: RINGKASAN + DATA PENYEWA ============
     const v = c.v;
+    const cu = d.cust || {};
     body = `<div class="grid lg:grid-cols-[1fr_380px] gap-6 max-w-5xl mx-auto">
-      <div class="card p-6 min-w-0">
-        <h3 class="font-display font-semibold text-lg mb-5">Detail Booking</h3>
-        <div class="flex gap-4 items-center pb-5 border-b border-white/5"><img src="${v.img}" class="w-28 h-20 object-cover rounded-lg shrink-0 hidden sm:block"><div class="min-w-0"><div class="font-display font-semibold">${esc(v.name)}</div><div class="text-[12px] text-muted">${dLong(d.start)} → ${dLong(d.end)}</div><div class="text-[12px] text-muted mt-0.5">${c.dur} hari · ${d.type} · ${esc(d.pickup)}</div></div></div>
-        <div class="py-5 space-y-2.5 text-[14px] border-b border-white/5">
-          <div class="flex justify-between gap-3 text-muted"><span>Rental ${c.dur} hari × ${fmtIDR(v.priceLK)}</span><span class="text-zinc-200">${fmtIDR(c.rental)}</span></div>
-          ${c.drv ? `<div class="flex justify-between gap-3 text-muted"><span>Driver ${c.dur} hari × Rp150.000</span><span class="text-zinc-200">${fmtIDR(c.drv)}</span></div>` : ''}
-          ${c.disc ? `<div class="flex justify-between gap-3 text-emerald-300"><span>Diskon ${d.promo}</span><span>−${fmtIDR(c.disc)}</span></div>` : ''}
+      <div class="space-y-5 min-w-0">
+        <div class="card p-6">
+          <h3 class="font-display font-semibold text-lg mb-5">Data Penyewa</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" class="inp" value="${esc(cu.nama || "")}" placeholder="Sesuai KTP"></div>
+            <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || "")}" placeholder="08xx-xxxx-xxxx" maxlength="15" oninput="validateWa(this)" type="tel"></div>
+            <div class="sm:col-span-2"><label class="lbl">Email *</label><input id="cf_email" type="email" class="inp" value="${esc(cu.email || "")}" placeholder="email@anda.com"></div>
+            <div class="sm:col-span-2"><label class="lbl">Upload Foto Identitas (KTP/SIM) *</label><input id="cf_ktp_file" type="file" accept="image/jpeg,image/png,image/jpg" class="inp" required onchange="previewKtp(this)"><p class="text-[11px] text-muted mt-1">Format: JPG, PNG · Maks 5 MB</p><div id="ktpPreview" class="mt-2 hidden"><p class="text-[11.5px] text-emerald-300">✓ <span id="ktpFileName"></span></p></div></div>
+            <div class="sm:col-span-2"><label class="lbl">Alamat *</label><input id="cf_alamat" class="inp" value="${esc(cu.alamat || "")}" placeholder="Alamat domisili"></div>
+            <div><label class="lbl">Alamat Tujuan *</label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || "")}" placeholder="Contoh: Bandung"></div>
+            <div class="sm:col-span-2"><label class="lbl">Catatan Tambahan</label><textarea id="cf_catatan" class="inp" rows="2" placeholder="Opsional: permintaan khusus…">${esc(cu.catatan || "")}</textarea></div>
+          </div>
         </div>
-        <div class="flex justify-between items-center pt-5 flex-wrap gap-2"><span class="font-display font-semibold">TOTAL</span><span class="font-display font-extrabold text-2xl text-maroon-400">${fmtIDR(c.total)}</span></div>
+        <div class="card p-6">
+          <h3 class="font-display font-semibold text-lg mb-5">Detail Booking</h3>
+          <div class="flex gap-4 items-center pb-5 border-b border-white/5"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0 hidden sm:block"><div class="min-w-0"><div class="font-display font-semibold">${esc(v.name)}</div><div class="text-[12px] text-muted">${dLong(d.start)} → ${dLong(d.end)}</div><div class="text-[12px] text-muted mt-0.5">${c.dur} hari · ${d.type}</div></div></div>
+        </div>
       </div>
       <div class="card p-6 h-fit min-w-0">
         <h4 class="font-display font-semibold mb-3">Kode Promo</h4>
-        <div class="flex gap-2"><input id="promoInp" class="inp uppercase" placeholder="MERDEKA2026" value="${d.promo || ''}"><button onclick="applyPromo()" class="btn btn-g btn-sm shrink-0">Pakai</button></div>
-        <p class="text-[11px] text-muted mt-2">Coba: MERDEKA2026 (10%, maks Rp100rb, min 2 hari)</p>
-        <div class="mt-5 pt-5 border-t border-white/5 space-y-2 text-[12.5px] text-muted">
-          <div class="flex gap-2 min-w-0">${ic('user', 'w-4 h-4 text-maroon-400 shrink-0')}<span class="truncate">${esc(d.cust.nama || '')} · ${esc(d.cust.wa || '')}</span></div>
-          ${S.custSession ? `<div class="flex gap-2 text-emerald-300">${ic('check', 'w-4 h-4 shrink-0')}Booking terhubung ke akun ${esc(S.custSession.email)}</div>` : ''}
-          <div class="flex gap-2">${ic('shield', 'w-4 h-4 text-maroon-400 shrink-0')}Asuransi all-risk termasuk</div>
-          <div class="flex gap-2">${ic('check', 'w-4 h-4 text-maroon-400 shrink-0')}Reschedule gratis s/d H-2</div>
+        <div class="flex gap-2"><input id="promoInp" class="inp uppercase" placeholder="MERDEKA2026" value="${d.promo || ""}"><button onclick="applyPromo()" class="btn btn-g btn-sm shrink-0">Pakai</button></div>
+        <div class="py-5 space-y-2.5 text-[14px] border-y border-white/5 mt-4">
+          <div class="flex justify-between gap-3 text-muted"><span>Rental ${c.dur} hari</span><span class="text-zinc-200">${fmtIDR(c.rental)}</span></div>
+          ${c.drv ? `<div class="flex justify-between gap-3 text-muted"><span>Driver</span><span class="text-zinc-200">${fmtIDR(c.drv)}</span></div>` : ""}
+          ${c.disc ? `<div class="flex justify-between gap-3 text-emerald-300"><span>Diskon</span><span>−${fmtIDR(c.disc)}</span></div>` : ""}
         </div>
+        <div class="flex justify-between items-center pt-5 flex-wrap gap-2"><span class="font-display font-semibold">TOTAL</span><span class="font-display font-extrabold text-2xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
     </div>`;
-  } else if (S.step === 4) {
+  } else if (S.step === 5) {
+    // ============ STEP 5: PEMBAYARAN ============
     const m = d.method;
     body = `<div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
       <div class="card p-6"><h3 class="font-display font-semibold text-lg mb-5">Pilih Metode Pembayaran</h3>
         <div class="grid grid-cols-2 gap-3">${[
-          ['QRIS', 'Dalam Pengembangan', false],
-          ['GoPay', 'Dalam Pengembangan', false],
-          ['OVO', 'Dalam Pengembangan', false],
-          ['Transfer Bank', `Transfer manual ${S.cms.payments?.bank?.nama || 'Bank'}`, true]
+          ["QRIS", "Dalam Pengembangan", false],
+          ["GoPay", "Dalam Pengembangan", false],
+          ["OVO", "Dalam Pengembangan", false],
+          ["Transfer Bank", `Transfer manual ${S.cms.payments?.bank?.nama || "Bank"}`, true]
         ].map(x => {
-  const aktif = x[2] !== false;
-  const onclick = aktif ? `chooseMethod('${x[0]}')` : `toast('${x[0]} — Dalam Pengembangan','info')`;
-  const cls = aktif 
-    ? (m === x[0] ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25')
-    : 'border-white/5 opacity-50 cursor-not-allowed';
-  return `<button onclick="${onclick}" class="rounded-xl border p-4 text-left transition ${cls}">
-    <div class="flex items-center gap-2 font-semibold text-[13px]">${ic('card', 'w-4 h-4 ' + (aktif ? 'text-maroon-400' : 'text-muted'))}${x[0]}</div>
-    <div class="text-[11px] ${aktif ? 'text-muted' : 'text-amber-300/70'} mt-1">${x[1]}</div>
-  </button>`;
-}).join('')}</div>
+          const aktif = x[2] !== false;
+          const onclick = aktif ? `chooseMethod("${x[0]}")` : `toast("${x[0]} — Dalam Pengembangan","info")`;
+          const cls = aktif ? (m === x[0] ? "border-maroon-500 bg-maroon-500/10" : "border-white/10 hover:border-white/25") : "border-white/5 opacity-50 cursor-not-allowed";
+          return `<button onclick="${onclick}" class="rounded-xl border p-4 text-left transition ${cls}">
+            <div class="flex items-center gap-2 font-semibold text-[13px]">${ic("card", "w-4 h-4 " + (aktif ? "text-maroon-400" : "text-muted"))}${x[0]}</div>
+            <div class="text-[11px] ${aktif ? "text-muted" : "text-amber-300/70"} mt-1">${x[1]}</div>
+          </button>`;
+        }).join("")}</div>
         <div class="mt-5 rounded-xl bg-ink-900 border border-white/5 p-4 flex justify-between items-center gap-3 flex-wrap"><span class="text-sm text-muted">Total tagihan</span><span class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
       <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
-        ${!m ? `<div class="text-muted">${ic('card', 'w-10 h-10 mx-auto mb-3 text-zinc-600')}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === 'QRIS' ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : m.startsWith('VA') ? `<p class="text-[12px] text-muted mb-2">Nomor Virtual Account</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2 break-all">8808 2608 1313 8899</div><button onclick="copyTxt('8808260813138899')" class="btn btn-g btn-sm mb-5">${ic('copy', 'w-4 h-4')} Salin Nomor</button>` : m === 'Transfer Bank' ? `<p class="text-[12px] text-muted mb-2">Rekening ${esc(S.cms.payments?.bank?.nama || 'BJB')} a.n. ${esc(S.cms.payments?.bank?.pemilik || 'AZZID RENTCAR')}</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">${(S.cms.payments?.bank?.norek || '0123456789').replace(/(\d{4})(?=\d)/g, '$1 ')}</div><button onclick="copyTxt('${S.cms.payments?.bank?.norek || '0123456789'}')" class="btn btn-g btn-sm mb-5">${ic('copy','w-4 h-4')} Salin Rekening</button>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m} untuk menyelesaikan pembayaran.</p>`}
-        ${m ? `<button onclick="doPay()" class="btn btn-m w-full max-w-xs">${ic('zap', 'w-4 h-4')} Bayar ${fmtIDR(c.total)}</button>` : ''}
+        ${!m ? `<div class="text-muted">${ic("card", "w-10 h-10 mx-auto mb-3 text-zinc-600")}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === "Transfer Bank" ? `<p class="text-[12px] text-muted mb-2">Rekening ${esc(S.cms.payments?.bank?.nama || "BJB")} a.n. ${esc(S.cms.payments?.bank?.pemilik || "AZZID RENTCAR")}</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">${(S.cms.payments?.bank?.norek || "0123456789").replace(/(\d{4})(?=\d)/g, "$1 ")}</div><button onclick="copyTxt('${S.cms.payments?.bank?.norek || "0123456789"}')" class="btn btn-g btn-sm mb-5">${ic("copy", "w-4 h-4")} Salin Rekening</button>` : m === "QRIS" ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m}.</p>`}
+        ${m ? `<button onclick="doPay()" class="btn btn-m w-full max-w-xs">${ic("zap", "w-4 h-4")} Bayar ${fmtIDR(c.total)}</button>` : ""}
       </div>
     </div>`;
   } else {
