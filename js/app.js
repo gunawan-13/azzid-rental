@@ -869,7 +869,12 @@ function doPay() {
     BOOKINGS.unshift(booking);
     S.lastBooking = booking;
     addLog(`Booking baru: ${id} · ${v.name} · ${d.cust?.nama || "Tamu"}`);
-    if (typeof addAdminNotif === "function") addAdminNotif("booking", `Booking baru ${id} dari ${d.cust?.nama || "Tamu"}`);
+    if (typeof addAdminNotif === "function") addAdminNotif("booking", `Booking baru ${id} dari ${d.cust?.nama || "Tamu"}`, id);
+    // Notif ke user (kalau login atau ada email)
+    const userEmail = S.custSession?.email || d.cust?.email || "";
+    if (userEmail && typeof addUserNotif === "function") {
+      addUserNotif(userEmail, "info", `Booking ${id} berhasil dibuat — menunggu konfirmasi admin`);
+    }
     if (typeof persist === "function") persist();
 
     // Simpan ke API (kalau ada) — tidak blocking
