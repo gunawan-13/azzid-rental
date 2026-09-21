@@ -3041,3 +3041,24 @@ document.addEventListener('click', function(e) {
     console.warn('auto-close bell error:', err);
   }
 }, true); // capture phase — jalan duluan
+
+// Fallback: panggil initGoogleButton saat DOM ready + tiap 1 detik selama 10 detik
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    let tries = 0;
+    const t = setInterval(() => {
+      tries++;
+      const el = document.getElementById("googleLoginBtn");
+      if (el && typeof initGoogleButton === "function") initGoogleButton();
+      if (tries > 10) clearInterval(t);
+    }, 1000);
+  });
+} else {
+  let tries = 0;
+  const t = setInterval(() => {
+    tries++;
+    const el = document.getElementById("googleLoginBtn");
+    if (el && typeof initGoogleButton === "function") initGoogleButton();
+    if (tries > 10) clearInterval(t);
+  }, 1000);
+}
