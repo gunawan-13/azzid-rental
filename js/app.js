@@ -636,7 +636,7 @@ function openBookingFromDetail(vid) {
   if (!S.draft.cust) S.draft.cust = {};
   if (!S.draft.promo) S.draft.promo = null;
   if (!S.draft.method) S.draft.method = '';
-  S.step = 1;
+  S.step = 2;
   location.hash = '#/booking';
   window.scrollTo({ top: 0 });
   syncAdminBtns();
