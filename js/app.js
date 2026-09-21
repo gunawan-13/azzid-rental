@@ -837,70 +837,50 @@ function upsertCustomer(name, wa, email) {
 }
 
 function doPay() {
-  if (!S.draft.method) { toast('Pilih metode pembayaran', 'err'); return; }
-  modal(`<div class="p-10 text-center"><div class="w-12 h-12 mx-auto rounded-full border-2 border-maroon-500 border-t-transparent spin mb-5"></div><h3 class="font-display font-semibold text-lg">Memproses Pembayaran…</h3><p class="text-sm text-muted mt-2">Menghubungi payment gateway · ${esc(S.draft.method)}</p></div>`);
-  setTimeout(() => {
-    closeModal();
-    const c = bkCalc();
-    const seq = String(BOOKINGS.length + 15).padStart(3, '0');
-    const id = `AZR-${TODAY.replaceAll('-', '')}-${seq}`;
-    const b = {
-      id,
-      cust: S.draft.cust.nama,
-      veh: S.draft.veh,
-      start: S.draft.start,
-      end: S.draft.end,
-      type: S.draft.type,
-      pickup: S.draft.pickup,
-      drop: S.draft.drop,
-      driver: null,
-      sub: c.rental,
-      drv: c.drv,
-      disc: c.disc,
-      total: c.total,
-      status: 'Confirmed',
-      pay: { m: S.draft.method, s: 'PAID', tx: 'TRX-' + Math.floor(88350 + Math.random() * 900), at: TODAY },
-      ktp_file: S.draft.cust.ktp_file || "",
-      user: S.custSession ? S.custSession.email : null
-    };
-    BOOKINGS.push(b);
-    // SINKRON KE BACKEND
-    try {
-      fetch(API_BASE_URL + '/bookings', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({
-          booking_code: b.id,
-          vehicle_id: b.veh,
-          customer_id: null,
-          start_date: b.start,
-          end_date: b.end,
-          rental_type: b.type,
-          pickup_location: b.pickup,
-          dropoff_location: b.drop,
-          total_amount: b.total,
-          status: b.status
-        })
-      }).then(r => r.json()).then(res => {
-        console.log('Booking saved to backend:', res);
-        if (res && res.data && res.data.id && b) { b.backendId = res.data.id; persist(); }
-      }).catch(e => console.warn('POST booking error:', e.message));
-    } catch (e) { console.warn('POST booking fail:', e.message); }
-    if(typeof addAdminNotif==='function')addAdminNotif('booking','Booking baru '+b.id+' dari '+b.cust);
-    if(typeof addUserNotif==='function')addUserNotif(b.user||S.draft.cust.email,'info','Booking '+b.id+' berhasil dibuat — menunggu konfirmasi admin');
-    const cu = upsertCustomer(S.draft.cust.nama, S.draft.cust.wa, S.draft.cust.email);
-    cu.spend += c.total;
-    cu.last = c.v.name;
-    if (cu.total > 3) cu.status = 'VIP';
-    else if (cu.total > 1) cu.status = 'Regular';
-    addLog(`Booking baru ${id} · ${c.v.name} · ${fmtK(c.total)}`);
-    persist();
-    S.lastBooking = b;
-    S.step = 5;
-    renderC();
-    window.scrollTo({ top: 0 });
-  }, 1800);
+  const d = S.draft;
+  const c = bkCalc();
+  if (!c || !d.method) { toast("Data booking belum lengkap", "err"); return; }
+  const v = c.v;
+  const id = "BKG-" + Date.now().toString(36).toUpperCase();
+
+  // Simpan booking
+  const booking = {
+    id: id,
+    veh: d.veh,
+    cust: d.cust?.nama || "Tamu",
+    wa: d.cust?.wa || "",
+    email: d.cust?.email || "",
+    start: d.start,
+    end: d.end,
+    dur: c.dur,
+    type: d.type,
+    pickup: d.pickup,
+    sub: c.rental,
+    drv: c.drv,
+    disc: c.disc,
+    total: c.total,
+    method: d.method,
+    promo: d.promo,
+    status: "Confirmed",
+    pay: { at: new Date().toISOString().slice(0,10) }
+  };
+
+  try {
+    BOOKINGS.unshift(booking);
+    S.lastBooking = booking;
+    addLog(`Booking baru: ${id} · ${v.name} · ${d.cust?.nama || "Tamu"}`);
+    if (typeof persist === "function") persist();
+
+    // Simpan ke API (kalau ada) — tidak blocking
+    if (typeof apiPost === "function") {
+      apiPost("/bookings", booking).catch(() => {});
+    }
+  } catch (e) { console.warn("Simpan booking lokal gagal:", e); }
+
+  // Langsung ke step selesai
+  S.step = 6;
+  renderC();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function qrSVG(seed) {
