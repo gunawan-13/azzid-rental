@@ -2866,3 +2866,4 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
+// force redeploy Mon, Sep 21, 2026 10:45:25 AM
