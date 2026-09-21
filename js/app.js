@@ -1212,8 +1212,8 @@ function renderA() {
   if (!menu.find(m => m[0] === S.adminView)) S.adminView = menu[0][0];
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
-  app.innerHTML = `<div class="min-h-screen bg-ink-950 flex">
-    <aside id="aSb" class="fixed lg:static z-40 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
+  app.innerHTML = `<div class="h-screen bg-ink-950 flex overflow-hidden">
+    <aside id="aSb" class="h-screen flex flex-col overflow-y-auto fixed lg:static z-40 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
       <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
@@ -1223,8 +1223,8 @@ function renderA() {
         <button onclick="adminLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-red-300 hover:bg-red-500/10">${ic('logout', 'w-[18px]')} Logout</button>
       </div>
     </aside>
-    <div class="flex-1 flex flex-col min-w-0 min-h-0">
-      <header class="h-16 bg-ink-900/80 backdrop-blur border-b border-white/5 flex items-center gap-3 px-4 sm:px-6 sticky top-0 z-30">
+    <div class="flex-1 flex flex-col min-w-0 h-screen">
+      <header class="h-16 bg-ink-900/80 backdrop-blur border-b border-white/5 flex items-center gap-3 px-4 sm:px-6 flex-shrink-0 z-30">
         <button class="lg:hidden p-2" onclick="document.getElementById('aSb').classList.toggle('-translate-x-full')">${ic('grid')}</button>
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('bellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
