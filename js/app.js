@@ -770,7 +770,11 @@ function bkNext() {
     const t = $("bkType")?.value; if (t) d.type = t;
     const p = $("bkPickup")?.value; if (p) d.pickup = p;
   }
-  // Step 3 (Akun): login opsional, tidak ada validasi
+  // Step 3 (Akun): WAJIB login
+  if (S.step === 3 && !S.custSession) {
+    toast("Silakan masuk atau login dengan Google terlebih dahulu", "err");
+    return;
+  }
   // Validasi step 4 (Ringkasan): Data Penyewa wajib
   if (S.step === 4) {
     const req = ["nama", "wa", "email", "alamat", "tujuan"];
@@ -996,9 +1000,7 @@ function vBooking() {
           <p id="bkRegErr" class="hidden text-[12px] text-red-300 mt-2.5"></p>
         </div>
       </div>
-      <div class="card p-4 text-center text-[12px] text-muted">
-        <button onclick="bkGo(4)" class="text-maroon-400 font-semibold hover:underline">Lanjut sebagai tamu →</button>
-      </div>`}
+      `}
     </div>`;
   } else if (S.step === 4) {
     // ============ STEP 4: RINGKASAN + DATA PENYEWA ============
