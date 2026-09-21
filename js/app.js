@@ -2333,9 +2333,20 @@ function aPromo() {
     <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">${PROMOS.map((p, i) => `<div class="rv card p-6 ${p.status !== 'Active' ? 'opacity-60' : ''}" style="transition-delay:${i * 70}ms">
       <div class="flex justify-between items-start gap-2 mb-4"><span class="font-mono font-bold text-lg text-maroon-400 border border-dashed border-maroon-500/50 rounded-lg px-3 py-1 break-all">${p.code}</span>${badge(p.status === 'Active' ? 'Active' : 'Expired')}</div>
       <div class="text-[12.5px] text-muted space-y-1.5"><p>${p.type === 'percent' ? 'Diskon ' + p.value + '% (maks ' + fmtK(p.cap) + ')' : 'Potongan ' + fmtK(p.value)}</p><p>Min. rental ${p.minDays} hari</p><p>${dShort(p.start)} – ${dShort(p.end)} ${p.end.slice(0, 4)}</p></div>
-      <button onclick="togglePromo('${p.id}')" class="btn btn-g btn-sm mt-4 w-full">${p.status === 'Active' ? 'Nonaktifkan' : 'Aktifkan'}</button>
+      <div class="grid grid-cols-3 gap-2 mt-4"><button onclick="togglePromo('${p.id}')" class="btn btn-g btn-sm">${p.status === 'Active' ? 'Nonaktifkan' : 'Aktifkan'}</button><button onclick="promoForm('${p.id}')" class="btn btn-g btn-sm">Edit</button><button onclick="deletePromo('${p.id}')" class="btn btn-d btn-sm">Hapus</button></div>
     </div>`).join('')}
   </div>`;
+}
+
+function deletePromo(id){
+  const p = PROMOS.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm('Hapus promo ' + p.code + '?\n\nPromo akan dihapus permanen.')) return;
+  PROMOS = PROMOS.filter(x => x.id !== id);
+  persist();
+  addLog('Promo ' + p.code + ' dihapus');
+  toast('Promo ' + p.code + ' dihapus', 'info');
+  renderAdminBody();
 }
 
 function togglePromo(id) {
@@ -2347,19 +2358,31 @@ function togglePromo(id) {
   renderAdminBody();
 }
 
-function promoForm() {
-  modal(`<div class="p-7"><h3 class="font-display font-semibold text-lg mb-5">Buat Promo Baru</h3>
-    <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Promo Name</label><input id="pf0" class="inp uppercase" placeholder="MERDEKA2026"></div><div><label class="lbl">Tipe</label><select id="pf1" class="inp"><option value="percent">Percent %</option><option value="flat">Flat Rp</option></select></div>
-    <div><label class="lbl">Discount Value</label><input id="pf2" class="inp" type="number" value="10"></div><div><label class="lbl">Maximum Discount</label><input id="pf3" class="inp" type="number" value="100000"></div>
-    <div><label class="lbl">Minimum Rental (hari)</label><input id="pf4" class="inp" type="number" value="2"></div><div><label class="lbl">Status</label><select id="pf5" class="inp"><option>Active</option><option>Expired</option></select></div>
-    <div><label class="lbl">Start Date</label><input id="pf6" type="date" class="inp" value="${TODAY}"></div><div><label class="lbl">End Date</label><input id="pf7" type="date" class="inp" value="2026-09-30"></div></div>
-    <button onclick="savePromo()" class="btn btn-m w-full mt-5">Simpan Promo</button>
+function promoForm(id) {
+  const p = id ? PROMOS.find(x => x.id === id) : null;
+  modal(`<div class="p-7"><h3 class="font-display font-semibold text-lg mb-5">${p ? 'Edit' : 'Buat'} Promo${p ? ' — ' + esc(p.code) : ''}</h3>
+    <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Promo Name</label><input id="pf0" class="inp uppercase" placeholder="MERDEKA2026" value="${p ? esc(p.code) : ''}"></div><div><label class="lbl">Tipe</label><select id="pf1" class="inp"><option value="percent" ${p && p.type === 'percent' ? 'selected' : ''}>Percent %</option><option value="flat" ${p && p.type === 'flat' ? 'selected' : ''}>Flat Rp</option></select></div>
+    <div><label class="lbl">Discount Value</label><input id="pf2" class="inp" type="number" value="${p ? p.value : 10}"></div><div><label class="lbl">Maximum Discount</label><input id="pf3" class="inp" type="number" value="${p ? p.cap : 100000}"></div>
+    <div><label class="lbl">Minimum Rental (hari)</label><input id="pf4" class="inp" type="number" value="${p ? p.minDays : 2}"></div><div><label class="lbl">Status</label><select id="pf5" class="inp"><option ${p && p.status === 'Active' ? 'selected' : ''}>Active</option><option ${p && p.status === 'Expired' ? 'selected' : ''}>Expired</option></select></div>
+    <div><label class="lbl">Start Date</label><input id="pf6" type="date" class="inp" value="${p ? p.start : TODAY}"></div><div><label class="lbl">End Date</label><input id="pf7" type="date" class="inp" value="${p ? p.end : '2026-09-30'}"></div></div>
+    <button onclick="savePromo('${p ? p.id : ''}')" class="btn btn-m w-full mt-5">${p ? 'Update' : 'Simpan'} Promo</button>
   </div>`);
 }
 
-function savePromo() {
+function savePromo(id) {
   const code = $('pf0').value.trim().toUpperCase();
   if (!code) { toast('Nama promo wajib diisi', 'err'); return; }
+  if (id) {
+    const p = PROMOS.find(x => x.id === id);
+    if (!p) { toast('Promo tidak ditemukan', 'err'); return; }
+    Object.assign(p, { code, type: $('pf1').value, value: +$('pf2').value, cap: +$('pf3').value, minDays: +$('pf4').value, status: $('pf5').value, start: $('pf6').value, end: $('pf7').value });
+    persist();
+    addLog('Promo ' + code + ' diperbarui');
+    toast('Promo ' + code + ' diperbarui');
+    closeModal();
+    renderAdminBody();
+    return;
+  }
   PROMOS.push({
     id: 'P-' + Date.now(),
     code,
