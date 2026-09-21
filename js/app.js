@@ -978,7 +978,7 @@ function vBooking() {
           ['QRIS', 'Dalam Pengembangan', false],
           ['GoPay', 'Dalam Pengembangan', false],
           ['OVO', 'Dalam Pengembangan', false],
-          ['Transfer Bank', 'Transfer manual BJB', true]
+          ['Transfer Bank', `Transfer manual ${S.cms.payments?.bank?.nama || 'Bank'}`, true]
         ].map(x => {
   const aktif = x[2] !== false;
   const onclick = aktif ? `chooseMethod('${x[0]}')` : `toast('${x[0]} — Dalam Pengembangan','info')`;
@@ -993,7 +993,7 @@ function vBooking() {
         <div class="mt-5 rounded-xl bg-ink-900 border border-white/5 p-4 flex justify-between items-center gap-3 flex-wrap"><span class="text-sm text-muted">Total tagihan</span><span class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
       <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
-        ${!m ? `<div class="text-muted">${ic('card', 'w-10 h-10 mx-auto mb-3 text-zinc-600')}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === 'QRIS' ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : m.startsWith('VA') ? `<p class="text-[12px] text-muted mb-2">Nomor Virtual Account</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2 break-all">8808 2608 1313 8899</div><button onclick="copyTxt('8808260813138899')" class="btn btn-g btn-sm mb-5">${ic('copy', 'w-4 h-4')} Salin Nomor</button>` : m === 'Transfer Bank' ? `<p class="text-[12px] text-muted mb-2">Rekening BJB a.n. AZZID RENTCAR</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">0123 4567 89</div><button onclick="copyTxt('0123456789')" class="btn btn-g btn-sm mb-5">${ic('copy', 'w-4 h-4')} Salin Rekening</button>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m} untuk menyelesaikan pembayaran.</p>`}
+        ${!m ? `<div class="text-muted">${ic('card', 'w-10 h-10 mx-auto mb-3 text-zinc-600')}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === 'QRIS' ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : m.startsWith('VA') ? `<p class="text-[12px] text-muted mb-2">Nomor Virtual Account</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2 break-all">8808 2608 1313 8899</div><button onclick="copyTxt('8808260813138899')" class="btn btn-g btn-sm mb-5">${ic('copy', 'w-4 h-4')} Salin Nomor</button>` : m === 'Transfer Bank' ? `<p class="text-[12px] text-muted mb-2">Rekening ${esc(S.cms.payments?.bank?.nama || 'BJB')} a.n. ${esc(S.cms.payments?.bank?.pemilik || 'AZZID RENTCAR')}</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">${(S.cms.payments?.bank?.norek || '0123456789').replace(/(\d{4})(?=\d)/g, '$1 ')}</div><button onclick="copyTxt('${S.cms.payments?.bank?.norek || '0123456789'}')" class="btn btn-g btn-sm mb-5">${ic('copy','w-4 h-4')} Salin Rekening</button>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m} untuk menyelesaikan pembayaran.</p>`}
         ${m ? `<button onclick="doPay()" class="btn btn-m w-full max-w-xs">${ic('zap', 'w-4 h-4')} Bayar ${fmtIDR(c.total)}</button>` : ''}
       </div>
     </div>`;
