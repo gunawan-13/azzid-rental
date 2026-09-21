@@ -1233,7 +1233,7 @@ function renderA() {
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
       </header>
-      <main id="aBody" class="p-4 sm:p-6 flex-1 min-w-0"></main>
+      <main id="aBody" class="p-4 sm:p-6 flex-1 min-w-0 overflow-y-auto"></main>
     </div>
   </div>`;
   renderAdminBody();
