@@ -1176,8 +1176,20 @@ function googleLoginMarkup(){
 function initGoogleButton(){
   const el=$('googleLoginBtn'); if(!el) return;
   if(!GOOGLE_CLIENT_ID){el.innerHTML='<div class="text-[11px] text-zinc-500 text-center border border-white/10 rounded-lg px-3 py-2">Login Google siap digunakan setelah GOOGLE_CLIENT_ID dikonfigurasi.</div>';return;}
-  const draw=()=>{ if(!window.google?.accounts?.id) return false; window.google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:credential=>doGoogleLogin(credential.credential)}); el.innerHTML=''; window.google.accounts.id.renderButton(el,{theme:'outline',size:'large',shape:'rectangular',width:360,text:'signin_with'}); return true; };
-  if(!draw()) setTimeout(draw,500);
+  // Kalau sudah dirender untuk container ini, skip (anti-flicker)
+  if (el.dataset.gRendered === "1" && el.querySelector("div[role=button]")) return;
+  // Cegah render ganda dalam 1 detik
+  if (el._lastInit && Date.now() - el._lastInit < 1000) return;
+  el._lastInit = Date.now();
+  const draw=()=>{
+    if(!window.google?.accounts?.id) return false;
+    window.google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:credential=>doGoogleLogin(credential.credential)});
+    el.innerHTML='';
+    window.google.accounts.id.renderButton(el,{theme:'outline',size:'large',shape:'rectangular',width:360,text:'signin_with'});
+    el.dataset.gRendered = "1";
+    return true;
+  };
+  if(!draw()) setTimeout(draw,300);
 }
 async function doGoogleLogin(credential){
   try{
