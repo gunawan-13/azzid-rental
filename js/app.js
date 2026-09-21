@@ -894,17 +894,11 @@ function vBooking() {
   if (S.step === 0) {
     body = `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<button onclick="pickVeh('${v.id}')" class="card overflow-hidden text-left transition hover:border-maroon-500/50 ${d.veh === v.id ? '!border-maroon-500 ring-2 ring-maroon-500/40' : ''}"><div class="h-32 overflow-hidden"><img src="${v.img}" class="w-full h-full object-cover"></div><div class="p-4 flex justify-between items-center gap-2"><div class="min-w-0"><div class="font-semibold text-sm truncate">${esc(v.name)}</div><div class="text-[11px] text-muted">${v.trans} · ${v.seats} seats</div></div><div class="font-display font-bold text-maroon-400 text-sm shrink-0">${fmtK(v.priceLK)}</div></div>${d.veh === v.id ? `<div class="bg-maroon-600 text-white text-center text-[11px] font-bold py-1.5 tracking-widest">✓ TERPILIH</div>` : ''}</button>`).join('')}</div>`;
   } else if (S.step === 1) {
-    const v = veh(d.veh);
-    const clash = isClash(d.veh, d.start, d.end);
-    body = `<div class="grid lg:grid-cols-[.9fr_1.1fr] gap-6">
-      <div class="card p-5 flex gap-4 items-center"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0"><div class="min-w-0"><div class="font-display font-semibold truncate">${esc(v.name)}</div><div class="text-[12px] text-muted">${v.year} · ${v.trans} · ${v.seats} seats</div><button onclick="location.hash='#/armada'" class="text-[12px] text-maroon-400 font-semibold mt-1">Ganti mobil</button></div></div>
-      <div class="card p-6">
-        <div class="grid sm:grid-cols-2 gap-4 mb-4"><div><label class="lbl">Tanggal Mulai</label><input type="date" class="inp" value="${d.start}" min="${TODAY}" onchange="S.draft.start=this.value;renderC()"></div><div><label class="lbl">Tanggal Selesai</label><input type="date" class="inp" value="${d.end}" min="${d.start}" onchange="S.draft.end=this.value;renderC()"></div></div>
-        <div class="grid sm:grid-cols-2 gap-3 mb-4">${['Lepas Kunci', 'Dengan Driver'].map(t => `<button onclick="S.draft.type='${t}';renderC()" class="rounded-xl border p-4 text-left transition ${d.type === t ? 'border-maroon-500 bg-maroon-500/10' : 'border-white/10 hover:border-white/25'}"><div class="flex items-center gap-2 font-semibold text-sm">${ic(t === 'Lepas Kunci' ? 'key' : 'wheel', 'w-4 h-4 text-maroon-400')}${t}</div><div class="text-[11px] text-muted mt-1">${t === 'Lepas Kunci' ? 'Kendarai sendiri, lebih bebas' : 'Driver profesional +Rp150rb/hari'}</div></button>`).join('')}</div>
-        <div class="grid sm:grid-cols-2 gap-4"><div><label class="lbl">Lokasi Pickup</label><select class="inp" onchange="S.draft.pickup=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.pickup === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
-          <div><label class="lbl">Lokasi Drop-off</label><select class="inp" onchange="S.draft.drop=this.value">${['Kantor - Cipayung Jakarta Timur'].map(x => `<option ${d.drop === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div></div>
-        ${clash ? `<div class="mt-4 rounded-lg border border-sky-500/40 bg-sky-500/10 text-sky-300 text-[12.5px] px-4 py-3 flex gap-2">${ic('bell', 'w-4 h-4 shrink-0')} Mobil ini sudah ada booking di tanggal tersebut. Anda tetap bisa memesan — admin akan konfirmasi ketersediaan unit.</div>` : ''}
-      </div>
+    body = `<div class="max-w-xl mx-auto text-center card p-8 sm:p-10">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-maroon-500/15 text-maroon-400 grid place-items-center mb-5">${ic('car', 'w-8 h-8')}</div>
+      <h2 class="font-display font-extrabold text-2xl mb-2">Pilih Mobil Dulu</h2>
+      <p class="text-muted text-sm mb-6">Silakan pilih mobil dari halaman <b class="text-white">Armada</b> untuk melanjutkan booking.</p>
+      <a href="#/armada" class="btn btn-m w-full">${ic('arrR', 'w-4 h-4')} Buka Halaman Armada</a>
     </div>`;
   } else if (S.step === 2) {
     const src = acc ? { nama: acc.nama, wa: acc.wa, email: acc.email, alamat: acc.alamat, ktp: acc.ktp, ttl: acc.ttl } : d.cust;
