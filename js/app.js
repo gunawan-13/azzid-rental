@@ -1279,7 +1279,7 @@ function renderA() {
         <button class="lg:hidden p-2" onclick="document.getElementById('aSb').classList.toggle('-translate-x-full')">${ic('grid')}</button>
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('bellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
-          <div id="bellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
+          <div id="bellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div onclick="openNotifDetail(\x27${n.bookingId || \x27\x27}\x27)" class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
         <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shadow-glow shrink-0 object-cover">
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
@@ -1404,7 +1404,7 @@ function aOverview() {
         </div>
       </div>
       <div class="rv card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
-        <div class="space-y-4">${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS.slice(0,5) : []).map(n => `<div class="flex gap-3"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl || "text-sky-300"} shrink-0">${ic(n.ic || "bell", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${esc(n.t)}</p><p class="text-[10.5px] text-muted mt-0.5">${esc(n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : n.w || "Baru saja"))}</p></div></div>`).join("")}</div><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
+        <div class="space-y-4">${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS.slice(0,5) : []).map(n => `<div onclick="openNotifDetail(\x27${n.bookingId || \x27\x27}\x27)" class="flex gap-3 cursor-pointer hover:bg-white/5 rounded-lg p-2 -m-2 transition"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl || "text-sky-300"} shrink-0">${ic(n.ic || "bell", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${esc(n.t)}</p><p class="text-[10.5px] text-muted mt-0.5">${esc(n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : n.w || "Baru saja"))}</p></div></div>`).join("")}</div><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
       <table class="tbl min-w-[720px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Status</th></tr></thead><tbody>
         ${BOOKINGS.slice(-6).reverse().map(b => `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400">${b.id.slice(-9)}</td><td>${esc(b.cust)}</td><td>${esc((veh(b.veh) || { name: '—' }).name)}</td><td>${dShort(b.start)}–${dShort(b.end)}</td><td>${fmtK(b.total)}</td><td>${badge(b.status)}</td></tr>`).join('')}
       </tbody></table>
@@ -1667,6 +1667,22 @@ function aBookings() {
     </div>
     <div class="rv card overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Payment</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="bkTbody"></tbody></table></div>
   </div>`;
+}
+
+function openNotifDetail(bookingId) {
+  // Tutup dropdown bell
+  const bellD = document.getElementById("bellD");
+  if (bellD) bellD.classList.add("hidden");
+  if (!bookingId) { toast("Notifikasi ini tidak terkait booking", "info"); return; }
+  // Kalau di admin, buka detail booking
+  if (S.adminMode) {
+    S.adminView = "booking";
+    renderAdminBody && renderAdminBody();
+    setTimeout(() => openBookingDetail(bookingId), 100);
+  } else {
+    // Public: arahkan ke lookup booking
+    location.hash = "#/booking/lookup/" + bookingId;
+  }
 }
 
 function openBookingDetail(id) {
