@@ -631,8 +631,13 @@ function openBookingFromDetail(vid) {
   S.draft.start = $('dtStart')?.value || S.draft.start || TODAY;
   S.draft.end = $('dtEnd')?.value || S.draft.end || addDays(TODAY,2);
   S.draft.type = $('dtType').value;
+  if (!S.draft.pickup) S.draft.pickup = 'Kantor - Cipayung Jakarta Timur';
+  if (!S.draft.drop) S.draft.drop = 'Kantor - Cipayung Jakarta Timur';
+  if (!S.draft.cust) S.draft.cust = {};
+  if (!S.draft.promo) S.draft.promo = null;
+  if (!S.draft.method) S.draft.method = '';
   S.step = 1;
-  renderC();
+  location.hash = '#/booking';
   window.scrollTo({ top: 0 });
   syncAdminBtns();
 }
