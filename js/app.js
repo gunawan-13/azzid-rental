@@ -869,6 +869,7 @@ function doPay() {
     BOOKINGS.unshift(booking);
     S.lastBooking = booking;
     addLog(`Booking baru: ${id} · ${v.name} · ${d.cust?.nama || "Tamu"}`);
+    if (typeof addAdminNotif === "function") addAdminNotif("booking", `Booking baru ${id} dari ${d.cust?.nama || "Tamu"}`);
     if (typeof persist === "function") persist();
 
     // Simpan ke API (kalau ada) — tidak blocking
