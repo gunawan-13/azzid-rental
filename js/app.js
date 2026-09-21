@@ -1177,16 +1177,16 @@ function initGoogleButton(){
   const el = $("googleLoginBtn"); if (!el) return;
   if (!GOOGLE_CLIENT_ID) return;
 
-  // Sudah ada tombol? skip total
+  // Sudah ada tombol render? skip total
   if (el.dataset.gRendered === "1" && (el.querySelector("div[role=button]") || el.querySelector("iframe"))) return;
-
-  // Lock global 3 detik
-  if (window._gLock && Date.now() - window._gLock < 3000) return;
-  window._gLock = Date.now();
 
   const draw = () => {
     if (!window.google?.accounts?.id) return false;
-    if (el.dataset.gRendered === "1" && (el.querySelector("div[role=button]") || el.querySelector("iframe"))) return true;
+    // Cek lagi — kalau sudah ada, skip
+    if (el.querySelector("div[role=button]") || el.querySelector("iframe")) {
+      el.dataset.gRendered = "1";
+      return true;
+    }
     try {
       window.google.accounts.id.initialize({client_id: GOOGLE_CLIENT_ID, callback: credential => doGoogleLogin(credential.credential)});
       el.innerHTML = "";
@@ -1198,9 +1198,10 @@ function initGoogleButton(){
 
   if (!draw()) {
     let retry = 0;
-    const t = setInterval(() => {
+    if (window._gRetryTimer) clearInterval(window._gRetryTimer);
+    window._gRetryTimer = setInterval(() => {
       retry++;
-      if (draw() || retry > 15) clearInterval(t);
+      if (draw() || retry > 30) { clearInterval(window._gRetryTimer); window._gRetryTimer = null; }
     }, 200);
   }
 }
@@ -3062,3 +3063,25 @@ if (document.readyState === "loading") {
     if (tries > 10) clearInterval(t);
   }, 1000);
 }
+
+// === Google Button — tunggu script ready ===
+(function waitGoogle() {
+  let tries = 0;
+  const check = setInterval(function() {
+    tries++;
+    if (window.google?.accounts?.id) {
+      clearInterval(check);
+      // Panggil setiap 500ms selama 10 detik kalau perlu
+      let n = 0;
+      const t2 = setInterval(function() {
+        n++;
+        const el = document.getElementById('googleLoginBtn');
+        if (el && el.dataset.gRendered !== '1') {
+          if (typeof initGoogleButton === 'function') initGoogleButton();
+        }
+        if (n > 20) clearInterval(t2);
+      }, 500);
+    }
+    if (tries > 60) clearInterval(check); // 30 detik
+  }, 500);
+})();
