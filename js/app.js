@@ -846,6 +846,8 @@ function doPay() {
   // Simpan booking
   const booking = {
     id: id,
+    user: S.custSession?.email || d.cust?.email || "",
+    userId: S.custSession?.id || null,
     veh: d.veh,
     cust: d.cust?.nama || "Tamu",
     wa: d.cust?.wa || "",
