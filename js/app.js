@@ -589,7 +589,7 @@ function vKontak() {
   return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Kontak</span><h1 class="font-display font-extrabold text-4xl mt-2">Hubungi Kami</h1></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid lg:grid-cols-2 gap-8">
     <div class="space-y-4 rv min-w-0">${[
       ['pin', 'Kantor Pusat', 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur, Jakarta, Indonesia 13840'],
-      ['phone', 'Telepon / WhatsApp', '+62 812-3456-7890 · 24/7'],
+      ['phone', 'Telepon / WhatsApp', '+62 838-9035-4333 · 24/7'],
       ['mail', 'Email', 'azzidrentalmobil@gmail.com · booking@azzidrentcar.id'],
       ['clock', 'Jam Operasional', 'Booking online 24 jam · Kantor 07.00–22.00 WIB']
     ].map(x => `<div class="card p-5 flex gap-4 items-start hover:border-maroon-500/40 transition"><span class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span><div class="min-w-0"><h3 class="font-display font-semibold text-sm">${x[1]}</h3><p class="text-[13px] text-muted mt-1 break-words">${x[2]}</p></div></div>`).join('')}
@@ -2399,7 +2399,7 @@ function saveDriver(id){
   const wa = $('df_wa').value.trim();
   if (!name) { toast('Nama wajib diisi', 'err'); return; }
   const waDigits = (wa || '').replace(/\\D/g, '');
-  if (waDigits.length !== 12) { toast('No. WhatsApp harus 12 angka (contoh: 081234567890)', 'err'); return; }
+  if (waDigits.length !== 12) { toast('No. WhatsApp harus 12 angka (contoh: 083890354333)', 'err'); return; }
   const data = {
     name: name,
     wa: wa,
@@ -2837,8 +2837,10 @@ function applyCms() {
   $('waFloat').href = wl;
   $('footWa').href = wl;
   const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur';
-  const elTelp = $('footTelepon'); if (elTelp) elTelp.textContent = S.cms.telepon || '+62 812-3456-7890';
-  const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'azzidrentalmobil@gmail.com';
+  const elTelp = $("footTelepon"); if (elTelp) elTelp.textContent = S.cms.telepon || "+62 838-9035-4333";
+  const elMail = $("footEmail"); if (elMail) elMail.textContent = S.cms.email || "azzidrentalmobil@gmail.com";
+  const elAddr = $("footAlamat"); if (elAddr) elAddr.textContent = S.cms.alamat || "Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur";
+  const elWa = $("footWa"); if (elWa) elWa.href = "https://wa.me/" + (S.cms.wa || "6283890354333");
 }
 
 function deleteUser(id, email){
@@ -2890,7 +2892,7 @@ function aSettings() {
         <div><label class="lbl">Nama Bisnis</label><input id="bizNama" class="inp" value="${esc(S.cms.namaBisnis||'AZZID RENTCAR')}"></div>
         <div><label class="lbl">Email</label><input id="bizEmail" class="inp" value="${esc(S.cms.email||'azzidrentalmobil@gmail.com')}"></div>
         <div class="sm:col-span-2"><label class="lbl">Alamat</label><input id="bizAlamat" class="inp" value="${esc(S.cms.alamat||'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur')}"></div>
-        <div class="sm:col-span-2"><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'+62 812-3456-7890')}"></div>
+        <div class="sm:col-span-2"><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'+62 838-9035-4333')}"></div>
       </div>
     </div>
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Metode Pembayaran Aktif</h3>
@@ -2899,8 +2901,8 @@ function aSettings() {
     <div><label class="lbl">QRIS — Nama Merchant / NMID</label><input id="payQris" class="inp" value="${esc(S.cms.payments?.qris||'')}" placeholder="Contoh: AZZID RENTCAR · QRIS GPN"></div>
     <div><label class="lbl">VA BCA — Nomor Virtual Account</label><input id="payVaBca" class="inp" value="${esc(S.cms.payments?.va_bca||'')}" placeholder="Contoh: 8808260813138899"></div>
     <div><label class="lbl">VA Mandiri — Nomor Virtual Account</label><input id="payVaMandiri" class="inp" value="${esc(S.cms.payments?.va_mandiri||'')}" placeholder="Contoh: 8880812345678"></div>
-    <div><label class="lbl">GoPay — Nomor HP</label><input id="payGopay" class="inp" value="${esc(S.cms.payments?.gopay||'')}" placeholder="Contoh: 081234567890"></div>
-    <div><label class="lbl">OVO — Nomor HP</label><input id="payOvo" class="inp" value="${esc(S.cms.payments?.ovo||'')}" placeholder="Contoh: 081234567890"></div>
+    <div><label class="lbl">GoPay — Nomor HP</label><input id="payGopay" class="inp" value="${esc(S.cms.payments?.gopay||'')}" placeholder="Contoh: 083890354333"></div>
+    <div><label class="lbl">OVO — Nomor HP</label><input id="payOvo" class="inp" value="${esc(S.cms.payments?.ovo||'')}" placeholder="Contoh: 083890354333"></div>
     <div class="grid sm:grid-cols-3 gap-3">
       <div><label class="lbl">Bank — Nama Bank</label><input id="payBankNama" class="inp" value="${esc(S.cms.payments?.bank?.nama||'BJB')}"></div>
       <div><label class="lbl">Bank — Nomor Rekening</label><input id="payBankNorek" class="inp" value="${esc(S.cms.payments?.bank?.norek||'')}" placeholder="Contoh: 0123456789"></div>
@@ -2945,7 +2947,7 @@ function openInvoice(id) {
   const v = veh(b.veh) || { name: '—' };
   $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0 auto;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 812-3456-7890 · azzidrentalmobil@gmail.com</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 838-9035-4333 · azzidrentalmobil@gmail.com</div></div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
     </div>
     <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
