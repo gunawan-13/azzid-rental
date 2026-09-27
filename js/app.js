@@ -786,6 +786,8 @@ function bkNext() {
     const ok = req.every(k => $("cf_" + k) && $("cf_" + k).value.trim());
     if (!ok) { toast("Lengkapi semua data wajib", "err"); return; }
     if (!window._ktpBase64) { toast("Upload foto identitas wajib", "err"); return; }
+    if (!d.cust) d.cust = {};
+    d.cust.ktp_file = window._ktpBase64 || d.cust.ktp_file || "";
     d.cust = {
       nama: $("cf_nama").value,
       wa: $("cf_wa").value,
@@ -863,6 +865,8 @@ function doPay() {
     total: c.total,
     method: d.method,
     promo: d.promo,
+    ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
+    ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
     status: "Confirmed",
     pay: { at: new Date().toISOString().slice(0,10), s: "PAID" }
   };
