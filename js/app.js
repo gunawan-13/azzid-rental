@@ -846,6 +846,8 @@ function doPay() {
   // Simpan booking
   const booking = {
     id: id,
+    user: S.custSession?.email || "",
+    userId: S.custSession?.id || null,
     user: S.custSession?.email || d.cust?.email || "",
     userId: S.custSession?.id || null,
     veh: d.veh,
@@ -864,11 +866,30 @@ function doPay() {
     method: d.method,
     promo: d.promo,
     status: "Confirmed",
-    pay: { at: new Date().toISOString().slice(0,10) }
+    pay: { at: new Date().toISOString().slice(0,10), s: "PAID" }
   };
 
   try {
     BOOKINGS.unshift(booking);
+    if (typeof CUSTOMERS !== "undefined") {
+      var cName = (d.cust && d.cust.nama) || "Tamu";
+      var cWa = (d.cust && d.cust.wa) || "";
+      var cEmail = (d.cust && d.cust.email) || "";
+      var existing = CUSTOMERS.find(x => x.name === cName);
+      if (existing) {
+        existing.total = (existing.total || 0) + 1;
+        existing.spend = (existing.spend || 0) + (booking.total || 0);
+        existing.last = booking.start || "\u2014";
+        existing.status = existing.total > 1 ? "Repeat" : "New";
+      } else {
+        CUSTOMERS.push({
+          id: "CST-" + String(CUSTOMERS.length + 1).padStart(3, "0"),
+          name: cName, wa: cWa, email: cEmail, addr: "",
+          total: 1, spend: booking.total || 0,
+          last: booking.start || "\u2014", status: "New"
+        });
+      }
+    }
     S.lastBooking = booking;
     addLog(`Booking baru: ${id} · ${v.name} · ${d.cust?.nama || "Tamu"}`);
     if (typeof addAdminNotif === "function") addAdminNotif("booking", `Booking baru ${id} dari ${d.cust?.nama || "Tamu"}`, id);
@@ -1111,7 +1132,7 @@ function showTabAuth(t){const i=$('mAuthIn'),r=$('mAuthReg'),a=$('atIn'),b=$('at
 async function doCustLogin(){const e=($('cAuthE').value||'').trim().toLowerCase(),p=$('cAuthP').value;try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''};closeModal();toast('Selamat datang kembali, '+user.name.split(' ')[0]+'!');renderC()}catch(err){$('mErrIn').textContent=err.message||'Email atau password salah.';$('mErrIn').classList.remove('hidden')}}
 async function doCustReg(){const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');err.classList.add('hidden');if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}try{const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});const user=apiData(result)?.user||result?.user;if(!user)throw new Error('Registrasi gagal.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w};closeModal();toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!');renderC()}catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}}
 async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;sessionStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderC()}
-function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.custSession;const hist=BOOKINGS.filter(b=>b.user===acc.email);const spend=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);modal(`<div class="p-7"><div class="flex justify-between items-start gap-4 mb-6"><div><h3 class="font-display font-bold text-xl">${esc(acc.nama)}</h3><p class="text-[12px] text-muted mt-1">${esc(acc.email)} · ${esc(acc.phone||'-')}</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-3 mb-5"><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${hist.length}</b><div class="text-[10px] text-muted uppercase">Total Booking</div></div><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${fmtK(spend)}</b><div class="text-[10px] text-muted uppercase">Pengeluaran</div></div></div><div class="space-y-2 max-h-52 overflow-y-auto">${hist.length?hist.map(b=>`<div class="bg-ink-900 rounded-lg p-3 text-[12px] flex justify-between gap-2"><span>${esc(b.id)}</span>${badge(b.status)}</div>`).join(''):'<p class="text-sm text-muted">Belum ada booking.</p>'}</div><button onclick="custLogout()" class="btn btn-d btn-sm w-full mt-5">${ic('logout','w-4 h-4')} Logout</button></div>`,1)}
+function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.custSession;const hist=BOOKINGS.filter(b=>b.user===acc.email || b.email===acc.email || b.cust===acc.nama);const spend=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);modal(`<div class="p-7"><div class="flex justify-between items-start gap-4 mb-6"><div><h3 class="font-display font-bold text-xl">${esc(acc.nama)}</h3><p class="text-[12px] text-muted mt-1">${esc(acc.email)} · ${esc(acc.phone||'-')}</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-3 mb-5"><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${hist.length}</b><div class="text-[10px] text-muted uppercase">Total Booking</div></div><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${fmtK(spend)}</b><div class="text-[10px] text-muted uppercase">Pengeluaran</div></div></div><div class="space-y-2 max-h-52 overflow-y-auto">${hist.length?hist.map(b=>`<div class="bg-ink-900 rounded-lg p-3 text-[12px] flex justify-between gap-2"><span>${esc(b.id)}</span>${badge(b.status)}</div>`).join(''):'<p class="text-sm text-muted">Belum ada booking.</p>'}</div><button onclick="custLogout()" class="btn btn-d btn-sm w-full mt-5">${ic('logout','w-4 h-4')} Logout</button></div>`,1)}
 
 /* ================= TRACK ================= */
 function openTrack() {
@@ -1394,7 +1415,7 @@ function aOverview() {
   const __safeSum = (arr, key) => Array.isArray(arr) ? arr.reduce((s, x) => s + (Number(x && x[key]) || 0), 0) : 0;
   const __totalBookings = __safeCount(BOOKINGS);
   const __activeBookings = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => ['Ongoing','Confirmed'].includes(b.status)).length : 0;
-  const __revenue = __safeSum(BOOKINGS.filter(b => b.pay && b.pay.s === 'PAID'), 'total');
+  const __revenue = __safeSum(BOOKINGS.filter(b => (b.pay && (b.pay.s === 'PAID' || b.pay.s === 'PENDING')) || b.status === 'Confirmed'), 'total');
   const __revenueJt = (__revenue / 1000000).toFixed(1);
   
   const series = revSeries(S.revRange);
