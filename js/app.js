@@ -1354,23 +1354,21 @@ function closeSb() {
   if (window.innerWidth < 1024) $('aSb').classList.add('-translate-x-full');
 }
 
-function revSeries(days) {
+function revSeries(n = 7) {
   const out = [];
-  const t = dP(TODAY);
-  // Kelompokkan revenue booking real per tanggal
-  const map = {};
-  if (Array.isArray(BOOKINGS)) {
-    BOOKINGS.forEach(b => {
-      if (b && b.start && b.pay && b.pay.s === 'PAID') {
-        map[b.start] = (map[b.start] || 0) + (Number(b.total) || 0);
-      }
-    });
-  }
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(t);
+  const today = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(today);
     d.setDate(d.getDate() - i);
-    const dateStr = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    const v = map[dateStr] || 0;   // ← ambil real, kalau tidak ada = 0
+    const dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    // Filter longgar: booking yang statusnya bukan cancelled/pending, dan tanggal mulai/pay sama
+    const v = BOOKINGS.filter(b => {
+      if (!b) return false;
+      if (b.status === "Cancelled" || b.status === "Pending") return false;
+      const payAt = (b.pay && b.pay.at) || "";
+      const startAt = b.start || "";
+      return payAt === dateStr || startAt === dateStr;
+    }).reduce((sum, b) => sum + (Number(b.total) || 0), 0);
     out.push({ d, v });
   }
   return out;
