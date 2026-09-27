@@ -1174,36 +1174,44 @@ function googleLoginMarkup(){
   return `<div class="my-4"><div class="flex items-center gap-3 text-[10px] text-zinc-500 uppercase tracking-widest"><span class="h-px bg-white/10 flex-1"></span><span>atau</span><span class="h-px bg-white/10 flex-1"></span></div><div id="googleLoginBtn" class="mt-4 flex justify-center min-h-[44px]" data-g-rendered="0"></div></div>`;
 }
 function initGoogleButton(){
-  const el = $("googleLoginBtn"); if (!el) return;
-  if (!GOOGLE_CLIENT_ID) return;
-
-  // Sudah ada tombol render? skip total
-  if (el.dataset.gRendered === "1" && (el.querySelector("div[role=button]") || el.querySelector("iframe"))) return;
-
-  const draw = () => {
-    if (!window.google?.accounts?.id) return false;
-    // Cek lagi — kalau sudah ada, skip
-    if (el.querySelector("div[role=button]") || el.querySelector("iframe")) {
-      el.dataset.gRendered = "1";
-      return true;
+  var el = document.getElementById("googleLoginBtn");
+  if (!el) { console.warn("initGoogleButton: #googleLoginBtn tidak ada"); return; }
+  if (!window.GOOGLE_CLIENT_ID) { console.warn("initGoogleButton: GOOGLE_CLIENT_ID kosong"); return; }
+  if (!window.google || !window.google.accounts || !window.google.accounts.id) {
+    console.warn("initGoogleButton: Google script belum ready, retry...");
+    if (!window._gWaitTimer) {
+      var tries = 0;
+      window._gWaitTimer = setInterval(function(){
+        tries++;
+        if (window.google && window.google.accounts && window.google.accounts.id) {
+          clearInterval(window._gWaitTimer); window._gWaitTimer = null;
+          initGoogleButton();
+        } else if (tries > 50) {
+          clearInterval(window._gWaitTimer); window._gWaitTimer = null;
+          console.warn("initGoogleButton: Google script tidak load setelah 10 detik");
+        }
+      }, 200);
     }
-    try {
-      window.google.accounts.id.initialize({client_id: GOOGLE_CLIENT_ID, callback: credential => doGoogleLogin(credential.credential)});
-      el.innerHTML = "";
-      window.google.accounts.id.renderButton(el, {theme: "outline", size: "large", shape: "rectangular", width: 360, text: "signin_with"});
-      el.dataset.gRendered = "1";
-      return true;
-    } catch (e) { console.warn("initGoogleButton draw error:", e); return false; }
-  };
-
-  if (!draw()) {
-    let retry = 0;
-    if (window._gRetryTimer) clearInterval(window._gRetryTimer);
-    window._gRetryTimer = setInterval(() => {
-      retry++;
-      if (draw() || retry > 30) { clearInterval(window._gRetryTimer); window._gRetryTimer = null; }
-    }, 200);
+    return;
   }
+  // Sudah ada tombol? skip
+  if (el.querySelector("div[role=button]") || el.querySelector("iframe")) {
+    el.dataset.gRendered = "1";
+    return;
+  }
+  try {
+    window.google.accounts.id.initialize({
+      client_id: window.GOOGLE_CLIENT_ID,
+      callback: function(credential){ doGoogleLogin(credential.credential); }
+    });
+    el.innerHTML = "";
+    window.google.accounts.id.renderButton(el, {
+      theme: "outline", size: "large", shape: "rectangular",
+      width: 360, text: "signin_with"
+    });
+    el.dataset.gRendered = "1";
+    console.log("✅ Google button rendered");
+  } catch (e) { console.error("initGoogleButton error:", e); }
 }
 async function doGoogleLogin(credential){
   try{
@@ -3043,45 +3051,26 @@ document.addEventListener('click', function(e) {
   }
 }, true); // capture phase — jalan duluan
 
-// Fallback: panggil initGoogleButton saat DOM ready + tiap 1 detik selama 10 detik
+
+
+
+
+// === Auto-trigger initGoogleButton ===
+function _gTrigger() {
+  if (document.getElementById("googleLoginBtn")) {
+    if (typeof initGoogleButton === "function") initGoogleButton();
+  }
+}
 if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", () => {
-    let tries = 0;
-    const t = setInterval(() => {
-      tries++;
-      const el = document.getElementById("googleLoginBtn");
-      if (el && typeof initGoogleButton === "function") initGoogleButton();
-      if (tries > 10) clearInterval(t);
-    }, 1000);
+  document.addEventListener("DOMContentLoaded", function(){
+    _gTrigger();
+    setInterval(_gTrigger, 1000);
   });
 } else {
-  let tries = 0;
-  const t = setInterval(() => {
-    tries++;
-    const el = document.getElementById("googleLoginBtn");
-    if (el && typeof initGoogleButton === "function") initGoogleButton();
-    if (tries > 10) clearInterval(t);
-  }, 1000);
+  _gTrigger();
+  setInterval(_gTrigger, 1000);
 }
-
-// === Google Button — tunggu script ready ===
-(function waitGoogle() {
-  let tries = 0;
-  const check = setInterval(function() {
-    tries++;
-    if (window.google?.accounts?.id) {
-      clearInterval(check);
-      // Panggil setiap 500ms selama 10 detik kalau perlu
-      let n = 0;
-      const t2 = setInterval(function() {
-        n++;
-        const el = document.getElementById('googleLoginBtn');
-        if (el && el.dataset.gRendered !== '1') {
-          if (typeof initGoogleButton === 'function') initGoogleButton();
-        }
-        if (n > 20) clearInterval(t2);
-      }, 500);
-    }
-    if (tries > 60) clearInterval(check); // 30 detik
-  }, 500);
-})();
+// MutationObserver — trigger saat DOM berubah
+if (typeof MutationObserver !== "undefined") {
+  new MutationObserver(_gTrigger).observe(document.body, { childList: true, subtree: true });
+}
