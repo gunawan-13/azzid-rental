@@ -590,7 +590,7 @@ function vKontak() {
     <div class="space-y-4 rv min-w-0">${[
       ['pin', 'Kantor Pusat', 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur, Jakarta, Indonesia 13840'],
       ['phone', 'Telepon / WhatsApp', '+62 812-3456-7890 · 24/7'],
-      ['mail', 'Email', 'halo@azzidrentcar.id · booking@azzidrentcar.id'],
+      ['mail', 'Email', 'azzidrentalmobil@gmail.com · booking@azzidrentcar.id'],
       ['clock', 'Jam Operasional', 'Booking online 24 jam · Kantor 07.00–22.00 WIB']
     ].map(x => `<div class="card p-5 flex gap-4 items-start hover:border-maroon-500/40 transition"><span class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span><div class="min-w-0"><h3 class="font-display font-semibold text-sm">${x[1]}</h3><p class="text-[13px] text-muted mt-1 break-words">${x[2]}</p></div></div>`).join('')}
       <div class="card overflow-hidden h-56 relative"><img src="${IMG.fleet}" class="w-full h-full object-cover opacity-40"><div class="absolute inset-0 grid place-items-center"><span class="badge bg-black/70 border-maroon-500/50 text-white px-4 py-2">${ic('pin', 'w-4 h-4')} Cipayung, Jakarta Timur</span></div></div>
@@ -2811,7 +2811,7 @@ function applyCms() {
   $('footWa').href = wl;
   const elAlamat = $('footAlamat'); if (elAlamat) elAlamat.textContent = S.cms.alamat || 'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur';
   const elTelp = $('footTelepon'); if (elTelp) elTelp.textContent = S.cms.telepon || '+62 812-3456-7890';
-  const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'halo@azzidrentcar.id';
+  const elEmail = $('footEmail'); if (elEmail) elEmail.textContent = S.cms.email || 'azzidrentalmobil@gmail.com';
 }
 
 function deleteUser(id, email){
@@ -2861,7 +2861,7 @@ function aSettings() {
     <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Informasi Bisnis</h3>
       <div class="grid sm:grid-cols-2 gap-4">
         <div><label class="lbl">Nama Bisnis</label><input id="bizNama" class="inp" value="${esc(S.cms.namaBisnis||'AZZID RENTCAR')}"></div>
-        <div><label class="lbl">Email</label><input id="bizEmail" class="inp" value="${esc(S.cms.email||'halo@azzidrentcar.id')}"></div>
+        <div><label class="lbl">Email</label><input id="bizEmail" class="inp" value="${esc(S.cms.email||'azzidrentalmobil@gmail.com')}"></div>
         <div class="sm:col-span-2"><label class="lbl">Alamat</label><input id="bizAlamat" class="inp" value="${esc(S.cms.alamat||'Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur')}"></div>
         <div class="sm:col-span-2"><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'+62 812-3456-7890')}"></div>
       </div>
@@ -2918,7 +2918,7 @@ function openInvoice(id) {
   const v = veh(b.veh) || { name: '—' };
   $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0 auto;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 812-3456-7890 · halo@azzidrentcar.id</div></div>
+      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 812-3456-7890 · azzidrentalmobil@gmail.com</div></div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
     </div>
     <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
