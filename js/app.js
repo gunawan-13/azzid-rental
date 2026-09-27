@@ -756,6 +756,10 @@ function previewKtp(input){
   const reader = new FileReader();
   reader.onload = (e) => {
     window._ktpBase64 = e.target.result;
+    if (typeof S !== 'undefined' && S.draft) {
+      if (!S.draft.cust) S.draft.cust = {};
+      S.draft.cust.ktp_file = e.target.result;
+    }
     const prev = document.getElementById('ktpPreview');
     const nameEl = document.getElementById('ktpFileName');
     if (prev && nameEl) { nameEl.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)'; prev.classList.remove('hidden'); }
@@ -870,8 +874,8 @@ function doPay() {
     total: c.total,
     method: d.method,
     promo: d.promo,
-    ktp_file: d.cust?.ktp_file || window._ktpBase64 || "",
-    ktp: d.cust?.ktp_file || window._ktpBase64 || "",
+    ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
+    ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
     status: "Confirmed",
     pay: { at: new Date().toISOString().slice(0,10), s: "PAID" }
   };
