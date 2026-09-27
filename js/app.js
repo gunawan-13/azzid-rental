@@ -846,8 +846,6 @@ function doPay() {
   // Simpan booking
   const booking = {
     id: id,
-    user: S.custSession?.email || "",
-    userId: S.custSession?.id || null,
     user: S.custSession?.email || d.cust?.email || "",
     userId: S.custSession?.id || null,
     veh: d.veh,
@@ -1415,7 +1413,7 @@ function aOverview() {
   const __safeSum = (arr, key) => Array.isArray(arr) ? arr.reduce((s, x) => s + (Number(x && x[key]) || 0), 0) : 0;
   const __totalBookings = __safeCount(BOOKINGS);
   const __activeBookings = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => ['Ongoing','Confirmed'].includes(b.status)).length : 0;
-  const __revenue = __safeSum(BOOKINGS.filter(b => (b.pay && (b.pay.s === 'PAID' || b.pay.s === 'PENDING')) || b.status === 'Confirmed'), 'total');
+  const __revenue = __safeSum(BOOKINGS.filter(b => b.status && b.status !== 'Cancelled' && b.status !== 'Pending'), 'total');
   const __revenueJt = (__revenue / 1000000).toFixed(1);
   
   const series = revSeries(S.revRange);
