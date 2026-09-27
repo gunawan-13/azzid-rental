@@ -125,6 +125,37 @@ async function loadVehiclesFromAPI() {
 
 const BOOKING_API_URL = `${API_BASE_URL}/bookings`;
 
+// === Helper POST & GET ===
+async function apiPost(path, data) {
+  try {
+    const url = API_BASE_URL + path;
+    const res = await fetch(url, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || json.success === false) throw new Error(json.message || ("HTTP " + res.status));
+    console.log("✅ API POST OK:", path, json);
+    return json;
+  } catch (e) {
+    console.warn("⚠️ API POST gagal:", path, e.message);
+    throw e;
+  }
+}
+
+async function apiGet(path) {
+  try {
+    const res = await fetch(API_BASE_URL + path, {
+      credentials: "include",
+      headers: { "Accept": "application/json" }
+    });
+    const json = await res.json().catch(() => ({}));
+    return json;
+  } catch (e) { console.warn("API GET gagal:", e.message); return null; }
+}
+
 async function loadBookingsFromAPI() {
   try {
     const res = await fetch(BOOKING_API_URL, { credentials: "include" });
@@ -912,9 +943,7 @@ function doPay() {
     if (typeof persist === "function") persist();
 
     // Simpan ke API (kalau ada) — tidak blocking
-    if (typeof apiPost === "function") {
-      apiPost("/bookings", booking).catch(() => {});
-    }
+    apiPost("/bookings", booking).then(() => console.log("✅ Booking terkirim ke API")).catch((e) => console.warn("⚠️ Gagal kirim booking:", e.message));
   } catch (e) { console.warn("Simpan booking lokal gagal:", e); }
 
   // Langsung ke step selesai
