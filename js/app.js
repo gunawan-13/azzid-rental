@@ -872,8 +872,6 @@ function doPay() {
     promo: d.promo,
     ktp_file: d.cust?.ktp_file || window._ktpBase64 || "",
     ktp: d.cust?.ktp_file || window._ktpBase64 || "",
-    ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
-    ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
     status: "Confirmed",
     pay: { at: new Date().toISOString().slice(0,10), s: "PAID" }
   };
