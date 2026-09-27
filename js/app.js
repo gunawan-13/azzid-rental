@@ -782,6 +782,11 @@ function bkNext() {
   }
   // Validasi step 4 (Ringkasan): Data Penyewa wajib
   if (S.step === 4) {
+    // Simpan KTP ke d.cust SEBELUM validasi
+    if (window._ktpBase64) {
+      if (!d.cust) d.cust = {};
+      d.cust.ktp_file = window._ktpBase64;
+    }
     const req = ["nama", "wa", "email", "alamat", "tujuan"];
     const ok = req.every(k => $("cf_" + k) && $("cf_" + k).value.trim());
     if (!ok) { toast("Lengkapi semua data wajib", "err"); return; }
@@ -865,6 +870,8 @@ function doPay() {
     total: c.total,
     method: d.method,
     promo: d.promo,
+    ktp_file: d.cust?.ktp_file || window._ktpBase64 || "",
+    ktp: d.cust?.ktp_file || window._ktpBase64 || "",
     ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
     ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
     status: "Confirmed",
