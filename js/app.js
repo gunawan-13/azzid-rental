@@ -1012,6 +1012,10 @@ function vBooking() {
             <a href="#/armada" class="ml-auto text-[11.5px] text-maroon-400 font-semibold shrink-0">Ganti →</a>
           </div>
         </div>
+        <div class="flex justify-between items-center gap-3 mt-8 pt-6 border-t border-white/5">
+          <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
+          <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button>
+        </div>
       </div>
     </div>`;
   } else if (S.step === 3) {
