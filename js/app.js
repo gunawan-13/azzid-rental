@@ -1146,8 +1146,14 @@ function vBooking() {
       </button> ${i < steps.length - 1 ? '<div class="w-5 sm:w-10 h-px bg-white/10 mx-2 shrink-0"></div>' : ''}
     </div>`).join('')}</div>
     ${body}
-    ${S.step >= 2 && S.step < 6 ? `<div class="flex justify-between max-w-5xl mx-auto mt-8 gap-3"><button onclick="bkBack()" class="btn btn-g">← Kembali</button><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
-    ${S.step === 0 ? `<div class="flex justify-center mt-8"><button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button></div>` : ''}
+
+    ${S.step >= 2 && S.step < 5 ? `<div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-8 pt-6 border-t border-white/5">
+      <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
+      <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button>
+    </div>` : S.step === 5 ? `<div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-8 pt-6 border-t border-white/5">
+      <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
+      <button onclick="doPay()" class="btn btn-m">${ic('zap', 'w-4 h-4')} Bayar</button>
+    </div>` : ''}
     
   </section>`;
 }
