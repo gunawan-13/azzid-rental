@@ -1157,17 +1157,66 @@ function vBooking() {
 }
 
 async function bkLogin() {
-  const e=($('bAuthE').value||'').trim().toLowerCase(), p=$('bAuthP').value;
-  try { const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})}); const user=apiData(result)?.user||result?.user; if(!user||user.role!=='user') throw new Error('Akun ini bukan akun penyewa.'); S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}; closeModal(); toast('Selamat datang, '+user.name.split(' ')[0]+'!'); renderC(); }
-  catch(err){ $('bkAuthErr').textContent=err.message||'Email atau password salah.'; $('bkAuthErr').classList.remove('hidden'); }
+  const e = ($("bAuthE").value || "").trim().toLowerCase();
+  const p = $("bAuthP").value;
+  const err = $("bkAuthErr");
+  if (err) err.classList.add("hidden");
+  
+  if (!e || !p) {
+    if (err) { err.textContent = "Email dan password wajib diisi"; err.classList.remove("hidden"); }
+    return;
+  }
+  
+  const users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
+  const user = users.find(u => u.email === e);
+  
+  if (!user) {
+    if (err) { err.textContent = "Akun tidak ditemukan. Silakan daftar."; err.classList.remove("hidden"); }
+    return;
+  }
+  if (user.password !== p) {
+    if (err) { err.textContent = "Password salah"; err.classList.remove("hidden"); }
+    return;
+  }
+  
+  S.custSession = { id: user.id, email: user.email, nama: user.nama, phone: user.phone || "" };
+  closeModal();
+  toast("Selamat datang kembali, " + user.nama.split(" ")[0] + "!");
+  renderC();
 }
 
 async function bkReg() {
-  const n=$('bRegN').value.trim(), w=$('bRegW').value.trim(), e=($('bRegE').value||'').trim().toLowerCase(), p=$('bRegP').value, err=$('bkRegErr'); err.classList.add('hidden');
-  if(!n||!w||!e||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return;}
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return;}
-  try { const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})}); const user=apiData(result)?.user||result?.user; if(!user) throw new Error('Registrasi gagal.'); S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w}; closeModal(); toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!'); renderC(); }
-  catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden');}
+  const n = $("bRegN").value.trim();
+  const w = $("bRegW").value.trim();
+  const e = ($("bRegE").value || "").trim().toLowerCase();
+  const p = $("bRegP").value;
+  const err = $("bkRegErr");
+  if (err) err.classList.add("hidden");
+  
+  if (!n || !w || !e || p.length < 6) {
+    if (err) { err.textContent = "Lengkapi semua field. Password minimal 6 karakter."; err.classList.remove("hidden"); }
+    return;
+  }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) {
+    if (err) { err.textContent = "Format email tidak valid."; err.classList.remove("hidden"); }
+    return;
+  }
+  
+  // Simpan user lokal
+  const users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
+  if (users.find(u => u.email === e)) {
+    if (err) { err.textContent = "Email sudah terdaftar. Silakan login."; err.classList.remove("hidden"); }
+    return;
+  }
+  
+  const newUser = { id: "USR-" + Date.now(), email: e, password: p, nama: n, phone: w };
+  users.push(newUser);
+  localStorage.setItem("azzid_local_users", JSON.stringify(users));
+  
+  S.custSession = { id: newUser.id, email: newUser.email, nama: newUser.nama, phone: newUser.phone };
+  closeModal();
+  toast("Akun berhasil dibuat. Selamat datang, " + n.split(" ")[0] + "!");
+  renderC();
 }
 
 /* ================= CUSTOMER AUTH ================= */
