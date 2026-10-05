@@ -1147,10 +1147,10 @@ function vBooking() {
     </div>`).join('')}</div>
     ${body}
 
-    ${S.step >= 2 && S.step < 5 ? `<div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-8 pt-6 border-t border-white/5">
+    ${S.step >= 2 && S.step < 5 ? `<div class="card mt-5 max-w-5xl mx-auto p-5 flex justify-between items-center gap-3">
       <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
       <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button>
-    </div>` : S.step === 5 ? `<div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-8 pt-6 border-t border-white/5">
+    </div>` : S.step === 5 ? `<div class="card mt-5 max-w-5xl mx-auto p-5 flex justify-between items-center gap-3">
       <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
       <button onclick="doPay()" class="btn btn-m">${ic('zap', 'w-4 h-4')} Bayar</button>
     </div>` : ''}
