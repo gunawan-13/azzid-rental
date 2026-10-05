@@ -3141,3 +3141,26 @@ if (document.readyState === "loading") {
 if (typeof MutationObserver !== "undefined") {
   new MutationObserver(_gTrigger).observe(document.body, { childList: true, subtree: true });
 }
+
+// === Fallback restoreAuth (kalau hilang) ===
+if (typeof restoreAuth === "undefined") {
+  window.restoreAuth = async function() {
+    try {
+      const local = localStorage.getItem("azzid_session");
+      if (local) {
+        S.session = JSON.parse(local);
+        if (S.session && S.session.role === "admin") {
+          window.__authReady = true;
+          if (typeof syncAdminBtns === "function") syncAdminBtns();
+          if (location.hash.startsWith("#/admin")) renderA();
+          return;
+        }
+      }
+      S.session = null;
+      S.custSession = null;
+      if (typeof syncAdminBtns === "function") syncAdminBtns();
+    } catch (e) {
+      console.warn("restoreAuth error:", e);
+    }
+  };
+}
