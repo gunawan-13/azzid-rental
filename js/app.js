@@ -1058,6 +1058,10 @@ function vBooking() {
           <p id="bkRegErr" class="hidden text-[12px] text-red-300 mt-2.5"></p>
         </div>
       </div>
+      <div class="flex justify-between items-center gap-3 max-w-xl mx-auto mt-6 pt-6 border-t border-white/5">
+        <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
+        <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic("arrR", "w-4 h-4")}</button>
+      </div>
       `}
     </div>`;
   } else if (S.step === 4) {
@@ -1093,6 +1097,10 @@ function vBooking() {
         </div>
         <div class="flex justify-between items-center pt-5 flex-wrap gap-2"><span class="font-display font-semibold">TOTAL</span><span class="font-display font-extrabold text-2xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
+      <div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-6 pt-6 border-t border-white/5">
+        <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
+        <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic("arrR", "w-4 h-4")}</button>
+      </div>
     </div>`;
   } else if (S.step === 5) {
     // ============ STEP 5: PEMBAYARAN ============
@@ -1118,6 +1126,10 @@ function vBooking() {
       <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
         ${!m ? `<div class="text-muted">${ic("card", "w-10 h-10 mx-auto mb-3 text-zinc-600")}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === "Transfer Bank" ? `<p class="text-[12px] text-muted mb-2">Rekening ${esc(S.cms.payments?.bank?.nama || "BCA")} a.n. ${esc(S.cms.payments?.bank?.pemilik || "DEDEF ROCHAYANDI")}</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">${(S.cms.payments?.bank?.norek || "6825279893").replace(/(\d{4})(?=\d)/g, "$1 ")}</div><button onclick="copyTxt('${S.cms.payments?.bank?.norek || "6825279893"}')" class="btn btn-g btn-sm mb-5">${ic("copy", "w-4 h-4")} Salin Rekening</button>` : m === "QRIS" ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m}.</p>`}
         ${m ? `<button onclick="doPay()" class="btn btn-m w-full max-w-xs">${ic("zap", "w-4 h-4")} Bayar ${fmtIDR(c.total)}</button>` : ""}
+      </div>
+      <div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-6 pt-6 border-t border-white/5">
+        <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
+        <button onclick="doPay()" class="btn btn-m">${ic("zap", "w-4 h-4")} Bayar Sekarang</button>
       </div>
     </div>`;
   } else {
