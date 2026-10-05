@@ -967,6 +967,10 @@ function qrSVG(seed) {
 }
 
 function vBooking() {
+  // Auto-skip step 3 kalau sudah login
+  if (S.step === 3 && S.custSession) {
+    S.step = 4;
+  }
   const d = S.draft;
   const steps = ['Jadwal & Jenis', 'Akun & Data', 'Ringkasan', 'Pembayaran', 'Selesai'];
   const c = bkCalc();
