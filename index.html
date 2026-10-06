@@ -365,44 +365,36 @@
 
   
   
-  <!-- === Realtime Badge Fix v2 === -->
+  
+  <!-- === Realtime Pulse + Align FINAL === -->
   <style>
-    /* Badge REAL-TIME — force sejajar */
-    #custApp .badge,
-    #custApp [class*="badge"] {
-      display: inline-grid !important;
-      grid-auto-flow: column !important;
+    /* Animasi denyut hijau */
+    @keyframes dotPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.8);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
+      }
+    }
+
+    /* Badge yang berisi dot-live */
+    #custApp .badge:has(.dot-live) {
+      display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      align-content: center !important;
       gap: 6px !important;
       line-height: 1 !important;
       height: auto !important;
-      padding: 6px 10px !important;
+      padding: 5px 10px !important;
       vertical-align: middle !important;
     }
 
-    /* Semua anak badge */
-    #custApp .badge > *,
-    #custApp [class*="badge"] > * {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      align-self: center !important;
-      line-height: 1 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
-    /* Dot hijau — fix ukuran & alignment */
-    #custApp .badge i,
-    #custApp .badge .dot-live,
-    #custApp .badge > i,
-    #custApp .badge span[class*="rounded-full"],
-    #custApp [class*="badge"] i,
-    #custApp [class*="badge"] span[class*="rounded-full"],
-    #custApp [class*="badge"] > i,
-    #custApp .dot-live {
+    /* Dot-live di dalam badge */
+    #custApp .badge .dot-live {
       display: inline-block !important;
       width: 6px !important;
       height: 6px !important;
@@ -410,41 +402,40 @@
       min-height: 6px !important;
       border-radius: 50% !important;
       background-color: #34d399 !important;
-      box-shadow: 0 0 6px rgba(52, 211, 153, 0.6) !important;
+      animation: dotPulse 1.8s infinite !important;
       margin: 0 !important;
       padding: 0 !important;
-      vertical-align: middle !important;
-      align-self: center !important;
       flex-shrink: 0 !important;
-      position: static !important;
-      transform: none !important;
-      top: auto !important;
-      bottom: auto !important;
-      left: auto !important;
-      right: auto !important;
+      align-self: center !important;
+      vertical-align: middle !important;
+      position: relative !important;
+      top: 0 !important;
+      line-height: 1 !important;
     }
 
-    /* Text badge */
-    #custApp .badge span,
-    #custApp [class*="badge"] span {
-      display: inline-flex !important;
-      align-items: center !important;
+    /* Paksa text badge center */
+    #custApp .badge:has(.dot-live) {
+      font-size: 11px !important;
+    }
+
+    /* Fallback kalau :has tidak support */
+    #custApp .badge {
       line-height: 1 !important;
-      vertical-align: middle !important;
+    }
+
+    /* Dot-live global (bell, stats, dll) */
+    #custApp .dot-live {
+      animation: dotPulse 1.8s infinite !important;
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      #custApp .badge,
-      #custApp [class*="badge"] {
+      #custApp .badge:has(.dot-live) {
         gap: 5px !important;
-        padding: 5px 9px !important;
+        padding: 4px 9px !important;
         font-size: 10px !important;
       }
-      #custApp .badge i,
-      #custApp .dot-live,
-      #custApp .badge > i,
-      #custApp .badge span[class*="rounded-full"] {
+      #custApp .badge .dot-live {
         width: 5px !important;
         height: 5px !important;
         min-width: 5px !important;
