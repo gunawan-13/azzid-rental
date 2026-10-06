@@ -149,65 +149,50 @@
     }
   </style>
 
-  <!-- === Step Indicator Fixed Position === -->
+  
+  
+  <!-- === Hapus Gap Header ke Hero === -->
   <style>
-    @media (max-width: 768px) {
-      /* Main content padding-top konsisten */
-      
-      /* Section booking — padding-top kecil */
-      #custApp section.max-w-7xl { padding-top: 0px !important; }
-      /* Step indicator container — kurangi margin bawah */
-      #custApp section.max-w-7xl > div:first-child {
-        margin-bottom: 20px !important;
-      }
-      /* Step circle compact */
-      #custApp section.max-w-7xl .w-8 {
-        width: 28px !important;
-        height: 28px !important;
-        font-size: 11px !important;
-        line-height: 1 !important;
-      }
-      /* Line antar step lebih pendek */
-      #custApp .w-5, #custApp .sm\:w-10 {
-        width: 16px !important;
-      }
-    }
-  </style>
-
-  <!-- === Konten langsung di bawah header === -->
-  <style>
-    /* Header fixed offset — total tinggi header + announcement */
-    :root {
-      --header-offset: 64px;
-    }
-    /* Main content — jarak pas */
+    /* Main content — pas di bawah header */
     main#cMain {
-      padding-top: var(--header-offset) !important;
+      padding-top: 88px !important;
     }
-    /* Mobile — konten lebih dekat */
     @media (max-width: 768px) {
-      :root {
-        --header-offset: 64px;
-      }
-      /* Hero section — kurangi padding */
-      #custApp section:first-of-type {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
-      }
-      /* Badge premium — margin-top kecil */
-      #custApp .badge {
-        margin-top: 0 !important;
-      }
-      /* Kurangi gap di hero */
-      #custApp section > .max-w-7xl {
-        padding-top: 8px !important;
+      main#cMain {
+        padding-top: 76px !important;
       }
     }
-    /* Desktop — konten langsung di bawah header */
-    @media (min-width: 769px) {
-      :root {
-        --header-offset: 72px;
-      }
+
+    /* Hero section — HAPUS padding-top */
+    #custApp section:first-of-type,
+    #custApp section:first-child {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    /* Container dalam hero */
+    #custApp section:first-of-type > .max-w-7xl,
+    #custApp section:first-child > .max-w-7xl,
+    #custApp section:first-of-type > div,
+    #custApp section:first-child > div {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    /* Kurangi gap di section hero */
+    #custApp section:first-of-type {
+      min-height: auto !important;
+    }
+
+    /* Kalau hero punya grid gap besar, kurangi */
+    #custApp section:first-of-type .grid {
+      gap: 24px !important;
+    }
+
+    /* Badge premium naik */
+    #custApp section:first-of-type .badge,
+    #custApp section:first-of-type [class*="badge"] {
+      margin-top: 0 !important;
     }
   </style>
 </head>
