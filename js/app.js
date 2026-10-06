@@ -535,7 +535,7 @@ function vDetail(slug) {
   if (!v) return `<div class="py-32 text-center">Mobil tidak ditemukan. <a class="text-maroon-400" href="#/armada">Kembali</a></div>`;
   const gal = [{ s: v.img, l: 'Depan' }, { s: IMG.interior, l: 'Interior' }, { s: IMG.dash, l: 'Dashboard' }, { s: v.img, l: 'Eksterior', f: 'hue-rotate(-25deg) brightness(.9)' }];
   const sim = VEHICLES.filter(x => x.cat === v.cat && x.id !== v.id && x.status !== 'inactive').concat(VEHICLES.filter(x => x.cat !== v.cat && x.id !== v.id && x.status !== 'inactive')).slice(0, 3);
-  return `<section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+  return `<section class="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-10">
     <nav class="text-[12px] text-muted mb-6 rv"><a href="#/" class="hover:text-white">Beranda</a> / <a href="#/armada" class="hover:text-white">Armada</a> / <span class="text-zinc-300">${esc(v.name)}</span></nav>
     <div class="grid lg:grid-cols-[1.2fr_.8fr] gap-8">
       <div class="rv min-w-0">
