@@ -133,38 +133,52 @@
     }
   </style>
 
-  <!-- === Prevent Horizontal Scroll === -->
+  
+
+  <!-- === Prevent Horizontal Scroll v2 === -->
   <style>
+    /* Body & html anti scroll */
     html, body {
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-      width: 100% !important;
+      overflow-x: clip !important;
+      max-width: 100% !important;
       position: relative;
     }
-    *, *::before, *::after {
-      box-sizing: border-box;
+    * { box-sizing: border-box; }
+
+    /* Marquee tetap jalan */
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
     }
-    img, svg, video, iframe, table, pre, code {
-      max-width: 100%;
+    #annBar {
+      display: inline-block !important;
+      white-space: nowrap !important;
+      animation: marqueeScroll 30s linear infinite !important;
+      will-change: transform;
+      padding-left: 100vw !important;
     }
-    /* Cegah semua elemen overflow */
-    section, div, main, header, footer {
-      max-width: 100%;
+    #annBar.animate-marquee {
+      animation: marqueeScroll 30s linear infinite !important;
     }
-    /* Marquee banner tidak bikin overflow */
-    .animate-marquee {
-      max-width: 100% !important;
+
+    /* Container marquee tidak boleh overflow */
+    .overflow-hidden {
       overflow: hidden !important;
     }
-    /* WA float tidak bikin overflow */
+
+    /* Cegah elemen lebar */
+    img, svg, video, iframe { max-width: 100%; height: auto; }
+
+    /* WA float jangan bikin overflow */
     .wa-float {
+      position: fixed !important;
       right: 16px !important;
+      bottom: 16px !important;
     }
     @media (max-width: 768px) {
-      body { overflow-x: hidden !important; }
       .wa-float {
         right: 12px !important;
-        bottom: 16px !important;
+        bottom: 12px !important;
         width: 52px !important;
         height: 52px !important;
       }
