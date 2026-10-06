@@ -45,8 +45,8 @@
     img, svg, video, iframe { max-width: 100%; height: auto; }
 
     /* Body tidak ketutup header fixed */
-    body { padding-top: 24px; }
-    @media (max-width: 640px) { body { padding-top: 36px; } }
+    body { padding-top: 16px; }
+    @media (max-width: 640px) { body { padding-top: 22px; } }
 
     /* Mobile: header compact */
     @media (max-width: 640px) {
@@ -69,7 +69,7 @@
       /* Logo diperkecil */
       header img { max-height: 36px !important; }
       /* Hero: turunkan sedikit */
-      section:first-of-type { padding-top: 24px !important; }
+      section:first-of-type { padding-top: 16px !important; }
       h1 { font-size: 28px !important; line-height: 1.2 !important; }
       h2 { font-size: 22px !important; }
       /* Step flow: kecilkan di mobile */
@@ -175,7 +175,7 @@
 
     /* Main — offset header (desktop) */
     main#cMain {
-      padding-top: 40px !important;
+      padding-top: 16px !important;
       margin-top: 0 !important;
     }
 
@@ -191,22 +191,22 @@
 
     /* Tablet */
     @media (max-width: 1024px) {
-      main#cMain { padding-top: 36px !important; }
+      main#cMain { padding-top: 22px !important; }
       #cHeader { height: 66px !important; }
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      main#cMain { padding-top: 32px !important; }
+      main#cMain { padding-top: 20px !important; }
       #cHeader { height: 64px !important; top: 32px !important; }
       #annBar { height: 32px !important; line-height: 32px !important; }
       /* Hero padding mobile */
-      #custApp section:first-child { padding-top: 24px !important; }
+      #custApp section:first-child { padding-top: 16px !important; }
     }
 
     /* Mobile kecil */
     @media (max-width: 480px) {
-      main#cMain { padding-top: 32px !important; }
+      main#cMain { padding-top: 20px !important; }
       #cHeader { height: 60px !important; }
     }
 
@@ -273,6 +273,53 @@
     #annBar {
       height: 34px !important;
       line-height: 34px !important;
+    }
+  </style>
+
+  <!-- === Marquee Center Fix === -->
+  <style>
+    /* Container marquee atas */
+    .fixed.top-0.left-0.right-0.z-40 {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      height: 34px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      line-height: 1 !important;
+    }
+    /* Teks marquee */
+    #annBar {
+      display: inline-flex !important;
+      align-items: center !important;
+      height: 34px !important;
+      line-height: 34px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      vertical-align: middle !important;
+      font-size: 13px !important;
+      white-space: nowrap !important;
+      will-change: transform !important;
+      animation: marqueeScroll 30s linear infinite !important;
+      padding-left: 100vw !important;
+    }
+    /* Fix text baseline */
+    #annBar span, #annBar * {
+      line-height: 1 !important;
+      vertical-align: middle !important;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    /* Mobile */
+    @media (max-width: 768px) {
+      .fixed.top-0.left-0.right-0.z-40 { height: 32px !important; }
+      #annBar {
+        height: 32px !important;
+        line-height: 32px !important;
+        font-size: 12px !important;
+      }
     }
   </style>
 </head>
