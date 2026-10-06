@@ -153,7 +153,7 @@
   <style>
     @media (max-width: 768px) {
       /* Main content padding-top konsisten */
-      #custApp main#cMain { padding-top: 56px !important; }
+      
       /* Section booking — padding-top kecil */
       #custApp section.max-w-7xl { padding-top: 0px !important; }
       /* Step indicator container — kurangi margin bawah */
@@ -170,6 +170,43 @@
       /* Line antar step lebih pendek */
       #custApp .w-5, #custApp .sm\:w-10 {
         width: 16px !important;
+      }
+    }
+  </style>
+
+  <!-- === Konten langsung di bawah header === -->
+  <style>
+    /* Header fixed offset — total tinggi header + announcement */
+    :root {
+      --header-offset: 100px;
+    }
+    /* Main content — jarak pas */
+    main#cMain {
+      padding-top: var(--header-offset) !important;
+    }
+    /* Mobile — konten lebih dekat */
+    @media (max-width: 768px) {
+      :root {
+        --header-offset: 96px;
+      }
+      /* Hero section — kurangi padding */
+      #custApp section:first-of-type {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+      }
+      /* Badge premium — margin-top kecil */
+      #custApp .badge {
+        margin-top: 0 !important;
+      }
+      /* Kurangi gap di hero */
+      #custApp section > .max-w-7xl {
+        padding-top: 8px !important;
+      }
+    }
+    /* Desktop — konten langsung di bawah header */
+    @media (min-width: 769px) {
+      :root {
+        --header-offset: 110px;
       }
     }
   </style>
