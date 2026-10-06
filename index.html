@@ -155,12 +155,35 @@
   
   
   
-  <!-- === RESPONSIVE LAYOUT FINAL === -->
+  
+  
+  
+  <!-- === Hero Center Vertical === -->
   <style>
     /* Reset */
     *, *::before, *::after { box-sizing: border-box; }
-    html { overflow-x: hidden !important; }
-    body { overflow-x: hidden !important; max-width: 100vw; }
+    html, body { overflow-x: hidden !important; max-width: 100vw; }
+
+    /* Announcement bar */
+    #annBar {
+      display: inline-flex !important;
+      align-items: center !important;
+      height: 34px !important;
+      line-height: 1 !important;
+      animation: marqueeScroll 30s linear infinite !important;
+      padding-left: 100vw !important;
+      white-space: nowrap !important;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    #custApp .fixed.top-0 { 
+      height: 34px !important;
+      display: flex !important;
+      align-items: center !important;
+      overflow: hidden !important;
+    }
 
     /* Header fixed */
     #cHeader {
@@ -168,62 +191,53 @@
       top: 34px !important;
       height: 68px !important;
       z-index: 50 !important;
+      background: rgba(0, 0, 0, 0.6) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
     }
 
-    /* Announcement bar */
-    #annBar { height: 34px !important; line-height: 34px !important; }
-
-    /* Main — offset header (desktop) */
+    /* Main content */
     main#cMain {
-      padding-top: 4px !important;
-      margin-top: 0 !important;
-    }
-
-    /* Hero — hapus padding atas */
-    #custApp section:first-child,
-    #custApp main > section:first-of-type {
       padding-top: 0 !important;
       margin-top: 0 !important;
     }
-    #custApp section:first-child > * {
-      margin-top: 0 !important;
+
+    /* Hero section — CENTER VERTIKAL */
+    #custApp section:first-child {
+      padding-top: 102px !important;
+      padding-bottom: 40px !important;
+      min-height: 100vh !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+
+    /* Wrapper hero */
+    #custApp section:first-child > div {
+      width: 100% !important;
     }
 
     /* Tablet */
     @media (max-width: 1024px) {
-      main#cMain { padding-top: 8px !important; }
       #cHeader { height: 66px !important; }
+      #custApp section:first-child {
+        padding-top: 100px !important;
+        min-height: auto !important;
+        padding-bottom: 32px !important;
+      }
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      main#cMain { padding-top: 6px !important; }
-      #cHeader { height: 64px !important; top: 32px !important; }
-      #annBar { height: 32px !important; line-height: 32px !important; }
-      /* Hero padding mobile */
-      #custApp section:first-child { padding-top: 4px !important; }
+      #cHeader { top: 32px !important; height: 64px !important; }
+      #annBar { height: 32px !important; }
+      #custApp .fixed.top-0 { height: 32px !important; }
+      #custApp section:first-child {
+        padding-top: 96px !important;
+        padding-bottom: 24px !important;
+        min-height: auto !important;
+        display: block !important;
+      }
     }
-
-    /* Mobile kecil */
-    @media (max-width: 480px) {
-      main#cMain { padding-top: 6px !important; }
-      #cHeader { height: 60px !important; }
-    }
-
-    /* Marquee tetap jalan */
-    @keyframes marqueeScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-    #annBar {
-      display: inline-block !important;
-      white-space: nowrap !important;
-      animation: marqueeScroll 30s linear infinite !important;
-      padding-left: 100vw !important;
-    }
-
-    /* Marquee container tidak overflow */
-    #custApp .overflow-hidden { overflow: hidden !important; }
 
     /* WA float */
     .wa-float {
@@ -248,79 +262,6 @@
     /* Admin boleh scroll horizontal */
     #adminApp { overflow-x: auto !important; }
     #adminApp table { overflow-x: auto !important; display: block; }
-  </style>
-
-  <!-- === Header Scroll Fix === -->
-  <style>
-    #cHeader {
-      position: fixed !important;
-      top: 34px !important;
-      height: 68px !important;
-      z-index: 50 !important;
-      background: rgba(0, 0, 0, 0.6) !important;
-      backdrop-filter: blur(16px) !important;
-      -webkit-backdrop-filter: blur(16px) !important;
-    }
-    @media (max-width: 768px) {
-      #cHeader {
-        top: 32px !important;
-        height: 64px !important;
-      }
-    }
-    @media (max-width: 1024px) and (min-width: 769px) {
-      #cHeader { height: 66px !important; }
-    }
-    #annBar {
-      height: 34px !important;
-      line-height: 34px !important;
-    }
-  </style>
-
-  <!-- === Marquee Center Fix === -->
-  <style>
-    /* Container marquee atas */
-    .fixed.top-0.left-0.right-0.z-40 {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: flex-start !important;
-      height: 34px !important;
-      padding: 0 !important;
-      overflow: hidden !important;
-      line-height: 1 !important;
-    }
-    /* Teks marquee */
-    #annBar {
-      display: inline-flex !important;
-      align-items: center !important;
-      height: 34px !important;
-      line-height: 34px !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      vertical-align: middle !important;
-      font-size: 13px !important;
-      white-space: nowrap !important;
-      will-change: transform !important;
-      animation: marqueeScroll 30s linear infinite !important;
-      padding-left: 100vw !important;
-    }
-    /* Fix text baseline */
-    #annBar span, #annBar * {
-      line-height: 1 !important;
-      vertical-align: middle !important;
-    }
-    @keyframes marqueeScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-    /* Mobile */
-    @media (max-width: 768px) {
-      .fixed.top-0.left-0.right-0.z-40 { height: 32px !important; }
-      #annBar {
-        height: 32px !important;
-        line-height: 32px !important;
-        font-size: 12px !important;
-      }
-    }
   </style>
 </head>
 <body>
