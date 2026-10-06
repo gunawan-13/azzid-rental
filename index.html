@@ -151,48 +151,43 @@
 
   
   
-  <!-- === Hapus Gap Header ke Hero === -->
+  
+  <!-- === FINAL: Hapus gap header ke hero === -->
   <style>
-    /* Main content — pas di bawah header */
-    main#cMain {
-      padding-top: 88px !important;
-    }
-    @media (max-width: 768px) {
-      main#cMain {
-        padding-top: 76px !important;
-      }
+    /* Header fixed */
+    #cHeader {
+      position: fixed !important;
+      top: 34px !important;
+      height: 64px !important;
+      z-index: 50 !important;
     }
 
-    /* Hero section — HAPUS padding-top */
-    #custApp section:first-of-type,
+    /* Main content — pas di bawah header */
+    main#cMain {
+      padding-top: 98px !important;
+    }
+
+    /* Hero section — HAPUS semua padding & margin atas */
     #custApp section:first-child {
       padding-top: 0 !important;
       margin-top: 0 !important;
+      min-height: auto !important;
     }
 
-    /* Container dalam hero */
-    #custApp section:first-of-type > .max-w-7xl,
-    #custApp section:first-child > .max-w-7xl,
-    #custApp section:first-of-type > div,
+    /* Grid dalam hero — hapus padding atas */
     #custApp section:first-child > div {
       padding-top: 0 !important;
       margin-top: 0 !important;
     }
 
-    /* Kurangi gap di section hero */
-    #custApp section:first-of-type {
-      min-height: auto !important;
-    }
-
-    /* Kalau hero punya grid gap besar, kurangi */
-    #custApp section:first-of-type .grid {
-      gap: 24px !important;
-    }
-
-    /* Badge premium naik */
-    #custApp section:first-of-type .badge,
-    #custApp section:first-of-type [class*="badge"] {
-      margin-top: 0 !important;
+    /* Mobile */
+    @media (max-width: 768px) {
+      main#cMain {
+        padding-top: 92px !important;
+      }
+      #cHeader {
+        height: 60px !important;
+      }
     }
   </style>
 </head>
