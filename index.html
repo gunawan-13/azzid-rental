@@ -265,10 +265,11 @@
   </style>
 
   
-  <!-- === FIX DATE INPUT + PREMIUM MOBILE === -->
+  
+  
+  <!-- === FIX MOBILE HERO SPACING === -->
   <style>
-    /* ========== FIX 1: DATE INPUT ========== */
-    /* Wrapper input date — full width */
+    /* DATE INPUT FIX */
     #custApp input[type="date"],
     input[type="date"].inp {
       display: block !important;
@@ -276,7 +277,6 @@
       max-width: 100% !important;
       box-sizing: border-box !important;
       padding-right: 44px !important;
-      position: relative !important;
       background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c53030' stroke-width='2'%3e%3crect x='3' y='4' width='18' height='18' rx='2'/%3e%3cpath d='M16 2v4M8 2v4M3 10h18'/%3e%3c/svg%3e") !important;
       background-repeat: no-repeat !important;
       background-position: right 12px center !important;
@@ -284,18 +284,14 @@
       -webkit-appearance: none !important;
       appearance: none !important;
     }
-    /* Sembunyikan icon native date */
     input[type="date"]::-webkit-calendar-picker-indicator {
       opacity: 0 !important;
       position: absolute !important;
       right: 0 !important;
-      top: 0 !important;
       width: 44px !important;
       height: 100% !important;
       cursor: pointer !important;
     }
-
-    /* Select styling */
     #custApp select {
       display: block !important;
       width: 100% !important;
@@ -307,41 +303,38 @@
       -webkit-appearance: none !important;
       appearance: none !important;
     }
+    #custApp .grid > div { min-width: 0 !important; overflow: hidden !important; }
+    #custApp .grid input, #custApp .grid select { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
 
-    /* Wrapper grid tanggal di Quick Booking — pastikan tidak overflow */
-    #custApp .grid {
-      display: grid !important;
-      max-width: 100% !important;
-    }
-    #custApp .grid > div {
-      min-width: 0 !important;
-      overflow: hidden !important;
-    }
-    #custApp .grid input,
-    #custApp .grid select {
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 0 !important;
-    }
-
-    /* ========== FIX 2: PREMIUM BADGE MOBILE ========== */
+    /* MOBILE HERO SPACING */
     @media (max-width: 768px) {
-      /* Section hero — turunkan sedikit dari header */
+      /* Section hero — TAMBAH jarak dari header */
       #custApp section:first-child {
-        padding-top: 12px !important;
+        padding-top: 40px !important;
       }
-      /* Badge premium — jarak cukup dari header */
-      #custApp section:first-child .badge,
+      /* Badge premium — jarak besar dari header */
       #custApp section:first-child [class*="badge"],
-      #custApp section:first-child [class*="rounded-full"] {
-        margin-top: 12px !important;
-        margin-bottom: 16px !important;
+      #custApp section:first-child [class*="rounded-full"],
+      #custApp section:first-child span:first-child {
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
       }
-      /* Judul hero */
+      /* Judul hero — jarak dari badge */
       #custApp section:first-child h1 {
         margin-top: 8px !important;
+        margin-bottom: 16px !important;
       }
-      /* Date input mobile */
+      /* Paragraf hero */
+      #custApp section:first-child p {
+        margin-top: 12px !important;
+        margin-bottom: 20px !important;
+      }
+      /* Button hero */
+      #custApp section:first-child button,
+      #custApp section:first-child a.btn {
+        margin-top: 8px !important;
+      }
+      /* Date & select mobile */
       #custApp input[type="date"],
       #custApp select {
         padding: 12px 40px 12px 12px !important;
@@ -349,119 +342,14 @@
       }
     }
 
-    /* Tablet */
+    /* TABLET */
     @media (min-width: 769px) and (max-width: 1024px) {
       #custApp section:first-child {
-        padding-top: 16px !important;
+        padding-top: 48px !important;
       }
     }
 
-    /* Kontras select & date */
-    #custApp select,
-    #custApp input[type="date"] {
-      background-color: rgba(20, 20, 20, 0.8) !important;
-      border: 1px solid rgba(255, 255, 255, 0.12) !important;
-      color: #fff !important;
-    }
-    #custApp select:focus,
-    #custApp input[type="date"]:focus {
-      border-color: #c53030 !important;
-      box-shadow: 0 0 0 3px rgba(197, 48, 48, 0.2) !important;
-    }
-  </style>
-
-  <!-- === FIX DATE INPUT + PREMIUM MOBILE === -->
-  <style>
-    /* ========== FIX 1: DATE INPUT ========== */
-    /* Wrapper input date — full width */
-    #custApp input[type="date"],
-    input[type="date"].inp {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      padding-right: 44px !important;
-      position: relative !important;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c53030' stroke-width='2'%3e%3crect x='3' y='4' width='18' height='18' rx='2'/%3e%3cpath d='M16 2v4M8 2v4M3 10h18'/%3e%3c/svg%3e") !important;
-      background-repeat: no-repeat !important;
-      background-position: right 12px center !important;
-      background-size: 18px 18px !important;
-      -webkit-appearance: none !important;
-      appearance: none !important;
-    }
-    /* Sembunyikan icon native date */
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      opacity: 0 !important;
-      position: absolute !important;
-      right: 0 !important;
-      top: 0 !important;
-      width: 44px !important;
-      height: 100% !important;
-      cursor: pointer !important;
-    }
-
-    /* Select styling */
-    #custApp select {
-      display: block !important;
-      width: 100% !important;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c53030' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e") !important;
-      background-repeat: no-repeat !important;
-      background-position: right 12px center !important;
-      background-size: 18px 18px !important;
-      padding-right: 40px !important;
-      -webkit-appearance: none !important;
-      appearance: none !important;
-    }
-
-    /* Wrapper grid tanggal di Quick Booking — pastikan tidak overflow */
-    #custApp .grid {
-      display: grid !important;
-      max-width: 100% !important;
-    }
-    #custApp .grid > div {
-      min-width: 0 !important;
-      overflow: hidden !important;
-    }
-    #custApp .grid input,
-    #custApp .grid select {
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 0 !important;
-    }
-
-    /* ========== FIX 2: PREMIUM BADGE MOBILE ========== */
-    @media (max-width: 768px) {
-      /* Section hero — turunkan sedikit dari header */
-      #custApp section:first-child {
-        padding-top: 12px !important;
-      }
-      /* Badge premium — jarak cukup dari header */
-      #custApp section:first-child .badge,
-      #custApp section:first-child [class*="badge"],
-      #custApp section:first-child [class*="rounded-full"] {
-        margin-top: 12px !important;
-        margin-bottom: 16px !important;
-      }
-      /* Judul hero */
-      #custApp section:first-child h1 {
-        margin-top: 8px !important;
-      }
-      /* Date input mobile */
-      #custApp input[type="date"],
-      #custApp select {
-        padding: 12px 40px 12px 12px !important;
-        font-size: 14px !important;
-      }
-    }
-
-    /* Tablet */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      #custApp section:first-child {
-        padding-top: 16px !important;
-      }
-    }
-
-    /* Kontras select & date */
+    /* Kontras */
     #custApp select,
     #custApp input[type="date"] {
       background-color: rgba(20, 20, 20, 0.8) !important;
