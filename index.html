@@ -366,35 +366,34 @@
   
   
   
-  <!-- === Realtime Pulse + Align FINAL === -->
+  
+  <!-- === Realtime Dot Center FINAL === -->
   <style>
-    /* Animasi denyut hijau */
     @keyframes dotPulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.8);
-      }
-      70% {
-        box-shadow: 0 0 0 8px rgba(52, 211, 153, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(52, 211, 153, 0);
-      }
+      0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.8); }
+      70% { box-shadow: 0 0 0 8px rgba(52, 211, 153, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
     }
 
-    /* Badge yang berisi dot-live */
+    /* Badge yang punya dot-live */
     #custApp .badge:has(.dot-live) {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      gap: 6px !important;
+      gap: 8px !important;
       line-height: 1 !important;
       height: auto !important;
-      padding: 5px 10px !important;
+      min-height: 28px !important;
+      padding: 6px 12px !important;
       vertical-align: middle !important;
+      position: relative !important;
+      font-size: 11px !important;
+      text-align: center !important;
     }
 
     /* Dot-live di dalam badge */
-    #custApp .badge .dot-live {
+    #custApp .badge .dot-live,
+    #custApp .badge > i.dot-live {
       display: inline-block !important;
       width: 6px !important;
       height: 6px !important;
@@ -409,30 +408,26 @@
       align-self: center !important;
       vertical-align: middle !important;
       position: relative !important;
-      top: 0 !important;
+      top: auto !important;
+      bottom: auto !important;
+      transform: translateY(0) !important;
       line-height: 1 !important;
+      font-size: 0 !important;
     }
 
-    /* Paksa text badge center */
-    #custApp .badge:has(.dot-live) {
-      font-size: 11px !important;
-    }
-
-    /* Fallback kalau :has tidak support */
-    #custApp .badge {
-      line-height: 1 !important;
-    }
-
-    /* Dot-live global (bell, stats, dll) */
-    #custApp .dot-live {
-      animation: dotPulse 1.8s infinite !important;
+    /* Force text baseline untuk badge */
+    #custApp .badge:has(.dot-live)::after {
+      content: "" !important;
+      display: table !important;
+      clear: both !important;
     }
 
     /* Mobile */
     @media (max-width: 768px) {
       #custApp .badge:has(.dot-live) {
-        gap: 5px !important;
-        padding: 4px 9px !important;
+        gap: 6px !important;
+        padding: 5px 10px !important;
+        min-height: 26px !important;
         font-size: 10px !important;
       }
       #custApp .badge .dot-live {
@@ -440,6 +435,26 @@
         height: 5px !important;
         min-width: 5px !important;
         min-height: 5px !important;
+      }
+    }
+
+    /* Denyut global */
+    #custApp .dot-live {
+      animation: dotPulse 1.8s infinite !important;
+    }
+
+    /* Fallback kalau :has tidak support */
+    @supports not selector(:has(*)) {
+      #custApp .badge {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        min-height: 28px !important;
+        line-height: 1 !important;
+      }
+      #custApp .badge .dot-live {
+        align-self: center !important;
       }
     }
   </style>
