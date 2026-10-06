@@ -4,7 +4,7 @@
   <link rel="icon" type="image/png" href="assets/img/azzid-removebg-preview.png"><link rel="apple-touch-icon" href="assets/img/azzid-removebg-preview.png">
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>AZZID RENTCAR — Rental Mobil Premium, Mudah & Terpercaya</title>
 <meta name="description" content="AZZID RENTCAR — Rental mobil lepas kunci & dengan driver. Armada terawat, harga transparan, proses cepat. Booking online 24/7.">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/400.css">
@@ -241,6 +241,57 @@
       #custApp section.max-w-7xl {
         padding-top: 24px !important;
       }
+    }
+  </style>
+
+  <!-- === Admin Mobile Responsive === -->
+  <style>
+    @media (max-width: 768px) {
+      /* Admin dashboard — normal zoom */
+      #adminApp {
+        font-size: 14px !important;
+      }
+      #adminApp .card {
+        padding: 16px !important;
+      }
+      #adminApp h1, #adminApp h2 {
+        font-size: 20px !important;
+      }
+      #adminApp h3 {
+        font-size: 16px !important;
+      }
+      /* Overview cards */
+      #adminApp .grid {
+        gap: 12px !important;
+      }
+      /* Font umum */
+      #adminApp .text-\[22px\] {
+        font-size: 18px !important;
+      }
+      #adminApp .text-xl {
+        font-size: 16px !important;
+      }
+      /* Table */
+      #adminApp table {
+        font-size: 12px !important;
+      }
+      /* Sidebar */
+      #adminApp aside, #adminApp nav {
+        font-size: 13px !important;
+      }
+    }
+
+    /* Cegah admin zoom out otomatis */
+    #adminApp {
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: auto !important;
+    }
+    #adminApp * {
+      min-width: 0;
+    }
+    #adminApp .grid > * {
+      min-width: 0;
     }
   </style>
 </head>
