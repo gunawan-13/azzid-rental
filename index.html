@@ -45,8 +45,8 @@
     img, svg, video, iframe { max-width: 100%; height: auto; }
 
     /* Body tidak ketutup header fixed */
-    body { padding-top: 16px; }
-    @media (max-width: 640px) { body { padding-top: 22px; } }
+    body { padding-top: 4px; }
+    @media (max-width: 640px) { body { padding-top: 8px; } }
 
     /* Mobile: header compact */
     @media (max-width: 640px) {
@@ -69,7 +69,7 @@
       /* Logo diperkecil */
       header img { max-height: 36px !important; }
       /* Hero: turunkan sedikit */
-      section:first-of-type { padding-top: 16px !important; }
+      section:first-of-type { padding-top: 4px !important; }
       h1 { font-size: 28px !important; line-height: 1.2 !important; }
       h2 { font-size: 22px !important; }
       /* Step flow: kecilkan di mobile */
@@ -175,7 +175,7 @@
 
     /* Main — offset header (desktop) */
     main#cMain {
-      padding-top: 16px !important;
+      padding-top: 4px !important;
       margin-top: 0 !important;
     }
 
@@ -191,22 +191,22 @@
 
     /* Tablet */
     @media (max-width: 1024px) {
-      main#cMain { padding-top: 22px !important; }
+      main#cMain { padding-top: 8px !important; }
       #cHeader { height: 66px !important; }
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      main#cMain { padding-top: 20px !important; }
+      main#cMain { padding-top: 6px !important; }
       #cHeader { height: 64px !important; top: 32px !important; }
       #annBar { height: 32px !important; line-height: 32px !important; }
       /* Hero padding mobile */
-      #custApp section:first-child { padding-top: 16px !important; }
+      #custApp section:first-child { padding-top: 4px !important; }
     }
 
     /* Mobile kecil */
     @media (max-width: 480px) {
-      main#cMain { padding-top: 20px !important; }
+      main#cMain { padding-top: 6px !important; }
       #cHeader { height: 60px !important; }
     }
 
