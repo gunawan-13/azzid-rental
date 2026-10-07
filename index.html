@@ -456,60 +456,64 @@
   
   
   
-  <!-- === Hero Homepage Spacing === -->
+  
+  <!-- === Hero Homepage Compact === -->
   <style>
-    /* Desktop */
+    /* Header fixed */
     #cHeader {
       position: fixed !important;
       top: 34px !important;
       height: 68px !important;
       z-index: 50 !important;
     }
+
+    /* Main */
     main#cMain {
       padding-top: 0 !important;
       margin-top: 0 !important;
     }
+
+    /* Hero homepage — naik dekat header */
     #custApp section:first-child {
-      padding-top: 102px !important;
-      padding-bottom: 20px !important;
+      padding-top: 90px !important;
+      padding-bottom: 16px !important;
       min-height: auto !important;
     }
 
-    /* TABLET */
+    /* Tablet */
     @media (min-width: 769px) and (max-width: 1024px) {
       #cHeader { height: 66px !important; }
       #custApp section:first-child {
-        padding-top: 110px !important;
-        padding-bottom: 24px !important;
+        padding-top: 96px !important;
+        padding-bottom: 16px !important;
       }
     }
 
-    /* MOBILE — beri jarak lebih besar dari header */
+    /* Mobile — naik lagi */
     @media (max-width: 768px) {
       #cHeader {
         top: 32px !important;
         height: 64px !important;
       }
-      /* Hero HP — TURUN sedikit */
       #custApp section:first-child {
-        padding-top: 120px !important;
-        padding-bottom: 20px !important;
+        padding-top: 88px !important;
+        padding-bottom: 12px !important;
       }
       /* Badge premium di HP */
       #custApp section:first-child .badge {
-        margin-bottom: 12px !important;
+        margin-bottom: 8px !important;
       }
       /* Judul hero di HP */
       #custApp section:first-child h1 {
-        margin-top: 4px !important;
-        margin-bottom: 12px !important;
-        font-size: 32px !important;
+        margin-top: 2px !important;
+        margin-bottom: 8px !important;
+        font-size: 30px !important;
         line-height: 1.1 !important;
       }
       /* Paragraf hero di HP */
       #custApp section:first-child p {
-        margin-top: 8px !important;
-        margin-bottom: 16px !important;
+        margin-top: 6px !important;
+        margin-bottom: 12px !important;
         font-size: 14px !important;
       }
     }
@@ -517,10 +521,10 @@
     /* Mobile kecil */
     @media (max-width: 480px) {
       #custApp section:first-child {
-        padding-top: 124px !important;
+        padding-top: 84px !important;
       }
       #custApp section:first-child h1 {
-        font-size: 28px !important;
+        font-size: 26px !important;
       }
     }
   </style>
