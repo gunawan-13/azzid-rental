@@ -3374,43 +3374,52 @@ window.closeSb = window.closeSb || function() {
 
 
 
-// === Marquee Simple HP ===
+
+
+
+// === Marquee HP Fix Final ===
 (function() {
   function initMarquee() {
     var bar = document.getElementById("annBar");
-    if (!bar || bar.dataset.mq === "final") return;
-    bar.dataset.mq = "final";
+    if (!bar || bar.dataset.mq === "v4") return;
+    bar.dataset.mq = "v4";
     
-    var isPaused = false;
+    var safetyTimer = null;
     
     function pause() {
-      if (isPaused) return;
-      isPaused = true;
+      // Force reflow biar animasi benar-benar pause
+      bar.style.animation = "none";
+      void bar.offsetWidth;
+      bar.style.animation = "marqueeScroll 60s linear infinite";
       bar.style.animationPlayState = "paused";
+      
+      // Safety: auto resume max 1.5 detik
+      if (safetyTimer) clearTimeout(safetyTimer);
+      safetyTimer = setTimeout(resume, 1500);
     }
+    
     function resume() {
-      if (!isPaused) return;
-      isPaused = false;
+      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+      bar.style.animation = "none";
+      void bar.offsetWidth;
+      bar.style.animation = "marqueeScroll 60s linear infinite";
       bar.style.animationPlayState = "running";
     }
     
-    // HP — touch only
+    // HP
     bar.addEventListener("touchstart", pause, { passive: true });
     bar.addEventListener("touchend", resume, { passive: true });
     bar.addEventListener("touchcancel", resume, { passive: true });
     
-    // Desktop — mouse only
+    // Desktop
     bar.addEventListener("mouseenter", pause);
     bar.addEventListener("mouseleave", resume);
     
-    // Safety: kalau touchend tidak fire (edge case), auto resume
-    var safetyTimer = null;
-    bar.addEventListener("touchstart", function() {
-      if (safetyTimer) clearTimeout(safetyTimer);
-      safetyTimer = setTimeout(resume, 2000);
-    }, { passive: true });
-    bar.addEventListener("touchend", function() {
-      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+    // Global fallback — touch di mana saja = resume
+    document.addEventListener("touchstart", function(e) {
+      if (!bar.contains(e.target)) {
+        resume();
+      }
     }, { passive: true });
   }
   
