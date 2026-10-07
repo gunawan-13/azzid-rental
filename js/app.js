@@ -692,40 +692,46 @@ function qbSubmit(e) {
 
 function setFilter(k, v) {
   if (!S.filters) S.filters = { cat: "Semua", trans: "Semua", seats: 0, maxPrice: 0, q: "", avail: false, sort: "pop" };
-  
-  // Update filter
   S.filters[k] = v;
   
-  // Update hanya LIST MOBIL (bukan seluruh halaman)
   const list = document.getElementById("vehListGrid");
   if (list && typeof filteredVeh === "function" && typeof vehCard === "function") {
     const arr = filteredVeh();
     
-    // Update count
     const countEl = document.getElementById("vehCount");
     if (countEl) countEl.textContent = arr.length;
     
-    // Update grid
     if (arr.length) {
-      list.innerHTML = arr.map(function(veh, i) { return vehCard(veh, i); }).join("");
+      // Render ulang list — tanpa class "rv"
+      list.innerHTML = arr.map(function(veh, i) {
+        return vehCard(veh, i);
+      }).join("");
+      
+      // FIX: hapus class rv + opacity 0 pada card baru
+      list.querySelectorAll(".veh-card.rv").forEach(function(card) {
+        card.classList.remove("rv");
+        card.style.opacity = "1";
+        card.style.transform = "none";
+      });
+      
+      // Trigger lazy-load image
+      list.querySelectorAll("img[loading=lazy]").forEach(function(img) {
+        if (img.dataset && img.dataset.src) {
+          img.src = img.dataset.src;
+        }
+        img.loading = "eager";
+      });
     } else {
-      list.innerHTML = `<div class="col-span-full card p-14 text-center text-muted"><p class="font-semibold">Tidak ada kendaraan yang cocok dengan filter.</p></div>`;
+      list.innerHTML = `<div class="col-span-full card p-14 text-center text-muted">${ic("car", "w-10 h-10 mx-auto mb-3 text-zinc-600")}<p class="font-semibold">Tidak ada kendaraan yang cocok dengan filter.</p></div>`;
     }
   }
   
-  // Update chip active state
   if (k === "cat") {
     document.querySelectorAll("[data-filter-cat]").forEach(function(btn) {
-      if (btn.getAttribute("data-filter-cat") === v) {
-        btn.classList.add("on");
-      } else {
-        btn.classList.remove("on");
-      }
+      if (btn.getAttribute("data-filter-cat") === v) btn.classList.add("on");
+      else btn.classList.remove("on");
     });
   }
-  
-  // Update dropdown selected state (kalau perlu)
-  if (typeof updateFilterUI === "function") updateFilterUI();
 }
 
 function bkGo(n) {
