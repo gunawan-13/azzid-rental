@@ -702,23 +702,30 @@ function setFilter(k, v) {
     if (countEl) countEl.textContent = arr.length;
     
     if (arr.length) {
-      // Render ulang list — tanpa class "rv"
       list.innerHTML = arr.map(function(veh, i) {
         return vehCard(veh, i);
       }).join("");
       
-      // FIX: hapus class rv + opacity 0 pada card baru
-      list.querySelectorAll(".veh-card.rv").forEach(function(card) {
+      // Animasi fade-in + slide-up untuk setiap card
+      const cards = list.querySelectorAll(".veh-card");
+      cards.forEach(function(card, i) {
         card.classList.remove("rv");
-        card.style.opacity = "1";
-        card.style.transform = "none";
+        card.style.opacity = "0";
+        card.style.transform = "translateY(20px)";
+        card.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+        card.style.transitionDelay = (i * 60) + "ms";
+        
+        // Trigger animation
+        requestAnimationFrame(function() {
+          setTimeout(function() {
+            card.style.opacity = "1";
+            card.style.transform = "translateY(0)";
+          }, 10);
+        });
       });
       
-      // Trigger lazy-load image
+      // Lazy-load image
       list.querySelectorAll("img[loading=lazy]").forEach(function(img) {
-        if (img.dataset && img.dataset.src) {
-          img.src = img.dataset.src;
-        }
         img.loading = "eager";
       });
     } else {
