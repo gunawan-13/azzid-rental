@@ -353,19 +353,10 @@
     }
 
     /* Marquee */
-    @keyframes marqueeScroll {
-      0% { transform: translateX(0); }
+    
       100% { transform: translateX(-100%); }
     }
-    #annBar {
-      display: inline-flex !important;
-      align-items: center !important;
-      height: 34px !important;
-      line-height: 1 !important;
-      animation: marqueeScroll 30s linear infinite !important;
-      padding-left: 100vw !important;
-      white-space: nowrap !important;
-    }
+    
     #custApp .fixed.top-0 {
       height: 34px !important;
       display: flex !important;
@@ -418,6 +409,65 @@
       /* Badge premium */
       html body #custApp main#cMain section:first-child .badge {
         margin-top: 0 !important;
+      }
+    }
+  </style>
+
+  <!-- === Marquee Slow + Pause Hover === -->
+  <style>
+    /* Animasi marquee — lambat */
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* Container marquee — atas */
+    #custApp > .fixed.top-0,
+    #custApp .fixed.top-0 {
+      height: 34px !important;
+      display: flex !important;
+      align-items: center !important;
+      overflow: hidden !important;
+      cursor: pointer !important;
+      z-index: 10000 !important;
+    }
+
+    /* Teks marquee */
+    #annBar {
+      display: inline-flex !important;
+      align-items: center !important;
+      height: 34px !important;
+      line-height: 1 !important;
+      /* Kecepatan lambat: 60 detik untuk 1 loop */
+      animation: marqueeScroll 60s linear infinite !important;
+      padding-left: 100vw !important;
+      white-space: nowrap !important;
+      will-change: transform !important;
+    }
+
+    /* PAUSE saat hover */
+    #custApp > .fixed.top-0:hover #annBar,
+    #custApp .fixed.top-0:hover #annBar,
+    #annBar:hover {
+      animation-play-state: paused !important;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      #annBar {
+        height: 32px !important;
+        font-size: 12px !important;
+        animation-duration: 45s !important;
+      }
+      #custApp .fixed.top-0 {
+        height: 32px !important;
+      }
+    }
+
+    /* Tablet */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      #annBar {
+        animation-duration: 50s !important;
       }
     }
   </style>
