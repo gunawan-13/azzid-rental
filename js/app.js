@@ -3366,3 +3366,65 @@ window.closeSb = window.closeSb || function() {
   if (overlay) overlay.remove();
   document.body.style.overflow = "";
 };
+
+
+// === Marquee Touch Pause (HP) — Fast Resume ===
+(function() {
+  function initMarqueePause() {
+    var bar = document.getElementById("annBar");
+    if (!bar || bar.dataset.touchInit === "2") return;
+    bar.dataset.touchInit = "2";
+    
+    var resumeTimer = null;
+    
+    function pause() {
+      bar.classList.add("paused");
+      bar.style.animationPlayState = "paused";
+      if (resumeTimer) clearTimeout(resumeTimer);
+    }
+    
+    function resume() {
+      bar.classList.remove("paused");
+      bar.style.animationPlayState = "running";
+      if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
+    }
+    
+    // Pointer down → pause
+    bar.addEventListener("pointerdown", function(e) {
+      pause();
+    }, { passive: true });
+    
+    // Pointer up → resume SEGERA
+    bar.addEventListener("pointerup", function() {
+      resume();
+    }, { passive: true });
+    
+    // Pointer cancel → resume
+    bar.addEventListener("pointercancel", resume, { passive: true });
+    
+    // Pointer leave → resume
+    bar.addEventListener("pointerleave", resume, { passive: true });
+    
+    // Touch end → resume (fallback)
+    bar.addEventListener("touchend", resume, { passive: true });
+    bar.addEventListener("touchcancel", resume, { passive: true });
+    
+    // SAFETY: Auto resume setelah 1 detik (kalau event tidak fire)
+    bar.addEventListener("pointerdown", function() {
+      if (resumeTimer) clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(resume, 1000);
+    }, { passive: true });
+    
+    // Desktop hover
+    bar.addEventListener("mouseenter", pause);
+    bar.addEventListener("mouseleave", resume);
+  }
+  
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMarqueePause);
+  } else {
+    initMarqueePause();
+  }
+  
+  setInterval(initMarqueePause, 1000);
+})();
