@@ -196,25 +196,35 @@
   
   
   
-  <!-- === Hero Masuk Header === -->
+  
+  <!-- === Header Solid + Hero === -->
   <style>
+    /* Header — solid, di atas semua */
     #cHeader {
       position: fixed !important;
       top: 34px !important;
       height: 68px !important;
-      z-index: 50 !important;
-      background: rgba(0, 0, 0, 0.85) !important;
-      backdrop-filter: blur(12px) !important;
-      -webkit-backdrop-filter: blur(12px) !important;
+      z-index: 9999 !important;
+      background: rgba(10, 10, 12, 0.98) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+      isolation: isolate !important;
     }
 
-    /* DESKTOP — main padding pas header, hero masuk */
+    /* Marquee — di atas header */
+    #custApp > .fixed.top-0,
+    #custApp .fixed.top-0 {
+      z-index: 10000 !important;
+    }
+
+    /* DESKTOP */
     main#cMain {
       padding-top: 68px !important;
       margin-top: 0 !important;
     }
 
-    /* DESKTOP — hero tarik ke atas masuk header */
+    /* DESKTOP — hero masuk header */
     @media (min-width: 769px) {
       #custApp section:first-child {
         padding-top: 0 !important;
@@ -222,7 +232,7 @@
         margin-top: -20px !important;
         min-height: auto !important;
         position: relative !important;
-        z-index: 45 !important;
+        z-index: 1 !important;
       }
       #custApp section:first-child > * {
         padding-top: 0 !important;
@@ -236,28 +246,35 @@
       #custApp section:first-child { margin-top: -18px !important; }
     }
 
-    /* MOBILE — tetap */
+    /* MOBILE */
     @media (max-width: 768px) {
       #cHeader {
         top: 32px !important;
         height: 64px !important;
+        z-index: 9999 !important;
       }
       main#cMain { padding-top: 96px !important; }
-      #custApp section:first-child { padding-top: 12px !important; margin-top: 0 !important; }
+      #custApp section:first-child {
+        padding-top: 12px !important;
+        margin-top: 0 !important;
+      }
     }
 
+    /* Anti overflow */
     html, body {
       overflow-x: hidden !important;
       max-width: 100vw !important;
     }
 
+    /* WA float */
     .wa-float {
       position: fixed !important;
       right: 16px !important;
       bottom: 16px !important;
-      z-index: 50 !important;
+      z-index: 500 !important;
     }
 
+    /* Marquee */
     @keyframes marqueeScroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-100%); }
@@ -276,6 +293,10 @@
       display: flex !important;
       align-items: center !important;
       overflow: hidden !important;
+    }
+    @media (max-width: 768px) {
+      #annBar { height: 32px !important; }
+      #custApp .fixed.top-0 { height: 32px !important; }
     }
   </style>
 </head>
