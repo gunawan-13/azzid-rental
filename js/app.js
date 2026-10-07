@@ -1400,7 +1400,7 @@ async function doLogin(){
 async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;sessionStorage.removeItem('azzid_has_session');localStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
 async function restoreAuth(){if(!sessionStorage.getItem('azzid_has_session')){S.session=null;S.custSession=null;syncAdminBtns();return}try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(err){S.session=null;S.custSession=null;if(err&&err.message&&(err.message.includes("401")||err.message.includes("Unauthorized"))){localStorage.removeItem("azzid_has_session")}syncAdminBtns();}}
 
-function setAdminView(v) {
+function setAdminView(v){ if(typeof closeSb==="function") closeSb();
   S.adminView = v;
   renderA();
 }
@@ -3310,3 +3310,13 @@ if (document.readyState === "loading") {
 
 // Re-run setiap 500ms (untuk input yang muncul dinamis)
 setInterval(addPasswordToggles, 500);
+
+
+// === Auto-close sidebar saat navigasi ===
+window.closeSb = window.closeSb || function() {
+  var sb = document.getElementById("admSb") || document.querySelector(".adm-sb") || document.querySelector("aside");
+  if (sb) sb.classList.add("hidden");
+  var overlay = document.querySelector(".sb-overlay");
+  if (overlay) overlay.remove();
+  document.body.style.overflow = "";
+};
