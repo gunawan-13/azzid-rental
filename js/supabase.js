@@ -1,9 +1,7 @@
-// === Supabase Client ===
 window.SUPABASE_URL = 'https://qjjzdxbdxcpmiapjlhcb.supabase.co';
 window.SUPABASE_ANON_KEY = 'sb_publishable_YC6hingIKVVNfaqnJqaAPw_hpOAA6Xn';
 window.supabaseClient = null;
 
-// Load Supabase SDK dari CDN
 (function() {
   var script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
@@ -19,6 +17,5 @@ window.supabaseClient = null;
       }
     } catch(e) { console.error('Supabase init error:', e); }
   };
-  script.onerror = function() { console.error('❌ Gagal load Supabase SDK'); };
   document.head.appendChild(script);
 })();
