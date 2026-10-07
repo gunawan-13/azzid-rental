@@ -558,17 +558,24 @@
   
   
   
-  <!-- === Filter Spacing Pas === -->
+  
+  <!-- === Katalog Armada Compact === -->
   <style>
-    /* Hero katalog — padding bawah untuk jarak */
+    /* Hero katalog — naik ke atas */
     #custApp section.bg-ink-900 {
-      padding-top: 24px !important;
-      padding-bottom: 32px !important;
+      padding-top: 12px !important;
+      padding-bottom: 20px !important;
+      min-height: auto !important;
+    }
+
+    /* Semua teks dalam hero */
+    #custApp section.bg-ink-900 .relative {
+      padding-top: 0 !important;
     }
 
     /* Section filter */
     #custApp section.max-w-7xl {
-      padding-top: 32px !important;
+      padding-top: 20px !important;
       padding-bottom: 24px !important;
     }
 
@@ -581,12 +588,26 @@
     /* Mobile */
     @media (max-width: 768px) {
       #custApp section.bg-ink-900 {
-        padding-top: 20px !important;
-        padding-bottom: 24px !important;
+        padding-top: 8px !important;
+        padding-bottom: 16px !important;
       }
       #custApp section.max-w-7xl {
-        padding-top: 24px !important;
+        padding-top: 16px !important;
         padding-bottom: 16px !important;
+      }
+      #custApp section.max-w-7xl > .card {
+        padding: 14px !important;
+      }
+    }
+
+    /* ========== KATALOG ARMADA (halaman #/armada) ========== */
+    /* Pastikan header offset konsisten */
+    #custApp main#cMain {
+      padding-top: 90px !important;
+    }
+    @media (max-width: 768px) {
+      #custApp main#cMain {
+        padding-top: 84px !important;
       }
     }
   </style>
