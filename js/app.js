@@ -691,6 +691,14 @@ function qbSubmit(e) {
 }
 
 function setFilter(k, v) {
+  if (!S.filters) S.filters = {};
+  S.filters[k] = v;
+  console.log("setFilter:", k, v, S.filters);
+  if (typeof renderC === "function") renderC();
+  if (typeof renderAdminBody === "function" && S.adminMode) renderAdminBody();
+  return;
+  // Legacy code di bawah (tidak akan dieksekusi)
+
   S.filters[k] = v;
   renderC();
 }
