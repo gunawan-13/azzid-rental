@@ -3371,37 +3371,47 @@ window.closeSb = window.closeSb || function() {
 
 
 
-// === Marquee HP Instant Resume ===
+
+
+
+// === Marquee Simple HP ===
 (function() {
   function initMarquee() {
     var bar = document.getElementById("annBar");
-    if (!bar || bar.dataset.mq === "3") return;
-    bar.dataset.mq = "3";
+    if (!bar || bar.dataset.mq === "final") return;
+    bar.dataset.mq = "final";
+    
+    var isPaused = false;
     
     function pause() {
+      if (isPaused) return;
+      isPaused = true;
       bar.style.animationPlayState = "paused";
-      bar.classList.add("paused");
     }
     function resume() {
+      if (!isPaused) return;
+      isPaused = false;
       bar.style.animationPlayState = "running";
-      bar.classList.remove("paused");
     }
     
-    // TOUCH EVENTS (HP) — instant
+    // HP — touch only
     bar.addEventListener("touchstart", pause, { passive: true });
     bar.addEventListener("touchend", resume, { passive: true });
     bar.addEventListener("touchcancel", resume, { passive: true });
-    bar.addEventListener("touchmove", resume, { passive: true });
     
-    // POINTER EVENTS (fallback desktop + HP baru)
-    bar.addEventListener("pointerdown", pause, { passive: true });
-    bar.addEventListener("pointerup", resume, { passive: true });
-    bar.addEventListener("pointercancel", resume, { passive: true });
-    bar.addEventListener("pointerleave", resume, { passive: true });
-    
-    // MOUSE (desktop)
+    // Desktop — mouse only
     bar.addEventListener("mouseenter", pause);
     bar.addEventListener("mouseleave", resume);
+    
+    // Safety: kalau touchend tidak fire (edge case), auto resume
+    var safetyTimer = null;
+    bar.addEventListener("touchstart", function() {
+      if (safetyTimer) clearTimeout(safetyTimer);
+      safetyTimer = setTimeout(resume, 2000);
+    }, { passive: true });
+    bar.addEventListener("touchend", function() {
+      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+    }, { passive: true });
   }
   
   if (document.readyState === "loading") {
