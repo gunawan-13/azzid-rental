@@ -3368,63 +3368,46 @@ window.closeSb = window.closeSb || function() {
 };
 
 
-// === Marquee Touch Pause (HP) — Fast Resume ===
+
+
+
+// === Marquee HP Instant Resume ===
 (function() {
-  function initMarqueePause() {
+  function initMarquee() {
     var bar = document.getElementById("annBar");
-    if (!bar || bar.dataset.touchInit === "2") return;
-    bar.dataset.touchInit = "2";
-    
-    var resumeTimer = null;
+    if (!bar || bar.dataset.mq === "3") return;
+    bar.dataset.mq = "3";
     
     function pause() {
-      bar.classList.add("paused");
       bar.style.animationPlayState = "paused";
-      if (resumeTimer) clearTimeout(resumeTimer);
+      bar.classList.add("paused");
     }
-    
     function resume() {
-      bar.classList.remove("paused");
       bar.style.animationPlayState = "running";
-      if (resumeTimer) { clearTimeout(resumeTimer); resumeTimer = null; }
+      bar.classList.remove("paused");
     }
     
-    // Pointer down → pause
-    bar.addEventListener("pointerdown", function(e) {
-      pause();
-    }, { passive: true });
-    
-    // Pointer up → resume SEGERA
-    bar.addEventListener("pointerup", function() {
-      resume();
-    }, { passive: true });
-    
-    // Pointer cancel → resume
-    bar.addEventListener("pointercancel", resume, { passive: true });
-    
-    // Pointer leave → resume
-    bar.addEventListener("pointerleave", resume, { passive: true });
-    
-    // Touch end → resume (fallback)
+    // TOUCH EVENTS (HP) — instant
+    bar.addEventListener("touchstart", pause, { passive: true });
     bar.addEventListener("touchend", resume, { passive: true });
     bar.addEventListener("touchcancel", resume, { passive: true });
+    bar.addEventListener("touchmove", resume, { passive: true });
     
-    // SAFETY: Auto resume setelah 1 detik (kalau event tidak fire)
-    bar.addEventListener("pointerdown", function() {
-      if (resumeTimer) clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(resume, 1000);
-    }, { passive: true });
+    // POINTER EVENTS (fallback desktop + HP baru)
+    bar.addEventListener("pointerdown", pause, { passive: true });
+    bar.addEventListener("pointerup", resume, { passive: true });
+    bar.addEventListener("pointercancel", resume, { passive: true });
+    bar.addEventListener("pointerleave", resume, { passive: true });
     
-    // Desktop hover
+    // MOUSE (desktop)
     bar.addEventListener("mouseenter", pause);
     bar.addEventListener("mouseleave", resume);
   }
   
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initMarqueePause);
+    document.addEventListener("DOMContentLoaded", initMarquee);
   } else {
-    initMarqueePause();
+    initMarquee();
   }
-  
-  setInterval(initMarqueePause, 1000);
+  setInterval(initMarquee, 1000);
 })();
