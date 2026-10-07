@@ -195,50 +195,45 @@
 
   
   
-  <!-- === Hero BG Full === -->
+  
+  <!-- === Hero Masuk Header === -->
   <style>
     #cHeader {
       position: fixed !important;
       top: 34px !important;
       height: 68px !important;
       z-index: 50 !important;
+      background: rgba(0, 0, 0, 0.85) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
     }
 
-    /* DESKTOP — main padding kecil */
+    /* DESKTOP — main padding pas header, hero masuk */
     main#cMain {
       padding-top: 68px !important;
       margin-top: 0 !important;
     }
 
-    /* DESKTOP — hero tanpa padding */
-    #custApp section:first-child {
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-      margin-top: 0 !important;
-      min-height: auto !important;
-    }
-    #custApp section:first-child > * {
-      padding-top: 0 !important;
-      margin-top: 0 !important;
-    }
-
-    /* Background image hero — full tinggi */
-    #custApp section:first-child img[alt*="Armada"],
-    #custApp section:first-child > div:first-child > img,
-    #custApp section:first-child .absolute.inset-0 {
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      object-fit: cover !important;
+    /* DESKTOP — hero tarik ke atas masuk header */
+    @media (min-width: 769px) {
+      #custApp section:first-child {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-top: -20px !important;
+        min-height: auto !important;
+        position: relative !important;
+        z-index: 45 !important;
+      }
+      #custApp section:first-child > * {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+      }
     }
 
     /* TABLET */
     @media (min-width: 769px) and (max-width: 1024px) {
       main#cMain { padding-top: 66px !important; }
+      #custApp section:first-child { margin-top: -18px !important; }
     }
 
     /* MOBILE — tetap */
@@ -248,7 +243,7 @@
         height: 64px !important;
       }
       main#cMain { padding-top: 96px !important; }
-      #custApp section:first-child { padding-top: 12px !important; }
+      #custApp section:first-child { padding-top: 12px !important; margin-top: 0 !important; }
     }
 
     html, body {
