@@ -692,15 +692,36 @@ function qbSubmit(e) {
 
 function setFilter(k, v) {
   if (!S.filters) S.filters = {};
+  
+  // Simpan fokus & cursor
+  const active = document.activeElement;
+  const focusId = active && active.id ? active.id : (active && active.getAttribute ? active.getAttribute("data-search") : null);
+  const selStart = active && active.selectionStart;
+  const selEnd = active && active.selectionEnd;
+  
   S.filters[k] = v;
-  console.log("setFilter:", k, v, S.filters);
+  
+  // Render
   if (typeof renderC === "function") renderC();
   if (typeof renderAdminBody === "function" && S.adminMode) renderAdminBody();
-  return;
-  // Legacy code di bawah (tidak akan dieksekusi)
-
-  S.filters[k] = v;
-  renderC();
+  
+  // Restore fokus
+  if (k === "q" || focusId) {
+    requestAnimationFrame(function() {
+      var target = null;
+      if (focusId) target = document.getElementById(focusId);
+      if (!target) {
+        target = document.querySelector('input[placeholder*="Cari"]') || 
+                 document.querySelector('input[oninput*="setFilter(\x27q\x27"]');
+      }
+      if (target) {
+        target.focus();
+        if (typeof selStart === "number" && target.setSelectionRange) {
+          try { target.setSelectionRange(selStart, selEnd); } catch(e) {}
+        }
+      }
+    });
+  }
 }
 
 function bkGo(n) {
