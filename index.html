@@ -321,7 +321,8 @@
   
   
   
-  <!-- === Force No Gap === -->
+  
+  <!-- === Hero Final No Gap === -->
   <style>
     #cHeader {
       position: fixed !important;
@@ -330,51 +331,33 @@
       z-index: 50 !important;
     }
 
-    /* DESKTOP — main padding kecil */
+    /* DESKTOP — main padding pas header */
     main#cMain {
-      padding-top: 102px !important;
+      padding-top: 72px !important;
       margin-top: 0 !important;
     }
 
-    /* Hero — hapus semua padding & margin */
-    #custApp section:first-child,
-    #custApp main#cMain > section:first-child {
+    /* Hero — hapus semua padding/margin atas */
+    #custApp section:first-child {
       padding-top: 0 !important;
       margin-top: 0 !important;
       min-height: auto !important;
     }
-
-    /* Semua child hero — hapus padding atas */
     #custApp section:first-child > * {
-      padding-top: 0 !important;
-      margin-top: 0 !important;
-    }
-
-    /* Hero container */
-    #custApp section:first-child > div {
       padding-top: 0 !important;
       margin-top: 0 !important;
     }
 
     /* TABLET */
     @media (min-width: 769px) and (max-width: 1024px) {
-      main#cMain {
-        padding-top: 100px !important;
-      }
+      main#cMain { padding-top: 70px !important; }
     }
 
-    /* MOBILE — tetap */
+    /* MOBILE */
     @media (max-width: 768px) {
-      #cHeader {
-        top: 32px !important;
-        height: 64px !important;
-      }
-      main#cMain {
-        padding-top: 96px !important;
-      }
-      #custApp section:first-child {
-        padding-top: 12px !important;
-      }
+      #cHeader { top: 32px !important; height: 64px !important; }
+      main#cMain { padding-top: 94px !important; }
+      #custApp section:first-child { padding-top: 12px !important; }
     }
 
     /* Anti overflow */
@@ -389,6 +372,14 @@
       right: 16px !important;
       bottom: 16px !important;
       z-index: 50 !important;
+    }
+    @media (max-width: 768px) {
+      .wa-float {
+        right: 12px !important;
+        bottom: 12px !important;
+        width: 52px !important;
+        height: 52px !important;
+      }
     }
 
     /* Marquee */
