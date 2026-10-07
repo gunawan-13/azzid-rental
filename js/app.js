@@ -691,11 +691,14 @@ function qbSubmit(e) {
 }
 
 function setFilter(k, v) {
-  if (!S.filters) S.filters = {};
+  if (!S.filters) S.filters = { cat: "Semua", trans: "Semua", seats: 0, maxPrice: 0, q: "", avail: false, sort: "pop" };
+  
+  // Simpan scroll position
+  const scrollY = window.scrollY || window.pageYOffset || 0;
   
   // Simpan fokus & cursor
   const active = document.activeElement;
-  const focusId = active && active.id ? active.id : (active && active.getAttribute ? active.getAttribute("data-search") : null);
+  const focusId = active && active.id ? active.id : null;
   const selStart = active && active.selectionStart;
   const selEnd = active && active.selectionEnd;
   
@@ -705,23 +708,23 @@ function setFilter(k, v) {
   if (typeof renderC === "function") renderC();
   if (typeof renderAdminBody === "function" && S.adminMode) renderAdminBody();
   
-  // Restore fokus
-  if (k === "q" || focusId) {
-    requestAnimationFrame(function() {
-      var target = null;
-      if (focusId) target = document.getElementById(focusId);
-      if (!target) {
-        target = document.querySelector('input[placeholder*="Cari"]') || 
-                 document.querySelector('input[oninput*="setFilter(\x27q\x27"]');
+  // Restore scroll + fokus
+  requestAnimationFrame(function() {
+    window.scrollTo(0, scrollY);
+    
+    if (k === "q" || focusId) {
+      // Cari input search
+      const searchInput = document.querySelector("input[data-search], input[placeholder*=\"Cari\"], input[placeholder*=\"cari\"]");
+      if (searchInput) {
+        searchInput.focus();
+        try {
+          if (selStart !== undefined && selEnd !== undefined) {
+            searchInput.setSelectionRange(selStart, selEnd);
+          }
+        } catch(e) {}
       }
-      if (target) {
-        target.focus();
-        if (typeof selStart === "number" && target.setSelectionRange) {
-          try { target.setSelectionRange(selStart, selEnd); } catch(e) {}
-        }
-      }
-    });
-  }
+    }
+  });
 }
 
 function bkGo(n) {
