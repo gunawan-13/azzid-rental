@@ -342,7 +342,8 @@
     }
   </style>
 
-  <!-- === Icon Quick Booking Fix + HP Premium === -->
+  
+  <!-- === Icon QB + HP Premium Turun === -->
   <style>
     /* ========== ICON QUICK BOOKING ========== */
     #custApp .card:has(.badge:has(.dot-live)) > div:first-child > span:first-child,
@@ -361,8 +362,6 @@
       margin: 0 !important;
       flex-shrink: 0 !important;
     }
-
-    /* Icon svg di dalam */
     #custApp .card:has(.badge:has(.dot-live)) > div:first-child > span:first-child svg,
     #custApp .card:has(.badge:has(.dot-live)) > .flex:first-child > span:first-child svg {
       width: 20px !important;
@@ -374,11 +373,7 @@
       fill: none !important;
       margin: 0 !important;
       padding: 0 !important;
-      transform: none !important;
-      overflow: visible !important;
     }
-
-    /* Hapus overflow hidden di parent */
     #custApp .card:has(.badge:has(.dot-live)) > div:first-child,
     #custApp .card:has(.badge:has(.dot-live)) > .flex:first-child {
       overflow: visible !important;
@@ -386,31 +381,17 @@
       gap: 10px !important;
     }
 
-    /* ========== PREMIUM HP NAIK ========== */
+    /* ========== PREMIUM HP — TURUN SEDIKIT ========== */
     @media (max-width: 768px) {
-      /* Badge premium di HP — naik */
-      #custApp section:first-child .badge,
-      #custApp section:first-child [class*="badge"],
-      #custApp section:first-child span:first-child {
-        margin-top: 0 !important;
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-      }
-
-      /* Hero container HP — naik */
+      /* Hero container HP — turun dikit */
       #custApp section:first-child {
-        padding-top: 0 !important;
+        padding-top: 16px !important;
       }
 
-      /* Konten hero HP — naik */
-      #custApp section:first-child > .relative,
-      #custApp section:first-child > div:not(.absolute) {
-        padding-top: 0 !important;
-      }
-
-      /* Grid hero HP */
-      #custApp section:first-child .grid {
-        padding-top: 8px !important;
+      /* Badge premium HP — turun dikit */
+      #custApp section:first-child .badge,
+      #custApp section:first-child [class*="badge"] {
+        margin-top: 12px !important;
       }
     }
   </style>
