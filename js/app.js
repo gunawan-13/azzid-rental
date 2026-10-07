@@ -513,7 +513,7 @@ function vArmada() {
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="card p-5 mb-8 rv">
-      <div class="flex flex-wrap gap-2 mb-4">${['Semua', 'City Car', 'MPV', 'SUV', 'Premium', 'Commercial'].map(c => `<button class="chip ${f.cat === c ? 'on' : ''}" onclick="setFilter('cat','${c}')">${c}</button>`).join('')}</div>
+      <div class="flex flex-wrap gap-2 mb-4">${['Semua', 'City Car', 'MPV', 'SUV', 'Premium', 'Commercial'].map(c => `<button class="chip ${f.cat === c ? 'on' : ''}" data-filter-cat="${c}" onclick="setFilter('cat','${c}')">${c}</button>`).join('')}</div>
       <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3">
         <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">${ic('search', 'w-4 h-4')}</span>
           <input class="inp pl-9" placeholder="Cari mobil…" value="${esc(f.q)}" oninput="setFilter('q',this.value)">
@@ -525,8 +525,8 @@ function vArmada() {
       </div>
       <label class="flex items-center gap-2 mt-4 text-[13px] text-muted cursor-pointer w-fit"><input type="checkbox" class="accent-[#991B1B]" ${f.avail ? 'checked' : ''} onchange="setFilter('avail',this.checked)"> Hanya tampilkan yang tersedia hari ini</label>
     </div>
-    <div class="flex items-center justify-between mb-5"><p class="text-sm text-muted"><b class="text-white">${list.length}</b> kendaraan ditemukan</p></div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">${list.length ? list.map((v, i) => vehCard(v, i)).join('') : `<div class="col-span-full card p-14 text-center text-muted">${ic('car', 'w-10 h-10 mx-auto mb-3 text-zinc-600')}<p class="font-semibold">Tidak ada kendaraan yang cocok dengan filter.</p></div>`}</div>
+    <div class="flex items-center justify-between mb-5"><p class="text-sm text-muted"><b id="vehCount" class="text-white">${list.length}</b> kendaraan ditemukan</p></div>
+    <div id="vehListGrid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">${list.length ? list.map((v, i) => vehCard(v, i)).join('') : `<div class="col-span-full card p-14 text-center text-muted">${ic('car', 'w-10 h-10 mx-auto mb-3 text-zinc-600')}<p class="font-semibold">Tidak ada kendaraan yang cocok dengan filter.</p></div>`}</div>
   </section>`;
 }
 
@@ -693,43 +693,39 @@ function qbSubmit(e) {
 function setFilter(k, v) {
   if (!S.filters) S.filters = { cat: "Semua", trans: "Semua", seats: 0, maxPrice: 0, q: "", avail: false, sort: "pop" };
   
-  // Simpan scroll position (sebelum render)
-  const scrollY = window.scrollY || window.pageYOffset || 0;
-  
-  // Simpan fokus + cursor
-  const active = document.activeElement;
-  const focusId = active && active.id ? active.id : null;
-  const isSearch = active && active.tagName === "INPUT" && (active.type === "text" || active.type === "search");
-  const selStart = isSearch && active.selectionStart;
-  const selEnd = isSearch && active.selectionEnd;
-  
   // Update filter
   S.filters[k] = v;
   
-  // Render
-  if (typeof renderC === "function") renderC();
-  
-  // Restore scroll + fokus (sync)
-  window.scrollTo(0, scrollY);
-  
-  requestAnimationFrame(function() {
-    window.scrollTo(0, scrollY);
+  // Update hanya LIST MOBIL (bukan seluruh halaman)
+  const list = document.getElementById("vehListGrid");
+  if (list && typeof filteredVeh === "function" && typeof vehCard === "function") {
+    const arr = filteredVeh();
     
-    if (isSearch && focusId) {
-      const inp = document.getElementById(focusId);
-      if (inp) {
-        inp.focus();
-        if (selStart !== undefined && selEnd !== undefined) {
-          try { inp.setSelectionRange(selStart, selEnd); } catch(e) {}
-        }
-      }
+    // Update count
+    const countEl = document.getElementById("vehCount");
+    if (countEl) countEl.textContent = arr.length;
+    
+    // Update grid
+    if (arr.length) {
+      list.innerHTML = arr.map(function(veh, i) { return vehCard(veh, i); }).join("");
+    } else {
+      list.innerHTML = `<div class="col-span-full card p-14 text-center text-muted"><p class="font-semibold">Tidak ada kendaraan yang cocok dengan filter.</p></div>`;
     }
-  });
+  }
   
-  // Second restore (untuk safety)
-  setTimeout(function() {
-    window.scrollTo(0, scrollY);
-  }, 50);
+  // Update chip active state
+  if (k === "cat") {
+    document.querySelectorAll("[data-filter-cat]").forEach(function(btn) {
+      if (btn.getAttribute("data-filter-cat") === v) {
+        btn.classList.add("on");
+      } else {
+        btn.classList.remove("on");
+      }
+    });
+  }
+  
+  // Update dropdown selected state (kalau perlu)
+  if (typeof updateFilterUI === "function") updateFilterUI();
 }
 
 function bkGo(n) {
