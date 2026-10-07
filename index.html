@@ -374,27 +374,50 @@
     }
   </style>
 
-  <!-- === HP Force Naik === -->
+  
+  <!-- === Laptop Force Tarik === -->
   <style>
-    /* Force HP only — jangan sentuh desktop */
-    @media (max-width: 768px) {
+    /* Desktop only — HP JANGAN diubah */
+    @media (min-width: 769px) {
+      /* Hero container — tarik kuat */
       html body #custApp main#cMain section:first-child {
-        margin-top: 60px !important;
+        margin-top: -500px !important;
         padding-top: 0 !important;
-        transform: translateY(0) !important;
+        min-height: auto !important;
       }
-      html body #custApp main#cMain section:first-child .badge,
-      html body #custApp main#cMain section:first-child [class*="badge"] {
-        margin-top: 0 !important;
-        padding-top: 4px !important;
-        padding-bottom: 4px !important;
+
+      /* BG wrapper — mentok header */
+      html body #custApp main#cMain section:first-child > .absolute,
+      html body #custApp main#cMain section:first-child > div:first-child {
+        position: absolute !important;
+        top: -500px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        height: calc(100% + 500px) !important;
+        overflow: hidden !important;
+        z-index: 0 !important;
       }
+
+      /* Gambar BG */
+      html body #custApp main#cMain section:first-child img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center top !important;
+      }
+
+      /* Konten hero — turun agar tidak ketutup header */
       html body #custApp main#cMain section:first-child > .relative,
       html body #custApp main#cMain section:first-child > div:not(.absolute) {
-        padding-top: 0 !important;
+        position: relative !important;
+        z-index: 2 !important;
+        padding-top: 130px !important;
       }
-      html body #custApp main#cMain section:first-child .grid {
-        padding-top: 0 !important;
+
+      /* Badge premium */
+      html body #custApp main#cMain section:first-child .badge {
+        margin-top: 0 !important;
       }
     }
   </style>
