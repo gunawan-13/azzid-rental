@@ -458,8 +458,10 @@
   
   
   
-  <!-- === Hero FINAL === -->
+  
+  <!-- === Hero Desktop Compact === -->
   <style>
+    /* Header */
     #cHeader {
       position: fixed !important;
       top: 34px !important;
@@ -470,17 +472,22 @@
       padding-top: 0 !important;
       margin-top: 0 !important;
     }
-    /* DESKTOP */
+
+    /* DESKTOP — hero naik */
     #custApp section:first-child {
-      padding-top: 72px !important;
+      padding-top: 24px !important;
       padding-bottom: 16px !important;
       min-height: auto !important;
     }
+
     /* TABLET */
     @media (min-width: 769px) and (max-width: 1024px) {
       #cHeader { height: 66px !important; }
-      #custApp section:first-child { padding-top: 80px !important; }
+      #custApp section:first-child {
+        padding-top: 32px !important;
+      }
     }
+
     /* MOBILE — tetap */
     @media (max-width: 768px) {
       #cHeader {
@@ -488,7 +495,7 @@
         height: 64px !important;
       }
       #custApp section:first-child {
-        padding-top: 64px !important;
+        padding-top: 96px !important;
         padding-bottom: 12px !important;
       }
       #custApp section:first-child h1 {
@@ -496,8 +503,9 @@
         line-height: 1.1 !important;
       }
     }
+
     @media (max-width: 480px) {
-      #custApp section:first-child { padding-top: 60px !important; }
+      #custApp section:first-child { padding-top: 92px !important; }
       #custApp section:first-child h1 { font-size: 26px !important; }
     }
   </style>
