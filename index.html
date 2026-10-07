@@ -205,7 +205,8 @@
   
   
   
-  <!-- === FINAL: BG Mentok + Icon Fix === -->
+  
+  <!-- === FINAL v2: BG Mentok + Jarak Konten === -->
   <style>
     /* Header solid */
     #cHeader {
@@ -220,21 +221,23 @@
     }
     #custApp .fixed.top-0 { z-index: 10000 !important; }
 
-    /* DESKTOP — BG mentok header */
+    /* DESKTOP */
     main#cMain {
       padding-top: 68px !important;
       margin-top: 0 !important;
     }
 
     @media (min-width: 769px) {
+      /* Hero container */
       #custApp section:first-child {
-        
+        padding-top: 0 !important;
         padding-bottom: 0 !important;
-        
+        margin-top: -70px !important;
         min-height: auto !important;
         position: relative !important;
         z-index: 1 !important;
-        padding-top: 0 !important; }
+      }
+
       /* BG wrapper — mentok header */
       #custApp section:first-child > .absolute,
       #custApp section:first-child > div:first-child {
@@ -247,6 +250,7 @@
         overflow: hidden !important;
         z-index: 0 !important;
       }
+
       /* Gambar BG */
       #custApp section:first-child img {
         width: 100% !important;
@@ -254,12 +258,18 @@
         object-fit: cover !important;
         object-position: center top !important;
       }
-      /* Konten hero — naik */
+
+      /* Konten hero — TURUN dari header */
       #custApp section:first-child > .relative,
       #custApp section:first-child > div:not(.absolute) {
         position: relative !important;
         z-index: 2 !important;
-        padding-top: 50px !important;
+        padding-top: 90px !important;
+      }
+
+      /* Badge premium — jarak dari header */
+      #custApp section:first-child .badge {
+        margin-top: 20px !important;
       }
     }
 
@@ -271,6 +281,10 @@
       #custApp section:first-child > div:first-child {
         top: -64px !important;
         height: calc(100% + 64px) !important;
+      }
+      #custApp section:first-child > .relative,
+      #custApp section:first-child > div:not(.absolute) {
+        padding-top: 80px !important;
       }
     }
 
@@ -316,14 +330,12 @@
       fill: none !important;
       margin: 0 !important;
       padding: 0 !important;
-      transform: translate(0, 0) !important;
     }
     #custApp .card:has(.badge:has(.dot-live)) > div:first-child,
     #custApp .card:has(.badge:has(.dot-live)) > .flex:first-child {
       overflow: visible !important;
       align-items: center !important;
       gap: 12px !important;
-      min-height: 44px !important;
     }
 
     /* Anti overflow */
