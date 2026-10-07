@@ -460,7 +460,8 @@
   
   
   
-  <!-- === Layout Normal === -->
+  
+  <!-- === Layout Normal + HP Fix === -->
   <style>
     /* Header fixed */
     #cHeader {
@@ -475,21 +476,60 @@
       padding-top: 102px !important;
     }
 
-    /* Mobile */
-    @media (max-width: 768px) {
+    /* TABLET */
+    @media (min-width: 769px) and (max-width: 1024px) {
       main#cMain {
-        padding-top: 96px !important;
+        padding-top: 100px !important;
       }
+    }
+
+    /* ============ MOBILE FIX ============ */
+    @media (max-width: 768px) {
       #cHeader {
         top: 32px !important;
         height: 64px !important;
       }
+      /* Main content — TURUN lebih besar dari header */
+      main#cMain {
+        padding-top: 130px !important;
+      }
+      /* Hero homepage — beri padding atas */
+      #custApp section:first-child {
+        padding-top: 20px !important;
+        padding-bottom: 24px !important;
+      }
+      /* Judul hero di HP */
+      #custApp section:first-child h1 {
+        font-size: 30px !important;
+        line-height: 1.15 !important;
+        margin-top: 8px !important;
+        margin-bottom: 12px !important;
+      }
+      /* Badge premium */
+      #custApp section:first-child .badge {
+        margin-top: 0 !important;
+        margin-bottom: 12px !important;
+      }
+      /* Paragraf hero */
+      #custApp section:first-child p {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        margin-top: 8px !important;
+        margin-bottom: 16px !important;
+      }
+      /* Tombol hero */
+      #custApp section:first-child .btn {
+        margin-top: 4px !important;
+      }
     }
 
-    /* Tablet */
-    @media (min-width: 769px) and (max-width: 1024px) {
+    /* MOBILE KECIL */
+    @media (max-width: 480px) {
       main#cMain {
-        padding-top: 100px !important;
+        padding-top: 124px !important;
+      }
+      #custApp section:first-child h1 {
+        font-size: 26px !important;
       }
     }
 
@@ -499,7 +539,7 @@
       max-width: 100vw !important;
     }
 
-    /* WA float normal */
+    /* WA float */
     .wa-float {
       position: fixed !important;
       right: 16px !important;
