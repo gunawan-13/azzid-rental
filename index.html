@@ -319,9 +319,10 @@
   
   
   
-  <!-- === Layout Normal Final === -->
+  
+  <!-- === Layout Fix Gap === -->
   <style>
-    /* Header fixed */
+    /* Header */
     #cHeader {
       position: fixed !important;
       top: 34px !important;
@@ -334,21 +335,28 @@
       padding-top: 102px !important;
     }
 
-    /* Hero — normal */
-    #custApp section:first-child {
-      padding-top: 0 !important;
-      padding-bottom: 24px !important;
-      margin-top: 0 !important;
-    }
-
-    /* Tablet */
-    @media (min-width: 769px) and (max-width: 1024px) {
+    /* DESKTOP — hapus gap hero ke header */
+    @media (min-width: 769px) {
       main#cMain {
-        padding-top: 100px !important;
+        padding-top: 82px !important;
+      }
+      #custApp section:first-child {
+        padding-top: 0 !important;
+        margin-top: -20px !important;
       }
     }
 
-    /* MOBILE */
+    /* TABLET */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      main#cMain {
+        padding-top: 80px !important;
+      }
+      #custApp section:first-child {
+        margin-top: -15px !important;
+      }
+    }
+
+    /* MOBILE — normal, jangan diubah */
     @media (max-width: 768px) {
       #cHeader {
         top: 32px !important;
@@ -359,7 +367,6 @@
       }
       #custApp section:first-child {
         padding-top: 12px !important;
-        padding-bottom: 20px !important;
         margin-top: 0 !important;
       }
     }
