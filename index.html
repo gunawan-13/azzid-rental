@@ -197,9 +197,10 @@
   
   
   
-  <!-- === Header Solid + Hero === -->
+  
+  <!-- === BG Hero Mentok Header === -->
   <style>
-    /* Header — solid, di atas semua */
+    /* Header solid, di atas */
     #cHeader {
       position: fixed !important;
       top: 34px !important;
@@ -212,19 +213,19 @@
       isolation: isolate !important;
     }
 
-    /* Marquee — di atas header */
+    /* Marquee */
     #custApp > .fixed.top-0,
     #custApp .fixed.top-0 {
       z-index: 10000 !important;
     }
 
-    /* DESKTOP */
+    /* DESKTOP — main padding pas */
     main#cMain {
       padding-top: 68px !important;
       margin-top: 0 !important;
     }
 
-    /* DESKTOP — hero masuk header */
+    /* DESKTOP — hero & BG mentok header */
     @media (min-width: 769px) {
       #custApp section:first-child {
         padding-top: 0 !important;
@@ -234,9 +235,17 @@
         position: relative !important;
         z-index: 1 !important;
       }
-      #custApp section:first-child > * {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
+      /* BG image hero — full mentok */
+      #custApp section:first-child > .absolute.inset-0,
+      #custApp section:first-child .absolute.inset-0 {
+        top: -20px !important;
+        position: absolute !important;
+        inset: -20px 0 0 0 !important;
+        height: calc(100% + 20px) !important;
+      }
+      /* Semua gambar BG hero */
+      #custApp section:first-child img[class*="object-cover"] {
+        object-position: center top !important;
       }
     }
 
