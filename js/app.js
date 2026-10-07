@@ -693,38 +693,43 @@ function qbSubmit(e) {
 function setFilter(k, v) {
   if (!S.filters) S.filters = { cat: "Semua", trans: "Semua", seats: 0, maxPrice: 0, q: "", avail: false, sort: "pop" };
   
-  // Simpan scroll position
+  // Simpan scroll position (sebelum render)
   const scrollY = window.scrollY || window.pageYOffset || 0;
   
-  // Simpan fokus & cursor
+  // Simpan fokus + cursor
   const active = document.activeElement;
   const focusId = active && active.id ? active.id : null;
-  const selStart = active && active.selectionStart;
-  const selEnd = active && active.selectionEnd;
+  const isSearch = active && active.tagName === "INPUT" && (active.type === "text" || active.type === "search");
+  const selStart = isSearch && active.selectionStart;
+  const selEnd = isSearch && active.selectionEnd;
   
+  // Update filter
   S.filters[k] = v;
   
   // Render
   if (typeof renderC === "function") renderC();
-  if (typeof renderAdminBody === "function" && S.adminMode) renderAdminBody();
   
-  // Restore scroll + fokus
+  // Restore scroll + fokus (sync)
+  window.scrollTo(0, scrollY);
+  
   requestAnimationFrame(function() {
     window.scrollTo(0, scrollY);
     
-    if (k === "q" || focusId) {
-      // Cari input search
-      const searchInput = document.querySelector("input[data-search], input[placeholder*=\"Cari\"], input[placeholder*=\"cari\"]");
-      if (searchInput) {
-        searchInput.focus();
-        try {
-          if (selStart !== undefined && selEnd !== undefined) {
-            searchInput.setSelectionRange(selStart, selEnd);
-          }
-        } catch(e) {}
+    if (isSearch && focusId) {
+      const inp = document.getElementById(focusId);
+      if (inp) {
+        inp.focus();
+        if (selStart !== undefined && selEnd !== undefined) {
+          try { inp.setSelectionRange(selStart, selEnd); } catch(e) {}
+        }
       }
     }
   });
+  
+  // Second restore (untuk safety)
+  setTimeout(function() {
+    window.scrollTo(0, scrollY);
+  }, 50);
 }
 
 function bkGo(n) {
