@@ -21,83 +21,9 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/custom.css">
 <style>#hdrAdminBtn:not(.auth-ready),#mobAdminBtn:not(.auth-ready){visibility:hidden}</style><style>#custApp{opacity:0;transition:opacity 0.4s ease}body.ready #custApp{opacity:1}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe{max-width:100%;height:auto}.break-all{word-break:break-all}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe,table{max-width:100%}*{box-sizing:border-box}<style>#custApp{padding-top:90px}@media(min-width:1024px){#custApp{padding-top:106px}}#adminApp{padding-top:0}</style></style>
-  <!-- === Mobile Responsive Fix === -->
-  <style>
-    html, body { overflow-x: hidden !important; max-width: 100vw; width: 100%; }
-    * { box-sizing: border-box; }
-    img, svg, video, iframe { max-width: 100%; }
-    /* Mobile tweaks */
-    @media (max-width: 640px) {
-      header { padding-left: 8px !important; padding-right: 8px !important; }
-      header > div, header .max-w-7xl { padding-left: 8px !important; padding-right: 8px !important; gap: 6px !important; }
-      header button, header a { padding: 6px 10px !important; font-size: 12px !important; }
-      body { font-size: 14px; }
-      .lbl { font-size: 11px !important; }
-      .inp { font-size: 14px !important; padding: 10px 12px !important; }
-    }
-  </style>
-
-  <!-- === Mobile Responsive Fix v2 === -->
-  <style>
-    /* Prevent horizontal scroll */
-    html, body { overflow-x: hidden !important; max-width: 100vw; width: 100%; }
-    * { box-sizing: border-box; }
-    img, svg, video, iframe { max-width: 100%; height: auto; }
-
-    /* Body tidak ketutup header fixed */
-    body { padding-top: 0px; }
-    @media (max-width: 640px) { body { padding-top: 0px; } }
-
-    /* Mobile: header compact */
-    @media (max-width: 640px) {
-      header, nav.fixed, .header-fixed {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-        height: 60px !important;
-      }
-      header > div, header .max-w-7xl {
-        padding-left: 8px !important;
-        padding-right: 8px !important;
-        gap: 6px !important;
-      }
-      header button, header a {
-        padding: 6px 10px !important;
-        font-size: 12px !important;
-      }
-      /* Sembunyikan tombol Lacak Booking + User di mobile, sisakan hamburger */
-      header .header-hide-mobile { display: none !important; }
-      /* Logo diperkecil */
-      header img { max-height: 36px !important; }
-      /* Hero: turunkan sedikit */
-      section:first-of-type { padding-top: 0px !important; }
-      h1 { font-size: 28px !important; line-height: 1.2 !important; }
-      h2 { font-size: 22px !important; }
-      /* Step flow: kecilkan di mobile */
-      .flex.items-center.justify-start.sm\:justify-center.gap-0 {
-        gap: 2px !important;
-        font-size: 10px !important;
-      }
-      /* Form input */
-      .lbl { font-size: 11px !important; }
-      .inp { font-size: 14px !important; padding: 10px 12px !important; }
-      /* Card padding */
-      .card { padding: 16px !important; }
-      /* Table scroll */
-      table { font-size: 12px !important; }
-    }
-
-    @media (max-width: 380px) {
-      h1 { font-size: 24px !important; }
-      header button, header a { padding: 5px 8px !important; font-size: 11px !important; }
-    }
-  </style>
-
-  <!-- === Mobile Booking Fix === -->
-  <style>
-    /* Fix step indicator ketutup header di mobile */
-    
-  </style>
-
+  
+  
+  
   <!-- === Admin Mobile Responsive === -->
   <style>
     @media (max-width: 768px) {
@@ -162,168 +88,17 @@
   
   
   
-  <!-- === FIX MOBILE HERO SPACING === -->
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- === Layout Standard === -->
   <style>
-    /* DATE INPUT FIX */
-    #custApp input[type="date"],
-    input[type="date"].inp {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      box-sizing: border-box !important;
-      padding-right: 44px !important;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c53030' stroke-width='2'%3e%3crect x='3' y='4' width='18' height='18' rx='2'/%3e%3cpath d='M16 2v4M8 2v4M3 10h18'/%3e%3c/svg%3e") !important;
-      background-repeat: no-repeat !important;
-      background-position: right 12px center !important;
-      background-size: 18px 18px !important;
-      -webkit-appearance: none !important;
-      appearance: none !important;
-    }
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      opacity: 0 !important;
-      position: absolute !important;
-      right: 0 !important;
-      width: 44px !important;
-      height: 100% !important;
-      cursor: pointer !important;
-    }
-    #custApp select {
-      display: block !important;
-      width: 100% !important;
-      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c53030' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e") !important;
-      background-repeat: no-repeat !important;
-      background-position: right 12px center !important;
-      background-size: 18px 18px !important;
-      padding-right: 40px !important;
-      -webkit-appearance: none !important;
-      appearance: none !important;
-    }
-    #custApp .grid > div { min-width: 0 !important; overflow: hidden !important; }
-    #custApp .grid input, #custApp .grid select { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
-
-    /* MOBILE HERO SPACING */
-    @media (max-width: 768px) {
-      /* Section hero — TAMBAH jarak dari header */
-      #custApp section:first-child { position: relative !important;  }
-      /* Badge premium — jarak besar dari header */
-      #custApp section:first-child [class*="badge"],
-      #custApp section:first-child [class*="rounded-full"],
-      #custApp section:first-child span:first-child {
-        margin-top: 0 !important;
-        margin-bottom: 20px !important;
-      }
-      /* Judul hero — jarak dari badge */
-      #custApp section:first-child h1 {
-        margin-top: 8px !important;
-        margin-bottom: 16px !important;
-      }
-      /* Paragraf hero */
-      #custApp section:first-child p {
-        margin-top: 12px !important;
-        margin-bottom: 20px !important;
-      }
-      /* Button hero */
-      #custApp section:first-child button,
-      #custApp section:first-child a.btn {
-        margin-top: 8px !important;
-      }
-      /* Date & select mobile */
-      #custApp input[type="date"],
-      #custApp select {
-        padding: 12px 40px 12px 12px !important;
-        font-size: 14px !important;
-      }
-    }
-
-    /* TABLET */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      #custApp section:first-child { position: relative !important; 
-        margin-bottom: 12px !important;
-      }
-      /* Badge premium */
-      #custApp section:first-child .badge {
-        margin-top: 0 !important;
-        margin-bottom: 12px !important;
-      }
-      /* Paragraf hero */
-      #custApp section:first-child p {
-        font-size: 14px !important;
-        line-height: 1.5 !important;
-        margin-top: 8px !important;
-        margin-bottom: 16px !important;
-      }
-      /* Tombol hero */
-      #custApp section:first-child .btn {
-        margin-top: 4px !important;
-      }
-    }
-
-    /* MOBILE KECIL */
-    @media (max-width: 480px) {
-      main#cMain {
-        padding-top: 92px !important;
-      }
-      #custApp section:first-child h1 {
-        font-size: 26px !important;
-      }
-    }
-
-    /* Anti overflow */
-    html, body {
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-    }
-
-    /* WA float */
-    .wa-float {
-      position: fixed !important;
-      right: 16px !important;
-      bottom: 16px !important;
-      z-index: 50 !important;
-    }
-    @media (max-width: 768px) {
-      .wa-float {
-        right: 12px !important;
-        bottom: 12px !important;
-        width: 52px !important;
-        height: 52px !important;
-      }
-    }
-
-    /* Marquee */
-    @keyframes marqueeScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-    #annBar {
-      display: inline-flex !important;
-      align-items: center !important;
-      height: 34px !important;
-      line-height: 1 !important;
-      animation: marqueeScroll 30s linear infinite !important;
-      padding-left: 100vw !important;
-      white-space: nowrap !important;
-    }
-    #custApp .fixed.top-0 {
-      height: 34px !important;
-      display: flex !important;
-      align-items: center !important;
-      overflow: hidden !important;
-    }
-    @media (max-width: 768px) {
-      #annBar { height: 32px !important; }
-      #custApp .fixed.top-0 { height: 32px !important; }
-    }
-  </style>
-
-  
-  
-  
-  
-  
-  
-  <!-- === Hero Final No Gap === -->
-  <style>
+    /* Header fixed */
     #cHeader {
       position: fixed !important;
       top: 34px !important;
@@ -331,40 +106,31 @@
       z-index: 50 !important;
     }
 
-    /* DESKTOP — main padding pas header */
+    /* Main content — offset header + marquee */
     main#cMain {
-      padding-top: 72px !important;
-      margin-top: 0 !important;
+      padding-top: 102px !important;
     }
 
-    /* Hero — hapus semua padding/margin atas */
-    #custApp section:first-child {
-      padding-top: 0 !important;
-      margin-top: 0 !important;
-      min-height: auto !important;
-    }
-    #custApp section:first-child > * {
-      padding-top: 0 !important;
-      margin-top: 0 !important;
-    }
-
-    /* TABLET */
+    /* Tablet */
     @media (min-width: 769px) and (max-width: 1024px) {
-      main#cMain { padding-top: 70px !important; }
+      main#cMain { padding-top: 100px !important; }
     }
 
-    /* MOBILE */
+    /* Mobile */
     @media (max-width: 768px) {
-      #cHeader { top: 32px !important; height: 64px !important; }
-      main#cMain { padding-top: 94px !important; }
-      #custApp section:first-child { padding-top: 12px !important; }
+      #cHeader {
+        top: 32px !important;
+        height: 64px !important;
+      }
+      main#cMain { padding-top: 96px !important; }
     }
 
-    /* Anti overflow */
+    /* Anti horizontal scroll */
     html, body {
       overflow-x: hidden !important;
       max-width: 100vw !important;
     }
+    img, video, iframe { max-width: 100%; height: auto; }
 
     /* WA float */
     .wa-float {
