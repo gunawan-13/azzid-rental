@@ -482,3 +482,53 @@
 <script src="js/app.js"></script>
 </body>
 </html>
+<!-- === Marquee HP Fix === -->
+<style>
+  /* HP responsive marquee */
+  @media (max-width: 768px) {
+    /* Container */
+    #custApp > .fixed.top-0,
+    #custApp .fixed.top-0 {
+      height: 28px !important;
+      min-height: 28px !important;
+      padding: 0 !important;
+      overflow: hidden !important;
+      display: flex !important;
+      align-items: center !important;
+    }
+    
+    /* Text */
+    #annBar {
+      height: 28px !important;
+      line-height: 28px !important;
+      font-size: 11px !important;
+      letter-spacing: 0.2px !important;
+      animation-duration: 60s !important;
+      padding-left: 100vw !important;
+      white-space: nowrap !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      vertical-align: middle !important;
+    }
+    
+    /* Pause on touch */
+    #annBar:active {
+      animation-play-state: paused !important;
+    }
+  }
+  
+  /* HP kecil */
+  @media (max-width: 380px) {
+    #annBar {
+      font-size: 10px !important;
+      animation-duration: 50s !important;
+    }
+    #custApp .fixed.top-0 {
+      height: 26px !important;
+    }
+    #annBar {
+      height: 26px !important;
+      line-height: 26px !important;
+    }
+  }
+</style>
