@@ -194,7 +194,8 @@
   </style>
 
   
-  <!-- === Hero Tarik Total === -->
+  
+  <!-- === Hero BG Full === -->
   <style>
     #cHeader {
       position: fixed !important;
@@ -203,21 +204,36 @@
       z-index: 50 !important;
     }
 
-    /* DESKTOP — main padding minimal */
+    /* DESKTOP — main padding kecil */
     main#cMain {
       padding-top: 68px !important;
       margin-top: 0 !important;
     }
 
-    /* DESKTOP — hero hapus semua */
+    /* DESKTOP — hero tanpa padding */
     #custApp section:first-child {
       padding-top: 0 !important;
+      padding-bottom: 0 !important;
       margin-top: 0 !important;
       min-height: auto !important;
     }
     #custApp section:first-child > * {
       padding-top: 0 !important;
       margin-top: 0 !important;
+    }
+
+    /* Background image hero — full tinggi */
+    #custApp section:first-child img[alt*="Armada"],
+    #custApp section:first-child > div:first-child > img,
+    #custApp section:first-child .absolute.inset-0 {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
     }
 
     /* TABLET */
