@@ -979,6 +979,35 @@ function doPay() {
       }
     }
     S.lastBooking = booking;
+    
+    // === SIMPAN KE SUPABASE ===
+    if (window.supabaseClient) {
+      window.supabaseClient.from("bookings").insert({
+        user_email: (S.custSession && S.custSession.email) || "",
+        veh_id: d.veh,
+        cust: booking.cust,
+        wa: booking.wa,
+        email: booking.email,
+        start: booking.start,
+        "end": booking.end,
+        dur: booking.dur,
+        type: booking.type,
+        pickup: booking.pickup,
+        sub: booking.sub,
+        drv: booking.drv,
+        disc: booking.disc,
+        total: booking.total,
+        method: booking.method,
+        promo: booking.promo,
+        status: "Confirmed",
+        pay_status: "PAID",
+        pay_at: new Date().toISOString(),
+        ktp_file: booking.ktp_file || ""
+      }).then(function(res) {
+        if (res.error) console.warn("⚠️ Supabase insert error:", res.error.message);
+        else console.log("✅ Booking tersimpan di Supabase");
+      }).catch(function(e) { console.warn("Supabase error:", e.message); });
+    }
     addLog(`Booking baru: ${id} · ${v.name} · ${d.cust?.nama || "Tamu"}`);
     if (typeof addAdminNotif === "function") addAdminNotif("booking", `Booking baru ${id} dari ${d.cust?.nama || "Tamu"}`, id);
     // Notif ke user (kalau login atau ada email)
@@ -3430,3 +3459,60 @@ window.closeSb = window.closeSb || function() {
   }
   setInterval(initMarquee, 1000);
 })();
+
+
+// === LOAD BOOKINGS DARI SUPABASE ===
+async function loadBookingsFromSupabase() {
+  if (!window.supabaseClient) return;
+  try {
+    const res = await window.supabaseClient
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false });
+    
+    if (res.error) throw res.error;
+    
+    if (res.data && Array.isArray(res.data)) {
+      BOOKINGS = res.data.map(function(b) {
+        return {
+          id: b.id,
+          user: b.user_email,
+          veh: b.veh_id,
+          cust: b.cust,
+          wa: b.wa,
+          email: b.email,
+          start: b.start,
+          end: b.end,
+          dur: b.dur,
+          type: b.type,
+          pickup: b.pickup,
+          sub: b.sub,
+          drv: b.drv,
+          disc: b.disc,
+          total: b.total,
+          method: b.method,
+          promo: b.promo,
+          status: b.status,
+          pay: { at: b.pay_at, s: b.pay_status },
+          ktp_file: b.ktp_file
+        };
+      });
+      console.log("✅ Loaded", BOOKINGS.length, "bookings dari Supabase");
+      if (typeof renderAdminBody === "function") renderAdminBody();
+      if (typeof renderC === "function") renderC();
+    }
+  } catch (e) {
+    console.warn("Load error:", e.message);
+  }
+}
+
+// Auto-load saat Supabase ready
+window.addEventListener("supabase-ready", function() {
+  console.log("Supabase ready — load bookings...");
+  setTimeout(loadBookingsFromSupabase, 500);
+});
+
+// Kalau Supabase sudah ready
+if (window.supabaseClient) {
+  setTimeout(loadBookingsFromSupabase, 1000);
+}
