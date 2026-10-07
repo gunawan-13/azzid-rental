@@ -555,41 +555,46 @@
     }
   </style>
 
-  <!-- === Filter Card Gap Fix === -->
+  
+  <!-- === Filter Card Gap Fix v2 === -->
   <style>
-    /* Section Katalog Armada — padding bawah dikurangi */
+    /* Section hero katalog — kurangi padding bawah */
+    #custApp section.py-16.bg-ink-900,
     #custApp section.bg-ink-900 {
-      padding-bottom: 24px !important;
+      padding-bottom: 8px !important;
     }
 
-    /* Section filter — padding atas dikurangi */
+    /* Section filter — kurangi padding atas */
     #custApp section.max-w-7xl {
-      padding-top: 24px !important;
+      padding-top: 8px !important;
       padding-bottom: 24px !important;
     }
 
-    /* Card filter — margin atas dikurangi */
+    /* Filter card — margin atas 0 */
+    #custApp section.max-w-7xl > div.card,
     #custApp section.max-w-7xl > .card {
       margin-top: 0 !important;
-      margin-bottom: 20px !important;
+      margin-bottom: 16px !important;
+    }
+
+    /* Section hero — padding atas juga kurangi */
+    #custApp section.py-16 {
+      padding-top: 24px !important;
     }
 
     /* Mobile */
     @media (max-width: 768px) {
-      /* Hero katalog */
       #custApp section.bg-ink-900 {
-        padding-top: 20px !important;
-        padding-bottom: 16px !important;
-      }
-      /* Section filter */
-      #custApp section.max-w-7xl {
         padding-top: 16px !important;
+        padding-bottom: 4px !important;
+      }
+      #custApp section.max-w-7xl {
+        padding-top: 4px !important;
         padding-bottom: 16px !important;
       }
-      /* Card filter */
       #custApp section.max-w-7xl > .card {
-        padding: 16px !important;
-        margin-bottom: 16px !important;
+        padding: 14px !important;
+        margin-bottom: 12px !important;
       }
     }
   </style>
