@@ -1627,7 +1627,11 @@ function renderA() {
     </aside>
     <div class="flex-1 flex flex-col min-w-0 h-screen min-h-0">
       <header class="h-16 bg-ink-900/80 backdrop-blur border-b border-white/5 flex items-center gap-3 px-4 sm:px-6 flex-shrink-0 z-30">
-        <button class="lg:hidden p-2" onclick="openSb()">☰ MENU</button>
+        <button onclick="openSb()" class="lg:hidden p-2" aria-label="Menu">
+          <span class="w-9 h-9 rounded-lg bg-maroon-500/20 text-maroon-400 grid place-items-center">
+            ${ic('grid', 'w-5 h-5')}
+          </span>
+        </button>
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('adminBellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
           <div id="adminBellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="notif-item flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer" data-notif-id="${n.bookingId || ""}"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
@@ -3615,26 +3619,29 @@ window.addEventListener("resize", function() {
 
 
 // === SIDEBAR FINAL ===
+
+
+
+
+
+// === SIDEBAR FINAL (dari kiri) ===
 function openSb() {
   var sb = document.getElementById("aSb");
   if (!sb) return;
   sb.classList.add("sb-open");
-  
   var ov = document.getElementById("sbOverlay");
   if (!ov) {
     ov = document.createElement("div");
     ov.id = "sbOverlay";
-    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9000;display:none";
     ov.onclick = closeSb;
     document.body.appendChild(ov);
   }
-  ov.style.display = "block";
+  ov.classList.add("sb-show");
 }
 
 function closeSb() {
   var sb = document.getElementById("aSb");
   if (sb) sb.classList.remove("sb-open");
-  
   var ov = document.getElementById("sbOverlay");
-  if (ov) ov.style.display = "none";
+  if (ov) ov.classList.remove("sb-show");
 }
