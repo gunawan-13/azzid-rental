@@ -1642,13 +1642,26 @@ function renderA() {
 
 function closeSb() {
   var sb = document.getElementById("aSb");
-  if (sb) {
-    sb.classList.add("translate-x-full");
-    sb.classList.remove("translate-x-0");
-  }
+  if (sb) sb.style.transform = "translateX(100%)";
   var ov = document.getElementById("sbOverlay");
   if (ov) ov.style.display = "none";
   document.body.style.overflow = "";
+}
+
+function openSb() {
+  var sb = document.getElementById("aSb");
+  if (!sb) return;
+  sb.style.transform = "translateX(0)";
+  var ov = document.getElementById("sbOverlay");
+  if (!ov) {
+    ov = document.createElement("div");
+    ov.id = "sbOverlay";
+    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:40;display:none";
+    ov.onclick = function() { closeSb(); };
+    document.body.appendChild(ov);
+  }
+  ov.style.display = "block";
+  document.body.style.overflow = "hidden";
 }
 
 function openSb() {
