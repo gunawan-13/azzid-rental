@@ -1518,6 +1518,8 @@ async function doLogin(){
 }
 async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;sessionStorage.removeItem('azzid_has_session');localStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
 async function restoreAuth() {
+  // KEEP_ADMIN_HASH: jangan redirect kalau di #/admin
+  var __wasAdmin = location.hash.startsWith("#/admin");
   try {
     // Cek admin session dari localStorage (PRIORITAS)
     var sess = localStorage.getItem("azzid_session");
@@ -1578,6 +1580,14 @@ const AMENU = [
 ];
 
 function renderA() {
+  // ADMIN_AUTO_REFRESH
+  if (!window._adminRefreshTimer) {
+    window._adminRefreshTimer = setInterval(function() {
+      if (S.session && location.hash.startsWith("#/admin")) {
+        if (typeof renderAdminBody === "function") renderAdminBody();
+      }
+    }, 10000);
+  }
   if (typeof loadDriversFromAPI === "function") loadDriversFromAPI();
   try{const _hca=document.getElementById("custApp");if(_hca)_hca.style.display="none";const _haa=document.getElementById("adminApp");if(_haa){_haa.classList.remove("hidden");_haa.style.display="block";}}catch(_){}
   try{window.scrollTo(0, 0);}catch(_){}
@@ -1642,7 +1652,7 @@ function renderA() {
       <main id="aBody" class="p-4 sm:p-6 flex-1 min-w-0 overflow-y-auto"></main>
     </div>
   </div>`;
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 
@@ -1856,7 +1866,7 @@ function startRental(id) {
   addLog(`Sewa dimulai: ${id} · ${v ? v.name : ''} (${b.cust})`);
   persist();
   toast('Sewa ' + id + ' dimulai — unit ditandai Rented');
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function returnRental(id) {
@@ -1869,7 +1879,7 @@ function returnRental(id) {
   addLog(`Pengembalian diproses: ${id} · ${v ? v.name : ''} — unit kembali Available`);
   persist();
   toast('Pengembalian ' + id + ' selesai. Terima kasih!');
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function extendRental(id) {
@@ -1884,7 +1894,7 @@ function extendRental(id) {
   addLog(`Sewa diperpanjang: ${id} s/d ${dShort(b.end)} (+${fmtK(per)})`);
   persist();
   toast('Sewa diperpanjang s/d ' + dShort(b.end) + ' · +' + fmtK(per));
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 /* ================= BOOKING CRUD ================= */
@@ -1966,7 +1976,7 @@ function saveBooking(id) {
   }
   persist();
   closeModal();
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function delBooking(id) {
@@ -2005,7 +2015,7 @@ function hardDelBooking(id) {
   persist();
   closeModal();
   toast('Booking dihapus', 'err');
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function bkRow(b) {
@@ -2103,7 +2113,7 @@ function bAct(id, act, val) {
     addLog('Booking ' + id + ' → ' + val); }
   persist();
   closeModal();
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function openAssignDriver(id) {
@@ -2120,7 +2130,7 @@ function assignDrv(id, did) {
   persist();
   toast('Driver ' + drv(did).name + ' ditugaskan');
   closeModal();
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function aCalendar() {
@@ -2565,7 +2575,7 @@ async function dupVeh(id) {
     persist();
     toast('Duplikat dibuat di browser. API belum tersambung.', 'info');
   }
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function delVeh(id) {
@@ -2688,7 +2698,7 @@ function setDrvStatus(id, val) {
   drv(id).status = val;
   persist();
   toast('Status ' + drv(id).name + ' → ' + val);
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function driverForm(id){
@@ -2747,7 +2757,7 @@ function saveDriver(id){
   persist();
   addLog('Driver ' + name + ' ' + (id ? 'diperbarui' : 'ditambahkan'));
   closeModal();
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function delDriver(id){
@@ -2763,7 +2773,7 @@ function delDriver(id){
   persist();
   addLog('Driver ' + d.name + ' dihapus');
   toast('Driver dihapus', 'info');
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function aPayments() {
@@ -2796,7 +2806,7 @@ function markPaid(id) {
   addLog(`Pembayaran ${id} diverifikasi lunas (${fmtK(b.total)})`);
   persist();
   toast('Pembayaran ' + id + ' lunas · ' + fmtIDR(b.total));
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function aPromo() {
@@ -2818,7 +2828,7 @@ function deletePromo(id){
   persist();
   addLog('Promo ' + p.code + ' dihapus');
   toast('Promo ' + p.code + ' dihapus', 'info');
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function togglePromo(id) {
@@ -2827,7 +2837,7 @@ function togglePromo(id) {
   addLog('Promo ' + p.code + ' → ' + p.status);
   persist();
   toast('Promo ' + p.code + ' → ' + p.status);
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function promoForm(id) {
@@ -2870,7 +2880,7 @@ function savePromo(id) {
   persist();
   closeModal();
   toast('Promo dibuat');
-  renderAdminBody();
+  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function setRepTab(v){S.repTab=v;renderAdminBody();}
@@ -3322,6 +3332,11 @@ function route() {
   }
   const h = location.hash;
   if (h.startsWith('#/admin')) {
+    /* FORCE_ADMIN_LOGIN */
+    if (!S.session) {
+      if (typeof renderA === "function") renderA();
+      return;
+    }
     $('custApp').classList.add('hidden');
     $('adminApp').classList.remove('hidden');
     renderA();
