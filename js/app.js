@@ -1709,6 +1709,27 @@ function aOverview() {
   const __revenue = __safeSum(BOOKINGS.filter(b => b.status && b.status !== 'Cancelled' && b.status !== 'Pending'), 'total');
   const __revenueJt = (__revenue / 1000000).toFixed(1);
   
+  // === TREND BULAN LALU ===
+  var __n = new Date();
+  var __thisM = __n.getFullYear() + "-" + String(__n.getMonth() + 1).padStart(2, "0") + "-01";
+  var __lastMStart = new Date(__n.getFullYear(), __n.getMonth() - 1, 1).toISOString().slice(0, 10);
+  var __lastMEnd = new Date(__n.getFullYear(), __n.getMonth(), 0, 23, 59, 59).toISOString().slice(0, 10);
+  var __bThisM = BOOKINGS.filter(function(b){return b.start >= __thisM;});
+  var __bLastM = BOOKINGS.filter(function(b){return b.start >= __lastMStart && b.start <= __lastMEnd;});
+  var __thisCount = __bThisM.length;
+  var __lastCount = __bLastM.length;
+  var __diff = __thisCount - __lastCount;
+  var __pct = __lastCount > 0 ? Math.round((__diff / __lastCount) * 100) : (__thisCount > 0 ? 100 : 0);
+  var trendTxt = (__lastCount === 0 && __thisCount === 0) ? "— vs bulan lalu" : (__diff > 0 ? "↑ " + Math.abs(__pct) + "% vs bulan lalu" : __diff < 0 ? "↓ " + Math.abs(__pct) + "% vs bulan lalu" : "— 0% vs bulan lalu");
+  var trendCls = __diff > 0 ? "text-emerald-300" : __diff < 0 ? "text-red-300" : "text-zinc-400";
+  
+  var __revThis = __bThisM.reduce(function(s,b){return s + (Number(b.total)||0);}, 0);
+  var __revLast = __bLastM.reduce(function(s,b){return s + (Number(b.total)||0);}, 0);
+  var __revDiff = __revThis - __revLast;
+  var __revPct = __revLast > 0 ? Math.round((__revDiff / __revLast) * 100) : (__revThis > 0 ? 100 : 0);
+  var revTxt = (__revLast === 0 && __revThis === 0) ? "— vs bulan lalu" : (__revDiff > 0 ? "↑ " + Math.abs(__revPct) + "% vs bulan lalu" : __revDiff < 0 ? "↓ " + Math.abs(__revPct) + "% vs bulan lalu" : "— 0% vs bulan lalu");
+  var revCls = __revDiff > 0 ? "text-emerald-300" : __revDiff < 0 ? "text-red-300" : "text-zinc-400";
+  
   const series = revSeries(S.revRange);
   const tot = series.reduce((a, b) => a + b.v, 0);
   const avail = VEHICLES.filter(v => v.status === 'available').length;
@@ -1725,9 +1746,9 @@ function aOverview() {
     </div>
     <div class="rv flex flex-wrap items-center justify-between gap-3"><div class="min-w-0"><h2 class="font-display font-bold text-xl">Selamat datang, <span class="text-maroon-400 capitalize">${esc(S.session.name)}</span> 👋</h2><p class="text-[12.5px] text-muted mt-1">${["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][new Date().getDay()]}, ${dLong(TODAY)} · Ringkasan operasional hari ini.</p></div></div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__totalBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] text-zinc-400 mt-1">— vs bulan lalu</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__activeBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] text-zinc-400 mt-1">— vs bulan lalu</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] text-emerald-300 mt-1">— vs periode sebelumnya</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__totalBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__activeBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] ${revCls} mt-1">${revTxt}</div></div>
       <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:240ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('car')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${avail}<span class="text-muted text-base">/${VEHICLES.length}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Armada Tersedia</div><div class="text-[11px] text-emerald-300 mt-1">Siap disewakan hari ini</div></div>
     </div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
