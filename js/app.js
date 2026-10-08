@@ -3732,3 +3732,46 @@ function closeSb() {
   var ov = document.getElementById("sbOverlay");
   if (ov) ov.classList.remove("sb-show");
 }
+
+
+// ============================================
+// === SCROLL_TOP_MANUAL ===
+// ============================================
+// 1. Cegah browser auto-restore scroll position
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+// 2. Force scroll top saat homepage load
+function forceScrollTopOnHome() {
+  var h = location.hash || "";
+  var isHome = (h === "" || h === "#" || h === "#/");
+  var isAdmin = h.indexOf("#/admin") === 0;
+  
+  // Hanya scroll top kalau BUKAN admin dan di homepage
+  if (isHome && !isAdmin) {
+    setTimeout(function() {
+      try { window.scrollTo(0, 0); } catch(e) {}
+    }, 5);
+  }
+}
+
+// 3. Jalankan saat DOM ready + load
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", forceScrollTopOnHome);
+} else {
+  forceScrollTopOnHome();
+}
+window.addEventListener("load", forceScrollTopOnHome);
+
+// 4. Handle saat hash change (pindah halaman)
+window.addEventListener("hashchange", function() {
+  var h = location.hash || "";
+  if (h === "" || h === "#" || h === "#/") {
+    setTimeout(function() {
+      try { window.scrollTo(0, 0); } catch(e) {}
+    }, 100);
+  }
+});
+
+console.log("✅ SCROLL_TOP_MANUAL: aktif");
