@@ -1,5 +1,5 @@
-window.SUPABASE_URL = 'https://PROJECT_ID_BARU.supabase.co';
-window.SUPABASE_ANON_KEY = 'PUBLISHABLE_KEY_BARU';
+window.SUPABASE_URL = 'https://xjncvsdlnkrkhwujjbma.supabase.co';
+window.SUPABASE_ANON_KEY = 'sb_publishable_nEn-yL07oLqrxPcCx1_m8A_UO2MrEPb';
 window.supabaseClient = null;
 
 (function() {
