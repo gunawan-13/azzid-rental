@@ -661,15 +661,14 @@ img {
   }
 }
 </style>
-<style id="LOGO_FIX">
-/* ============ LOGO HILANGKAN ABU ============ */
-/* Semua logo di header, footer, sidebar, login */
+
+<style id="QB_FIX">
+/* ============ LOGO POLOS ============ */
 #cHeader img,
 header img,
 footer img,
 #aSb img,
-#loginCard img,
-[class*="azzid-removebg"] {
+#loginCard img {
   border-radius: 50% !important;
   background: transparent !important;
   box-shadow: none !important;
@@ -677,78 +676,90 @@ footer img,
   outline: none !important;
   padding: 0 !important;
   object-fit: contain !important;
-  background-color: transparent !important;
 }
 
-/* Hapus border/ring di sekitar logo */
-#cHeader a img,
-header a img,
-#loginCard img,
-#aSb > div:first-child img {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  border-radius: 50% !important;
-  mix-blend-mode: normal !important;
-  filter: none !important;
-}
-
-/* Fallback — semua img dengan class rounded yang berisi logo */
-img[alt*="AZZID"],
-img[alt*="Azzid"] {
-  border-radius: 50% !important;
-  background: transparent !important;
-  box-shadow: none !important;
-  border: none !important;
-  object-fit: contain !important;
-}
-
-/* ============ QUICK BOOKING ICON FIX ============ */
-/* Container ikon QB */
-.card .flex.items-center > span:first-child,
-.card > .flex:first-child > span:first-child,
-[class*="Quick Booking"] ~ * span:first-child {
-  display: grid !important;
+/* ============ QUICK BOOKING ICON ============ */
+/* Wrapper icon QB — persegi 40x40 */
+#custApp .card > .flex:first-child > span:first-child,
+#custApp .card > div:first-child > span:first-child,
+#custApp .card > div.flex:first-child > span:first-child {
+  display: inline-grid !important;
   place-items: center !important;
   align-items: center !important;
   justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  flex-shrink: 0 !important;
+  border-radius: 10px !important;
+  padding: 0 !important;
+  margin: 0 !important;
   line-height: 1 !important;
   vertical-align: middle !important;
+  background-color: rgba(220, 38, 38, 0.15) !important;
+  color: #ef4444 !important;
 }
 
-/* SVG icon QB */
-.card > .flex:first-child svg,
-.card > .flex.items-center svg,
-.card [class*="bg-maroon-500"] svg {
+/* SVG petir di dalam */
+#custApp .card > .flex:first-child > span:first-child svg,
+#custApp .card > div:first-child > span:first-child svg {
   display: block !important;
-  margin: 0 auto !important;
   width: 20px !important;
   height: 20px !important;
   min-width: 20px !important;
   min-height: 20px !important;
-  stroke-width: 2 !important;
-  position: static !important;
-  top: auto !important;
-  bottom: auto !important;
-  left: auto !important;
-  right: auto !important;
-  transform: none !important;
-}
-
-/* Container icon QB */
-.card > .flex:first-child > span,
-.card > .flex.items-center > span:has(svg) {
-  display: inline-grid !important;
-  place-items: center !important;
-  width: 36px !important;
-  height: 36px !important;
-  min-width: 36px !important;
-  min-height: 36px !important;
-  flex-shrink: 0 !important;
-  vertical-align: middle !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
   margin: 0 !important;
   padding: 0 !important;
+  stroke: #ef4444 !important;
+  fill: none !important;
+  transform: none !important;
+  position: static !important;
+}
+
+/* Wrapper flex header QB */
+#custApp .card > .flex:first-child,
+#custApp .card > div:first-child {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  min-height: 40px !important;
+}
+
+/* ============ BADGE REAL-TIME ============ */
+/* Badge — pill horizontal */
+#custApp .badge:has(.dot-live),
+#custApp .badge.bg-emerald-400/10 {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: auto !important;
+  min-height: 26px !important;
+  width: auto !important;
+  max-width: none !important;
+  padding: 4px 10px !important;
+  border-radius: 999px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* Teks di badge */
+#custApp .badge:has(.dot-live) * {
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+/* ============ HEADER QB — justify between ============ */
+#custApp .card > .flex:first-child {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
 }
 </style>
 </head>
