@@ -1519,17 +1519,7 @@ async function doLogin(){
 async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;sessionStorage.removeItem('azzid_has_session');localStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
 async function restoreAuth() {
   try {
-    // 1. Cek Supabase session
-    if (window.supabaseClient) {
-      var res = await window.supabaseClient.auth.getSession();
-      if (res.data && res.data.session) {
-        var u = res.data.session.user;
-        S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || u.email.split("@")[0], phone: u.user_metadata?.phone || "" };
-        console.log("✅ Supabase session restored:", u.email);
-      }
-    }
-    
-    // 2. Cek session admin dari localStorage
+    // Cek admin session dari localStorage (PRIORITAS)
     var sess = localStorage.getItem("azzid_session");
     if (sess) {
       try {
@@ -1542,16 +1532,22 @@ async function restoreAuth() {
       } catch(e) {}
     }
     
-    // 3. Cek sessionStorage
-    if (!S.session && sessionStorage.getItem("azzid_has_session") === "1") {
-      var localSess = localStorage.getItem("azzid_session");
-      if (localSess) {
-        try { S.session = JSON.parse(localSess); window.__authReady = true; } catch(e) {}
-      }
+    // Cek Supabase session (user)
+    if (window.supabaseClient) {
+      try {
+        var res = await window.supabaseClient.auth.getSession();
+        if (res.data && res.data.session) {
+          var u = res.data.session.user;
+          S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || u.email.split("@")[0], phone: u.user_metadata?.phone || "" };
+          console.log("✅ User session restored:", u.email);
+        }
+      } catch(e) {}
     }
     
     if (typeof syncAdminBtns === "function") syncAdminBtns();
-    if (location.hash.startsWith("#/admin") && S.session) {
+    
+    // Kalau di halaman admin & ada session → render dashboard
+    if (location.hash.startsWith("#/admin")) {
       if (typeof renderA === "function") renderA();
     }
   } catch (e) {
@@ -1618,7 +1614,7 @@ function renderA() {
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
   app.innerHTML = `<div class="h-screen bg-ink-950 flex overflow-hidden min-h-0">
-    <aside id="aSb" class="h-screen flex flex-col overflow-y-auto fixed lg:static z-40 inset-y-0 left-0 w-64 bg-ink-900 border-r border-white/5 flex flex-col -translate-x-full lg:translate-x-0 transition-transform">
+    <aside id="aSb" class="h-screen flex flex-col overflow-y-auto fixed lg:static z-40 inset-y-0 right-0 w-64 bg-ink-900 border-l border-white/5 flex flex-col translate-x-full lg:translate-x-0 transition-transform">
       <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
@@ -1630,10 +1626,10 @@ function renderA() {
     </aside>
     <div class="flex-1 flex flex-col min-w-0 h-screen min-h-0">
       <header class="h-16 bg-ink-900/80 backdrop-blur border-b border-white/5 flex items-center gap-3 px-4 sm:px-6 flex-shrink-0 z-30">
-        <button class="lg:hidden p-2" onclick="document.getElementById('aSb').classList.toggle('-translate-x-full')">${ic('grid')}</button>
+        <button class="lg:hidden p-2" onclick="document.getElementById('aSb').classList.toggle('translate-x-full')">${ic('grid')}</button>
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
-        <div class="relative ml-auto"><button onclick="document.getElementById('bellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
-          <div id="bellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="notif-item flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer" data-notif-id="${n.bookingId || ""}"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
+        <div class="relative ml-auto"><button onclick="document.getElementById('adminBellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
+          <div id="adminBellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="notif-item flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer" data-notif-id="${n.bookingId || ""}"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
         <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shadow-glow shrink-0 object-cover">
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
@@ -1645,7 +1641,11 @@ function renderA() {
 }
 
 function closeSb() {
-  if (window.innerWidth < 1024) $('aSb').classList.add('-translate-x-full');
+  var sb = document.getElementById("aSb");
+  if (!sb) return;
+  if (window.innerWidth < 1024) {
+    sb.classList.add("translate-x-full");
+  }
 }
 
 function revSeries(n = 7) {
