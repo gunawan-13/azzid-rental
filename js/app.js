@@ -3345,31 +3345,40 @@ function renderC() {
 }
 
 function route() {
-  if (location.hash.startsWith("#/admin")) {
-    // FORCE LOGIN CHECK
-    if (!S.session) {
-      if (typeof renderA === "function") renderA();
-      return;
-    }
-    const ca = document.getElementById("custApp");
-    if (ca) ca.style.display = "none";
-    const aa = document.getElementById("adminApp");
-    if (aa) aa.classList.remove("hidden");
-  }
-  const h = location.hash;
-  if (h.startsWith('#/admin')) {
-    /* FORCE_ADMIN_LOGIN */
-    if (!S.session) {
-      if (typeof renderA === "function") renderA();
-      return;
-    }
-    $('custApp').classList.add('hidden');
-    $('adminApp').classList.remove('hidden');
-    renderA();
-   
+  // Tunggu auth ready sebelum render
+  if (window.__authReady !== true) {
+    setTimeout(route, 50);
     return;
   }
-  renderC();
+  
+  var h = location.hash || "#/";
+  
+  // === ADMIN ROUTE ===
+  if (h.startsWith("#/admin")) {
+    // Kalau belum login → tampil form login (renderA handle)
+    if (!S.session) {
+      var ca0 = document.getElementById("custApp");
+      var aa0 = document.getElementById("adminApp");
+      if (ca0) { ca0.style.display = "none"; ca0.classList.add("hidden"); }
+      if (aa0) { aa0.style.display = "block"; aa0.classList.remove("hidden"); }
+      if (typeof renderA === "function") renderA();
+      return;
+    }
+    // Login → tampil dashboard
+    var ca = document.getElementById("custApp");
+    var aa = document.getElementById("adminApp");
+    if (ca) { ca.style.display = "none"; ca.classList.add("hidden"); }
+    if (aa) { aa.style.display = "block"; aa.classList.remove("hidden"); }
+    if (typeof renderA === "function") renderA();
+    return;
+  }
+  
+  // === PUBLIC ROUTE ===
+  var ca2 = document.getElementById("custApp");
+  var aa2 = document.getElementById("adminApp");
+  if (ca2) { ca2.style.display = ""; ca2.classList.remove("hidden"); }
+  if (aa2) { aa2.style.display = "none"; aa2.classList.add("hidden"); }
+  if (typeof renderC === "function") renderC();
 }
 
 window.addEventListener('hashchange', function() {
