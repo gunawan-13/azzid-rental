@@ -1614,7 +1614,7 @@ function renderA() {
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
   app.innerHTML = `<div class="h-screen bg-ink-950 flex overflow-hidden min-h-0">
-    <aside id="aSb" class="fixed lg:static inset-y-0 right-0 z-50 lg:z-auto w-64 max-w-[80vw] bg-ink-900 border-l border-white/5 flex flex-col translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto">
+    <aside id="aSb" style="position:fixed;top:0;right:0;bottom:0;width:280px;max-width:80vw;background:#0a0a0a;z-index:50;transform:translateX(100%);transition:transform 0.3s;overflow-y:auto;display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,0.05)">
       <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
