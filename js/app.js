@@ -366,13 +366,13 @@ function vHome() {
             ['3500', '+', 'Perjalanan'],
             ['4.9', '', 'Rating /5'],
             ['5', '+', 'Tahun']
-          ].map((s, i) => `<div class="rv" style="transition-delay:${i * 100}ms">
+          ].map((s, i) => `<div class="" style="transition-delay:${i * 100}ms">
             <div class="font-display font-extrabold text-2xl text-white"><span data-cu="${s[0]}" data-suf="${s[1]}">0</span></div>
             <div class="text-[11px] uppercase tracking-widest text-muted mt-1">${s[2]}</div>
           </div>`).join('')}
         </div>
       </div>
-      <div class="rv card bg-ink-800/85 backdrop-blur-xl p-6 sm:p-7 border-white/10 shadow-card min-w-0">
+      <div class="card bg-ink-800/85 backdrop-blur-xl p-6 sm:p-7 border-white/10 shadow-card min-w-0">
         <div class="flex items-center gap-2 mb-5"><span class="w-8 h-8 rounded-lg bg-maroon-500/20 text-maroon-400 grid place-items-center">${ic('zap', 'w-4 h-4')}</span>
           <h3 class="font-display font-bold">Quick Booking</h3><span class="ml-auto badge bg-emerald-400/10 border-emerald-400/30 text-emerald-300"><i class="w-1.5 h-1.5 rounded-full bg-emerald-400 dot-live"></i>Real-time</span>
         </div>
@@ -401,7 +401,7 @@ function vHome() {
         ['zap', 'Proses Cepat', 'Booking online 3 menit, konfirmasi instan, mobil siap jalan sesuai jadwal.'],
         ['headset', 'Support 24/7', 'Tim siaga penuh untuk rescue, pertanyaan, dan perpanjangan rental kapan saja.']
       ]
-      .map((t, i) => `<div class="rv card p-6 hover:border-maroon-500/40 transition group" style="transition-delay:${i * 90}ms">
+      .map((t, i) => `<div class="card p-6 hover:border-maroon-500/40 transition group" style="transition-delay:${i * 90}ms">
         <div class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center mb-4 group-hover:scale-110 transition">${ic(t[0])}</div>
         <h3 class="font-display font-semibold mb-1.5">${t[1]}</h3><p class="text-[13px] text-muted leading-relaxed">${t[2]}</p>
       </div>`).join('')}
@@ -418,7 +418,7 @@ function vHome() {
   <section class="bg-ink-900 border-y border-white/5 py-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
       <div class="text-center mb-12 rv"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan Rental</span> <h2 class="font-display font-bold text-3xl mt-2">Solusi Lengkap Setiap Perjalanan</h2></div>
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="rv card p-6 bg-ink-800 hover:-translate-y-1.5 hover:border-maroon-500/40 transition duration-300" style="transition-delay:${i * 80}ms">
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="card p-6 bg-ink-800 hover:-translate-y-1.5 hover:border-maroon-500/40 transition duration-300" style="transition-delay:${i * 80}ms">
         <div class="flex items-start justify-between gap-2"><div class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(s.ic)}</div>
         </div>
         <h3 class="font-display font-semibold mt-4 mb-1.5">${s.t}</h3><p class="text-[13px] text-muted leading-relaxed">${s.d}</p>
@@ -426,11 +426,11 @@ function vHome() {
     </div></div>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
-    <div class="rv relative"><img src="${IMG.fleet}" alt="Garasi AZZID RENTCAR" class="rounded-2xl border border-white/10 w-full object-cover h-[420px]">
+    <div class="relative"><img src="${IMG.fleet}" alt="Garasi AZZID RENTCAR" class="rounded-2xl border border-white/10 w-full object-cover h-[420px]">
       <div class="absolute bottom-6 right-4 card bg-maroon-600 border-maroon-500/50 px-6 py-4 floaty shadow-glow"><div class="font-display font-extrabold text-2xl">inspeksi</div><div class="text-[11px] tracking-widest uppercase text-red-200">Inspeksi Setiap Unit</div></div>
     </div>
     <div class="min-w-0"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Keunggulan AZZID</span> <h2 class="font-display font-bold text-3xl mt-2 mb-6">Bukan Sekadar Rental, <span class="text-maroon-400">Partner Perjalanan.</span></h2>
-      <ul class="space-y-3.5 text-[14.5px]">${['Unit tahun muda (2022–2024), interior selalu detail & wangi', 'Driver bersertifikat, seragam rapi, dan hafal rute Jabodetabek', 'Asuransi all-risk di setiap perjalanan', 'Reschedule gratis hingga H-2', 'Unit pengganti maksimal 3 jam jika kendala', 'Harga final di depan — sudah termasuk layanan antar'].map((x, i) => `<li class="rv flex gap-3" style="transition-delay:${i * 70}ms"><span class="w-5 h-5 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center shrink-0 mt-0.5">${ic('check', 'w-3 h-3')}</span>${x}</li>`).join('')}</ul>
+      <ul class="space-y-3.5 text-[14.5px]">${['Unit tahun muda (2022–2024), interior selalu detail & wangi', 'Driver bersertifikat, seragam rapi, dan hafal rute Jabodetabek', 'Asuransi all-risk di setiap perjalanan', 'Reschedule gratis hingga H-2', 'Unit pengganti maksimal 3 jam jika kendala', 'Harga final di depan — sudah termasuk layanan antar'].map((x, i) => `<li class="flex gap-3" style="transition-delay:${i * 70}ms"><span class="w-5 h-5 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center shrink-0 mt-0.5">${ic('check', 'w-3 h-3')}</span>${x}</li>`).join('')}</ul>
     </div>
   </section>
   <section class="bg-ink-900 border-y border-white/5 py-20">
@@ -458,7 +458,7 @@ function vHome() {
       </a>
       <p class="text-[11.5px] text-muted mt-3">Bantu kami berkembang — tulis pengalaman Anda di Google Maps</p>
     </div>
-    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${TESTIMONIALS.slice(0,3).map((t, i) => `<div class="rv card p-6 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${TESTIMONIALS.slice(0,3).map((t, i) => `<div class="card p-6 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms">
       <div class="flex gap-1 mb-3">${[1, 1, 1, 1, 1].map(x => starIc(x)).join('')}</div>
       <p class="text-[13.5px] text-zinc-300 leading-relaxed mb-5">“${t.t}”</p>
       <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center font-display font-bold">${t.n[0]}</span>
@@ -551,7 +551,7 @@ function vDetail(slug) {
         </div>
       </div>
       <div class="min-w-0">
-        <div class="rv card p-6">
+        <div class="card p-6">
           <div class="flex items-start justify-between gap-3"><div class="min-w-0"><h1 class="font-display font-bold text-2xl">${esc(v.name)}</h1><p class="text-muted text-[13px] mt-1">${v.brand} · ${v.year} · ${v.plate}</p></div>
             <span class="w-11 h-11 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic('car')}</span>
           </div>
@@ -566,7 +566,7 @@ function vDetail(slug) {
             ].map(x => `<div class="bg-ink-900 rounded-lg px-3.5 py-3 border border-white/5 flex items-center gap-2.5 min-w-0">${ic(x[0], 'w-4 h-4 text-maroon-400 shrink-0')}<span class="min-w-0"><span class="block text-[10px] uppercase tracking-wider text-muted">${x[1]}</span>${x[2]}</span></div>`).join('')}
           </div>
         </div>
-        <div class="rv card p-6 mt-5 border-maroon-500/30 sticky top-24">
+        <div class="card p-6 mt-5 border-maroon-500/30 sticky top-24">
           <h3 class="font-display font-semibold mb-4">Harga Rental / Hari</h3>
           <div class="grid grid-cols-2 gap-3 mb-5">
             <div class="rounded-xl border border-white/10 p-4 text-center"><div class="text-[10px] uppercase tracking-widest text-muted mb-1">Lepas Kunci</div><div class="font-display font-extrabold text-maroon-400 text-lg">${fmtIDR(v.priceLK)}</div></div>
@@ -587,12 +587,12 @@ function vDetail(slug) {
 }
 
 function vLayanan() {
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><p class="text-muted mt-2 text-sm max-w-2xl">Dari perjalanan harian hingga event premium — semua dilayani dengan standar yang sama: tepat waktu, terawat, transparan.</p></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="rv card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><p class="text-[13.5px] text-muted leading-relaxed mb-4">${s.d}</p><button onclick="openBooking()" class="btn btn-g btn-sm mt-5 w-full">Booking Layanan</button></div>`).join('')}</section>`;
+  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><p class="text-muted mt-2 text-sm max-w-2xl">Dari perjalanan harian hingga event premium — semua dilayani dengan standar yang sama: tepat waktu, terawat, transparan.</p></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><p class="text-[13.5px] text-muted leading-relaxed mb-4">${s.d}</p><button onclick="openBooking()" class="btn btn-g btn-sm mt-5 w-full">Booking Layanan</button></div>`).join('')}</section>`;
 }
 
 function vTentang() {
   return `<section class="relative py-16 bg-ink-900 border-b border-white/5 overflow-hidden"><img src="${IMG.hero}" class="absolute inset-0 w-full h-full object-cover opacity-20"><div class="relative max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Tentang Kami</span><h1 class="font-display font-extrabold text-4xl mt-2">Drive Comfort. Travel Better.</h1></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid lg:grid-cols-2 gap-12 items-center">
-    <div class="rv"><img src="${IMG.fleet}" class="rounded-2xl border border-white/10 h-[420px] w-full object-cover" alt="Garasi AZZID"></div>
+    <div class=""><img src="${IMG.fleet}" class="rounded-2xl border border-white/10 h-[420px] w-full object-cover" alt="Garasi AZZID"></div>
     <div class="rv min-w-0"><h2 class="font-display font-bold text-3xl mb-5">Nyaman Berkendara, <span class="text-maroon-400">Tenang Bepergian.</span></h2>
       <p class="text-muted text-[14.5px] leading-relaxed mb-4">AZZID RENTCAR berdiri sejak 2021 di Jakarta Selatan, dimulai dari 3 unit mobil dan satu keyakinan sederhana: rental mobil seharusnya mudah, transparan, dan bisa dipercaya.</p>
       <p class="text-muted text-[14.5px] leading-relaxed mb-6">Kini kami melayani lebih dari 1.200 pelanggan — keluarga, pebisnis, perusahaan, hingga event organizer — dengan armada tahun muda yang diinspeksi menyeluruh sebelum setiap perjalanan.</p>
@@ -608,7 +608,7 @@ function vTentang() {
       ['3500', '+', 'Perjalanan Selesai'],
       ['8', '', 'Unit Armada Premium'],
       ['24', '/7', 'Jam Siaga Bantuan']
-    ].map((s, i) => `<div class="rv" style="transition-delay:${i * 90}ms"><div class="font-display font-extrabold text-4xl text-maroon-400"><span data-cu="${s[0]}" data-suf="${s[1]}">0</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">${s[2]}</div></div>`).join('')}
+    ].map((s, i) => `<div class="" style="transition-delay:${i * 90}ms"><div class="font-display font-extrabold text-4xl text-maroon-400"><span data-cu="${s[0]}" data-suf="${s[1]}">0</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">${s[2]}</div></div>`).join('')}
   </div></section>`;
 }
 
@@ -1767,7 +1767,7 @@ function aOverview() {
   const avail = VEHICLES.filter(v => v.status === 'available').length;
   const pendAmt = BOOKINGS.filter(b => ['PENDING', 'UNPAID'].includes(b.pay.s)).reduce((a, b) => a + b.total, 0);
   return `<div class="space-y-6">
-    <div class="rv card p-5 !bg-gradient-to-r !from-maroon-800/70 !to-ink-800 flex flex-wrap items-center gap-4">
+    <div class="card p-5 !bg-gradient-to-r !from-maroon-800/70 !to-ink-800 flex flex-wrap items-center gap-4">
       <span class="w-12 h-12 rounded-xl bg-white/10 text-white grid place-items-center shrink-0">${ic('key')}</span>
       <div class="min-w-0 grow"><h2 class="font-display font-bold text-lg">Kelola Sewa Mobil — ${ongoingCount()} sewa aktif</h2>
         <p class="text-[12.5px] text-muted">Mulai sewa, perpanjang, dan proses pengembalian dari satu layar.</p>
@@ -1776,12 +1776,12 @@ function aOverview() {
         <button onclick="bookingForm()" class="btn btn-g btn-sm">${ic('plus', 'w-4 h-4')} Buat Booking</button>
       </div>
     </div>
-    <div class="rv flex flex-wrap items-center justify-between gap-3"><div class="min-w-0"><h2 class="font-display font-bold text-xl">Selamat datang, <span class="text-maroon-400 capitalize">${esc(S.session.name)}</span> 👋</h2><p class="text-[12.5px] text-muted mt-1">${["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][new Date().getDay()]}, ${dLong(TODAY)} · Ringkasan operasional hari ini.</p></div></div>
+    <div class="flex flex-wrap items-center justify-between gap-3"><div class="min-w-0"><h2 class="font-display font-bold text-xl">Selamat datang, <span class="text-maroon-400 capitalize">${esc(S.session.name)}</span> 👋</h2><p class="text-[12.5px] text-muted mt-1">${["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][new Date().getDay()]}, ${dLong(TODAY)} · Ringkasan operasional hari ini.</p></div></div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__totalBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__activeBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] ${revCls} mt-1">${revTxt}</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:240ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('car')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${avail}<span class="text-muted text-base">/${VEHICLES.length}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Armada Tersedia</div><div class="text-[11px] text-emerald-300 mt-1">Siap disewakan hari ini</div></div>
+      <div class="card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__totalBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
+      <div class="card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__activeBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
+      <div class="card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] ${revCls} mt-1">${revTxt}</div></div>
+      <div class="card p-5 hover:border-maroon-500/40 transition" style="transition-delay:240ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('car')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${avail}<span class="text-muted text-base">/${VEHICLES.length}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Armada Tersedia</div><div class="text-[11px] text-emerald-300 mt-1">Siap disewakan hari ini</div></div>
     </div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
       ${[
@@ -1789,10 +1789,10 @@ function aOverview() {
         ['BOOKING HARI INI', String(BOOKINGS.filter(b => b.start === TODAY).length), 'bg-sky-400'],
         ['MOBIL DISEWA', String(VEHICLES.filter(v => v.status === 'rented').length), 'bg-orange-400'],
         ['MOBIL MAINTENANCE', String(VEHICLES.filter(v => v.status === 'maintenance').length), 'bg-red-400']
-      ].map((x, i) => `<div class="rv card !bg-ink-800 px-5 py-4 flex items-center justify-between" style="transition-delay:${i * 70}ms"><div class="min-w-0"><div class="text-[10px] tracking-widest text-muted uppercase truncate">${x[0]}</div><div class="font-display font-bold text-lg mt-1 truncate">${x[1]}</div></div><span class="w-2 h-2 rounded-full ${x[2]} dot-live shrink-0"></span></div>`).join('')}
+      ].map((x, i) => `<div class="card !bg-ink-800 px-5 py-4 flex items-center justify-between" style="transition-delay:${i * 70}ms"><div class="min-w-0"><div class="text-[10px] tracking-widest text-muted uppercase truncate">${x[0]}</div><div class="font-display font-bold text-lg mt-1 truncate">${x[1]}</div></div><span class="w-2 h-2 rounded-full ${x[2]} dot-live shrink-0"></span></div>`).join('')}
     </div>
     <div class="grid xl:grid-cols-[1.6fr_1fr] gap-6">
-      <div class="rv card p-6 min-w-0"><div class="flex flex-wrap items-center justify-between gap-3 mb-5"><h3 class="font-display font-semibold">Revenue Analytics</h3>
+      <div class="card p-6 min-w-0"><div class="flex flex-wrap items-center justify-between gap-3 mb-5"><h3 class="font-display font-semibold">Revenue Analytics</h3>
         <div class="flex gap-1.5">${[
           ['7', '7 Hari'],
           ['30', '30 Hari'],
@@ -1809,7 +1809,7 @@ function aOverview() {
           ].map(x => `<div class="min-w-0"><div class="font-display font-bold text-[15px] text-maroon-400 truncate">${x[1]}</div><div class="text-[10px] uppercase tracking-wider text-muted mt-1">${x[0]}</div></div>`).join('')}
         </div>
       </div>
-      <div class="rv card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
+      <div class="card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
         <div class="space-y-4">${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS.slice(0,5) : []).map(n => `<div class="notif-item flex gap-3 cursor-pointer hover:bg-white/5 rounded-lg p-2 -m-2 transition" data-notif-id="${n.bookingId || ""}"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl || "text-sky-300"} shrink-0">${ic(n.ic || "bell", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${esc(n.t)}</p><p class="text-[10.5px] text-muted mt-0.5">${esc(n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : n.w || "Baru saja"))}</p></div></div>`).join("")}</div><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
       <table class="tbl min-w-[720px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Status</th></tr></thead><tbody>
         ${BOOKINGS.slice(-6).reverse().map(b => `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400">${b.id.slice(-9)}</td><td>${esc(b.cust)}</td><td>${esc((veh(b.veh) || { name: '—' }).name)}</td><td>${dShort(b.start)}–${dShort(b.end)}</td><td>${fmtK(b.total)}</td><td>${badge(b.status)}</td></tr>`).join('')}
@@ -1826,7 +1826,7 @@ function aRental() {
   const overdue = ongoing.filter(b => b.end < TODAY);
   const revActive = ongoing.reduce((a, b) => a + b.total, 0);
   return `<div class="space-y-5">
-    <div class="rv card p-4 !bg-gradient-to-r !from-maroon-800/60 !to-ink-800 flex flex-wrap items-center gap-3"><span class="w-10 h-10 rounded-xl bg-white/10 text-white grid place-items-center shrink-0">${ic('key')}</span>
+    <div class="card p-4 !bg-gradient-to-r !from-maroon-800/60 !to-ink-800 flex flex-wrap items-center gap-3"><span class="w-10 h-10 rounded-xl bg-white/10 text-white grid place-items-center shrink-0">${ic('key')}</span>
       <div class="min-w-0 grow"><h2 class="font-display font-bold">Pusat Pengelolaan Sewa Mobil</h2><p class="text-[12px] text-muted">Mulai sewa, perpanjang, dan proses pengembalian — status armada & log diperbarui otomatis.</p></div>
       <button onclick="bookingForm()" class="btn btn-m btn-sm">${ic('plus', 'w-4 h-4')} Buat Booking</button>
     </div>
@@ -1836,11 +1836,11 @@ function aRental() {
         ['cal', 'AKAN DATANG', upcoming.length, 'text-sky-300'],
         ['clock', 'JATUH TEMPO ≤24 JAM', dueSoon.length, 'text-amber-300'],
         ['alert', 'OVERDUE', overdue.length, 'text-red-300']
-      ].map((x, i) => `<div class="rv card p-4 flex items-center gap-3" style="transition-delay:${i * 60}ms"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span><div class="min-w-0"><div class="font-display font-extrabold text-xl ${x[3]}">${x[2]}</div><div class="text-[10px] uppercase tracking-widest text-muted truncate">${x[1]}</div></div></div>`).join('')}
+      ].map((x, i) => `<div class="card p-4 flex items-center gap-3" style="transition-delay:${i * 60}ms"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span><div class="min-w-0"><div class="font-display font-extrabold text-xl ${x[3]}">${x[2]}</div><div class="text-[10px] uppercase tracking-widest text-muted truncate">${x[1]}</div></div></div>`).join('')}
     </div>
-    <div class="rv card p-4 flex flex-wrap items-center gap-3 !bg-ink-800"><span class="text-[12px] text-muted">Nilai sewa berjalan:</span><b class="font-display text-maroon-400">${fmtIDR(revActive)}</b><span class="ml-auto text-[11.5px] text-muted">Semua aksi tercatat di log perubahan.</span></div>
+    <div class="card p-4 flex flex-wrap items-center gap-3 !bg-ink-800"><span class="text-[12px] text-muted">Nilai sewa berjalan:</span><b class="font-display text-maroon-400">${fmtIDR(revActive)}</b><span class="ml-auto text-[11.5px] text-muted">Semua aksi tercatat di log perubahan.</span></div>
     ${overdue.length ? `<div class="rv rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-[13px] text-red-300 flex gap-2.5">${ic('alert', 'w-5 h-5 shrink-0')}<div><b>${overdue.length} sewa melewati tanggal pengembalian.</b> Segera hubungi customer atau proses perpanjangan.</div></div>` : ''}
-    <div class="rv card overflow-x-auto">
+    <div class="card overflow-x-auto">
       <div class="p-5 pb-0 flex items-center justify-between gap-3"><h3 class="font-display font-semibold">Sedang Berjalan (Ongoing)</h3><span class="badge bg-orange-400/10 border-orange-400/30 text-orange-300">${ongoing.length}</span></div>
       <div class="overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Periode</th><th>Driver</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
         ${ongoing.length ? ongoing.map(b => { const v = veh(b.veh) || { name: '—' }; return `<tr>
@@ -1856,7 +1856,7 @@ function aRental() {
         </tr>`; }).join('') : `<tr><td colspan="7" class="text-center py-10 text-muted">Tidak ada sewa yang sedang berjalan.</td></tr>`}
       </tbody></table></div>
     </div>
-    <div class="rv card overflow-x-auto">
+    <div class="card overflow-x-auto">
       <div class="p-5 pb-0 flex items-center justify-between gap-3"><h3 class="font-display font-semibold">Akan Datang (Confirmed) — jadwal pickup</h3><span class="badge bg-sky-400/10 border-sky-400/30 text-sky-300">${upcoming.length}</span></div>
       <div class="overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Mulai</th><th>Pickup</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
         ${upcoming.length ? upcoming.map(b => { const v = veh(b.veh) || { name: '—' }; return `<tr>
@@ -1872,7 +1872,7 @@ function aRental() {
         </tr>`; }).join('') : `<tr><td colspan="7" class="text-center py-10 text-muted">Tidak ada jadwal yang akan datang.</td></tr>`}
       </tbody></table></div>
     </div>
-    <div class="rv card p-5"><h3 class="font-display font-semibold mb-3">Jadwal Pengembalian Terdekat</h3>
+    <div class="card p-5"><h3 class="font-display font-semibold mb-3">Jadwal Pengembalian Terdekat</h3>
       <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">${ongoing.slice().sort((a, b) => a.end.localeCompare(b.end)).slice(0, 6).map(b => { const v = veh(b.veh) || { name: '—' }; return `<div class="bg-ink-900 rounded-xl px-4 py-3 border border-white/5 flex items-center gap-3 min-w-0"><span class="w-9 h-9 rounded-lg bg-orange-400/10 text-orange-300 grid place-items-center shrink-0">${ic('back', 'w-4 h-4')}</span><div class="min-w-0"><div class="text-[12.5px] font-semibold truncate">${esc(v.name)} · ${esc(b.cust)}</div><div class="text-[11px] text-muted">Kembali ${dLong(b.end)}</div></div></div>`; }).join('') || '<p class="text-[12.5px] text-muted">Tidak ada jadwal pengembalian.</p>'}</div>
     </div>
   </div>`;
@@ -2062,7 +2062,7 @@ function refreshBk() {
 
 function aBookings() {
   return `<div class="space-y-5">
-    <div class="rv card p-4 flex flex-wrap gap-3 items-center">
+    <div class="card p-4 flex flex-wrap gap-3 items-center">
       <div class="relative w-full sm:w-60"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">${ic('search', 'w-4 h-4')}</span>
         <input class="inp pl-9" placeholder="Cari ID / customer / mobil…" value="${esc(S._q)}" oninput="S._q=this.value;refreshBk()">
       </div>
@@ -2071,7 +2071,7 @@ function aBookings() {
       <span id="bkCnt" class="text-[12px] text-muted"></span>
       <button onclick="bookingForm()" class="btn btn-m btn-sm ml-auto">${ic('plus', 'w-4 h-4')} Buat Booking</button>
     </div>
-    <div class="rv card overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Payment</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="bkTbody"></tbody></table></div>
+    <div class="card overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Payment</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="bkTbody"></tbody></table></div>
   </div>`;
 }
 
@@ -2181,13 +2181,13 @@ function aCalendar() {
     </div>`;
   }).join('');
   return `<div class="space-y-5">
-    <div class="rv card p-4 flex flex-wrap items-center gap-3">
+    <div class="card p-4 flex flex-wrap items-center gap-3">
       <button onclick="S.calM--;if(S.calM<0){S.calM=11;S.calY--}renderAdminBody()" class="btn btn-g btn-sm">←</button>
       <h3 class="font-display font-bold text-lg w-40 text-center">${names[m]} ${y}</h3>
       <button onclick="S.calM++;if(S.calM>11){S.calM=0;S.calY++}renderAdminBody()" class="btn btn-g btn-sm">→</button>
       <div class="ml-auto flex flex-wrap gap-4 text-[11px] text-muted"><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-maroon-600 inline-block"></i>Disewa</span><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-amber-400/40 inline-block"></i>Maintenance</span><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-maroon-500/20 inline-block"></i>Hari ini</span></div>
     </div>
-    <div class="rv card overflow-auto max-h-[62vh]"><div class="flex border-b border-white/10 sticky top-0 bg-ink-800 z-20"><div class="w-40 sm:w-44 shrink-0 px-3 sm:px-4 py-2 text-[10px] font-bold text-muted uppercase tracking-wider border-r border-white/5 bg-ink-800">Kendaraan</div><div class="flex">${head}</div></div>${rows}</div>
+    <div class="card overflow-auto max-h-[62vh]"><div class="flex border-b border-white/10 sticky top-0 bg-ink-800 z-20"><div class="w-40 sm:w-44 shrink-0 px-3 sm:px-4 py-2 text-[10px] font-bold text-muted uppercase tracking-wider border-r border-white/5 bg-ink-800">Kendaraan</div><div class="flex">${head}</div></div>${rows}</div>
     <p class="rv text-[12px] text-muted">Klik bar untuk detail booking · Jadwal pickup & pengembalian tampil sebagai rentang tanggal.</p>
   </div>`;
 }
@@ -2224,7 +2224,7 @@ function aArmada() {
         ['check', 'AVAILABLE', st.av, 'text-emerald-300'],
         ['clock', 'RENTED', st.rt, 'text-red-300'],
         ['alert', 'MAINTENANCE', st.mt, 'text-amber-300']
-      ].map((x, i) => `<div class="rv card p-4 flex items-center gap-3" style="transition-delay:${i * 60}ms">
+      ].map((x, i) => `<div class="card p-4 flex items-center gap-3" style="transition-delay:${i * 60}ms">
         <span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span>
         <div class="min-w-0">
           <div class="font-display font-extrabold text-xl ${x[3]}">${x[2]}</div>
@@ -2232,7 +2232,7 @@ function aArmada() {
         </div>
       </div>`).join('')}
     </div>
-    <div class="rv card p-4 flex flex-wrap gap-3 items-center">
+    <div class="card p-4 flex flex-wrap gap-3 items-center">
       <div class="relative w-full sm:w-56">
         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-muted">${ic('search', 'w-4 h-4')}</span>
         <input class="inp pl-9" placeholder="Cari nama / plat…" value="${esc(S._vq)}" oninput="S._vq=this.value;refreshVeh()">
@@ -2247,7 +2247,7 @@ function aArmada() {
       </select>
       <button onclick="vehForm()" class="btn btn-m btn-sm ml-auto">${ic('plus', 'w-4 h-4')} Tambah Mobil</button>
     </div>
-    <div class="rv card overflow-x-auto">
+    <div class="card overflow-x-auto">
       <table class="tbl min-w-[960px]">
         <thead>
           <tr>
@@ -2266,7 +2266,7 @@ function aArmada() {
         <tbody id="vehTbody"></tbody>
       </table>
     </div>
-    <div class="rv card p-5">
+    <div class="card p-5">
       <h3 class="font-display font-semibold mb-4">${ic('file', 'w-4 h-4 inline mr-2 text-maroon-400')}Log Perubahan Aset</h3>
       <div class="space-y-2 max-h-56 overflow-y-auto">
         ${LOGS.slice(0, 12).map(l => `<div class="flex gap-3 text-[12.5px] bg-ink-900 rounded-lg px-4 py-2.5">
@@ -2651,10 +2651,10 @@ async function hardDel(id) {
 
 /* ================= CUSTOMER / DRIVER / PAYMENT / PROMO / REPORTS / CMS / USERS / SETTINGS ================= */
 function aCustomers() {
-  return `<div class="rv card overflow-x-auto"><table class="tbl min-w-[860px]"><thead><tr><th>ID</th><th>Nama</th><th>Kontak</th><th>Total Booking</th><th>Total Spending</th><th>Last Rental</th><th>Status</th><th></th></tr></thead><tbody>
+  return `<div class="card overflow-x-auto"><table class="tbl min-w-[860px]"><thead><tr><th>ID</th><th>Nama</th><th>Kontak</th><th>Total Booking</th><th>Total Spending</th><th>Last Rental</th><th>Status</th><th></th></tr></thead><tbody>
     ${CUSTOMERS.map(c => `<tr class="cursor-pointer" onclick="custDetail('${c.id}')"><td class="font-mono text-[11px] text-muted whitespace-nowrap">${c.id}</td><td class="font-semibold whitespace-nowrap">${esc(c.name)}</td><td class="text-muted whitespace-nowrap">${c.wa}</td><td>${c.total}</td><td class="font-semibold text-maroon-400 whitespace-nowrap">${fmtK(c.spend)}</td><td class="text-muted whitespace-nowrap">${esc(c.last)}</td><td>${badge(c.status)}</td><td class="text-muted">${ic('chevR', 'w-4 h-4')}</td></tr>`).join('')}
   </tbody></table></div>
-  <div class="rv card p-5 mt-5"><h3 class="font-display font-semibold mb-3">Akun Penyewa Terdaftar (${ACCOUNTS.length})</h3>
+  <div class="card p-5 mt-5"><h3 class="font-display font-semibold mb-3">Akun Penyewa Terdaftar (${ACCOUNTS.length})</h3>
     <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">${ACCOUNTS.map(a => `<div class="bg-ink-900 rounded-xl px-4 py-3 border border-white/5 flex items-center gap-3 min-w-0"><span class="w-9 h-9 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center font-bold shrink-0">${esc(a.nama[0])}</span><div class="min-w-0"><div class="text-[13px] font-semibold truncate">${esc(a.nama)}</div><div class="text-[11px] text-muted truncate">${a.email} · sejak ${dShort(a.joined)} ${a.joined.slice(0, 4)}</div></div></div>`).join('')}</div>
   </div>`;
 }
@@ -2706,7 +2706,7 @@ function aDrivers() {
   if (typeof DRIVERS === "undefined" || !Array.isArray(DRIVERS)) return "<div class=\"p-8 text-center text-muted\">Data driver tidak tersedia.</div>";
   const header = '<div class="flex items-center justify-between mb-5"><h2 class="font-display font-bold text-lg">Daftar Driver</h2><button onclick="driverForm()" class="btn btn-m btn-sm">+ Tambah Driver</button></div>';
   if (DRIVERS.length === 0) return header + '<div class="card p-8 text-center"><p class="text-muted text-sm">Belum ada driver terdaftar. Klik "Tambah Driver" untuk memulai.</p></div>';
-  return header + `<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">${DRIVERS.map((d, i) => `<div class="rv card p-6" style="transition-delay:${i * 70}ms">
+  return header + `<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">${DRIVERS.map((d, i) => `<div class="card p-6" style="transition-delay:${i * 70}ms">
     <div class="flex items-center gap-4 mb-4"><span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-xl shrink-0">${(d.name || "D")[0]}</span>
       <div class="min-w-0"><h3 class="font-display font-semibold truncate">${d.name}</h3><div class="flex items-center gap-1 text-[12px] text-amber-300">${starIc(1)} ${d.rating} · ${d.trips} perjalanan</div></div>
     </div>
@@ -2809,9 +2809,9 @@ function aPayments() {
         ['check', 'PAID', fmtIDR(paid), 'text-emerald-300'],
         ['clock', 'PENDING', fmtIDR(pend), 'text-amber-300'],
         ['logout', 'REFUND', fmtIDR(ref), 'text-violet-300']
-      ].map((x, i) => `<div class="rv card p-5" style="transition-delay:${i * 70}ms"><div class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted mb-2">${ic(x[0], 'w-4 h-4 text-maroon-400')}${x[1]}</div><div class="font-display font-extrabold text-lg sm:text-xl ${x[3]} break-all">${x[2]}</div></div>`).join('')}
+      ].map((x, i) => `<div class="card p-5" style="transition-delay:${i * 70}ms"><div class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted mb-2">${ic(x[0], 'w-4 h-4 text-maroon-400')}${x[1]}</div><div class="font-display font-extrabold text-lg sm:text-xl ${x[3]} break-all">${x[2]}</div></div>`).join('')}
     </div>
-    <div class="rv card overflow-x-auto"><table class="tbl min-w-[820px]"><thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Amount</th><th>Method</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
+    <div class="card overflow-x-auto"><table class="tbl min-w-[820px]"><thead><tr><th>Transaction</th><th>Booking</th><th>Customer</th><th>Amount</th><th>Method</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
       ${[...BOOKINGS].reverse().map(b => `<tr><td class="font-mono text-[12px] whitespace-nowrap">${b.pay.tx}</td><td class="font-mono text-maroon-400 text-[12px] whitespace-nowrap">${b.id.slice(-9)}</td><td class="whitespace-nowrap">${esc(b.cust)}</td><td class="font-semibold whitespace-nowrap">${fmtK(b.total)}</td><td class="whitespace-nowrap">${b.pay.m}</td><td>${badge(b.pay.s)}</td>
         <td>${['PENDING', 'UNPAID'].includes(b.pay.s) ? `<button onclick="markPaid('${b.id}')" class="btn btn-m btn-sm !py-1">Tandai Lunas</button>` : '<span class="text-muted text-[11px] whitespace-nowrap">' + (b.pay.at || '—') + '</span>'}</td>
       </tr>`).join('')}
@@ -2832,8 +2832,8 @@ function markPaid(id) {
 
 function aPromo() {
   return `<div class="space-y-5">
-    <div class="rv card p-4 flex justify-end"><button onclick="promoForm()" class="btn btn-m btn-sm">${ic('plus', 'w-4 h-4')} Buat Promo</button></div>
-    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">${PROMOS.map((p, i) => `<div class="rv card p-6 ${p.status !== 'Active' ? 'opacity-60' : ''}" style="transition-delay:${i * 70}ms">
+    <div class="card p-4 flex justify-end"><button onclick="promoForm()" class="btn btn-m btn-sm">${ic('plus', 'w-4 h-4')} Buat Promo</button></div>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-5">${PROMOS.map((p, i) => `<div class="card p-6 ${p.status !== 'Active' ? 'opacity-60' : ''}" style="transition-delay:${i * 70}ms">
       <div class="flex justify-between items-start gap-2 mb-4"><span class="font-mono font-bold text-lg text-maroon-400 border border-dashed border-maroon-500/50 rounded-lg px-3 py-1 break-all">${p.code}</span>${badge(p.status === 'Active' ? 'Active' : 'Expired')}</div>
       <div class="text-[12.5px] text-muted space-y-1.5"><p>${p.type === 'percent' ? 'Diskon ' + p.value + '% (maks ' + fmtK(p.cap) + ')' : 'Potongan ' + fmtK(p.value)}</p><p>Min. rental ${p.minDays} hari</p><p>${dShort(p.start)} – ${dShort(p.end)} ${p.end.slice(0, 4)}</p></div>
       <div class="grid grid-cols-3 gap-2 mt-4"><button onclick="togglePromo('${p.id}')" class="btn btn-g btn-sm">${p.status === 'Active' ? 'Nonaktifkan' : 'Aktifkan'}</button><button onclick="promoForm('${p.id}')" class="btn btn-g btn-sm">Edit</button><button onclick="deletePromo('${p.id}')" class="btn btn-d btn-sm">Hapus</button></div>
@@ -3022,7 +3022,7 @@ function aReports() {
     ].map(x => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-extrabold text-base sm:text-xl ${x[2]} break-all">${x[1]}</div></div>`).join('')}</div>
     <div class="flex flex-wrap gap-3 mt-5">${['Excel', 'CSV', 'PDF'].map(f => `<button data-export-fmt="${f}" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Export ${f}</button>`).join('')}</div>`;
   }
-  return `<div class="space-y-5"><div class="rv flex flex-wrap gap-2">${tabs.map(x => `<button onclick="S.repTab='${x[0]}';renderAdminBody()" class="chip ${t === x[0] ? 'on' : ''}">${x[1]}</button>`).join('')}</div><div class="rv min-w-0">${body}</div></div>`;
+  return `<div class="space-y-5"><div class="flex flex-wrap gap-2">${tabs.map(x => `<button onclick="S.repTab='${x[0]}';renderAdminBody()" class="chip ${t === x[0] ? 'on' : ''}">${x[1]}</button>`).join('')}</div><div class="rv min-w-0">${body}</div></div>`;
 }
 
 function exportCSV(rows) {
@@ -3151,7 +3151,7 @@ function saveCmsEditor(type){
 
 function aCms() {
   return `<div class="max-w-3xl space-y-5">
-    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">${ic('globe', 'w-4 h-4 inline mr-2 text-maroon-400')}Konten Homepage</h3>
+    <div class="card p-6"><h3 class="font-display font-semibold mb-4">${ic('globe', 'w-4 h-4 inline mr-2 text-maroon-400')}Konten Homepage</h3>
       <div class="space-y-4"><div><label class="lbl">Headline Baris 1</label><input id="cm0" class="inp" value="${esc(S.cms.head1)}"></div>
         <div><label class="lbl">Headline Baris 2</label><input id="cm1" class="inp" value="${esc(S.cms.head2)}"></div>
         <div><label class="lbl">Subheadline</label><textarea id="cm2" class="inp" rows="3">${esc(S.cms.sub)}</textarea></div>
@@ -3160,7 +3160,7 @@ function aCms() {
         <button onclick="saveCms()" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan & Terapkan ke Website</button>
       </div>
     </div>
-    <div class="rv card p-6"><h3 class="font-display font-semibold mb-3">Kelola Konten Lain</h3>
+    <div class="card p-6"><h3 class="font-display font-semibold mb-3">Kelola Konten Lain</h3>
       <div class="grid sm:grid-cols-2 gap-2.5">${['Banner Promo', 'Armada Unggulan', 'Tentang Kami', 'Layanan', 'FAQ', 'Testimonial', 'Footer', 'Kontak'].map(x => `<button onclick="openCmsEditor('${x}')" class="card !bg-ink-900 p-4 text-left text-[13px] font-semibold hover:border-maroon-500/40 transition flex justify-between items-center gap-2">${x}${ic('edit', 'w-4 h-4 text-muted shrink-0')}</button>`).join('')}</div>
     </div>
   </div>`;
@@ -3214,10 +3214,10 @@ function deleteUser(id, email){
 
 function aUsers() {
   return `<div class="space-y-6">
-    <div class="rv card overflow-x-auto"><table class="tbl min-w-[680px]"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
+    <div class="card overflow-x-auto"><table class="tbl min-w-[680px]"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
       ${ADMIN_USERS.map(u => `<tr><td class="font-semibold whitespace-nowrap">${esc(u.name)}</td><td class="text-muted whitespace-nowrap">${esc(u.email)}</td><td><select class="inp !w-36 !py-1.5 text-[12px]" onchange="updateUserRole(${u.id},this.value)"><option value="admin" ${u.role === "admin" ? "selected" : ""}>Admin</option><option value="user" ${u.role === "user" ? "selected" : ""}>User</option></select></td><td>${badge(u.status)}</td><td><button onclick="deleteUser(${u.id},'${esc(u.email)}')" class="btn btn-d btn-sm !py-1 !px-2" title="Hapus">${ic('trash', 'w-3.5 h-3.5')}</button></td></tr>`).join('')}
     </tbody></table></div>
-    <div class="rv card p-6 overflow-x-auto"><h3 class="font-display font-semibold mb-4">Role Permission Matrix</h3>
+    <div class="card p-6 overflow-x-auto"><h3 class="font-display font-semibold mb-4">Role Permission Matrix</h3>
       <table class="tbl min-w-[680px]"><thead><tr><th>Modul</th><th>Super Admin</th><th>Admin</th><th>Staff</th><th>Finance</th><th>Driver</th></tr></thead><tbody>
         ${[
           ['Kelola Sewa Mobil', '✓', '✓', '✓', '✓', '◐'],
@@ -3235,7 +3235,7 @@ function aUsers() {
 
 function aSettings() {
   return `<div class="max-w-3xl space-y-5">
-    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Informasi Bisnis</h3>
+    <div class="card p-6"><h3 class="font-display font-semibold mb-4">Informasi Bisnis</h3>
       <div class="grid sm:grid-cols-2 gap-4">
         <div><label class="lbl">Nama Bisnis</label><input id="bizNama" class="inp" value="${esc(S.cms.namaBisnis||'AZZID RENTCAR')}"></div>
         <div><label class="lbl">Email</label><input id="bizEmail" class="inp" value="${esc(S.cms.email||'azzidrentalmobil@gmail.com')}"></div>
@@ -3243,7 +3243,7 @@ function aSettings() {
         <div class="sm:col-span-2"><label class="lbl">Telepon</label><input id="bizTelepon" class="inp" value="${esc(S.cms.telepon||'+62 838-9035-4333')}"></div>
       </div>
     </div>
-    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Metode Pembayaran Aktif</h3>
+    <div class="card p-6"><h3 class="font-display font-semibold mb-4">Metode Pembayaran Aktif</h3>
   <div class="flex flex-wrap gap-2.5 mb-5">${['QRIS', 'VA BCA', 'VA Mandiri', 'GoPay', 'OVO', 'Transfer Bank'].map((m, i) => `<label class="chip cursor-pointer ${i < 5 ? 'on' : ''}"><input type="checkbox" class="hidden" ${i < 5 ? 'checked' : ''} onchange="this.parentElement.classList.toggle('on')">${m}</label>`).join('')}</div>
   <div class="space-y-3 border-t border-white/10 pt-5">
     <div><label class="lbl">QRIS — Nama Merchant / NMID</label><input id="payQris" class="inp" value="${esc(S.cms.payments?.qris||'')}" placeholder="Contoh: AZZID RENTCAR · QRIS GPN"></div>
@@ -3258,10 +3258,10 @@ function aSettings() {
     </div>
   </div>
 </div>
-    <div class="rv card p-6"><h3 class="font-display font-semibold mb-4">Notifikasi</h3>
+    <div class="card p-6"><h3 class="font-display font-semibold mb-4">Notifikasi</h3>
       <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan','Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" id="notif_${i}" class="accent-[#991B1B] w-4 h-4 shrink-0" ${(S.cms.notifications?.[i] !== false) ? 'checked' : ''}></label>`).join('')}</div>
     </div>
-    <div class="rv card p-6 border-red-500/20"><h3 class="font-display font-semibold mb-2 text-red-300">Zona Pemeliharaan Data</h3>
+    <div class="card p-6 border-red-500/20"><h3 class="font-display font-semibold mb-2 text-red-300">Zona Pemeliharaan Data</h3>
       <p class="text-[12.5px] text-muted mb-4">Kembalikan seluruh data (armada, sewa, booking, customer, akun, promo) ke kondisi demo awal. Data yang tersimpan di browser akan dihapus.</p>
       <button onclick="resetDemo()" class="btn btn-d btn-sm">${ic('alert', 'w-4 h-4')} Reset Data Demo</button>
     </div>

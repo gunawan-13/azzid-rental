@@ -556,15 +556,36 @@
   }
 </style>
 
-<style id="ANTI_SHIFT">
-/* ============ ANTI LAYOUT SHIFT ============ */
-#custApp {
-  opacity: 1 !important;
-  transition: none !important;
-  visibility: visible !important;
+
+<style id="FINAL_ANIM">
+/* ============ ANIMASI 1X + NO SHIFT ============ */
+@keyframes fadeInOnce {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
-/* Cegah scroll restore */
+/* CustApp — fade in 1x saja */
+#custApp {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: fadeInOnce 0.4s ease 1 forwards !important;
+}
+
+/* Admin — fade in 1x */
+#adminApp {
+  opacity: 1 !important;
+  animation: fadeInOnce 0.3s ease 1 forwards !important;
+}
+
+/* HAPUS SEMUA animasi rv — langsung tampil */
+.rv {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Anti shift */
 html {
   overflow-anchor: none !important;
   scroll-behavior: auto !important;
@@ -573,17 +594,15 @@ html {
 }
 body {
   overflow-anchor: none !important;
-  overflow-y: visible !important;
   overflow-x: hidden !important;
 }
 
-/* Hero — reserve height & contain */
+/* Hero — reserve height */
 #custApp section:first-child,
 #custApp section:first-of-type {
   min-height: 90vh !important;
-  contain: layout style paint !important;
+  contain: layout style !important;
 }
-
 @media (max-width: 768px) {
   #custApp section:first-child,
   #custApp section:first-of-type {
@@ -591,25 +610,7 @@ body {
   }
 }
 
-/* HAPUS semua animasi reveal */
-.rv {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-  animation: none !important;
-}
-
-/* Font — pakai system font dulu, swap kalau custom font ready */
-body, html {
-  font-display: swap !important;
-}
-
-/* Reserve space untuk image hero */
-img {
-  background-color: #1a1a1a;
-}
-
-/* Fix hero h1 — reserve height */
+/* Judul hero — reserve height */
 #custApp section:first-child h1,
 #custApp section:first-of-type h1 {
   min-height: 96px !important;
@@ -619,6 +620,10 @@ img {
   #custApp section:first-of-type h1 {
     min-height: 120px !important;
   }
+}
+
+img {
+  background-color: #1a1a1a;
 }
 </style>
 </head>
