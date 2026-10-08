@@ -1592,6 +1592,10 @@ function renderA() {
   try{const _hca=document.getElementById("custApp");if(_hca)_hca.style.display="none";const _haa=document.getElementById("adminApp");if(_haa){_haa.classList.remove("hidden");_haa.style.display="block";}}catch(_){}
   try{window.scrollTo(0, 0);}catch(_){}
   if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
+  // STAY_ADMIN_ON_REFRESH
+  if (location.hash.startsWith("#/admin")) {
+    try { window.scrollTo(0, 0); } catch(e) {}
+  }
   const app = $('adminApp');
   if (!S.session) {
     app.innerHTML = `<div class="min-h-screen grid place-items-center relative overflow-hidden bg-ink-950 px-4 py-10">
@@ -1660,21 +1664,38 @@ function renderA() {
 
 
 function revSeries(n = 7) {
-  const out = [];
-  const today = new Date();
-  for (let i = n - 1; i >= 0; i--) {
-    const d = new Date(today);
+  var out = [];
+  var today = new Date();
+  for (var i = n - 1; i >= 0; i--) {
+    var d = new Date(today);
     d.setDate(d.getDate() - i);
-    const dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-    // Filter longgar: booking yang statusnya bukan cancelled/pending, dan tanggal mulai/pay sama
-    const v = BOOKINGS.filter(b => {
+    var dateStr = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    // Normalize semua format tanggal
+    var v = BOOKINGS.filter(function(b) {
       if (!b) return false;
       if (b.status === "Cancelled" || b.status === "Pending") return false;
-      const payAt = (b.pay && b.pay.at) || "";
-      const startAt = b.start || "";
-      return payAt === dateStr || startAt === dateStr;
-    }).reduce((sum, b) => sum + (Number(b.total) || 0), 0);
-    out.push({ d, v });
+      
+      function normalize(str) {
+        if (!str) return "";
+        str = String(str).slice(0, 10);
+        // Format: YYYY-MM-DD → YYYY-MM-DD
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        // Format: DD/MM/YYYY
+        var m = str.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (m) return m[3] + "-" + m[2] + "-" + m[1];
+        // Format: MM/DD/YYYY
+        m = str.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (m) return m[3] + "-" + m[1] + "-" + m[2];
+        return str;
+      }
+      
+      var payAt = normalize((b.pay && b.pay.at) || "");
+      var startAt = normalize(b.start || "");
+      var createdAt = normalize(b.created_at || "");
+      
+      return payAt === dateStr || startAt === dateStr || createdAt === dateStr;
+    }).reduce(function(sum, b) { return sum + (Number(b.total) || 0); }, 0);
+    out.push({ d: d, v: v });
   }
   return out;
 }
@@ -3325,6 +3346,11 @@ function renderC() {
 
 function route() {
   if (location.hash.startsWith("#/admin")) {
+    // FORCE LOGIN CHECK
+    if (!S.session) {
+      if (typeof renderA === "function") renderA();
+      return;
+    }
     const ca = document.getElementById("custApp");
     if (ca) ca.style.display = "none";
     const aa = document.getElementById("adminApp");
