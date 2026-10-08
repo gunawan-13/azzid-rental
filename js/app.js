@@ -3372,7 +3372,21 @@ function route() {
   renderC();
 }
 
-window.addEventListener('hashchange', route);
+window.addEventListener('hashchange', function() {
+  var h = location.hash || '#/';
+  // FORCE_ADMIN_ROUTE
+  if (h.indexOf('#/admin') === 0) {
+    try {
+      var ca = document.getElementById('custApp');
+      var aa = document.getElementById('adminApp');
+      if (ca) { ca.style.display = 'none'; ca.classList.add('hidden'); }
+      if (aa) { aa.style.display = 'block'; aa.classList.remove('hidden'); }
+      if (typeof renderA === 'function') renderA();
+      return;
+    } catch(e) { console.error('admin route error:', e); }
+  }
+  if (typeof route === 'function') route();
+});
 window.addEventListener('scroll', () => {
   const hd = $('cHeader');
   const on = window.scrollY > 40;
@@ -3400,6 +3414,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
   window.__authReady = false;
   restoreAuth().then(() => {
+    // FORCE_ADMIN_LOAD
+    if (location.hash.indexOf('#/admin') === 0) {
+      try {
+        var ca = document.getElementById('custApp');
+        var aa = document.getElementById('adminApp');
+        if (ca) { ca.style.display = 'none'; ca.classList.add('hidden'); }
+        if (aa) { aa.style.display = 'block'; aa.classList.remove('hidden'); }
+        if (typeof renderA === 'function') renderA();
+      } catch(e) {}
+    }
     window.__authReady = true;document.body.classList.add('ready');
     syncAdminBtns();
     if (location.hash.startsWith('#/admin')) renderA();
