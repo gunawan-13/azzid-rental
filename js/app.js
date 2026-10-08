@@ -3636,7 +3636,7 @@ window.addEventListener("resize", function() {
 function forceSidebarLayout() {
   var sb = document.getElementById("aSb");
   if (!sb) return;
-  var isMobile = window.innerWidth < 1024;
+  var isMobile = window.innerWidth < 1024 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
   
   // Bersihkan semua inline style
   sb.style.removeProperty("transform");
