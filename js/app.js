@@ -1615,7 +1615,7 @@ function renderA() {
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
   app.innerHTML = `<div class="h-screen bg-ink-950 flex overflow-hidden min-h-0">
-    <aside id="aSb" style="position:fixed;top:0;right:0;bottom:0;width:280px;max-width:80vw;background:#0a0a0a;z-index:50;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;display:flex;flex-direction:column;border-left:1px solid rgba(255,255,255,0.05);box-shadow:-10px 0 30px rgba(0,0,0,0.5)">
+    <aside id="aSb" class="adm-sidebar">
       <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
@@ -1643,28 +1643,14 @@ function renderA() {
 
 function closeSb() {
   var sb = document.getElementById("aSb");
-  if (sb) sb.style.transform = "translateX(100%)";
+  if (sb) sb.classList.remove("adm-sidebar-open");
   var ov = document.getElementById("sbOverlay");
   if (ov) ov.style.display = "none";
   document.body.style.overflow = "";
 }
-function openSb() {
-  var sb = document.getElementById("aSb");
-  if (!sb) return;
-  sb.style.transform = "translateX(0)";
-  var ov = document.getElementById("sbOverlay");
-  if (!ov) {
-    ov = document.createElement("div");
-    ov.id = "sbOverlay";
-    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:45;display:none";
-    ov.onclick = function() { closeSb(); };
-    document.body.appendChild(ov);
-  }
-  ov.style.display = "block";
-  document.body.style.overflow = "hidden";
-}
 
 function openSb() {
+  if (window.innerWidth >= 1024) return;
   var sb = document.getElementById("aSb");
   if (!sb) return;
   sb.classList.add("adm-sidebar-open");
@@ -1672,40 +1658,7 @@ function openSb() {
   if (!ov) {
     ov = document.createElement("div");
     ov.id = "sbOverlay";
-    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:40;display:none";
-    ov.onclick = function() { closeSb(); };
-    document.body.appendChild(ov);
-  }
-  ov.style.display = "block";
-  document.body.style.overflow = "hidden";
-}
-
-function openSb() {
-  var sb = document.getElementById("aSb");
-  if (!sb) return;
-  sb.style.transform = "translateX(0)";
-  var ov = document.getElementById("sbOverlay");
-  if (!ov) {
-    ov = document.createElement("div");
-    ov.id = "sbOverlay";
-    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:40;display:none";
-    ov.onclick = function() { closeSb(); };
-    document.body.appendChild(ov);
-  }
-  ov.style.display = "block";
-  document.body.style.overflow = "hidden";
-}
-
-function openSb() {
-  var sb = document.getElementById("aSb");
-  if (!sb) return;
-  sb.classList.remove("translate-x-full");
-  sb.classList.add("translate-x-0");
-  var ov = document.getElementById("sbOverlay");
-  if (!ov) {
-    ov = document.createElement("div");
-    ov.id = "sbOverlay";
-    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:40;display:none";
+    ov.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:45;display:none";
     ov.onclick = function() { closeSb(); };
     document.body.appendChild(ov);
   }
@@ -3665,3 +3618,15 @@ window.addEventListener("supabase-ready", function() {
 if (window.supabaseClient) {
   setTimeout(loadBookingsFromSupabase, 1000);
 }
+
+
+// === Auto-close sidebar saat resize ke desktop ===
+window.addEventListener("resize", function() {
+  if (window.innerWidth >= 1024) {
+    var sb = document.getElementById("aSb");
+    if (sb) sb.classList.remove("adm-sidebar-open");
+    var ov = document.getElementById("sbOverlay");
+    if (ov) ov.style.display = "none";
+    document.body.style.overflow = "";
+  }
+});
