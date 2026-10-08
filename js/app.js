@@ -1670,10 +1670,11 @@ function revSeries(n = 7) {
 }
 
 function areaChart(data, h = 210) {
-  const W = 720,
-    max = Math.max(...data.map(x => x.v)) * 1.15;
-  const px = i => i * (W / (data.length - 1)),
-    py = v => h - 14 - (v / max) * (h - 40);
+  const W = 720;
+  const rawMax = Math.max(...data.map(x => x.v));
+  const max = rawMax > 0 ? rawMax * 1.15 : 1; // Handle data kosong
+  const px = i => i * (W / Math.max(1, data.length - 1));
+  const py = v => h - 14 - (v / max) * (h - 40);
   let line = '',
     area = `M0 ${h-14} `;
   data.forEach((p, i) => {
