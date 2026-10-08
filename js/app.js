@@ -3775,3 +3775,28 @@ window.addEventListener("hashchange", function() {
 });
 
 console.log("✅ SCROLL_TOP_MANUAL: aktif");
+
+
+// ============================================
+// === NO_SHIFT_JS ===
+// ============================================
+// Cegah browser auto-restore scroll
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+// Force scroll top hanya di homepage
+function __scrollTopHome() {
+  var h = location.hash || "";
+  if (h === "" || h === "#" || h === "#/") {
+    try { window.scrollTo(0, 0); } catch(e) {}
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", __scrollTopHome);
+} else {
+  __scrollTopHome();
+}
+
+console.log("✅ NO_SHIFT_JS: aktif");
