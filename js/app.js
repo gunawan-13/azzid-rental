@@ -3315,6 +3315,14 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  // RENDER_C_GUARD — skip kalau di admin
+  if (location.hash.indexOf("#/admin") === 0) {
+    var aa = document.getElementById("adminApp");
+    if (aa && !aa.classList.contains("hidden")) {
+      console.log("🔒 renderC diblok — di admin");
+      return;
+    }
+  }
   // LOCK_ADMIN_STATE — kalau di admin, jangan renderC
   if (location.hash.startsWith("#/admin") && window.__adminLocked) {
     console.log("🔒 renderC diblok — di admin");
@@ -3350,26 +3358,24 @@ function renderC() {
 }
 
 function route() {
-  // Tunggu auth ready sebelum render
-  if (window.__authReady !== true) {
-    setTimeout(route, 50);
-    return;
-  }
-  
   var h = location.hash || "#/";
   
   // === ADMIN ROUTE ===
-  if (h.startsWith("#/admin")) {
-    // Kalau belum login → tampil form login (renderA handle)
+  if (h.indexOf("#/admin") === 0) {
+    // Cek localStorage SINKRON — tidak tunggu async
     if (!S.session) {
-      var ca0 = document.getElementById("custApp");
-      var aa0 = document.getElementById("adminApp");
-      if (ca0) { ca0.style.display = "none"; ca0.classList.add("hidden"); }
-      if (aa0) { aa0.style.display = "block"; aa0.classList.remove("hidden"); }
-      if (typeof renderA === "function") renderA();
-      return;
+      try {
+        var sess = localStorage.getItem("azzid_session");
+        if (sess) {
+          var parsed = JSON.parse(sess);
+          if (parsed && parsed.role === "admin") {
+            S.session = parsed;
+          }
+        }
+      } catch(e) {}
     }
-    // Login → tampil dashboard
+    
+    // Tampilkan adminApp
     var ca = document.getElementById("custApp");
     var aa = document.getElementById("adminApp");
     if (ca) { ca.style.display = "none"; ca.classList.add("hidden"); }
@@ -3380,18 +3386,16 @@ function route() {
   }
   
   // === PUBLIC ROUTE ===
-  window.__adminLocked = false;
   var ca2 = document.getElementById("custApp");
   var aa2 = document.getElementById("adminApp");
   if (ca2) { ca2.style.display = ""; ca2.classList.remove("hidden"); }
   if (aa2) { aa2.style.display = "none"; aa2.classList.add("hidden"); }
+  window.__adminLocked = false;
   if (typeof renderC === "function") renderC();
 }
 
 // Hashchange → route()
-window.addEventListener('hashchange', function() {
-  if (typeof route === 'function') route();
-});
+// hashchange removed
 window.addEventListener('scroll', () => {
   const hd = $('cHeader');
   const on = window.scrollY > 40;
@@ -3770,14 +3774,7 @@ if (document.readyState === "loading") {
 window.addEventListener("load", forceScrollTopOnHome);
 
 // 4. Handle saat hash change (pindah halaman)
-window.addEventListener("hashchange", function() {
-  var h = location.hash || "";
-  if (h === "" || h === "#" || h === "#/") {
-    setTimeout(function() {
-      try { window.scrollTo(0, 0); } catch(e) {}
-    }, 100);
-  }
-});
+// hashchange removed
 
 console.log("✅ SCROLL_TOP_MANUAL: aktif");
 
@@ -3829,3 +3826,41 @@ if (document.readyState === "loading") {
 window.addEventListener("load", __topHomeFinal);
 
 console.log("✅ FINAL_NO_SHIFT aktif");
+
+
+// ============================================
+// === FINAL_HASHCHANGE ===
+// ============================================
+window.addEventListener("hashchange", function() {
+  if (typeof route === "function") route();
+});
+
+// Force route saat load — handle refresh
+function __forceAdminRoute() {
+  if (typeof route === "function") route();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    setTimeout(__forceAdminRoute, 100);
+  });
+} else {
+  setTimeout(__forceAdminRoute, 100);
+}
+
+// Handle saat load (setelah resource load)
+window.addEventListener("load", function() {
+  setTimeout(__forceAdminRoute, 100);
+});
+
+// Cegah beforeunload reset
+window.addEventListener("beforeunload", function() {
+  // Jangan hapus localStorage
+  var s = localStorage.getItem("azzid_session");
+  if (s) {
+    // Pastikan tetap ada
+    localStorage.setItem("azzid_session", s);
+  }
+});
+
+console.log("✅ FINAL_HASHCHANGE aktif");
