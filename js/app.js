@@ -1615,7 +1615,7 @@ function renderA() {
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
   app.innerHTML = `<div class="h-screen bg-ink-950 flex overflow-hidden min-h-0">
-    <aside id="aSb" class="adm-sidebar">
+    <aside id="aSb" class="adm-sidebar" data-sb>
       <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
@@ -3630,3 +3630,48 @@ window.addEventListener("resize", function() {
     document.body.style.overflow = "";
   }
 });
+
+
+// === FORCE SIDEBAR LAYOUT ===
+function forceSidebarLayout() {
+  var sb = document.getElementById("aSb");
+  if (!sb) return;
+  var isMobile = window.innerWidth < 1024;
+  
+  // Bersihkan semua inline style
+  sb.style.removeProperty("transform");
+  sb.style.removeProperty("position");
+  sb.style.removeProperty("top");
+  sb.style.removeProperty("right");
+  sb.style.removeProperty("bottom");
+  sb.style.removeProperty("width");
+  sb.style.removeProperty("max-width");
+  sb.style.removeProperty("z-index");
+  sb.style.removeProperty("background");
+  sb.style.removeProperty("border-left");
+  sb.style.removeProperty("box-shadow");
+  sb.style.removeProperty("overflow-y");
+  sb.style.removeProperty("display");
+  sb.style.removeProperty("flex-direction");
+  sb.style.removeProperty("transition");
+  
+  if (isMobile) {
+    // Paksa off-canvas
+    sb.style.cssText = "position:fixed;top:0;right:0;bottom:0;width:280px;max-width:80vw;background:#0a0a0a;z-index:50;display:flex;flex-direction:column;overflow-y:auto;border-left:1px solid rgba(255,255,255,0.05);transform:translateX(100%);transition:transform .3s ease;box-shadow:-10px 0 30px rgba(0,0,0,0.5)";
+  } else {
+    // Desktop: static
+    sb.style.cssText = "position:static;width:16rem;background:#0a0a0a;border-left:1px solid rgba(255,255,255,0.05);display:flex;flex-direction:column;overflow-y:auto;transform:none";
+  }
+}
+
+// Jalankan saat load + saat render admin
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() { setTimeout(forceSidebarLayout, 100); });
+} else {
+  setTimeout(forceSidebarLayout, 100);
+}
+
+window.addEventListener("resize", forceSidebarLayout);
+
+// Re-run tiap 500ms untuk handle renderA
+setInterval(forceSidebarLayout, 500);

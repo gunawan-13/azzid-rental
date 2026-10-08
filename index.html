@@ -642,44 +642,45 @@
     /* Prevent goyang */
     html, body { overflow-x: hidden !important; max-width: 100vw !important; }
   </style>
-  <!-- === Admin Sidebar Final === -->
-  <style>
-    /* BASE (mobile) — sidebar off-canvas */
-    .adm-sidebar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 280px;
-      max-width: 80vw;
-      background: #0a0a0a;
-      border-left: 1px solid rgba(255,255,255,0.05);
-      z-index: 50;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      transform: translateX(100%);
-      transition: transform .3s ease;
-      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+  <!-- === Admin Sidebar FORCE === -->
+<style>
+  /* MOBILE — paksa off-canvas */
+  @media (max-width: 1023px) {
+    #aSb.adm-sidebar {
+      position: fixed !important;
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 280px !important;
+      max-width: 80vw !important;
+      z-index: 50 !important;
+      transform: translateX(100%) !important;
+      transition: transform .3s ease !important;
+      background: #0a0a0a !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow-y: auto !important;
+      border-left: 1px solid rgba(255,255,255,0.05) !important;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5) !important;
     }
-    .adm-sidebar.adm-sidebar-open {
-      transform: translateX(0);
+    #aSb.adm-sidebar.adm-sidebar-open {
+      transform: translateX(0) !important;
     }
+  }
 
-    /* DESKTOP (>= 1024px) — sidebar static selalu tampil */
-    @media (min-width: 1024px) {
-      .adm-sidebar {
-        position: static !important;
-        transform: none !important;
-        width: 16rem;
-        box-shadow: none;
-        transition: none;
-      }
+  /* DESKTOP — static */
+  @media (min-width: 1024px) {
+    #aSb.adm-sidebar {
+      position: static !important;
+      transform: none !important;
+      width: 16rem !important;
+      box-shadow: none !important;
+      transition: none !important;
     }
+  }
 
-    /* Prevent goyang */
-    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
-  </style>
+  html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+</style>
 </head>
 
 
