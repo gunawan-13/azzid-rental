@@ -1580,7 +1580,7 @@ const AMENU = [
 function renderA() {
   if (typeof loadDriversFromAPI === "function") loadDriversFromAPI();
   try{const _hca=document.getElementById("custApp");if(_hca)_hca.style.display="none";const _haa=document.getElementById("adminApp");if(_haa){_haa.classList.remove("hidden");_haa.style.display="block";}}catch(_){}
-  try{window.scrollTo({ top: 0, behavior: "instant" });}catch(_){}
+  try{window.scrollTo(0, 0);}catch(_){}
   if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
   const app = $('adminApp');
   if (!S.session) {
@@ -1609,7 +1609,7 @@ function renderA() {
     </div>`;
     return;
   }
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo(0, 0);
   const menu = AMENU.filter(m => (ROLE_MENU[S.session.role] || FULL_MENU).includes(m[0]));
   if (!menu.find(m => m[0] === S.adminView)) S.adminView = menu[0][0];
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
@@ -1725,8 +1725,8 @@ function aOverview() {
     </div>
     <div class="rv flex flex-wrap items-center justify-between gap-3"><div class="min-w-0"><h2 class="font-display font-bold text-xl">Selamat datang, <span class="text-maroon-400 capitalize">${esc(S.session.name)}</span> 👋</h2><p class="text-[12.5px] text-muted mt-1">${["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][new Date().getDay()]}, ${dLong(TODAY)} · Ringkasan operasional hari ini.</p></div></div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__totalBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] text-emerald-300 mt-1">— vs bulan lalu</div></div>
-      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__activeBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] text-emerald-300 mt-1">— vs bulan lalu</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('file')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__totalBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Total Booking</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
+      <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:80ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('clock')}</span></div><div class="font-display font-extrabold text-[22px] leading-none"><span >${__activeBookings}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Booking Aktif</div><div class="text-[11px] ${trendCls} mt-1">${trendTxt}</div></div>
       <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:160ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('wallet')}</span></div><div class="font-display font-extrabold text-[22px]">${fmtK(tot)}</div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Pendapatan (${S.revRange} hari)</div><div class="text-[11px] text-emerald-300 mt-1">— vs periode sebelumnya</div></div>
       <div class="rv card p-5 hover:border-maroon-500/40 transition" style="transition-delay:240ms"><div class="flex items-center justify-between mb-3"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center">${ic('car')}</span></div><div class="font-display font-extrabold text-[22px] leading-none">${avail}<span class="text-muted text-base">/${VEHICLES.length}</span></div><div class="text-[11px] uppercase tracking-widest text-muted mt-2">Armada Tersedia</div><div class="text-[11px] text-emerald-300 mt-1">Siap disewakan hari ini</div></div>
     </div>
