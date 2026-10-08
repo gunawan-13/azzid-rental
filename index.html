@@ -555,68 +555,71 @@
     display: block !important;
   }
 </style>
+
 <style id="ANTI_SHIFT">
-  /* ============ ANTI LAYOUT SHIFT ============ */
-  
-  /* CustApp langsung tampil, tanpa fade */
-  #custApp {
-    opacity: 1 !important;
-    transition: none !important;
-    visibility: visible !important;
-  }
-  
-  /* Cegah scroll restoration browser */
-  html {
-    overflow-anchor: none !important;
-    scroll-behavior: auto !important;
-  }
-  
-  body {
-    overflow-anchor: none !important;
-  }
-  
-  /* Hero — reserve height & contain layout */
+/* ============ ANTI LAYOUT SHIFT ============ */
+#custApp {
+  opacity: 1 !important;
+  transition: none !important;
+  visibility: visible !important;
+}
+
+/* Cegah scroll restore */
+html {
+  overflow-anchor: none !important;
+  scroll-behavior: auto !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+}
+body {
+  overflow-anchor: none !important;
+  overflow-y: visible !important;
+  overflow-x: hidden !important;
+}
+
+/* Hero — reserve height & contain */
+#custApp section:first-child,
+#custApp section:first-of-type {
+  min-height: 90vh !important;
+  contain: layout style paint !important;
+}
+
+@media (max-width: 768px) {
   #custApp section:first-child,
   #custApp section:first-of-type {
-    min-height: 90vh !important;
-    contain: layout style paint !important;
+    min-height: 88vh !important;
   }
-  
-  @media (max-width: 768px) {
-    #custApp section:first-child,
-    #custApp section:first-of-type {
-      min-height: 88vh !important;
-    }
+}
+
+/* HAPUS semua animasi reveal */
+.rv {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Font — pakai system font dulu, swap kalau custom font ready */
+body, html {
+  font-display: swap !important;
+}
+
+/* Reserve space untuk image hero */
+img {
+  background-color: #1a1a1a;
+}
+
+/* Fix hero h1 — reserve height */
+#custApp section:first-child h1,
+#custApp section:first-of-type h1 {
+  min-height: 96px !important;
+}
+@media (min-width: 1024px) {
+  #custApp section:first-child h1,
+  #custApp section:first-of-type h1 {
+    min-height: 120px !important;
   }
-  
-  /* Semua elemen reveal — langsung tampil (tanpa animasi) */
-  .rv {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    animation: none !important;
-  }
-  
-  /* Font — cegah FOUT */
-  body, html {
-    font-display: optional !important;
-  }
-  
-  /* Image placeholder */
-  img {
-    background-color: #1a1a1a;
-  }
-  
-  /* Prevent double scrollbar */
-  html {
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
-  }
-  
-  body {
-    overflow-y: visible !important;
-    overflow-x: hidden !important;
-  }
+}
 </style>
 </head>
 
