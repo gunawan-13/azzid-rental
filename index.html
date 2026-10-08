@@ -472,215 +472,48 @@
   </style>
 
   
-  <!-- === Anti Goyang + Admin Fix v2 === -->
-  <style>
-    /* ========== ANTI GOYANG TOTAL ========== */
-    html, body {
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-      width: 100% !important;
-      position: relative !important;
-    }
-    * { box-sizing: border-box; }
-    #custApp, #adminApp {
-      overflow-x: hidden !important;
-      max-width: 100vw !important;
-      width: 100% !important;
-    }
-    /* Semua elemen tidak boleh lebih lebar dari viewport */
-    #custApp > *, #adminApp > * {
-      max-width: 100vw !important;
-    }
-    /* Table boleh scroll horizontal */
-    table, .tbl {
-      display: block !important;
-      overflow-x: auto !important;
-      max-width: 100% !important;
-      -webkit-overflow-scrolling: touch !important;
-    }
-    /* Marquee tidak bikin overflow */
-    #annBar {
-      max-width: none !important;
-    }
-    .overflow-hidden { overflow: hidden !important; }
+      <style id="sbFinal">
+  /* ============ SIDEBAR FINAL ============ */
 
-    /* ========== SIDEBAR ADMIN MOBILE ========== */
-    @media (max-width: 768px) {
-      #adminApp aside,
-      #adminApp [class*="sidebar"],
-      #adminApp nav[class*="fixed"] {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        bottom: 0 !important;
-        height: 100vh !important;
-        height: 100dvh !important;
-        width: 280px !important;
-        max-width: 85vw !important;
-        z-index: 100 !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        -webkit-overflow-scrolling: touch !important;
-        background: #0a0a0a !important;
-        display: flex !important;
-        flex-direction: column !important;
-        transition: transform 0.3s ease !important;
-      }
-
-      /* Sembunyikan sidebar (default) */
-      #adminApp aside.hidden,
-      #adminApp [class*="sidebar"].hidden,
-      #adminApp nav[class*="fixed"].hidden {
-        transform: translateX(-100%) !important;
-      }
-
-      /* Menu list scroll */
-      #adminApp aside nav,
-      #adminApp aside ul {
-        flex: 1 !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
-      }
-
-      /* Menu item */
-      #adminApp aside button {
-        padding: 14px 16px !important;
-        font-size: 14px !important;
-      }
-
-      /* Menu bawah (Lihat Website + Keluar) STICKY di bawah */
-      #adminApp aside > .mt-auto,
-      #adminApp aside > div:last-child {
-        position: sticky !important;
-        bottom: 0 !important;
-        background: #0a0a0a !important;
-        border-top: 1px solid rgba(255,255,255,0.05) !important;
-        padding: 12px 16px !important;
-        z-index: 5 !important;
-        margin-top: auto !important;
-      }
-    }
-
-    /* ========== FORM LOGIN ADMIN MOBILE ========== */
-    @media (max-width: 768px) {
-      #adminApp input.inp {
-        padding-right: 44px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-      }
-      #adminApp button[onclick*="password"],
-      #adminApp button[onclick*="toggle"] {
-        position: absolute !important;
-        right: 12px !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        z-index: 10 !important;
-      }
-      #adminApp .max-w-md,
-      #adminApp .max-w-lg {
-        max-width: 100% !important;
-        padding: 20px 16px !important;
-      }
-    }
-
-    /* ========== WA FLOAT ========== */
-    .wa-float {
-      position: fixed !important;
-      right: 16px !important;
-      bottom: 16px !important;
-      z-index: 50 !important;
-    }
-    @media (max-width: 768px) {
-      .wa-float {
-        right: 12px !important;
-        bottom: 12px !important;
-        width: 52px !important;
-        height: 52px !important;
-      }
-    }
-  </style>
-  <!-- === Admin Sidebar Custom === -->
-  <style>
-    /* Sidebar default (desktop) */
-    .adm-sidebar {
-      width: 16rem;
-      background: #0a0a0a;
-      border-left: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
-
-    /* Mobile: sidebar fixed off-canvas */
-    @media (max-width: 1023px) {
-      .adm-sidebar {
-        position: fixed !important;
-        top: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 280px !important;
-        max-width: 80vw !important;
-        z-index: 50 !important;
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        border-left: 1px solid rgba(255,255,255,0.1);
-        box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-      }
-      .adm-sidebar.adm-sidebar-open {
-        transform: translateX(0) !important;
-      }
-    }
-
-    /* Desktop: sidebar selalu tampil */
-    @media (min-width: 1024px) {
-      .adm-sidebar {
-        transform: none !important;
-        position: static !important;
-        height: 100vh;
-      }
-    }
-
-    /* Prevent goyang */
-    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
-  </style>
-  <!-- === Admin Sidebar FORCE === -->
-<style>
-  /* MOBILE — paksa off-canvas */
-  @media (max-width: 1023px) {
-    #aSb.adm-sidebar {
-      position: fixed !important;
-      top: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      width: 280px !important;
-      max-width: 80vw !important;
-      z-index: 50 !important;
-      transform: translateX(100%) !important;
-      transition: transform .3s ease !important;
-      background: #0a0a0a !important;
-      display: flex !important;
-      flex-direction: column !important;
-      overflow-y: auto !important;
-      border-left: 1px solid rgba(255,255,255,0.05) !important;
-      box-shadow: -10px 0 30px rgba(0,0,0,0.5) !important;
-    }
-    #aSb.adm-sidebar.adm-sidebar-open {
-      transform: translateX(0) !important;
-    }
+  /* --- BASE: mobile-first off-canvas --- */
+  #aSb {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: 280px !important;
+    max-width: 80vw !important;
+    background: #0a0a0a !important;
+    z-index: 9999 !important;
+    transform: translateX(100%) !important;
+    transition: transform 0.3s ease !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    border-left: 1px solid rgba(255,255,255,0.05) !important;
+  }
+  #aSb.sb-open {
+    transform: translateX(0) !important;
   }
 
-  /* DESKTOP — static */
+  /* --- DESKTOP: static permanent --- */
   @media (min-width: 1024px) {
-    #aSb.adm-sidebar {
+    #aSb {
       position: static !important;
       transform: none !important;
       width: 16rem !important;
-      box-shadow: none !important;
-      transition: none !important;
+      max-width: none !important;
+      z-index: auto !important;
+      border-left: 1px solid rgba(255,255,255,0.05) !important;
     }
   }
 
-  html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+  /* --- Anti goyang --- */
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+  }
 </style>
 </head>
 
