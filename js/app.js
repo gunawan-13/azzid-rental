@@ -1517,7 +1517,47 @@ async function doLogin(){
   }
 }
 async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;sessionStorage.removeItem('azzid_has_session');localStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
-async function restoreAuth(){if(!sessionStorage.getItem('azzid_has_session')){S.session=null;S.custSession=null;syncAdminBtns();return}try{const result=await authApi('/me');const user=apiData(result);if(user?.role==='admin'){S.session={id:user.id,name:user.name,email:user.email,role:user.role};loadAdminUsers()}else if(user?.role==='user'){S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}}syncAdminBtns();if(location.hash.startsWith('#/admin'))renderA()}catch(err){S.session=null;S.custSession=null;if(err&&err.message&&(err.message.includes("401")||err.message.includes("Unauthorized"))){localStorage.removeItem("azzid_has_session")}syncAdminBtns();}}
+async function restoreAuth() {
+  try {
+    // 1. Cek Supabase session
+    if (window.supabaseClient) {
+      var res = await window.supabaseClient.auth.getSession();
+      if (res.data && res.data.session) {
+        var u = res.data.session.user;
+        S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || u.email.split("@")[0], phone: u.user_metadata?.phone || "" };
+        console.log("✅ Supabase session restored:", u.email);
+      }
+    }
+    
+    // 2. Cek session admin dari localStorage
+    var sess = localStorage.getItem("azzid_session");
+    if (sess) {
+      try {
+        var parsed = JSON.parse(sess);
+        if (parsed && parsed.role === "admin") {
+          S.session = parsed;
+          window.__authReady = true;
+          console.log("✅ Admin session restored:", parsed.email);
+        }
+      } catch(e) {}
+    }
+    
+    // 3. Cek sessionStorage
+    if (!S.session && sessionStorage.getItem("azzid_has_session") === "1") {
+      var localSess = localStorage.getItem("azzid_session");
+      if (localSess) {
+        try { S.session = JSON.parse(localSess); window.__authReady = true; } catch(e) {}
+      }
+    }
+    
+    if (typeof syncAdminBtns === "function") syncAdminBtns();
+    if (location.hash.startsWith("#/admin") && S.session) {
+      if (typeof renderA === "function") renderA();
+    }
+  } catch (e) {
+    console.warn("restoreAuth error:", e);
+  }
+}
 
 function setAdminView(v){ if(typeof closeSb==="function") closeSb();
   S.adminView = v;

@@ -24,57 +24,7 @@
   
   
   
-  <!-- === Admin Mobile Responsive === -->
-  <style>
-    @media (max-width: 768px) {
-      /* Admin dashboard — normal zoom */
-      #adminApp {
-        font-size: 14px !important;
-      }
-      #adminApp .card {
-        padding: 16px !important;
-      }
-      #adminApp h1, #adminApp h2 {
-        font-size: 20px !important;
-      }
-      #adminApp h3 {
-        font-size: 16px !important;
-      }
-      /* Overview cards */
-      #adminApp .grid {
-        gap: 12px !important;
-      }
-      /* Font umum */
-      #adminApp .text-\[22px\] {
-        font-size: 18px !important;
-      }
-      #adminApp .text-xl {
-        font-size: 16px !important;
-      }
-      /* Table */
-      #adminApp table {
-        font-size: 12px !important;
-      }
-      /* Sidebar */
-      #adminApp aside, #adminApp nav {
-        font-size: 13px !important;
-      }
-    }
-
-    /* Cegah admin zoom out otomatis */
-    #adminApp {
-      width: 100% !important;
-      max-width: 100vw !important;
-      overflow-x: auto !important;
-    }
-    #adminApp * {
-      min-width: 0;
-    }
-    #adminApp .grid > * {
-      min-width: 0;
-    }
-  </style>
-
+  
   
   
   
@@ -516,6 +466,100 @@
         line-height: 30px !important;
         font-size: 11px !important;
         animation-duration: 55s !important;
+      }
+    }
+  </style>
+
+  <!-- === Admin Mobile Fix Final === -->
+  <style>
+    /* ========== ANTI GOYANG (PUBLIC ONLY) ========== */
+    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+    #custApp { overflow-x: hidden !important; max-width: 100vw !important; }
+
+    /* Admin boleh scroll horizontal */
+    #adminApp { overflow-x: auto !important; }
+    #adminApp * { max-width: 100%; }
+    #adminApp table { overflow-x: auto !important; display: block; }
+    #adminApp .tbl { display: table; overflow-x: auto; }
+
+    /* ========== ADMIN SIDEBAR MOBILE ========== */
+    @media (max-width: 768px) {
+      /* Sidebar full height + scroll */
+      #adminApp aside,
+      #adminApp [class*="sidebar"],
+      #adminApp nav[class*="fixed"] {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        bottom: 0 !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        width: 280px !important;
+        max-width: 85vw !important;
+        z-index: 100 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        background: #0a0a0a !important;
+        padding-bottom: 100px !important;
+      }
+      
+      /* Menu list scroll */
+      #adminApp aside nav,
+      #adminApp aside ul {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 20px !important;
+      }
+
+      /* Menu item */
+      #adminApp aside button {
+        padding: 14px 16px !important;
+        font-size: 14px !important;
+      }
+
+      /* Tombol close/hamburger z-index di atas sidebar */
+      #adminApp button[onclick*="closeSb"],
+      #adminApp .sb-close {
+        z-index: 110 !important;
+      }
+
+      /* Overlay */
+      .sb-overlay {
+        position: fixed !important;
+        inset: 0 !important;
+        background: rgba(0,0,0,0.7) !important;
+        z-index: 99 !important;
+        backdrop-filter: blur(4px) !important;
+      }
+    }
+
+    /* ========== FORM LOGIN ADMIN MOBILE ========== */
+    @media (max-width: 768px) {
+      #adminApp input[type="password"],
+      #adminApp input[type="email"],
+      #adminApp input.inp {
+        padding-right: 44px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Icon mata di dalam input */
+      #adminApp .relative > button[onclick*="password"],
+      #adminApp .relative > button[onclick*="toggle"] {
+        position: absolute !important;
+        right: 12px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        z-index: 10 !important;
+      }
+
+      /* Form login card */
+      #adminApp .max-w-md,
+      #adminApp .max-w-lg {
+        max-width: 100% !important;
+        padding: 20px 16px !important;
+        margin: 0 8px !important;
       }
     }
   </style>
