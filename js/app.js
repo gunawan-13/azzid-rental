@@ -3315,6 +3315,11 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  // LOCK_ADMIN_STATE — kalau di admin, jangan renderC
+  if (location.hash.startsWith("#/admin") && window.__adminLocked) {
+    console.log("🔒 renderC diblok — di admin");
+    return;
+  }
   try{const _sca=document.getElementById("custApp");if(_sca)_sca.style.display="block";const _saa=document.getElementById("adminApp");if(_saa)_saa.style.display="none";}catch(_){}
   if(location.hash.startsWith("#/admin"))return;
   const h = location.hash.replace(/^#\/?/, '');
@@ -3370,10 +3375,12 @@ function route() {
     if (ca) { ca.style.display = "none"; ca.classList.add("hidden"); }
     if (aa) { aa.style.display = "block"; aa.classList.remove("hidden"); }
     if (typeof renderA === "function") renderA();
+    window.__adminLocked = true;
     return;
   }
   
   // === PUBLIC ROUTE ===
+  window.__adminLocked = false;
   var ca2 = document.getElementById("custApp");
   var aa2 = document.getElementById("adminApp");
   if (ca2) { ca2.style.display = ""; ca2.classList.remove("hidden"); }
