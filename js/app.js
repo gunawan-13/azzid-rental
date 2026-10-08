@@ -1604,13 +1604,13 @@ function renderA() {
       <div class="relative w-full max-w-4xl grid lg:grid-cols-2 card overflow-hidden bg-ink-800/90 backdrop-blur-xl rv on" id="loginCard">
         <div class="hidden lg:flex flex-col justify-between p-9 bg-gradient-to-br from-maroon-800 via-maroon-700 to-ink-900 relative overflow-hidden">
           <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-20">
-          <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-11 h-11 rounded-xl shadow-glow shrink-0 object-cover">
+          <div class="relative"><div class="flex items-center gap-3 mb-10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-11 h-11 rounded-full shrink-0 object-contain">
             <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[10px] tracking-[.3em] text-red-200">ADMIN DASHBOARD</div></div></div>
             <h2 class="font-display font-extrabold text-3xl leading-tight">Dashboard Operasional Rental.</h2></div>
           <ul class="relative space-y-2.5 text-[13px] text-red-100">${['Overview · Booking · Calendar · Armada', 'Customer · Driver · Payment · Promo', 'Reports · CMS Website · Users & Roles · Settings', 'Kelola Sewa: mulai, perpanjang, pengembalian'].map(x => `<li class="flex gap-2.5"><span class="mt-1">${ic('check', 'w-4 h-4')}</span>${x}</li>`).join('')}</ul>
         </div>
         <div class="p-7 sm:p-9">
-          <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-10 h-10 rounded-lg shadow-glow shrink-0 object-cover">
+          <div class="lg:hidden flex items-center gap-2.5 mb-6"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-10 h-10 rounded-full shrink-0 object-contain">
             <div><div class="font-display font-bold">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted">ADMIN DASHBOARD</div></div></div>
           <h3 class="font-display font-bold text-xl mb-1">Login Admin</h3>
           <p class="text-[12.5px] text-muted mb-6">Masuk untuk membuka dashboard pengelolaan rental.</p>
@@ -1630,7 +1630,7 @@ function renderA() {
   const ong = ongoingCount();
   app.innerHTML = `<div class="h-screen bg-ink-950 flex overflow-hidden min-h-0">
     <aside id="aSb">
-      <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">
+      <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shrink-0 object-contain">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
       <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m => `<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView === m[0] ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2], 'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0] === 'rental' && ong ? `<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300">${ong}</span>` : ''}${m[0] === 'booking' && pend ? `<span class="badge bg-amber-400/20 border-amber-400/40 text-amber-300">${pend}</span>` : ''}</button>`).join('')}</nav>
@@ -1649,7 +1649,7 @@ function renderA() {
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('adminBellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
           <div id="adminBellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="notif-item flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer" data-notif-id="${n.bookingId || ""}"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
-        <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shadow-glow shrink-0 object-cover">
+        <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shrink-0 object-contain">
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
       </header>

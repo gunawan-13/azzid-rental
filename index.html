@@ -661,6 +661,96 @@ img {
   }
 }
 </style>
+<style id="LOGO_FIX">
+/* ============ LOGO HILANGKAN ABU ============ */
+/* Semua logo di header, footer, sidebar, login */
+#cHeader img,
+header img,
+footer img,
+#aSb img,
+#loginCard img,
+[class*="azzid-removebg"] {
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  background-color: transparent !important;
+}
+
+/* Hapus border/ring di sekitar logo */
+#cHeader a img,
+header a img,
+#loginCard img,
+#aSb > div:first-child img {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  border-radius: 50% !important;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+}
+
+/* Fallback — semua img dengan class rounded yang berisi logo */
+img[alt*="AZZID"],
+img[alt*="Azzid"] {
+  border-radius: 50% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  object-fit: contain !important;
+}
+
+/* ============ QUICK BOOKING ICON FIX ============ */
+/* Container ikon QB */
+.card .flex.items-center > span:first-child,
+.card > .flex:first-child > span:first-child,
+[class*="Quick Booking"] ~ * span:first-child {
+  display: grid !important;
+  place-items: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  vertical-align: middle !important;
+}
+
+/* SVG icon QB */
+.card > .flex:first-child svg,
+.card > .flex.items-center svg,
+.card [class*="bg-maroon-500"] svg {
+  display: block !important;
+  margin: 0 auto !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  stroke-width: 2 !important;
+  position: static !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+}
+
+/* Container icon QB */
+.card > .flex:first-child > span,
+.card > .flex.items-center > span:has(svg) {
+  display: inline-grid !important;
+  place-items: center !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  flex-shrink: 0 !important;
+  vertical-align: middle !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+</style>
 </head>
 
 
