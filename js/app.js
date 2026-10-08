@@ -1248,9 +1248,9 @@ function vBooking() {
 }
 
 async function bkLogin() {
-  const e = ($("bAuthE").value || "").trim().toLowerCase();
-  const p = $("bAuthP").value;
-  const err = $("bkAuthErr");
+  var e = ($("bAuthE").value || "").trim().toLowerCase();
+  var p = $("bAuthP").value;
+  var err = $("bkAuthErr");
   if (err) err.classList.add("hidden");
   
   if (!e || !p) {
@@ -1258,8 +1258,26 @@ async function bkLogin() {
     return;
   }
   
-  const users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
-  const user = users.find(u => u.email === e);
+  // Coba Supabase Auth dulu
+  if (window.supabaseClient) {
+    try {
+      var res = await window.supabaseClient.auth.signInWithPassword({ email: e, password: p });
+      if (res.error) throw res.error;
+      
+      var u = res.data.user;
+      S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || e.split("@")[0], phone: u.user_metadata?.phone || "" };
+      closeModal();
+      toast("Selamat datang, " + S.custSession.nama.split(" ")[0] + "!");
+      renderC();
+      return;
+    } catch (sbErr) {
+      console.warn("Supabase auth gagal, fallback lokal:", sbErr.message);
+    }
+  }
+  
+  // Fallback: login lokal (localStorage)
+  var users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
+  var user = users.find(function(u) { return u.email === e; });
   
   if (!user) {
     if (err) { err.textContent = "Akun tidak ditemukan. Silakan daftar."; err.classList.remove("hidden"); }
@@ -1277,11 +1295,11 @@ async function bkLogin() {
 }
 
 async function bkReg() {
-  const n = $("bRegN").value.trim();
-  const w = $("bRegW").value.trim();
-  const e = ($("bRegE").value || "").trim().toLowerCase();
-  const p = $("bRegP").value;
-  const err = $("bkRegErr");
+  var n = $("bRegN").value.trim();
+  var w = $("bRegW").value.trim();
+  var e = ($("bRegE").value || "").trim().toLowerCase();
+  var p = $("bRegP").value;
+  var err = $("bkRegErr");
   if (err) err.classList.add("hidden");
   
   if (!n || !w || !e || p.length < 6) {
@@ -1293,14 +1311,40 @@ async function bkReg() {
     return;
   }
   
-  // Simpan user lokal
-  const users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
-  if (users.find(u => u.email === e)) {
-    if (err) { err.textContent = "Email sudah terdaftar. Silakan login."; err.classList.remove("hidden"); }
-    return;
+  // Register ke Supabase Auth
+  if (window.supabaseClient) {
+    try {
+      var res = await window.supabaseClient.auth.signUp({
+        email: e,
+        password: p,
+        options: { data: { name: n, phone: w } }
+      });
+      if (res.error) throw res.error;
+      
+      // Simpan juga ke tabel users
+      await window.supabaseClient.from("users").insert({
+        email: e, name: n, phone: w, role: "user", status: "Active"
+      });
+      
+      S.custSession = { id: res.data.user?.id || "u-" + Date.now(), email: e, nama: n, phone: w };
+      closeModal();
+      toast("Akun berhasil dibuat. Selamat datang, " + n.split(" ")[0] + "!");
+      renderC();
+      return;
+    } catch (sbErr) {
+      console.warn("Supabase register gagal, fallback lokal:", sbErr.message);
+      if (err) { err.textContent = sbErr.message || "Registrasi gagal."; err.classList.remove("hidden"); }
+      return;
+    }
   }
   
-  const newUser = { id: "USR-" + Date.now(), email: e, password: p, nama: n, phone: w };
+  // Fallback lokal
+  var users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
+  if (users.find(function(u) { return u.email === e; })) {
+    if (err) { err.textContent = "Email sudah terdaftar."; err.classList.remove("hidden"); }
+    return;
+  }
+  var newUser = { id: "USR-" + Date.now(), email: e, password: p, nama: n, phone: w };
   users.push(newUser);
   localStorage.setItem("azzid_local_users", JSON.stringify(users));
   
