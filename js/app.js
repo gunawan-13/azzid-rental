@@ -3381,19 +3381,8 @@ function route() {
   if (typeof renderC === "function") renderC();
 }
 
+// Hashchange → route()
 window.addEventListener('hashchange', function() {
-  var h = location.hash || '#/';
-  // FORCE_ADMIN_ROUTE
-  if (h.indexOf('#/admin') === 0) {
-    try {
-      var ca = document.getElementById('custApp');
-      var aa = document.getElementById('adminApp');
-      if (ca) { ca.style.display = 'none'; ca.classList.add('hidden'); }
-      if (aa) { aa.style.display = 'block'; aa.classList.remove('hidden'); }
-      if (typeof renderA === 'function') renderA();
-      return;
-    } catch(e) { console.error('admin route error:', e); }
-  }
   if (typeof route === 'function') route();
 });
 window.addEventListener('scroll', () => {
