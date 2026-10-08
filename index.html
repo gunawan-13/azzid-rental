@@ -21,7 +21,7 @@
 <script src="js/tailwind.config.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/custom.css">
-<style>#hdrAdminBtn:not(.auth-ready),#mobAdminBtn:not(.auth-ready){visibility:hidden}</style><style>#custApp{opacity:1!important;transition:none!important}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe{max-width:100%;height:auto}.break-all{word-break:break-all}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe,table{max-width:100%}*{box-sizing:border-box}<style>#custApp{padding-top:90px;contain:layout}@media(min-width:1024px){#custApp{padding-top:106px}}#adminApp{padding-top:0}</style></style>
+<style>#hdrAdminBtn:not(.auth-ready),#mobAdminBtn:not(.auth-ready){visibility:hidden}</style><style></style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe{max-width:100%;height:auto}.break-all{word-break:break-all}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe,table{max-width:100%}*{box-sizing:border-box}<style>#custApp{padding-top:90px;contain:layout}@media(min-width:1024px){#custApp{padding-top:106px}}#adminApp{padding-top:0}</style></style>
   
   
   
@@ -557,35 +557,32 @@
 </style>
 
 
-<style id="FINAL_ANIM">
-/* ============ ANIMASI 1X + NO SHIFT ============ */
-@keyframes fadeInOnce {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
 
-/* CustApp — fade in 1x saja */
-#custApp {
-  opacity: 1 !important;
-  visibility: visible !important;
-  animation: fadeInOnce 0.4s ease 1 forwards !important;
-}
+<style id="ANTI_SHIFT_FINAL">
+/* ============ ANTI SHIFT FINAL ============ */
 
-/* Admin — fade in 1x */
-#adminApp {
-  opacity: 1 !important;
-  animation: fadeInOnce 0.3s ease 1 forwards !important;
-}
-
-/* HAPUS SEMUA animasi rv — langsung tampil */
-.rv {
+/* 1. HILANGKAN semua animasi rv */
+.rv, [class*="rv"] {
   opacity: 1 !important;
   transform: none !important;
   transition: none !important;
   animation: none !important;
 }
 
-/* Anti shift */
+/* 2. CustApp — TANPA fade animation (langsung tampil) */
+#custApp {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+#adminApp {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+/* 3. Prevent browser auto-restore scroll */
 html {
   overflow-anchor: none !important;
   scroll-behavior: auto !important;
@@ -597,12 +594,16 @@ body {
   overflow-x: hidden !important;
 }
 
-/* Hero — reserve height */
+/* 4. Hero — reserve height FIXED (tidak berubah) */
 #custApp section:first-child,
 #custApp section:first-of-type {
   min-height: 90vh !important;
+  max-height: none !important;
+  height: auto !important;
   contain: layout style !important;
+  display: block !important;
 }
+
 @media (max-width: 768px) {
   #custApp section:first-child,
   #custApp section:first-of-type {
@@ -610,10 +611,11 @@ body {
   }
 }
 
-/* Judul hero — reserve height */
+/* 5. Judul hero — reserve tinggi */
 #custApp section:first-child h1,
 #custApp section:first-of-type h1 {
   min-height: 96px !important;
+  display: block !important;
 }
 @media (min-width: 1024px) {
   #custApp section:first-child h1,
@@ -622,8 +624,41 @@ body {
   }
 }
 
+/* 6. Badge premium — reserve height */
+#custApp .badge {
+  display: inline-flex !important;
+  min-height: 30px !important;
+  align-items: center !important;
+}
+
+/* 7. Grid stats — reserve height */
+#custApp section:first-child .grid {
+  min-height: 120px !important;
+}
+
+/* 8. Image placeholder */
 img {
   background-color: #1a1a1a;
+}
+
+/* 9. Font — pakai fallback dulu */
+#custApp {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+/* 10. Prevent padding change */
+#custApp {
+  padding-top: 90px !important;
+}
+@media (min-width: 1024px) {
+  #custApp {
+    padding-top: 106px !important;
+  }
+}
+@media (max-width: 768px) {
+  #custApp {
+    padding-top: 88px !important;
+  }
 }
 </style>
 </head>

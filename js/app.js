@@ -3800,3 +3800,27 @@ if (document.readyState === "loading") {
 }
 
 console.log("✅ NO_SHIFT_JS: aktif");
+
+
+// ============================================
+// === FINAL_NO_SHIFT ===
+// ============================================
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+function __topHomeFinal() {
+  var h = location.hash || "";
+  if (h === "" || h === "#" || h === "#/") {
+    try { window.scrollTo(0, 0); } catch(e) {}
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", __topHomeFinal);
+} else {
+  __topHomeFinal();
+}
+window.addEventListener("load", __topHomeFinal);
+
+console.log("✅ FINAL_NO_SHIFT aktif");
