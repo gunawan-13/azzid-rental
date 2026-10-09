@@ -792,6 +792,16 @@ img {
 </style>
 
 <style id="FORCE_FAQ_FIX">
+/* Hapus background dari semua elemen FAQ */
+.acc,
+.acc button,
+.acc button > span,
+.acc button > span:first-child {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Span pertanyaan — horizontal + putih */
 .acc button > span:first-child {
   display: block !important;
   width: auto !important;
@@ -806,29 +816,30 @@ img {
   font-weight: 600 !important;
   font-size: 14.5px !important;
   line-height: 1.5 !important;
-  background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
   border: none !important;
 }
+
+/* Button — padding lega */
 .acc button {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
   text-align: left !important;
-  padding: 16px 24px !important;
-  background: transparent !important;
+  padding: 20px 32px !important;
   border: none !important;
   gap: 16px !important;
 }
+
+/* Icon + tetap kanan */
 .acc button > .acc-ic {
   display: inline-block !important;
   flex-shrink: 0 !important;
   color: #f87171 !important;
   font-size: 20px !important;
   line-height: 1 !important;
-  background: transparent !important;
   padding: 0 !important;
   margin: 0 !important;
 }
