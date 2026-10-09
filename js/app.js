@@ -3979,46 +3979,107 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 })();
 
 
+
+
 // ============================================
-// === FORCE_FAQ_JS — paksa FAQ horizontal via JS
+// === FORCE_FAQ_JS_V2 — super agresif, tiap 1 detik ===
 // ============================================
 (function() {
   function fixFaq() {
+    document.querySelectorAll('.acc').forEach(function(acc) {
+      acc.style.setProperty('background', 'transparent', 'important');
+      acc.style.setProperty('background-color', 'transparent', 'important');
+      acc.style.setProperty('border', '1px solid rgba(255,255,255,0.06)', 'important');
+      acc.style.setProperty('border-radius', '12px', 'important');
+      acc.style.setProperty('overflow', 'hidden', 'important');
+    });
+    
     document.querySelectorAll('.acc button').forEach(function(btn) {
+      // Reset semua background
+      btn.style.setProperty('background', 'transparent', 'important');
+      btn.style.setProperty('background-color', 'transparent', 'important');
+      btn.style.setProperty('background-image', 'none', 'important');
+      btn.style.setProperty('border', 'none', 'important');
+      btn.style.setProperty('box-shadow', 'none', 'important');
+      
+      // Layout
       btn.style.setProperty('width', '100%', 'important');
       btn.style.setProperty('display', 'flex', 'important');
-      btn.style.setProperty('text-align', 'left', 'important');
       btn.style.setProperty('align-items', 'center', 'important');
       btn.style.setProperty('justify-content', 'space-between', 'important');
-      btn.style.setProperty('gap', '16px', 'important');
+      btn.style.setProperty('padding', '20px 28px', 'important');
+      btn.style.setProperty('gap', '12px', 'important');
+      btn.style.setProperty('min-height', '64px', 'important');
+      btn.style.setProperty('text-align', 'left', 'important');
+      btn.style.setProperty('cursor', 'pointer', 'important');
       
-      var spans = btn.querySelectorAll('span');
+      // Span pertanyaan
+      const spans = btn.querySelectorAll('span');
       if (spans.length > 0) {
-        var q = spans[0];
+        const q = spans[0];
         q.style.setProperty('display', 'block', 'important');
         q.style.setProperty('flex', '1', 'important');
         q.style.setProperty('width', 'auto', 'important');
         q.style.setProperty('min-width', '0', 'important');
         q.style.setProperty('max-width', 'none', 'important');
-        q.style.setProperty('text-align', 'left', 'important');
-        q.style.setProperty('color', '#fff', 'important');
+        q.style.setProperty('background', 'transparent', 'important');
+        q.style.setProperty('background-color', 'transparent', 'important');
+        q.style.setProperty('background-image', 'none', 'important');
+        q.style.setProperty('color', '#ffffff', 'important');
         q.style.setProperty('font-weight', '600', 'important');
+        q.style.setProperty('font-size', '14.5px', 'important');
+        q.style.setProperty('line-height', '1.4', 'important');
+        q.style.setProperty('text-align', 'left', 'important');
+        q.style.setProperty('padding', '0', 'important');
+        q.style.setProperty('margin', '0', 'important');
+        q.style.setProperty('border', 'none', 'important');
         q.style.setProperty('word-break', 'normal', 'important');
-        q.style.setProperty('overflow-wrap', 'break-word', 'important');
         q.style.setProperty('white-space', 'normal', 'important');
+        q.style.setProperty('overflow-wrap', 'break-word', 'important');
+      }
+      
+      // Icon +
+      const icon = btn.querySelector('.acc-ic');
+      if (icon) {
+        icon.style.setProperty('display', 'inline-flex', 'important');
+        icon.style.setProperty('align-items', 'center', 'important');
+        icon.style.setProperty('justify-content', 'center', 'important');
+        icon.style.setProperty('flex-shrink', '0', 'important');
+        icon.style.setProperty('color', '#f87171', 'important');
+        icon.style.setProperty('font-size', '22px', 'important');
+        icon.style.setProperty('line-height', '1', 'important');
+        icon.style.setProperty('width', '24px', 'important');
+        icon.style.setProperty('height', '24px', 'important');
+        icon.style.setProperty('background', 'transparent', 'important');
+      }
+    });
+    
+    // Paksa max-width section FAQ
+    document.querySelectorAll('section').forEach(function(s) {
+      if (s.textContent.includes('Pertanyaan yang Sering')) {
+        s.style.setProperty('max-width', '512px', 'important');
+        s.style.setProperty('margin-left', 'auto', 'important');
+        s.style.setProperty('margin-right', 'auto', 'important');
       }
     });
   }
   
-  // Jalankan setelah DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(fixFaq, 500); });
-  } else {
+  function run() {
+    fixFaq();
+    setTimeout(fixFaq, 100);
     setTimeout(fixFaq, 500);
+    setTimeout(fixFaq, 1000);
+    setTimeout(fixFaq, 2000);
   }
   
-  // Re-run tiap 2 detik (kalau ada render ulang)
-  setInterval(fixFaq, 2000);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
   
-  console.log('FORCE_FAQ_JS aktif');
+  // Re-run tiap 1 detik (anti cache)
+  setInterval(fixFaq, 1000);
+  
+  console.log('🔥 FORCE_FAQ_JS_V2 aktif');
 })();
