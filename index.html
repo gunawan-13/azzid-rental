@@ -801,7 +801,7 @@ img {
   background-color: transparent !important;
 }
 
-/* Span pertanyaan — horizontal + putih */
+/* Span pertanyaan — horizontal + putih + rata tengah vertikal */
 .acc button > span:first-child {
   display: block !important;
   width: auto !important;
@@ -819,29 +819,35 @@ img {
   padding: 0 !important;
   margin: 0 !important;
   border: none !important;
+  vertical-align: middle !important;
 }
 
-/* Button — padding lega */
+/* Button — padding lebih kecil + align tengah */
 .acc button {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
   text-align: left !important;
-  padding: 20px 32px !important;
+  padding: 16px 24px !important;
   border: none !important;
-  gap: 16px !important;
+  gap: 12px !important;
+  min-height: 56px !important;
 }
 
-/* Icon + tetap kanan */
+/* Icon + tetap kanan, rata tengah vertikal */
 .acc button > .acc-ic {
-  display: inline-block !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   flex-shrink: 0 !important;
   color: #f87171 !important;
   font-size: 20px !important;
   line-height: 1 !important;
   padding: 0 !important;
   margin: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 </style>
 </body>
