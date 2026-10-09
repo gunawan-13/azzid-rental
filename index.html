@@ -698,75 +698,39 @@ setTimeout(function() {
   }
 }, 2000);
 </script>
-<style id="SMOOTH_ANIM">
-/* ============ ANIMASI SMOOTH 1X ============ */
-@keyframes slideUpHero {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+
+<style id="ANIM_ONCE_PER_SESSION">
+/* ============ ANIMASI 1X PER SESSION ============ */
+
+/* Default — semua visible */
+.rv, .rv * {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-/* Hero — animasi slide-up smooth */
-#custApp section:first-child .rv,
-#custApp section:first-of-type .rv,
-#custApp section:first-child > div > .badge,
-#custApp section:first-child h1,
-#custApp section:first-child > p {
-  opacity: 0;
-  animation: slideUpHero 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
+/* KEYFRAMES */
+@keyframes slideUpSmooth {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Aktif HANYA kalau body punya class .anim-first-load */
+body.anim-first-load .hero-anim {
+  animation: slideUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
   animation-iteration-count: 1 !important;
 }
 
-/* Stagger delay untuk hero */
-#custApp section:first-child .badge {
-  animation-delay: 0.05s !important;
-}
-#custApp section:first-child h1 {
-  animation-delay: 0.15s !important;
-}
-#custApp section:first-child > p {
-  animation-delay: 0.3s !important;
-}
-#custApp section:first-child .btn,
-#custApp section:first-child a.btn {
-  opacity: 0;
-  animation: slideUpHero 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s 1 forwards !important;
-  animation-iteration-count: 1 !important;
-}
+/* Stagger hero */
+body.anim-first-load .hero-anim[data-anim="badge"] { animation-delay: 0.05s !important; }
+body.anim-first-load .hero-anim[data-anim="title"] { animation-delay: 0.15s !important; }
+body.anim-first-load .hero-anim[data-anim="text"]  { animation-delay: 0.30s !important; }
+body.anim-first-load .hero-anim[data-anim="btn"]   { animation-delay: 0.45s !important; }
+body.anim-first-load .hero-anim[data-anim="stat1"] { animation-delay: 0.55s !important; }
+body.anim-first-load .hero-anim[data-anim="stat2"] { animation-delay: 0.65s !important; }
+body.anim-first-load .hero-anim[data-anim="stat3"] { animation-delay: 0.75s !important; }
+body.anim-first-load .hero-anim[data-anim="stat4"] { animation-delay: 0.85s !important; }
 
-/* Stats — slide-up dengan stagger */
-#custApp section:first-child .grid > div,
-#custApp section:first-child .grid > div > div {
-  opacity: 0;
-  animation: slideUpHero 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
-  animation-iteration-count: 1 !important;
-}
-
-/* Stagger stats — 4 item */
-#custApp section:first-child .grid > div:nth-child(1) { animation-delay: 0.5s !important; }
-#custApp section:first-child .grid > div:nth-child(2) { animation-delay: 0.6s !important; }
-#custApp section:first-child .grid > div:nth-child(3) { animation-delay: 0.7s !important; }
-#custApp section:first-child .grid > div:nth-child(4) { animation-delay: 0.8s !important; }
-
-/* Quick Booking — slide dari kanan */
-#custApp section:first-child .card:has(.badge:has(.dot-live)),
-#custApp section:first-child .card.bg-ink-800 {
-  opacity: 0;
-  animation: slideUpHero 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s 1 forwards !important;
-  animation-iteration-count: 1 !important;
-}
-
-/* Hapus animasi lain di hero */
-#custApp section:first-child .rv {
-  transition: none !important;
-}
-
-/* ============ ANTI-SHIFT ============ */
+/* ============ ANTI SHIFT ============ */
 html {
   overflow-anchor: none !important;
   scroll-behavior: auto !important;
@@ -775,7 +739,6 @@ body {
   overflow-anchor: none !important;
 }
 
-/* Hero — reserve height */
 #custApp section:first-child,
 #custApp section:first-of-type {
   min-height: 90vh !important;
@@ -788,7 +751,6 @@ body {
   }
 }
 
-/* Judul hero — reserve */
 #custApp section:first-child h1 {
   min-height: 96px !important;
 }
@@ -798,7 +760,6 @@ body {
   }
 }
 
-/* Image placeholder */
 img {
   background-color: #1a1a1a;
 }

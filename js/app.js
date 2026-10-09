@@ -356,13 +356,13 @@ function vHome() {
     </div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-24 grid lg:grid-cols-[1.15fr_.85fr] gap-12 items-center w-full">
       <div class="min-w-0">
-        <span class="inline-flex items-center gap-2 badge bg-maroon-500/15 border-maroon-500/40 text-red-300 mb-6">${ic('shield', 'w-3.5 h-3.5')} PREMIUM & RELIABLE CAR RENTAL</span>
-        <h1 class="font-display font-extrabold text-4xl sm:text-5xl xl:text-[62px] leading-[1.05] tracking-tight">
-          <span class="hline"><span style="animation-delay:.15s">${esc(S.cms.head1)}</span></span>
-          <span class="hline"><span style="animation-delay:.32s" class="text-transparent bg-clip-text bg-gradient-to-r from-maroon-400 to-red-500">${esc(S.cms.head2)}</span></span>
+        <span class="hero-anim inline-flex items-center gap-2 badge bg-maroon-500/15 border-maroon-500/40 text-red-300 mb-6" data-anim="badge">${ic('shield', 'w-3.5 h-3.5')} PREMIUM & RELIABLE CAR RENTAL</span>
+        <h1 class="hero-anim font-display font-extrabold text-4xl sm:text-5xl xl:text-[62px] leading-[1.05] tracking-tight" data-anim="title">
+          <span>${esc(S.cms.head1)}</span></span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-maroon-400 to-red-500">${esc(S.cms.head2)}</span></span>
         </h1>
-        <p class="mt-5 text-zinc-300 max-w-xl text-[15px] sm:text-base leading-relaxed">${esc(S.cms.sub)}</p>
-        <div class="mt-8 flex flex-wrap gap-4">
+        <p class="hero-anim mt-5 text-zinc-300 max-w-xl text-[15px] sm:text-base leading-relaxed" data-anim="text">${esc(S.cms.sub)}</p>
+        <div class="hero-anim mt-8 flex flex-wrap gap-4" data-anim="btn">
           <a href="https://wa.me/6281291663498?text=Halo%20AZZID%20RENTCAR%2C%20saya%20ingin%20bertanya" target="_blank" class="btn btn-m">${ic("phone")} Hubungi Kami</a>
           <a href="#/armada" class="btn btn-g">${ic('car')} Lihat Armada</a>
         </div>
@@ -372,7 +372,7 @@ function vHome() {
             ['3500', '+', 'Perjalanan'],
             ['4.9', '', 'Rating /5'],
             ['5', '+', 'Tahun']
-          ].map((s, i) => `<div class="" style="transition-delay:${i * 100}ms">
+          ].map((s, i) => `<div class="hero-anim" style="transition-delay:${i * 100}ms" data-anim="stat${i+1}">
             <div class="font-display font-extrabold text-2xl text-white"><span data-cu="${s[0]}" data-suf="${s[1]}">0</span></div>
             <div class="text-[11px] uppercase tracking-widest text-muted mt-1">${s[2]}</div>
           </div>`).join('')}
