@@ -792,12 +792,11 @@ img {
 </style>
 
 <style id="FORCE_FAQ_FIX">
-.acc button > span:first-child,
-.acc button > span:not(.acc-ic) {
+.acc button > span:first-child {
   display: block !important;
   width: auto !important;
   max-width: none !important;
-  flex: 1 1 100% !important;
+  flex: 1 1 auto !important;
   min-width: 0 !important;
   word-break: normal !important;
   overflow-wrap: break-word !important;
@@ -805,7 +804,12 @@ img {
   text-align: left !important;
   color: #fff !important;
   font-weight: 600 !important;
+  font-size: 14.5px !important;
   line-height: 1.5 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
 }
 .acc button {
   display: flex !important;
@@ -813,6 +817,20 @@ img {
   justify-content: space-between !important;
   width: 100% !important;
   text-align: left !important;
+  padding: 16px 24px !important;
+  background: transparent !important;
+  border: none !important;
+  gap: 16px !important;
+}
+.acc button > .acc-ic {
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  color: #f87171 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 </style>
 </body>
