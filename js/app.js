@@ -3850,6 +3850,11 @@ window.addEventListener("hashchange", function() {
 
 // Force route saat load — handle refresh
 function __forceAdminRoute() {
+  // Skip kalau bukan admin route
+  var __h = location.hash || "";
+  if (__h.indexOf("#/admin") !== 0) {
+    return;
+  }
   if (typeof route === "function") route();
 }
 
