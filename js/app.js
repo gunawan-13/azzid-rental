@@ -3977,3 +3977,48 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     console.log("⏭️ Animasi skip (bukan first load)");
   }
 })();
+
+
+// ============================================
+// === FORCE_FAQ_JS — paksa FAQ horizontal via JS
+// ============================================
+(function() {
+  function fixFaq() {
+    document.querySelectorAll('.acc button').forEach(function(btn) {
+      btn.style.setProperty('width', '100%', 'important');
+      btn.style.setProperty('display', 'flex', 'important');
+      btn.style.setProperty('text-align', 'left', 'important');
+      btn.style.setProperty('align-items', 'center', 'important');
+      btn.style.setProperty('justify-content', 'space-between', 'important');
+      btn.style.setProperty('gap', '16px', 'important');
+      
+      var spans = btn.querySelectorAll('span');
+      if (spans.length > 0) {
+        var q = spans[0];
+        q.style.setProperty('display', 'block', 'important');
+        q.style.setProperty('flex', '1', 'important');
+        q.style.setProperty('width', 'auto', 'important');
+        q.style.setProperty('min-width', '0', 'important');
+        q.style.setProperty('max-width', 'none', 'important');
+        q.style.setProperty('text-align', 'left', 'important');
+        q.style.setProperty('color', '#fff', 'important');
+        q.style.setProperty('font-weight', '600', 'important');
+        q.style.setProperty('word-break', 'normal', 'important');
+        q.style.setProperty('overflow-wrap', 'break-word', 'important');
+        q.style.setProperty('white-space', 'normal', 'important');
+      }
+    });
+  }
+  
+  // Jalankan setelah DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(fixFaq, 500); });
+  } else {
+    setTimeout(fixFaq, 500);
+  }
+  
+  // Re-run tiap 2 detik (kalau ada render ulang)
+  setInterval(fixFaq, 2000);
+  
+  console.log('FORCE_FAQ_JS aktif');
+})();
