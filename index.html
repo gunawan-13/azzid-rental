@@ -762,6 +762,44 @@ footer img,
   align-items: center !important;
 }
 </style>
+<style id="FIX_FOUT_FLASH">
+/* ============ FIX FOUT FLASH ============ */
+/* Sembunyikan body sampai CSS ready */
+html {
+  visibility: hidden !important;
+  background: #0a0a0a !important;
+}
+body {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  background: #0a0a0a !important;
+  transition: opacity 0.15s ease !important;
+}
+html.ready,
+body.ready {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+/* Fallback — kalau JS error, tetap tampil setelah 2 detik */
+html.force-show,
+body.force-show {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+/* Prevent flash dari elemen hero */
+#custApp {
+  background: #0a0a0a !important;
+}
+</style>
+<script>
+/* Pasang force-show setelah 2 detik sebagai fallback */
+setTimeout(function() {
+  if (!document.documentElement.classList.contains('ready')) {
+    document.documentElement.classList.add('force-show');
+    document.body.classList.add('force-show');
+  }
+}, 2000);
+</script>
 </head>
 
 

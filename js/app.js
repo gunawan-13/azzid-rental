@@ -3911,3 +3911,36 @@ window.addEventListener("load", function() {
 window.addEventListener("pageshow", function() { __forceTop(); });
 
 console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
+
+
+// ============================================
+// === FIX_FOUT_READY ===
+// ============================================
+// Set body ready SETELAH CSS + JS siap — cegah flash footer
+function __makeReady() {
+  try {
+    document.documentElement.classList.add("ready");
+    document.body.classList.add("ready");
+    console.log("✅ Body ready — visible");
+  } catch(e) {}
+}
+
+// Panggil di multiple timing
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    // Delay sedikit biar CSS ke-apply
+    requestAnimationFrame(function() {
+      setTimeout(__makeReady, 10);
+    });
+  });
+} else {
+  requestAnimationFrame(function() {
+    setTimeout(__makeReady, 10);
+  });
+}
+
+// Safety — paksa ready setelah 1.5s (jangan sampai blank)
+setTimeout(__makeReady, 1500);
+window.addEventListener("load", __makeReady);
+
+console.log("✅ FIX_FOUT_READY aktif");
