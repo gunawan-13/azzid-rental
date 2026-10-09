@@ -465,7 +465,7 @@ function vHome() {
       <p class="text-[11.5px] text-muted mt-3">Bantu kami berkembang — tulis pengalaman Anda di Google Maps</p>
     </div>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${TESTIMONIALS.slice(0,3).map((t, i) => `<div class="card p-6 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms">
-      <div class="flex gap-1 mb-3">${[1, 1, 1, 1, 1].map(x => starIc(x)).join('')}</div>
+      <div class="flex gap-1 mb-3" style="display:flex!important;gap:4px!important;justify-content:flex-start!important;align-items:center!important;">${[1, 1, 1, 1, 1].map(x => starIc(x)).join('')}</div>
       <p class="text-[13.5px] text-zinc-300 leading-relaxed mb-5">“${t.t}”</p>
       <div class="flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-maroon-500/20 text-maroon-400 grid place-items-center font-display font-bold">${t.n[0]}</span>
         <div class="min-w-0"><div class="font-semibold text-sm">${t.n}</div><div class="text-[11px] text-muted">${t.r}</div></div>

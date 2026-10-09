@@ -775,5 +775,20 @@ img {
 <script src="js/crud.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/app.js"></script>
+<style>
+/* FAQ FIX — paksa teks horizontal */
+.acc button,
+.acc button > span:first-child {
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+  text-align: left !important;
+}
+.acc button > span:first-child {
+  color: #fff !important;
+}
+</style>
 </body>
 </html>
