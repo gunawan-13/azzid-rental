@@ -793,15 +793,15 @@ img {
 
 <style id="FORCE_FAQ_FIX">
 /* Hapus background dari semua elemen FAQ */
-.acc,
-.acc button,
-.acc button > span,
-.acc button > span:first-child {
+.acc, .acc *, .acc button, .acc button *,
+.acc-body, .acc-body *,
+.acc .rv, .acc .card {
   background: transparent !important;
   background-color: transparent !important;
+  background-image: none !important;
 }
 
-/* Span pertanyaan — horizontal + putih + rata tengah vertikal */
+/* Span pertanyaan — horizontal + putih + presisi */
 .acc button > span:first-child {
   display: block !important;
   width: auto !important;
@@ -815,24 +815,24 @@ img {
   color: #fff !important;
   font-weight: 600 !important;
   font-size: 14.5px !important;
-  line-height: 1.5 !important;
+  line-height: 1.4 !important;
   padding: 0 !important;
   margin: 0 !important;
   border: none !important;
-  vertical-align: middle !important;
 }
 
-/* Button — padding lebih kecil + align tengah */
+/* Button — padding lebih lega + align tengah presisi */
 .acc button {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
   text-align: left !important;
-  padding: 16px 24px !important;
+  padding: 20px 28px !important;
   border: none !important;
   gap: 12px !important;
-  min-height: 56px !important;
+  min-height: 64px !important;
+  line-height: 1.4 !important;
 }
 
 /* Icon + tetap kanan, rata tengah vertikal */
@@ -842,7 +842,7 @@ img {
   justify-content: center !important;
   flex-shrink: 0 !important;
   color: #f87171 !important;
-  font-size: 20px !important;
+  font-size: 22px !important;
   line-height: 1 !important;
   padding: 0 !important;
   margin: 0 !important;
