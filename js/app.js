@@ -1,3 +1,9 @@
+// === SCROLL_RESTORE_EARLY (WAJIB paling atas) ===
+try {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+} catch(e) {}
 window.__authReady = false;
 /* ================= VEHICLE API ================= */
 
@@ -3864,3 +3870,44 @@ window.addEventListener("beforeunload", function() {
 });
 
 console.log("✅ FINAL_HASHCHANGE aktif");
+
+
+// ============================================
+// === FORCE_SCROLL_HOME_V2 ===
+// ============================================
+function __forceTop() {
+  var h = location.hash || "";
+  var isHome = (h === "" || h === "#" || h === "#/");
+  if (!isHome) return;
+  
+  // Multiple method untuk memastikan
+  try { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); } catch(e) {}
+  try { window.scrollTo(0, 0); } catch(e) {}
+  try { document.documentElement.scrollTop = 0; } catch(e) {}
+  try { document.body.scrollTop = 0; } catch(e) {}
+}
+
+// Panggil di multiple timing — anti-fail
+__forceTop();
+[10, 50, 100, 200, 300, 500].forEach(function(ms) {
+  setTimeout(__forceTop, ms);
+});
+
+// DOM ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    __forceTop();
+    [10, 50, 100, 200].forEach(function(ms) { setTimeout(__forceTop, ms); });
+  });
+}
+
+// Window load
+window.addEventListener("load", function() {
+  __forceTop();
+  [50, 100, 200, 500].forEach(function(ms) { setTimeout(__forceTop, ms); });
+});
+
+// Page show (bfcache)
+window.addEventListener("pageshow", function() { __forceTop(); });
+
+console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
