@@ -3914,33 +3914,40 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FIX_FOUT_READY ===
+
+
+
 // ============================================
-// Set body ready SETELAH CSS + JS siap — cegah flash footer
-function __makeReady() {
-  try {
-    document.documentElement.classList.add("ready");
-    document.body.classList.add("ready");
-    console.log("✅ Body ready — visible");
-  } catch(e) {}
-}
+// === ANIM_FLAG_LOGIC ===
+// ============================================
+(function() {
+  var KEY = "azzid_anim_shown";
+  var isFirstLoad = !sessionStorage.getItem(KEY);
 
-// Panggil di multiple timing
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", function() {
-    // Delay sedikit biar CSS ke-apply
-    requestAnimationFrame(function() {
-      setTimeout(__makeReady, 10);
-    });
-  });
-} else {
-  requestAnimationFrame(function() {
-    setTimeout(__makeReady, 10);
-  });
-}
+  if (isFirstLoad) {
+    // Set flag — animation hanya 1x per session
+    try { sessionStorage.setItem(KEY, "1"); } catch(e) {}
 
-// Safety — paksa ready setelah 1.5s (jangan sampai blank)
-setTimeout(__makeReady, 1500);
-window.addEventListener("load", __makeReady);
+    // Tambah class anim-first-load ke body
+    function addAnimClass() {
+      try {
+        document.body.classList.add("anim-first-load");
 
-console.log("✅ FIX_FOUT_READY aktif");
+        // Hapus class setelah animation selesai (1.2s)
+        setTimeout(function() {
+          document.body.classList.remove("anim-first-load");
+        }, 1200);
+      } catch(e) {}
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", addAnimClass);
+    } else {
+      addAnimClass();
+    }
+
+    console.log("🎬 Animasi first load aktif");
+  } else {
+    console.log("⏭️ Animasi skip (bukan first load)");
+  }
+})();
