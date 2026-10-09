@@ -3932,11 +3932,6 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     function addAnimClass() {
       try {
         document.body.classList.add("anim-first-load");
-
-        // Hapus class setelah animation selesai (1.2s)
-        setTimeout(function() {
-          document.body.classList.remove("anim-first-load");
-        }, 2500);
       } catch(e) {}
     }
 
