@@ -707,40 +707,27 @@ setTimeout(function() {
   opacity: 1;
   transform: none;
 }
-.hero-anim {
-  opacity: 1;
-  transform: none;
-}
-
-/* KEYFRAMES */
+/* Hero-anim — animasi langsung */
 @keyframes slideUpSmooth {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 24px, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
+  0% { opacity: 0; transform: translate3d(0, 24px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-/* Aktif HANYA kalau body punya class .anim-first-load */
-body.anim-first-load .hero-anim {
-  animation: slideUpSmooth 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1 both !important;
-  animation-iteration-count: 1 !important;
+.hero-anim {
+  animation: slideUpSmooth 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1 both;
   will-change: transform, opacity;
   backface-visibility: hidden;
 }
 
-/* Stagger hero */
-body.anim-first-load .hero-anim[data-anim="badge"] { animation-delay: 0.05s !important; }
-body.anim-first-load .hero-anim[data-anim="title"] { animation-delay: 0.15s !important; }
-body.anim-first-load .hero-anim[data-anim="text"]  { animation-delay: 0.30s !important; }
-body.anim-first-load .hero-anim[data-anim="btn"]   { animation-delay: 0.45s !important; }
-body.anim-first-load .hero-anim[data-anim="stat1"] { animation-delay: 0.55s !important; }
-body.anim-first-load .hero-anim[data-anim="stat2"] { animation-delay: 0.65s !important; }
-body.anim-first-load .hero-anim[data-anim="stat3"] { animation-delay: 0.75s !important; }
-body.anim-first-load .hero-anim[data-anim="stat4"] { animation-delay: 0.85s !important; }
+.hero-anim[data-anim="badge"] { animation-delay: 0.05s; }
+.hero-anim[data-anim="title"] { animation-delay: 0.15s; }
+.hero-anim[data-anim="text"]  { animation-delay: 0.30s; }
+.hero-anim[data-anim="btn"]   { animation-delay: 0.45s; }
+.hero-anim[data-anim="stat1"] { animation-delay: 0.55s; }
+.hero-anim[data-anim="stat2"] { animation-delay: 0.65s; }
+.hero-anim[data-anim="stat3"] { animation-delay: 0.75s; }
+.hero-anim[data-anim="stat4"] { animation-delay: 0.85s; }
+
 
 /* ============ ANTI SHIFT ============ */
 html {

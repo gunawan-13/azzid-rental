@@ -3931,7 +3931,12 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     // Tambah class anim-first-load ke body
     function addAnimClass() {
       try {
+        if (document.body.classList.contains("anim-first-load")) {
+          console.log("🎬 anim-first-load SUDAH ADA, skip add");
+          return;
+        }
         document.body.classList.add("anim-first-load");
+        console.log("🎬 anim-first-load ADDED at", new Date().toISOString().slice(11,23));
       } catch(e) {}
     }
 
