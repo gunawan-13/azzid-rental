@@ -3364,6 +3364,13 @@ function renderC() {
 }
 
 function route() {
+  var __newRoute = location.hash || "#/";
+  if (window.__lastRoute === __newRoute) {
+    console.log("route skip — masih di", __newRoute);
+    return;
+  }
+  window.__lastRoute = __newRoute;
+  
   var h = location.hash || "#/";
   
   // === ADMIN ROUTE ===
