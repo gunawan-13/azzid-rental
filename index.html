@@ -704,20 +704,38 @@ setTimeout(function() {
 
 /* Default — semua visible */
 .rv, .rv * {
+  opacity: 1;
+  transform: none;
+}
+.rv.hero-anim,
+.rv .hero-anim,
+.hero-anim.rv {
+  opacity: 0;
+  transform: translateY(24px);
+}
+body.anim-first-load .hero-anim {
   opacity: 1 !important;
-  transform: none !important;
+  transform: translateY(0) !important;
 }
 
 /* KEYFRAMES */
 @keyframes slideUpSmooth {
-  0% { opacity: 0; transform: translateY(24px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 /* Aktif HANYA kalau body punya class .anim-first-load */
 body.anim-first-load .hero-anim {
-  animation: slideUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
+  animation: slideUpSmooth 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1 forwards !important;
   animation-iteration-count: 1 !important;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
 }
 
 /* Stagger hero */
