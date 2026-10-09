@@ -3936,7 +3936,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
         // Hapus class setelah animation selesai (1.2s)
         setTimeout(function() {
           document.body.classList.remove("anim-first-load");
-        }, 1200);
+        }, 2500);
       } catch(e) {}
     }
 
