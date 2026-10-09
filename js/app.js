@@ -3341,6 +3341,12 @@ function renderC() {
     console.log("🔒 renderC diblok — di admin");
     return;
   }
+  // SKIP_RERENDER — skip kalau sudah render & hash sama
+  if (window.__firstRenderDone && window.__lastRenderedHash === location.hash) {
+    console.log("[SKIP] renderC skip — hash sama");
+    return;
+  }
+  window.__lastRenderedHash = location.hash;
   try{const _sca=document.getElementById("custApp");if(_sca)_sca.style.display="block";const _saa=document.getElementById("adminApp");if(_saa)_saa.style.display="none";}catch(_){}
   if(location.hash.startsWith("#/admin"))return;
   const h = location.hash.replace(/^#\/?/, '');
@@ -3359,6 +3365,7 @@ function renderC() {
   else if (p[0] === 'kontak') html = vKontak();
   else html = vHome();
   main.innerHTML = html;
+  window.__firstRenderDone = true;
   revealInit();
   document.querySelectorAll('.navl').forEach(a => {
     const t = a.getAttribute('href').replace(/^#\//, '');
