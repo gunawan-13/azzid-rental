@@ -850,5 +850,25 @@ img {
   height: 24px !important;
 }
 </style>
+<style id="KILL_FAQ_RED_BG">
+/* Paksa SEMUA elemen FAQ tanpa background */
+.acc, .acc *, .acc button, .acc button *,
+.acc-body, .acc-body *,
+.acc .rv, .acc .card,
+#custApp .acc, #custApp .acc *,
+#custApp section:first-child .acc * {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Span pertanyaan — pastikan putih di atas hitam */
+.acc button > span:first-child {
+  color: #fff !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+</style>
 </body>
 </html>
