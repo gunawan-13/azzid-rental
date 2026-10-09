@@ -3321,6 +3321,13 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
+  // DOUBLE_RENDER_GUARD — cegah render ulang dalam 300ms
+  var __now = Date.now();
+  if (window.__lastRenderCTime && (__now - window.__lastRenderCTime) < 300) {
+    console.log("[SKIP] renderC double call");
+    return;
+  }
+  window.__lastRenderCTime = __now;
   // RENDER_C_GUARD — skip kalau di admin
   if (location.hash.indexOf("#/admin") === 0) {
     var aa = document.getElementById("adminApp");
