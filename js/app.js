@@ -513,7 +513,7 @@ function vArmada() {
     <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-15">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
       <span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Katalog Armada</span>
-      <h1 class="font-display font-extrabold text-4xl" style="margin:0 0 8px 0!important;padding:0!important;line-height:1.1!important;">Pilih Mobil Anda</h1><p class="text-muted text-sm" style="margin:0!important;padding:0!important;background:none!important;color:#9ca3af!important;font-size:13px!important;line-height:1.4!important;display:block!important;position:static!important;">Semua unit terawat, diasuransikan, dan siap jalan. Harga per 24 jam.</p>
+      <h1 class="font-display font-extrabold text-4xl" style="margin:0 0 8px 0!important;padding:0!important;line-height:1.1!important;">Pilih Mobil Anda</h1><!-- HAPUS_DESKRIPSI -->
     </div>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -592,14 +592,7 @@ function vDetail(slug) {
 }
 
 function vLayanan() {
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><p class="text-muted mt-2 text-sm max-w-2xl">Dari perjalanan harian hingga event premium — semua dilayani dengan standar yang sama: tepat waktu, terawat, transparan.</p></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><p class="text-[13.5px] text-muted leading-relaxed mb-4">${s.d}</p><button onclick="openBooking()" class="btn btn-g btn-sm mt-5 w-full">Booking Layanan</button></div>`).join('')}</section>`;
-}
-
-function vTentang() {
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5 overflow-hidden"><img src="${IMG.hero}" class="absolute inset-0 w-full h-full object-cover opacity-20"><div class="relative max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Tentang Kami</span><h1 class="font-display font-extrabold text-4xl mt-2">Drive Comfort. Travel Better.</h1></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 grid lg:grid-cols-2 gap-12 items-center">
-    <div class=""><img src="${IMG.fleet}" class="rounded-2xl border border-white/10 h-[420px] w-full object-cover" alt="Garasi AZZID"></div>
-    <div class="rv min-w-0"><h2 class="font-display font-bold text-3xl mb-5">Nyaman Berkendara, <span class="text-maroon-400">Tenang Bepergian.</span></h2>
-      <p class="text-muted text-[14.5px] leading-relaxed mb-4">AZZID RENTCAR berdiri sejak 2021 di Jakarta Selatan, dimulai dari 3 unit mobil dan satu keyakinan sederhana: rental mobil seharusnya mudah, transparan, dan bisa dipercaya.</p>
+  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><!-- HAPUS_DESKRIPSI --></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><!-- HAPUS_DESKRIPSI -->
       <p class="text-muted text-[14.5px] leading-relaxed mb-6">Kini kami melayani lebih dari 1.200 pelanggan — keluarga, pebisnis, perusahaan, hingga event organizer — dengan armada tahun muda yang diinspeksi menyeluruh sebelum setiap perjalanan.</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">${[
         ['Visi', 'Menjadi standar rental mobil premium paling terpercaya di Indonesia.'],
