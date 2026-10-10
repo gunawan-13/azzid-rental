@@ -4626,3 +4626,46 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(fix, 2000);
   console.log('🔥 FAQ_BINTANG_FORCE_JS aktif');
 })();
+
+
+// ============================================
+// === FORCE_MARQUEE_JS — paksa marquee jalan
+// ============================================
+(function() {
+  function force() {
+    var bar = document.getElementById('annBar');
+    if (!bar) return;
+    
+    // Paksa inline style — paling tinggi specificity
+    bar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+    bar.style.setProperty('animation-play-state', 'running', 'important');
+    bar.style.setProperty('animation-name', 'marqueeScroll', 'important');
+    bar.style.setProperty('animation-duration', '60s', 'important');
+    bar.style.setProperty('animation-timing-function', 'linear', 'important');
+    bar.style.setProperty('animation-iteration-count', 'infinite', 'important');
+    bar.style.setProperty('display', 'inline-block', 'important');
+    bar.style.setProperty('white-space', 'nowrap', 'important');
+    bar.style.setProperty('padding', '0', 'important');
+    bar.style.setProperty('margin', '0', 'important');
+    bar.style.setProperty('will-change', 'transform', 'important');
+    bar.style.setProperty('min-width', 'max-content', 'important');
+  }
+  
+  function run() {
+    force();
+    setTimeout(force, 100);
+    setTimeout(force, 300);
+    setTimeout(force, 800);
+    setTimeout(force, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  // Re-apply tiap 500ms — paksa terus
+  setInterval(force, 500);
+  console.log('🔥 FORCE_MARQUEE_JS aktif');
+})();

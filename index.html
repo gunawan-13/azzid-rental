@@ -449,10 +449,7 @@
       will-change: transform !important;
     }
 
-    @keyframes marqueeScroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
+    /* keyframes duplikat dihapus */
 
     
 
@@ -1445,34 +1442,42 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="FIX_MARQUEE">
-/* annBar — fix padding + animasi */
-#annBar {
+</style><style id="FORCE_MARQUEE">
+/* Marquee — paksa jalan */
+#annBar,
+html body #custApp #annBar,
+html body #custApp div.fixed #annBar {
   animation: marqueeScroll 60s linear infinite !important;
   animation-play-state: running !important;
+  animation-name: marqueeScroll !important;
+  animation-duration: 60s !important;
+  animation-timing-function: linear !important;
+  animation-iteration-count: infinite !important;
   display: inline-block !important;
   white-space: nowrap !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
   will-change: transform !important;
+  transform: translateX(0) !important;
   min-width: max-content !important;
 }
 
-@keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
+/* Keyframes baru */
+/* keyframes duplikat dihapus */
 
-/* Container — overflow hidden */
-#custApp > .fixed.top-0,
-#custApp > div.fixed {
+/* Parent container — overflow hidden */
+#custApp > div.fixed.top-0,
+#custApp > div.fixed.top-0 > div:first-child,
+#custApp > .fixed.top-0 {
   overflow: hidden !important;
   white-space: nowrap !important;
+  width: 100% !important;
 }
 
-/* Hover pause */
-#annBar:hover {
-  animation-play-state: paused !important;
+/* Hover pause — matikan dulu biar selalu jalan */
+#annBar:hover,
+#custApp:hover #annBar {
+  animation-play-state: running !important;
 }
 </style></body>
 </html>
