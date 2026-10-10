@@ -1053,5 +1053,37 @@ img {
   transition: transform 0.4s ease, border-color 0.3s ease !important;
 }
 </style>
-</body>
+<style id="KILL_TOTAL_ANIM_ARMADA">
+/* Matikan SEMUA animasi di halaman armada */
+#custApp,
+#custApp *,
+#custApp section,
+#custApp section *,
+.veh-card,
+.veh-card *,
+.grid,
+.grid * {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  animation-name: none !important;
+  animation-play-state: paused !important;
+  transition-delay: 0s !important;
+}
+
+/* KECUALIKAN hover card — tetap jalan */
+.veh-card:hover,
+.veh-card:hover * {
+  transition-delay: 0s !important;
+}
+
+/* KECUALIKAN hover section */
+.veh-card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease !important;
+}
+
+.veh-card:hover {
+  transform: translateY(-8px) !important;
+}
+</style></body>
 </html>
