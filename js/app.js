@@ -3707,19 +3707,27 @@ async function loadBookingsFromSupabase() {
         };
       });
       console.log("✅ Loaded", BOOKINGS.length, "bookings dari Supabase");
+      // Guard: hanya render kalau perlu
       if (typeof renderAdminBody === "function") renderAdminBody();
-      if (typeof renderC === "function") renderC();
+      // renderC() dihapus — biar tidak re-render home berulang
     }
   } catch (e) {
     console.warn("Load error:", e.message);
   }
 }
 
-// Auto-load saat Supabase ready
-window.addEventListener("supabase-ready", function() {
-  console.log("Supabase ready — load bookings...");
-  setTimeout(loadBookingsFromSupabase, 500);
-});
+// Auto-load saat Supabase ready — HANYA 1x (guard anti-loop)
+if (!window.__supabaseLoadDone) {
+  window.addEventListener("supabase-ready", function() {
+    if (window.__supabaseLoadDone) {
+      console.log("⏭️ Supabase load skip — sudah pernah");
+      return;
+    }
+    window.__supabaseLoadDone = true;
+    console.log("Supabase ready — load bookings...");
+    setTimeout(loadBookingsFromSupabase, 500);
+  });
+}
 
 // Kalau Supabase sudah ready
 if (window.supabaseClient) {
