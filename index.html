@@ -1445,5 +1445,67 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
+</style><style id="MARQUEE_CENTER">
+/* ============================================ */
+/* HEADER MERAH (annBar) — mulai dari TENGAH */
+/* ============================================ */
+#annBar {
+  padding-left: 50vw !important;
+  padding-right: 50vw !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  animation: marqueeScroll 80s linear infinite !important;
+  animation-play-state: running !important;
+  min-width: max-content !important;
+  will-change: transform !important;
+}
+
+/* Hover pause */
+#annBar:hover {
+  animation-play-state: paused !important;
+}
+
+/* ============================================ */
+/* HEADER NAVY (marquee-track) — tetap dari kanan */
+/* ============================================ */
+.marquee-track {
+  padding-left: 100vw !important;
+  padding-right: 0 !important;
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  animation: marqueeScroll 60s linear infinite !important;
+  animation-play-state: running !important;
+  min-width: max-content !important;
+}
+
+.marquee-track > span {
+  display: inline-flex !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused !important;
+}
+
+/* ============================================ */
+/* KEYFRAMES */
+/* ============================================ */
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ============================================ */
+/* CONTAINER */
+/* ============================================ */
+#custApp > div.fixed.top-0,
+#custApp > div.fixed.top-0 > div,
+#custApp > div.bg-ink-900.border-y {
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+}
 </style></body>
 </html>
