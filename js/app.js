@@ -3423,12 +3423,13 @@ function route() {
 
 // Hashchange → route()
 // hashchange removed
+// FIX_HEADER_STATIC: Header selalu transparan, tidak berubah saat scroll
 window.addEventListener('scroll', () => {
   const hd = $('cHeader');
-  const on = window.scrollY > 40;
-  hd.style.background = on ? 'rgba(11,11,13,.92)' : 'transparent';
-  hd.style.backdropFilter = on ? 'blur(14px)' : 'none';
-  hd.style.borderColor = on ? 'rgba(255,255,255,.06)' : 'transparent';
+  if (!hd) return;
+  hd.style.background = 'transparent';
+  hd.style.backdropFilter = 'none';
+  hd.style.borderColor = 'transparent';
 });
 
 applyCms();
