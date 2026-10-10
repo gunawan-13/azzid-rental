@@ -1597,5 +1597,37 @@ footer a[href="#/faq"],
 footer a[href*="/faq"] {
   display: none !important;
 }
+</style><style id="RAPAT_FILTER">
+/* Button filter armada — rapatkan */
+#custApp section:has(.veh-card) .flex.flex-wrap.gap-2,
+#custApp section:has(.veh-card) div:has(> button),
+#custApp .card .flex.flex-wrap {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+/* Setiap button filter */
+#custApp .card button,
+#custApp .card button.chip,
+#custApp button.chip {
+  padding: 8px 16px !important;
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+  border-radius: 999px !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Active button (Semua) */
+#custApp .card button.chip.active,
+#custApp .card button[class*="bg-maroon"],
+#custApp button.chip[class*="bg-maroon"] {
+  background: #dc2626 !important;
+  color: #fff !important;
+}
 </style></body>
 </html>
