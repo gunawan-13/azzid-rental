@@ -4435,3 +4435,75 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(fix, 2000);
   console.log('🔥 FIX_ARMADA_FINAL aktif');
 })();
+
+
+// ============================================
+// === FIX_HAPUS_ABU_ARMADA — hapus kotak abu-abu + rapatkan teks
+// ============================================
+(function() {
+  function fix() {
+    const h1 = [...document.querySelectorAll('h1, h2')].find(el =>
+      el.textContent.trim() === 'Pilih Mobil Anda'
+    );
+    if (!h1) return;
+    
+    const sec = h1.closest('section');
+    if (!sec) return;
+    
+    // 1. Hapus semua overlay/image di section header
+    sec.querySelectorAll('img, div[class*="absolute"]').forEach(function(el) {
+      if (el === h1 || el.contains(h1)) return;
+      const cls = el.className || '';
+      if (cls.includes('absolute') || el.tagName === 'IMG') {
+        el.style.setProperty('display', 'none', 'important');
+        console.log('🗑️ Hapus overlay:', el.tagName, cls.substring(0, 40));
+      }
+    });
+    
+    // 2. Hapus min-height section
+    sec.style.setProperty('min-height', '0', 'important');
+    sec.style.setProperty('height', 'auto', 'important');
+    sec.style.setProperty('padding-top', '24px', 'important');
+    sec.style.setProperty('padding-bottom', '24px', 'important');
+    
+    // 3. Rapatkan wrapper
+    const wrapper = h1.parentElement;
+    wrapper.style.setProperty('padding', '0', 'important');
+    wrapper.style.setProperty('min-height', '0', 'important');
+    wrapper.style.setProperty('height', 'auto', 'important');
+    wrapper.style.setProperty('display', 'block', 'important');
+    wrapper.style.setProperty('gap', '0', 'important');
+    
+    // 4. Hapus background abu-abu di wrapper
+    wrapper.style.setProperty('background', 'transparent', 'important');
+    wrapper.style.setProperty('background-color', 'transparent', 'important');
+    
+    // 5. Rapatkan <p>
+    const p = [...sec.querySelectorAll('p')].find(el =>
+      el.textContent.includes('Semua unit terawat')
+    );
+    if (p) {
+      p.style.cssText = 'margin:8px 0 0 0!important;padding:0!important;background:transparent!important;background-color:transparent!important;color:#9ca3af!important;font-size:13px!important;line-height:1.5!important;display:block!important;position:static!important;';
+    }
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 200);
+    setTimeout(fix, 500);
+    setTimeout(fix, 1000);
+    setTimeout(fix, 2000);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  const obs = new MutationObserver(fix);
+  obs.observe(document.body, { childList: true, subtree: true });
+  
+  setInterval(fix, 1500);
+  console.log('🔥 FIX_HAPUS_ABU_ARMADA aktif');
+})();
