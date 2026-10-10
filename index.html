@@ -874,10 +874,25 @@ img {
 </style>
 
 <style id="CENTER_ICON_LAYANAN">
-/* Layanan card — HANYA icon di tengah */
-#custApp section .card > div:first-child:has(svg) {
-  margin-left: auto !important;
+/* Card layanan — kotak merah tetap KIRI */
+#custApp section .card:has(h3),
+#custApp section .card:has(button) {
+  text-align: left !important;
+}
+
+/* Kotak merah — hapus margin auto (balik ke kiri) */
+#custApp section .card:has(h3) > div:first-child,
+#custApp section .card:has(button) > div:first-child {
+  margin-left: 0 !important;
   margin-right: auto !important;
+}
+
+/* Icon SVG di dalam kotak merah — tengah */
+#custApp section .card > div:first-child svg,
+#custApp section .card > div[class*="w-12"] > svg,
+#custApp section .card > div[class*="w-11"] > svg {
+  margin: auto !important;
+  display: block !important;
 }
 </style>
 </body>

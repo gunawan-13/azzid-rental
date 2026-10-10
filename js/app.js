@@ -4086,3 +4086,44 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 FORCE_FAQ_JS_V2 aktif');
 })();
+
+
+// ============================================
+// === CENTER_ICON_INNER_JS — icon SVG di tengah kotak
+// ============================================
+(function() {
+  function centerInnerIcons() {
+    document.querySelectorAll('#custApp section .card > div').forEach(function(box) {
+      // Cek apakah ini kotak icon (punya w-11/w-12 + rounded + gradient)
+      const cls = box.className || '';
+      if (!cls.match(/w-1[12]/) || !cls.match(/rounded/)) return;
+      
+      // Paksa flex center
+      box.style.setProperty('display', 'flex', 'important');
+      box.style.setProperty('align-items', 'center', 'important');
+      box.style.setProperty('justify-content', 'center', 'important');
+      
+      // Icon SVG di dalam — pastikan center
+      const svg = box.querySelector('svg');
+      if (svg) {
+        svg.style.setProperty('margin', '0', 'important');
+        svg.style.setProperty('display', 'block', 'important');
+      }
+    });
+  }
+  
+  function run() {
+    centerInnerIcons();
+    setTimeout(centerInnerIcons, 500);
+    setTimeout(centerInnerIcons, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(centerInnerIcons, 2000);
+  console.log('🎯 CENTER_ICON_INNER_JS aktif');
+})();
