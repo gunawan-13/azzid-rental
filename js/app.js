@@ -4244,3 +4244,71 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(fixMobil, 1500);
   console.log('🔥 FIX_MOBIL_FULL aktif');
 })();
+
+
+// ============================================
+// === FIX_LOGIN_ADMIN_JS — form center + icon mata presisi
+// ============================================
+(function() {
+  function fixLogin() {
+    const pwdInput = document.querySelector('input[type="password"]');
+    if (!pwdInput) return;
+    
+    // Naik ke card login
+    let card = pwdInput.closest('[class*="card"]') || pwdInput.closest('[class*="rounded"]');
+    if (!card) {
+      card = pwdInput.closest('section') || pwdInput.parentElement.parentElement.parentElement;
+    }
+    
+    if (card) {
+      card.style.setProperty('max-width', '960px', 'important');
+      card.style.setProperty('width', '100%', 'important');
+      card.style.setProperty('margin-left', 'auto', 'important');
+      card.style.setProperty('margin-right', 'auto', 'important');
+    }
+    
+    // Input password wrapper + icon mata
+    document.querySelectorAll('input[type="password"], input[type="text"]').forEach(function(inp) {
+      inp.style.setProperty('padding-right', '48px', 'important');
+      
+      const wrapper = inp.parentElement;
+      if (wrapper) {
+        wrapper.style.setProperty('position', 'relative', 'important');
+        
+        const btn = wrapper.querySelector('button');
+        if (btn && btn.querySelector('svg')) {
+          btn.style.setProperty('position', 'absolute', 'important');
+          btn.style.setProperty('right', '16px', 'important');
+          btn.style.setProperty('top', '50%', 'important');
+          btn.style.setProperty('transform', 'translateY(-50%)', 'important');
+          btn.style.setProperty('width', '24px', 'important');
+          btn.style.setProperty('height', '24px', 'important');
+          btn.style.setProperty('padding', '0', 'important');
+          btn.style.setProperty('display', 'inline-flex', 'important');
+          btn.style.setProperty('align-items', 'center', 'important');
+          btn.style.setProperty('justify-content', 'center', 'important');
+          btn.style.setProperty('background', 'transparent', 'important');
+          btn.style.setProperty('border', 'none', 'important');
+          btn.style.setProperty('color', '#9ca3af', 'important');
+          btn.style.setProperty('cursor', 'pointer', 'important');
+        }
+      }
+    });
+  }
+  
+  function run() {
+    fixLogin();
+    setTimeout(fixLogin, 300);
+    setTimeout(fixLogin, 800);
+    setTimeout(fixLogin, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fixLogin, 1500);
+  console.log('🔥 FIX_LOGIN_ADMIN_JS aktif');
+})();

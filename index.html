@@ -895,5 +895,50 @@ img {
   display: block !important;
 }
 </style>
+
+<style id="FIX_LOGIN_ADMIN">
+/* Login admin — perpendek + center */
+#adminApp [class*="login"],
+#adminApp [class*="auth"],
+#adminApp > div > div[class*="card"],
+#adminApp section:has(input[type="password"]) {
+  max-width: 960px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Input password — icon mata presisi */
+#adminApp input[type="password"],
+#adminApp input[type="text"] {
+  padding-right: 48px !important;
+}
+
+/* Icon mata — posisi center vertikal + kanan */
+#adminApp button:has(svg[viewBox*="0 0 24 24"]):has(path[d*="M1"]),
+#adminApp button:has(svg):has(path[d*="eye"]),
+#adminApp button[onclick*="togglePassword"],
+#adminApp button[onclick*="togglePw"] {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  color: #9ca3af !important;
+  cursor: pointer !important;
+}
+
+/* Input wrapper — position relative */
+#adminApp div:has(> input[type="password"]) {
+  position: relative !important;
+}
+</style>
 </body>
 </html>
