@@ -4312,3 +4312,60 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(fixLogin, 1500);
   console.log('🔥 FIX_LOGIN_ADMIN_JS aktif');
 })();
+
+
+// ============================================
+// === FIX_ARMADA_HEADER_JS — rapatkan deskripsi ke judul
+// ============================================
+(function() {
+  function fixArmadaHeader() {
+    // Cari h1 "Pilih Mobil Anda"
+    const h1 = [...document.querySelectorAll('h1, h2')].find(el =>
+      el.textContent.includes('Pilih Mobil Anda') ||
+      el.textContent.includes('Katalog Armada')
+    );
+    if (!h1) return;
+    
+    // Cari <p> yang berisi "Semua unit terawat"
+    const p = [...document.querySelectorAll('p')].find(el =>
+      el.textContent.includes('Semua unit terawat') ||
+      el.textContent.includes('diasuransikan, dan siap jalan')
+    );
+    if (!p) return;
+    
+    // Hapus background merah di p
+    p.style.setProperty('background', 'transparent', 'important');
+    p.style.setProperty('background-color', 'transparent', 'important');
+    p.style.setProperty('padding', '0', 'important');
+    p.style.setProperty('margin-top', '8px', 'important');
+    p.style.setProperty('margin-bottom', '0', 'important');
+    
+    // Kalau parent p adalah section terpisah, rapatkan
+    const headerSection = h1.closest('section');
+    const pSection = p.closest('section');
+    
+    if (headerSection && pSection && headerSection !== pSection) {
+      // Kurangi padding atas section p
+      pSection.style.setProperty('padding-top', '8px', 'important');
+      
+      // Kurangi padding bawah header
+      headerSection.style.setProperty('padding-bottom', '0', 'important');
+    }
+  }
+  
+  function run() {
+    fixArmadaHeader();
+    setTimeout(fixArmadaHeader, 300);
+    setTimeout(fixArmadaHeader, 800);
+    setTimeout(fixArmadaHeader, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fixArmadaHeader, 1500);
+  console.log('🔥 FIX_ARMADA_HEADER_JS aktif');
+})();
