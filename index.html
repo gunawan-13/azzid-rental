@@ -970,44 +970,55 @@ img {
 </style>
 
 <style id="FIX_ARMADA_FLOAT">
-/* Header Armada — rapat */
-#custApp section:has(h1):has(+ section) > div {
-  padding-top: 16px !important;
-  padding-bottom: 16px !important;
-}
-
-#custApp section > div > h1 + p,
-#custApp section > div > span + h1 + p {
-  margin-top: 6px !important;
-  margin-bottom: 0 !important;
-  padding: 0 !important;
-  background: transparent !important;
-  position: relative !important;
-  top: 0 !important;
-}
-
-/* Section header — kurangi padding */
-#custApp section:has(h1):has(+ section) {
+/* ============ HEADER ARMADA — RAPAT ============ */
+/* Section header Armada (yang punya h1 "Pilih Mobil Anda") */
+#custApp section:has(> div > h1):has(+ section) {
   padding-top: 20px !important;
   padding-bottom: 20px !important;
   min-height: 0 !important;
+  animation: none !important;
+  transform: none !important;
 }
 
-/* ============================================ */
-/* ANIMASI NAIK TURUN PADA KOLOM (FLOAT) */
-/* ============================================ */
-@keyframes floatUpDown {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+/* Wrapper dalam header */
+#custApp section:has(> div > h1):has(+ section) > div {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  min-height: 0 !important;
 }
 
-/* Card mobil — float saat hover */
+/* h1 dan p di header — rapat */
+#custApp section:has(> div > h1):has(+ section) h1 {
+  margin-bottom: 6px !important;
+  margin-top: 0 !important;
+}
+
+#custApp section:has(> div > h1):has(+ section) p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: #9ca3af !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+
+#custApp section:has(> div > h1):has(+ section) > div > span:first-child {
+  display: block !important;
+  margin-bottom: 4px !important;
+}
+
+/* ============ HAPUS ANIMASI SECTION ============ */
+/* Matikan animasi float di section — biar tidak goyang */
+#custApp section:has(.veh-card) {
+  animation: none !important;
+  transform: none !important;
+}
+
+/* ============ CARD MOBIL — FLOAT HOVER (bukan loop) ============ */
 .veh-card {
-  transition: transform 0.5s ease, box-shadow 0.5s ease !important;
+  transition: transform 0.4s ease, box-shadow 0.4s ease !important;
+  animation: none !important;
 }
 
 .veh-card:hover {
@@ -1015,26 +1026,31 @@ img {
   box-shadow: 0 12px 30px rgba(220, 38, 38, 0.15) !important;
 }
 
-/* Section Armada — subtle float animation */
-#custApp section:has(.veh-card) {
-  animation: floatUpDown 6s ease-in-out infinite !important;
+/* ============ GAMBAR MOBIL — FULL WIDTH ============ */
+/* Container gambar — paksa full */
+.veh-card > div:first-child {
+  width: 100% !important;
+  height: 220px !important;
+  overflow: hidden !important;
+  position: relative !important;
 }
 
-/* Card testimonial — float saat hover */
+/* Gambar — isi penuh (crop) */
+.veh-card img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+}
+
+/* ============ CARD TESTIMONIAL — HOVER ============ */
 .card:has(.flex.gap-1):hover {
   transform: translateY(-6px) !important;
-  transition: transform 0.4s ease !important;
 }
 
-/* Card Layanan — float saat hover */
-.card:has(h3):hover {
-  transform: translateY(-6px) !important;
-  transition: transform 0.4s ease !important;
-}
-
-/* Semua card — smooth transition */
 .card {
-  transition: transform 0.4s ease, border-color 0.3s ease, box-shadow 0.4s ease !important;
+  transition: transform 0.4s ease, border-color 0.3s ease !important;
 }
 </style>
 </body>
