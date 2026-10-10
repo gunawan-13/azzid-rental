@@ -4558,3 +4558,83 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(hide, 2000);
   console.log('🔥 HIDE_ARMADA_HEADER_JS aktif');
 })();
+
+
+// ============================================
+// === FAQ_BINTANG_FORCE_JS — paksa FAQ horizontal + bintang rapat
+// ============================================
+(function() {
+  function fix() {
+    // FAQ buttons
+    document.querySelectorAll('.acc button').forEach(function(btn) {
+      btn.style.setProperty('display', 'flex', 'important');
+      btn.style.setProperty('align-items', 'center', 'important');
+      btn.style.setProperty('justify-content', 'space-between', 'important');
+      btn.style.setProperty('width', '100%', 'important');
+      btn.style.setProperty('padding', '16px 24px', 'important');
+      btn.style.setProperty('gap', '16px', 'important');
+      btn.style.setProperty('text-align', 'left', 'important');
+      btn.style.setProperty('background', 'transparent', 'important');
+      
+      var spans = btn.querySelectorAll('span');
+      if (spans.length > 0) {
+        var q = spans[0];
+        q.style.setProperty('display', 'block', 'important');
+        q.style.setProperty('flex', '1', 'important');
+        q.style.setProperty('width', 'auto', 'important');
+        q.style.setProperty('min-width', '0', 'important');
+        q.style.setProperty('text-align', 'left', 'important');
+        q.style.setProperty('color', '#fff', 'important');
+        q.style.setProperty('font-weight', '600', 'important');
+        q.style.setProperty('word-break', 'normal', 'important');
+        q.style.setProperty('white-space', 'normal', 'important');
+        q.style.setProperty('padding', '0', 'important');
+        q.style.setProperty('margin', '0', 'important');
+        q.style.setProperty('background', 'transparent', 'important');
+      }
+    });
+    
+    // Bintang review
+    document.querySelectorAll('.card > .flex.gap-1').forEach(function(el) {
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('gap', '4px', 'important');
+      el.style.setProperty('justify-content', 'flex-start', 'important');
+      el.style.setProperty('width', 'auto', 'important');
+    });
+    
+    // Nama testimonial
+    document.querySelectorAll('.card').forEach(function(card) {
+      if (!card.querySelector('.flex.gap-1 svg')) return;
+      if (!card.querySelector('.rounded-full')) return;
+      
+      card.style.setProperty('display', 'flex', 'important');
+      card.style.setProperty('flex-direction', 'column', 'important');
+      card.style.setProperty('height', '100%', 'important');
+      
+      var p = card.querySelector('p');
+      if (p) p.style.setProperty('flex', '1 1 auto', 'important');
+      
+      var nameRow = card.querySelector('.flex.items-center.gap-3');
+      if (nameRow) {
+        nameRow.style.setProperty('margin-top', 'auto', 'important');
+        nameRow.style.setProperty('padding-top', '16px', 'important');
+      }
+    });
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 300);
+    setTimeout(fix, 800);
+    setTimeout(fix, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fix, 2000);
+  console.log('🔥 FAQ_BINTANG_FORCE_JS aktif');
+})();
