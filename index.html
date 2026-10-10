@@ -1384,5 +1384,56 @@ img {
   display: none !important;
   content: none !important;
 }
+</style><style id="KILL_GARIS_CAHAYA">
+/* Card mobil — hapus gradient overlay + border yang bikin kilat */
+.veh-card > div:first-child > div[class*="gradient"],
+.veh-card > div:first-child > div[class*="absolute"] {
+  display: none !important;
+  background: none !important;
+  background-image: none !important;
+  opacity: 0 !important;
+}
+
+/* Hapus SEMUA border di card mobil */
+.veh-card,
+.veh-card > *,
+.veh-card > div:first-child,
+.veh-card > div:first-child > * {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Hapus pseudo-element */
+.veh-card *::before,
+.veh-card *::after,
+.veh-card > div:first-child *::before,
+.veh-card > div:first-child *::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+/* Hapus garis abu di bawah gambar */
+.veh-card > div:first-child {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Card info section (Automatic, 7 seats) — hapus garis atas */
+.veh-card > div:not(:first-child) {
+  border-top: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Gambar mobil — hapus filter/brightness */
+.veh-card img {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
 </style></body>
 </html>
