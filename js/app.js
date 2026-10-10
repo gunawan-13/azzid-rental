@@ -4666,88 +4666,34 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FAQ_FIX_NAV_JS — re-apply style FAQ setiap render
+
+
+
+// ============================================
+// === FAQ_NAV_V2_JS — paksa FAQ horizontal setiap saat
 // ============================================
 (function() {
   function fixFaq() {
-    // Cari semua .acc button (FAQ)
     document.querySelectorAll('.acc button').forEach(function(btn) {
-      btn.style.setProperty('display', 'flex', 'important');
-      btn.style.setProperty('align-items', 'center', 'important');
-      btn.style.setProperty('justify-content', 'space-between', 'important');
-      btn.style.setProperty('width', '100%', 'important');
-      btn.style.setProperty('padding', '16px 24px', 'important');
-      btn.style.setProperty('gap', '16px', 'important');
-      btn.style.setProperty('text-align', 'left', 'important');
-      btn.style.setProperty('background', 'transparent', 'important');
+      btn.setAttribute('style', 'display:flex!important;align-items:center!important;justify-content:space-between!important;width:100%!important;padding:16px 24px!important;gap:16px!important;text-align:left!important;background:transparent!important;');
       
       var spans = btn.querySelectorAll('span');
       if (spans.length > 0) {
-        var q = spans[0];
-        q.style.setProperty('display', 'block', 'important');
-        q.style.setProperty('flex', '1 1 auto', 'important');
-        q.style.setProperty('width', 'auto', 'important');
-        q.style.setProperty('min-width', '0', 'important');
-        q.style.setProperty('max-width', 'none', 'important');
-        q.style.setProperty('text-align', 'left', 'important');
-        q.style.setProperty('color', '#fff', 'important');
-        q.style.setProperty('font-weight', '600', 'important');
-        q.style.setProperty('font-size', '14.5px', 'important');
-        q.style.setProperty('word-break', 'normal', 'important');
-        q.style.setProperty('white-space', 'normal', 'important');
-        q.style.setProperty('overflow-wrap', 'break-word', 'important');
-        q.style.setProperty('padding', '0', 'important');
-        q.style.setProperty('margin', '0', 'important');
-        q.style.setProperty('background', 'transparent', 'important');
+        spans[0].setAttribute('style', 'display:block!important;flex:1 1 auto!important;width:auto!important;min-width:0!important;max-width:none!important;text-align:left!important;color:#fff!important;font-weight:600!important;font-size:14.5px!important;word-break:normal!important;white-space:normal!important;overflow-wrap:break-word!important;padding:0!important;margin:0!important;background:transparent!important;');
       }
       
-      // Icon +
       var icon = btn.querySelector('.acc-ic');
       if (icon) {
-        icon.style.setProperty('display', 'inline-flex', 'important');
-        icon.style.setProperty('align-items', 'center', 'important');
-        icon.style.setProperty('justify-content', 'center', 'important');
-        icon.style.setProperty('flex-shrink', '0', 'important');
-        icon.style.setProperty('width', '24px', 'important');
-        icon.style.setProperty('height', '24px', 'important');
-        icon.style.setProperty('color', '#f87171', 'important');
-      }
-    });
-    
-    // Bintang review
-    document.querySelectorAll('.card > .flex.gap-1').forEach(function(el) {
-      el.style.setProperty('display', 'inline-flex', 'important');
-      el.style.setProperty('gap', '4px', 'important');
-      el.style.setProperty('justify-content', 'flex-start', 'important');
-      el.style.setProperty('width', 'auto', 'important');
-    });
-    
-    // Nama testimonial sejajar
-    document.querySelectorAll('.card').forEach(function(card) {
-      if (!card.querySelector('.flex.gap-1 svg')) return;
-      if (!card.querySelector('.rounded-full')) return;
-      
-      card.style.setProperty('display', 'flex', 'important');
-      card.style.setProperty('flex-direction', 'column', 'important');
-      card.style.setProperty('height', '100%', 'important');
-      
-      var p = card.querySelector('p');
-      if (p) p.style.setProperty('flex', '1 1 auto', 'important');
-      
-      var nameRow = card.querySelector('.flex.items-center.gap-3');
-      if (nameRow) {
-        nameRow.style.setProperty('margin-top', 'auto', 'important');
-        nameRow.style.setProperty('padding-top', '16px', 'important');
+        icon.setAttribute('style', 'display:inline-flex!important;align-items:center!important;justify-content:center!important;flex-shrink:0!important;width:24px!important;height:24px!important;color:#f87171!important;font-size:20px!important;');
       }
     });
   }
   
-  // Jalankan setiap kali DOM berubah (setelah render ulang)
   function run() {
     fixFaq();
     setTimeout(fixFaq, 100);
-    setTimeout(fixFaq, 300);
-    setTimeout(fixFaq, 800);
+    setTimeout(fixFaq, 500);
+    setTimeout(fixFaq, 1500);
   }
   
   if (document.readyState === 'loading') {
@@ -4756,13 +4702,9 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  // Observer — fix setiap kali DOM berubah (route render ulang)
-  var observer = new MutationObserver(function() {
-    fixFaq();
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
-  
-  // Interval fallback
-  setInterval(fixFaq, 1500);
-  console.log('🔥 FAQ_FIX_NAV_JS aktif');
+  // Observer + interval
+  var obs = new MutationObserver(fixFaq);
+  obs.observe(document.body, { childList: true, subtree: true });
+  setInterval(fixFaq, 1000);
+  console.log('🔥 FAQ_NAV_V2_JS aktif');
 })();
