@@ -513,7 +513,7 @@ function vArmada() {
     <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-15">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
       <span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Katalog Armada</span>
-      <h1 class="font-display font-extrabold text-4xl" style="margin:0 0 8px 0!important;padding:0!important;line-height:1.1!important;">Pilih Mobil Anda</h1><!-- HAPUS_DESKRIPSI -->
+      <h1 class="font-display font-extrabold text-4xl" style="margin:0 0 8px 0!important;padding:0!important;line-height:1.1!important;">Pilih Mobil Anda</h1><p class="text-muted text-sm" style="margin:0!important;padding:0!important;color:#9ca3af!important;font-size:13px!important;line-height:1.4!important;">Semua unit terawat, diasuransikan, dan siap jalan. Harga per 24 jam.</p>
     </div>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -592,7 +592,7 @@ function vDetail(slug) {
 }
 
 function vLayanan() {
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><!-- HAPUS_DESKRIPSI --></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><!-- HAPUS_DESKRIPSI -->
+  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Layanan</span><h1 class="font-display font-extrabold text-4xl mt-2">Layanan Rental Kami</h1><p class="text-muted mt-2 text-sm max-w-2xl">Dari perjalanan harian hingga event premium — semua dilayani dengan standar yang sama: tepat waktu, terawat, transparan.</p></div></section><section class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">${SERVICES.map((s, i) => `<div class="card p-7 hover:-translate-y-1.5 hover:border-maroon-500/40 transition" style="transition-delay:${i * 70}ms"><div class="w-12 h-12 rounded-xl bg-gradient-to-br from-maroon-500 to-maroon-800 text-white grid place-items-center mb-5 shadow-glow">${ic(s.ic)}</div><h3 class="font-display font-semibold text-lg mb-2">${s.t}</h3><!-- HAPUS_DESKRIPSI -->
       <p class="text-muted text-[14.5px] leading-relaxed mb-6">Kini kami melayani lebih dari 1.200 pelanggan — keluarga, pebisnis, perusahaan, hingga event organizer — dengan armada tahun muda yang diinspeksi menyeluruh sebelum setiap perjalanan.</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">${[
         ['Visi', 'Menjadi standar rental mobil premium paling terpercaya di Indonesia.'],

@@ -1151,5 +1151,22 @@ img {
   padding: 0 !important;
   margin: 0 !important;
 }
+</style><style id="HAPUS_DESKRIPSI_HEADER">
+/* Hapus <p> di section header — target spesifik by section */
+#custApp section:has(h1):has(+ section) > div > p {
+  display: none !important;
+}
+
+/* Pengecualian: jangan hapus <p> di dalam card */
+#custApp section:has(h1) > div > p:not(.text-muted) {
+  display: block !important;
+}
+
+/* Atau target by text (kalau didukung) */
+#custApp section:has(h1) p:has-text("Semua unit terawat"),
+#custApp section:has(h1) p:has-text("Dari perjalanan harian"),
+#custApp section:has(h1) p:has-text("Drive Comfort") {
+  display: none !important;
+}
 </style></body>
 </html>
