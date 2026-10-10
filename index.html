@@ -1443,41 +1443,34 @@ img {
   display: none !important;
 }
 </style><style id="FORCE_MARQUEE">
-/* Marquee — paksa jalan */
+/* Kedua marquee — paksa jalan */
 #annBar,
+.marquee-track,
 html body #custApp #annBar,
-html body #custApp div.fixed #annBar {
+html body #custApp .marquee-track {
   animation: marqueeScroll 60s linear infinite !important;
   animation-play-state: running !important;
   animation-name: marqueeScroll !important;
   animation-duration: 60s !important;
-  animation-timing-function: linear !important;
-  animation-iteration-count: infinite !important;
   display: inline-block !important;
   white-space: nowrap !important;
   padding: 0 !important;
   margin: 0 !important;
   will-change: transform !important;
-  transform: translateX(0) !important;
   min-width: max-content !important;
 }
 
-/* Keyframes baru */
-/* keyframes duplikat dihapus */
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
 
-/* Parent container — overflow hidden */
+/* Parent overflow */
 #custApp > div.fixed.top-0,
-#custApp > div.fixed.top-0 > div:first-child,
-#custApp > .fixed.top-0 {
+#custApp > div.fixed.top-0 > div {
   overflow: hidden !important;
   white-space: nowrap !important;
   width: 100% !important;
-}
-
-/* Hover pause — matikan dulu biar selalu jalan */
-#annBar:hover,
-#custApp:hover #annBar {
-  animation-play-state: running !important;
 }
 </style></body>
 </html>

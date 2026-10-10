@@ -4629,33 +4629,40 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FORCE_MARQUEE_JS — paksa marquee jalan
+
+
+
+// ============================================
+// === FORCE_MARQUEE_JS — paksa kedua marquee jalan
 // ============================================
 (function() {
   function force() {
+    // annBar (header navy bawah)
     var bar = document.getElementById('annBar');
-    if (!bar) return;
+    if (bar) {
+      bar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+      bar.style.setProperty('animation-play-state', 'running', 'important');
+      bar.style.setProperty('display', 'inline-block', 'important');
+      bar.style.setProperty('white-space', 'nowrap', 'important');
+      bar.style.setProperty('padding', '0', 'important');
+      bar.style.setProperty('min-width', 'max-content', 'important');
+    }
     
-    // Paksa inline style — paling tinggi specificity
-    bar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-    bar.style.setProperty('animation-play-state', 'running', 'important');
-    bar.style.setProperty('animation-name', 'marqueeScroll', 'important');
-    bar.style.setProperty('animation-duration', '60s', 'important');
-    bar.style.setProperty('animation-timing-function', 'linear', 'important');
-    bar.style.setProperty('animation-iteration-count', 'infinite', 'important');
-    bar.style.setProperty('display', 'inline-block', 'important');
-    bar.style.setProperty('white-space', 'nowrap', 'important');
-    bar.style.setProperty('padding', '0', 'important');
-    bar.style.setProperty('margin', '0', 'important');
-    bar.style.setProperty('will-change', 'transform', 'important');
-    bar.style.setProperty('min-width', 'max-content', 'important');
+    // marquee-track (header merah atas)
+    document.querySelectorAll('.marquee-track, [class*="marquee"]').forEach(function(el) {
+      el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+      el.style.setProperty('animation-play-state', 'running', 'important');
+      el.style.setProperty('display', 'inline-block', 'important');
+      el.style.setProperty('white-space', 'nowrap', 'important');
+      el.style.setProperty('padding', '0', 'important');
+      el.style.setProperty('min-width', 'max-content', 'important');
+    });
   }
   
   function run() {
     force();
     setTimeout(force, 100);
-    setTimeout(force, 300);
-    setTimeout(force, 800);
+    setTimeout(force, 500);
     setTimeout(force, 1500);
   }
   
@@ -4665,7 +4672,6 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  // Re-apply tiap 500ms — paksa terus
-  setInterval(force, 500);
+  setInterval(force, 1000);
   console.log('🔥 FORCE_MARQUEE_JS aktif');
 })();
