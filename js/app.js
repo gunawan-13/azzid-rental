@@ -3185,7 +3185,7 @@ function saveCms() {
 
 function applyCms() {
   const bp = S.cms.bannerPromo;
-  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent=annText; try { if (typeof initMarquee === 'function') initMarquee(); } catch(e) {}
+  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent = annText + '   •   ' + annText + '   •   ' + annText + '   •   ' + annText; try { if (typeof initMarquee === 'function') initMarquee(); } catch(e) {}
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
@@ -4645,26 +4645,28 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_FINAL_JS — fix 2 header + hover pause
+
+
+
+// ============================================
+// === MARQUEE_CENTER_JS — header merah dari tengah
 // ============================================
 (function() {
-  var hoverRed = false;
-  var hoverNavy = false;
-  
   function fix() {
-    // annBar (header merah)
+    // annBar (header merah) — text di tengah (50vw) + duplikat
     var annBar = document.getElementById('annBar');
     if (annBar) {
-      annBar.style.setProperty('padding-left', '100vw', 'important');
-      annBar.style.setProperty('padding-right', '0', 'important');
+      // Padding 50vw = mulai dari tengah viewport
+      annBar.style.setProperty('padding-left', '50vw', 'important');
+      annBar.style.setProperty('padding-right', '50vw', 'important');
       annBar.style.setProperty('display', 'inline-block', 'important');
       annBar.style.setProperty('white-space', 'nowrap', 'important');
-      annBar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      annBar.style.setProperty('animation-play-state', hoverRed ? 'paused' : 'running', 'important');
+      annBar.style.setProperty('animation', 'marqueeScroll 80s linear infinite', 'important');
       annBar.style.setProperty('min-width', 'max-content', 'important');
+      annBar.style.setProperty('will-change', 'transform', 'important');
     }
     
-    // marquee-track (header navy)
+    // marquee-track (header navy) — tetap dari kanan
     document.querySelectorAll('.marquee-track').forEach(function(el) {
       el.style.setProperty('padding-left', '100vw', 'important');
       el.style.setProperty('padding-right', '0', 'important');
@@ -4672,56 +4674,14 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       el.style.setProperty('flex-wrap', 'nowrap', 'important');
       el.style.setProperty('white-space', 'nowrap', 'important');
       el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      el.style.setProperty('animation-play-state', hoverNavy ? 'paused' : 'running', 'important');
       el.style.setProperty('min-width', 'max-content', 'important');
-      
-      el.querySelectorAll(':scope > span').forEach(function(child) {
-        child.style.setProperty('display', 'inline-flex', 'important');
-        child.style.setProperty('white-space', 'nowrap', 'important');
-        child.style.setProperty('flex-shrink', '0', 'important');
-      });
-    });
-  }
-  
-  // Hover listener — header merah
-  function attachHoverRed() {
-    var annBar = document.getElementById('annBar');
-    if (!annBar || annBar.dataset.hoverBound) return;
-    annBar.dataset.hoverBound = '1';
-    
-    annBar.addEventListener('mouseenter', function() {
-      hoverRed = true;
-      fix();
-    });
-    annBar.addEventListener('mouseleave', function() {
-      hoverRed = false;
-      fix();
-    });
-  }
-  
-  // Hover listener — header navy
-  function attachHoverNavy() {
-    document.querySelectorAll('.marquee-track').forEach(function(el) {
-      if (el.dataset.hoverBound) return;
-      el.dataset.hoverBound = '1';
-      
-      el.addEventListener('mouseenter', function() {
-        hoverNavy = true;
-        fix();
-      });
-      el.addEventListener('mouseleave', function() {
-        hoverNavy = false;
-        fix();
-      });
     });
   }
   
   function run() {
     fix();
-    attachHoverRed();
-    attachHoverNavy();
-    setTimeout(function() { fix(); attachHoverRed(); attachHoverNavy(); }, 300);
-    setTimeout(function() { fix(); attachHoverRed(); attachHoverNavy(); }, 1000);
+    setTimeout(fix, 300);
+    setTimeout(fix, 1000);
   }
   
   if (document.readyState === 'loading') {
@@ -4730,11 +4690,16 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(function() {
-    fix();
-    attachHoverRed();
-    attachHoverNavy();
-  }, 1000);
+  // Hover pause
+  document.addEventListener('mouseover', function(e) {
+    var bar = e.target.closest('#annBar, .marquee-track');
+    if (bar) bar.style.setProperty('animation-play-state', 'paused', 'important');
+  });
+  document.addEventListener('mouseout', function(e) {
+    var bar = e.target.closest('#annBar, .marquee-track');
+    if (bar) bar.style.setProperty('animation-play-state', 'running', 'important');
+  });
   
-  console.log('🔥 MARQUEE_FINAL_JS aktif');
+  setInterval(fix, 2000);
+  console.log('🔥 MARQUEE_CENTER_JS aktif');
 })();

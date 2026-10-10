@@ -1442,29 +1442,28 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="MARQUEE_FINAL">
+</style><style id="MARQUEE_CENTER">
 /* ============================================ */
-/* HEADER MERAH (annBar) — mulai dari KANAN */
+/* HEADER MERAH (annBar) — mulai dari TENGAH */
 /* ============================================ */
 #annBar {
-  padding-left: 100vw !important;
-  padding-right: 0 !important;
+  padding-left: 50vw !important;
+  padding-right: 50vw !important;
   display: inline-block !important;
   white-space: nowrap !important;
-  animation: marqueeScroll 60s linear infinite !important;
+  animation: marqueeScroll 80s linear infinite !important;
   animation-play-state: running !important;
   min-width: max-content !important;
   will-change: transform !important;
 }
 
-/* Hover pause — header merah */
-#annBar:hover,
-#custApp > div.fixed.top-0:hover #annBar {
+/* Hover pause */
+#annBar:hover {
   animation-play-state: paused !important;
 }
 
 /* ============================================ */
-/* HEADER NAVY (marquee-track) — sama kecepatan */
+/* HEADER NAVY (marquee-track) — tetap dari kanan */
 /* ============================================ */
 .marquee-track {
   padding-left: 100vw !important;
@@ -1475,7 +1474,6 @@ img {
   animation: marqueeScroll 60s linear infinite !important;
   animation-play-state: running !important;
   min-width: max-content !important;
-  will-change: transform !important;
 }
 
 .marquee-track > span {
@@ -1484,22 +1482,20 @@ img {
   flex-shrink: 0 !important;
 }
 
-/* Hover pause — header navy */
-.marquee-track:hover,
-#custApp > div.bg-ink-900.border-y:hover .marquee-track {
+.marquee-track:hover {
   animation-play-state: paused !important;
 }
 
 /* ============================================ */
-/* KEYFRAMES — sama untuk kedua header */
+/* KEYFRAMES */
 /* ============================================ */
 @keyframes marqueeScroll {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  100% { transform: translateX(-50%); }
 }
 
 /* ============================================ */
-/* CONTAINER OVERFLOW HIDDEN */
+/* CONTAINER */
 /* ============================================ */
 #custApp > div.fixed.top-0,
 #custApp > div.fixed.top-0 > div,
