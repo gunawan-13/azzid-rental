@@ -3875,15 +3875,15 @@ function __forceAdminRoute() {
 
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() {
-    setTimeout(__forceAdminRoute, 100);
+    /* KILL: setTimeout __forceAdminRoute */
   });
 } else {
-  setTimeout(__forceAdminRoute, 100);
+  /* KILL: setTimeout __forceAdminRoute */
 }
 
 // Handle saat load (setelah resource load)
 window.addEventListener("load", function() {
-  setTimeout(__forceAdminRoute, 100);
+  /* KILL: setTimeout __forceAdminRoute */
 });
 
 // Cegah beforeunload reset
@@ -3916,22 +3916,20 @@ function __forceTop() {
 
 // Panggil di multiple timing — anti-fail
 __forceTop();
-[10, 50, 100, 200, 300, 500].forEach(function(ms) {
-  setTimeout(__forceTop, ms);
-});
+/* KILL: forceTop loop dihapus */
 
 // DOM ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function() {
     __forceTop();
-    [10, 50, 100, 200].forEach(function(ms) { setTimeout(__forceTop, ms); });
+    /* KILL: forceTop loop dihapus */
   });
 }
 
 // Window load
 window.addEventListener("load", function() {
   __forceTop();
-  [50, 100, 200, 500].forEach(function(ms) { setTimeout(__forceTop, ms); });
+  /* KILL: forceTop loop dihapus */
 });
 
 // Page show (bfcache)
