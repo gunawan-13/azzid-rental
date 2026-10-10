@@ -1629,5 +1629,47 @@ footer a[href*="/faq"] {
   background: #dc2626 !important;
   color: #fff !important;
 }
+</style><style id="FIX_FAQ_WIDTH">
+/* ============================================ */
+/* FAQ section — paksa max-width sama (sempit) */
+/* ============================================ */
+#custApp section:has(.acc),
+#custApp section:has(.acc button) {
+  max-width: 720px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
+/* Container FAQ — paksa flexbox */
+#custApp .acc {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ============================================ */
+/* Fallback — semua section yang berisi FAQ */
+/* ============================================ */
+#custApp section:has(h1 + .acc),
+#custApp section:has(h2 + .acc),
+#custApp > section.space-y-3 {
+  max-width: 720px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* ============================================ */
+/* Hapus paksaan max-w-7xl di FAQ */
+/* ============================================ */
+#custApp section[class*="max-w-7xl"]:has(.acc) {
+  max-width: 720px !important;
+}
+
+#custApp section[class*="max-w-4xl"]:has(.acc),
+#custApp section[class*="max-w-2xl"]:has(.acc) {
+  max-width: 720px !important;
+}
 </style></body>
 </html>
