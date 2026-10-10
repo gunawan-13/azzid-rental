@@ -1123,5 +1123,33 @@ img {
 #custApp .border-white/10 {
   border-color: transparent !important;
 }
+</style><style id="HAPUS_BG_ARMADA">
+/* Section header Armada — hapus background image */
+#custApp section:has(> div > h1):has(> div > span) {
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+}
+
+/* Hapus semua img absolute di section Armada */
+#custApp section:has(> div > h1) > img {
+  display: none !important;
+}
+
+#custApp section:has(> div > h1) > div.absolute {
+  display: none !important;
+}
+
+/* Wrapper — paksa auto */
+#custApp section:has(> div > h1) > div {
+  position: relative !important;
+  z-index: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
 </style></body>
 </html>
