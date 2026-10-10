@@ -4621,39 +4621,46 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_CENTER_JS — header merah dari tengah
+
+
+
+// ============================================
+// === MARQUEE_CENTER_PAKSA_JS — paksa header merah di tengah
 // ============================================
 (function() {
   function fix() {
-    // annBar (header merah) — text di tengah (50vw) + duplikat
+    // annBar — paksa center
     var annBar = document.getElementById('annBar');
     if (annBar) {
-      // Padding 50vw = mulai dari tengah viewport
-      annBar.style.setProperty('padding-left', '50vw', 'important');
-      annBar.style.setProperty('padding-right', '50vw', 'important');
-      annBar.style.setProperty('display', 'inline-block', 'important');
+      annBar.style.setProperty('display', 'block', 'important');
+      annBar.style.setProperty('width', '100%', 'important');
+      annBar.style.setProperty('text-align', 'center', 'important');
+      annBar.style.setProperty('padding', '0', 'important');
+      annBar.style.setProperty('margin', '0 auto', 'important');
       annBar.style.setProperty('white-space', 'nowrap', 'important');
-      annBar.style.setProperty('animation', 'marqueeScroll 80s linear infinite', 'important');
-      annBar.style.setProperty('min-width', 'max-content', 'important');
+      annBar.style.setProperty('animation', 'marqueeScrollCenter 80s linear infinite', 'important');
+      annBar.style.setProperty('animation-play-state', 'running', 'important');
+      annBar.style.setProperty('min-width', '0', 'important');
       annBar.style.setProperty('will-change', 'transform', 'important');
     }
     
-    // marquee-track (header navy) — tetap dari kanan
+    // marquee-track — tetap
     document.querySelectorAll('.marquee-track').forEach(function(el) {
       el.style.setProperty('padding-left', '100vw', 'important');
       el.style.setProperty('padding-right', '0', 'important');
       el.style.setProperty('display', 'inline-flex', 'important');
       el.style.setProperty('flex-wrap', 'nowrap', 'important');
       el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+      el.style.setProperty('animation', 'marqueeScrollNavy 60s linear infinite', 'important');
       el.style.setProperty('min-width', 'max-content', 'important');
     });
   }
   
   function run() {
     fix();
-    setTimeout(fix, 300);
-    setTimeout(fix, 1000);
+    setTimeout(fix, 100);
+    setTimeout(fix, 500);
+    setTimeout(fix, 1500);
   }
   
   if (document.readyState === 'loading') {
@@ -4673,5 +4680,5 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   });
   
   setInterval(fix, 2000);
-  console.log('🔥 MARQUEE_CENTER_JS aktif');
+  console.log('🔥 MARQUEE_CENTER_PAKSA_JS aktif');
 })();

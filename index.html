@@ -1445,18 +1445,24 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="MARQUEE_CENTER">
+</style><style id="MARQUEE_CENTER_PAKSA">
 /* ============================================ */
-/* HEADER MERAH (annBar) — mulai dari TENGAH */
+/* HEADER MERAH (annBar) — PAKSA text di tengah */
 /* ============================================ */
 #annBar {
-  padding-left: 50vw !important;
-  padding-right: 50vw !important;
-  display: inline-block !important;
-  white-space: nowrap !important;
-  animation: marqueeScroll 80s linear infinite !important;
+  /* Paksa lebar container penuh */
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  text-align: center !important;
+  padding: 0 !important;
+  margin: 0 auto !important;
+  
+  /* Animasi */
+  animation: marqueeScrollCenter 80s linear infinite !important;
   animation-play-state: running !important;
-  min-width: max-content !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
   will-change: transform !important;
 }
 
@@ -1465,8 +1471,14 @@ img {
   animation-play-state: paused !important;
 }
 
+/* Keyframes — geser 50% untuk seamless loop */
+@keyframes marqueeScrollCenter {
+  0% { transform: translateX(50%); }
+  100% { transform: translateX(-50%); }
+}
+
 /* ============================================ */
-/* HEADER NAVY (marquee-track) — tetap dari kanan */
+/* HEADER NAVY (marquee-track) — tetap seperti sekarang */
 /* ============================================ */
 .marquee-track {
   padding-left: 100vw !important;
@@ -1474,7 +1486,7 @@ img {
   display: inline-flex !important;
   flex-wrap: nowrap !important;
   white-space: nowrap !important;
-  animation: marqueeScroll 60s linear infinite !important;
+  animation: marqueeScrollNavy 60s linear infinite !important;
   animation-play-state: running !important;
   min-width: max-content !important;
 }
@@ -1489,16 +1501,13 @@ img {
   animation-play-state: paused !important;
 }
 
-/* ============================================ */
-/* KEYFRAMES */
-/* ============================================ */
-@keyframes marqueeScroll {
+@keyframes marqueeScrollNavy {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }
 }
 
 /* ============================================ */
-/* CONTAINER */
+/* CONTAINER — paksa full width */
 /* ============================================ */
 #custApp > div.fixed.top-0,
 #custApp > div.fixed.top-0 > div,
@@ -1506,6 +1515,7 @@ img {
   overflow: hidden !important;
   white-space: nowrap !important;
   width: 100% !important;
+  max-width: 100% !important;
 }
 </style></body>
 </html>
