@@ -4127,3 +4127,67 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(centerInnerIcons, 2000);
   console.log('🎯 CENTER_ICON_INNER_JS aktif');
 })();
+
+
+// ============================================
+// === FIX_MOBIL_BINTANG — paksa layout presisi
+// ============================================
+(function() {
+  function fixMobilBintang() {
+    // 1. Card mobil — paksa layout
+    document.querySelectorAll('.veh-card').forEach(function(card) {
+      card.style.setProperty('display', 'flex', 'important');
+      card.style.setProperty('flex-direction', 'column', 'important');
+      card.style.setProperty('height', '100%', 'important');
+    });
+    
+    // 2. Container gambar mobil — paksa tinggi konsisten
+    document.querySelectorAll('.veh-card > div:first-child').forEach(function(box) {
+      box.style.setProperty('height', '208px', 'important');
+      box.style.setProperty('min-height', '208px', 'important');
+      box.style.setProperty('overflow', 'hidden', 'important');
+      box.style.setProperty('position', 'relative', 'important');
+    });
+    
+    // 3. Gambar mobil — paksa isi penuh
+    document.querySelectorAll('.veh-card img, .veh-img').forEach(function(img) {
+      img.style.setProperty('width', '100%', 'important');
+      img.style.setProperty('height', '100%', 'important');
+      img.style.setProperty('object-fit', 'cover', 'important');
+      img.style.setProperty('display', 'block', 'important');
+    });
+    
+    // 4. Bintang review — paksa rapat kiri
+    document.querySelectorAll('.card > .flex.gap-1').forEach(function(el) {
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('gap', '4px', 'important');
+      el.style.setProperty('justify-content', 'flex-start', 'important');
+      el.style.setProperty('align-items', 'center', 'important');
+      el.style.setProperty('width', 'auto', 'important');
+      el.style.setProperty('max-width', 'fit-content', 'important');
+    });
+    
+    // 5. SVG bintang — paksa ukuran kecil
+    document.querySelectorAll('.card > .flex.gap-1 svg').forEach(function(svg) {
+      svg.style.setProperty('width', '16px', 'important');
+      svg.style.setProperty('height', '16px', 'important');
+      svg.style.setProperty('flex-shrink', '0', 'important');
+    });
+  }
+  
+  function run() {
+    fixMobilBintang();
+    setTimeout(fixMobilBintang, 300);
+    setTimeout(fixMobilBintang, 800);
+    setTimeout(fixMobilBintang, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fixMobilBintang, 1500);
+  console.log('🔥 FIX_MOBIL_BINTANG aktif');
+})();
