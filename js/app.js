@@ -3185,7 +3185,7 @@ function saveCms() {
 
 function applyCms() {
   const bp = S.cms.bannerPromo;
-  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent=annText+'   •   '+annText;
+  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent=annText+'   •   '+annText; try { if (typeof initMarquee === 'function') initMarquee(); } catch(e) {}
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
@@ -3665,7 +3665,7 @@ window.closeSb = window.closeSb || function() {
   } else {
     initMarquee();
   }
-  /* KILL interval initMarquee */
+  setInterval(initMarquee, 1000);
 })();
 
 

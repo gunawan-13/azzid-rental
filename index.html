@@ -1445,5 +1445,33 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
+</style><style id="FIX_MARQUEE">
+/* annBar — fix padding + animasi */
+#annBar {
+  animation: marqueeScroll 60s linear infinite !important;
+  animation-play-state: running !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  padding-left: 0 !important;
+  padding-right: 100vw !important;
+  will-change: transform !important;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Container — overflow hidden */
+#custApp > .fixed.top-0,
+#custApp > div.fixed {
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+
+/* Hover pause */
+#annBar:hover {
+  animation-play-state: paused !important;
+}
 </style></body>
 </html>
