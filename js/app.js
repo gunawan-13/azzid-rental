@@ -3185,7 +3185,7 @@ function saveCms() {
 
 function applyCms() {
   const bp = S.cms.bannerPromo;
-  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent=annText+'   •   '+annText; try { if (typeof initMarquee === 'function') initMarquee(); } catch(e) {}
+  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent=annText; try { if (typeof initMarquee === 'function') initMarquee(); } catch(e) {}
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
@@ -4633,37 +4633,45 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FORCE_MARQUEE_JS — paksa kedua marquee jalan
+
+
+
+// ============================================
+// === FIX_MARQUEE_FINAL_JS — paksa animasi jalan tanpa hapus padding
 // ============================================
 (function() {
-  function force() {
-    // annBar (header navy bawah)
-    var bar = document.getElementById('annBar');
-    if (bar) {
-      bar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      bar.style.setProperty('animation-play-state', 'running', 'important');
-      bar.style.setProperty('display', 'inline-block', 'important');
-      bar.style.setProperty('white-space', 'nowrap', 'important');
-      bar.style.setProperty('padding', '0', 'important');
-      bar.style.setProperty('min-width', 'max-content', 'important');
+  function fixMarquee() {
+    // Header merah (annBar) — paksa animation, tapi JANGAN hapus padding
+    var annBar = document.getElementById('annBar');
+    if (annBar) {
+      // Set animasi saja
+      annBar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+      annBar.style.setProperty('animation-play-state', 'running', 'important');
+      annBar.style.setProperty('display', 'inline-block', 'important');
+      annBar.style.setProperty('white-space', 'nowrap', 'important');
+      // PADDING: paksa 100vw kiri
+      annBar.style.setProperty('padding-left', '100vw', 'important');
+      annBar.style.setProperty('padding-right', '0', 'important');
+      annBar.style.setProperty('min-width', 'max-content', 'important');
     }
     
-    // marquee-track (header merah atas)
+    // Header navy (marquee-track)
     document.querySelectorAll('.marquee-track, [class*="marquee"]').forEach(function(el) {
       el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
       el.style.setProperty('animation-play-state', 'running', 'important');
       el.style.setProperty('display', 'inline-block', 'important');
       el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('padding', '0', 'important');
+      el.style.setProperty('padding-left', '100vw', 'important');
+      el.style.setProperty('padding-right', '0', 'important');
       el.style.setProperty('min-width', 'max-content', 'important');
     });
   }
   
   function run() {
-    force();
-    setTimeout(force, 100);
-    setTimeout(force, 500);
-    setTimeout(force, 1500);
+    fixMarquee();
+    setTimeout(fixMarquee, 100);
+    setTimeout(fixMarquee, 500);
+    setTimeout(fixMarquee, 1500);
   }
   
   if (document.readyState === 'loading') {
@@ -4672,6 +4680,6 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(force, 1000);
-  console.log('🔥 FORCE_MARQUEE_JS aktif');
+  setInterval(fixMarquee, 1000);
+  console.log('🔥 FIX_MARQUEE_FINAL_JS aktif');
 })();

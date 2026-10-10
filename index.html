@@ -1442,21 +1442,28 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="FORCE_MARQUEE">
-/* Kedua marquee — paksa jalan */
-#annBar,
-.marquee-track,
-html body #custApp #annBar,
-html body #custApp .marquee-track {
-  animation: marqueeScroll 60s linear infinite !important;
-  animation-play-state: running !important;
-  animation-name: marqueeScroll !important;
-  animation-duration: 60s !important;
+</style><style id="FIX_MARQUEE_POSISI">
+/* Header merah (annBar) — mulai dari kanan viewport */
+#annBar {
+  padding-left: 100vw !important;
+  padding-right: 0 !important;
   display: inline-block !important;
   white-space: nowrap !important;
-  padding: 0 !important;
-  margin: 0 !important;
+  animation: marqueeScroll 60s linear infinite !important;
+  animation-play-state: running !important;
+  min-width: max-content !important;
   will-change: transform !important;
+}
+
+/* Header navy (marquee-track) — mulai dari kanan juga */
+.marquee-track,
+#custApp .marquee-track {
+  padding-left: 100vw !important;
+  padding-right: 0 !important;
+  display: inline-block !important;
+  white-space: nowrap !important;
+  animation: marqueeScroll 60s linear infinite !important;
+  animation-play-state: running !important;
   min-width: max-content !important;
 }
 
@@ -1465,7 +1472,7 @@ html body #custApp .marquee-track {
   100% { transform: translateX(-100%); }
 }
 
-/* Parent overflow */
+/* Container overflow */
 #custApp > div.fixed.top-0,
 #custApp > div.fixed.top-0 > div {
   overflow: hidden !important;
