@@ -514,7 +514,7 @@ function vArmada() {
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
       <span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Katalog Armada</span>
       <h1 class="font-display font-extrabold text-4xl" style="margin:0;padding:0;">Pilih Mobil Anda</h1>
-      <p class="text-muted text-sm" style="margin:4px 0 0 0!important;padding:0!important;background:transparent!important;color:#9ca3af!important;font-size:13px!important;line-height:1.4!important;display:block!important;position:static!important;float:none!important;">Semua unit terawat, diasuransikan, dan siap jalan. Harga per 24 jam.</p>
+      <p class="text-muted text-sm" style="margin:6px 0 0 0!important;padding:0!important;background:transparent!important;color:#9ca3af!important;font-size:13px!important;line-height:1.4!important;display:block!important;position:static!important;">Semua unit terawat, diasuransikan, dan siap jalan. Harga per 24 jam.</p>
     </div>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
