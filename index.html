@@ -1306,5 +1306,83 @@ img {
 .veh-card *:hover {
   outline: none !important;
 }
+</style><style id="FIX_IMG_RESPONSIVE">
+/* Card mobil — layout konsisten */
+.veh-card {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  background: #1a1a1d !important;
+  border-radius: 12px !important;
+}
+
+/* Container gambar — aspect ratio + overflow hidden */
+.veh-card > div:first-child {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 4 / 3 !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  border-radius: 12px 12px 0 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Gambar — isi penuh, no border */
+.veh-card img,
+.veh-card > div:first-child img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Hover — JANGAN ubah ukuran/border */
+.veh-card:hover,
+.veh-card:hover > div:first-child,
+.veh-card:hover img {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  height: 100% !important;
+}
+
+/* Hover — cuma ubah translateY di card */
+.veh-card:hover {
+  transform: translateY(-6px) !important;
+  transition: transform 0.3s ease !important;
+}
+
+/* Grid parent — paksa rata */
+.grid:has(> .veh-card) {
+  align-items: stretch !important;
+  gap: 20px !important;
+}
+
+.grid:has(> .veh-card) > .veh-card {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+}
+
+/* Hilangkan pseudo-element kilat */
+.veh-card > div:first-child::before,
+.veh-card > div:first-child::after,
+.veh-card:hover > div:first-child::before,
+.veh-card:hover > div:first-child::after {
+  display: none !important;
+  content: none !important;
+}
 </style></body>
 </html>
