@@ -1175,5 +1175,95 @@ img {
 #custApp section:has(h1):has(+ section):has(span) {
   display: none !important;
 }
+</style><style id="RESTORE_FIXES">
+/* ============ FAQ — horizontal, rapat, putih ============ */
+.acc button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  padding: 16px 24px !important;
+  gap: 16px !important;
+  min-height: 56px !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.acc button > span:first-child {
+  display: block !important;
+  flex: 1 1 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  text-align: left !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 14.5px !important;
+  line-height: 1.5 !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.acc button > span.acc-ic {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: #f87171 !important;
+  font-size: 20px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.acc {
+  background: transparent !important;
+  border-radius: 12px !important;
+}
+
+/* ============ BINTANG REVIEW — rapat kiri ============ */
+.card > .flex.gap-1 {
+  display: inline-flex !important;
+  gap: 4px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  margin-bottom: 12px !important;
+}
+
+.card > .flex.gap-1 svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ============ NAMA TESTIMONIAL — sejajar di bawah ============ */
+.card:has(.flex.gap-1 svg):has(.rounded-full) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.card:has(.flex.gap-1 svg):has(.rounded-full) > p {
+  flex: 1 1 auto !important;
+}
+
+.card:has(.flex.gap-1 svg):has(.rounded-full) > .flex.items-center.gap-3 {
+  margin-top: auto !important;
+  padding-top: 16px !important;
+}
+
+.grid:has(> .card:has(.flex.gap-1)) {
+  align-items: stretch !important;
+}
 </style></body>
 </html>
