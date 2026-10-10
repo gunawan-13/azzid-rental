@@ -4649,39 +4649,38 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_CENTER_JS — header merah dari tengah
+
+
+
+// ============================================
+// === MARQUEE_CENTER_V2_JS — paksa header merah dari TENGAH
 // ============================================
 (function() {
-  function fix() {
-    // annBar (header merah) — text di tengah (50vw) + duplikat
+  function forceCenter() {
     var annBar = document.getElementById('annBar');
-    if (annBar) {
-      // Padding 50vw = mulai dari tengah viewport
-      annBar.style.setProperty('padding-left', '50vw', 'important');
-      annBar.style.setProperty('padding-right', '50vw', 'important');
-      annBar.style.setProperty('display', 'inline-block', 'important');
-      annBar.style.setProperty('white-space', 'nowrap', 'important');
-      annBar.style.setProperty('animation', 'marqueeScroll 80s linear infinite', 'important');
-      annBar.style.setProperty('min-width', 'max-content', 'important');
-      annBar.style.setProperty('will-change', 'transform', 'important');
-    }
+    if (!annBar) return;
     
-    // marquee-track (header navy) — tetap dari kanan
-    document.querySelectorAll('.marquee-track').forEach(function(el) {
-      el.style.setProperty('padding-left', '100vw', 'important');
-      el.style.setProperty('padding-right', '0', 'important');
-      el.style.setProperty('display', 'inline-flex', 'important');
-      el.style.setProperty('flex-wrap', 'nowrap', 'important');
-      el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      el.style.setProperty('min-width', 'max-content', 'important');
-    });
+    // Paksa SEMUA properti via inline style setProperty
+    annBar.style.setProperty('padding-left', '50vw', 'important');
+    annBar.style.setProperty('padding-right', '0', 'important');
+    annBar.style.setProperty('display', 'inline-block', 'important');
+    annBar.style.setProperty('white-space', 'nowrap', 'important');
+    annBar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+    annBar.style.setProperty('animation-play-state', 'running', 'important');
+    annBar.style.setProperty('min-width', 'max-content', 'important');
+    annBar.style.setProperty('transform', 'translateX(0)', 'important');
+    
+    // Debug log
+    // console.log('annBar padding-left:', annBar.style.paddingLeft);
   }
   
   function run() {
-    fix();
-    setTimeout(fix, 300);
-    setTimeout(fix, 1000);
+    forceCenter();
+    setTimeout(forceCenter, 50);
+    setTimeout(forceCenter, 200);
+    setTimeout(forceCenter, 500);
+    setTimeout(forceCenter, 1000);
+    setTimeout(forceCenter, 2000);
   }
   
   if (document.readyState === 'loading') {
@@ -4690,16 +4689,22 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
+  // Re-apply tiap 500ms
+  setInterval(forceCenter, 500);
+  
   // Hover pause
   document.addEventListener('mouseover', function(e) {
-    var bar = e.target.closest('#annBar, .marquee-track');
-    if (bar) bar.style.setProperty('animation-play-state', 'paused', 'important');
+    if (e.target.closest('#annBar')) {
+      var annBar = document.getElementById('annBar');
+      if (annBar) annBar.style.setProperty('animation-play-state', 'paused', 'important');
+    }
   });
   document.addEventListener('mouseout', function(e) {
-    var bar = e.target.closest('#annBar, .marquee-track');
-    if (bar) bar.style.setProperty('animation-play-state', 'running', 'important');
+    if (e.target.closest('#annBar')) {
+      var annBar = document.getElementById('annBar');
+      if (annBar) annBar.style.setProperty('animation-play-state', 'running', 'important');
+    }
   });
   
-  setInterval(fix, 2000);
-  console.log('🔥 MARQUEE_CENTER_JS aktif');
+  console.log('🔥 MARQUEE_CENTER_V2_JS aktif');
 })();
