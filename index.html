@@ -1168,5 +1168,12 @@ img {
 #custApp section:has(h1) p:has-text("Drive Comfort") {
   display: none !important;
 }
+</style><style id="HIDE_ARMADA_HEADER">
+/* Sembunyikan section header Armada (Katalog Armada + Pilih Mobil Anda + deskripsi) */
+#custApp section:has(> div > span:first-child:has-text("Katalog Armada")),
+#custApp section:has(> div > h1:has-text("Pilih Mobil Anda")),
+#custApp section:has(h1):has(+ section):has(span) {
+  display: none !important;
+}
 </style></body>
 </html>
