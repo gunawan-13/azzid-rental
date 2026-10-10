@@ -3504,15 +3504,15 @@ function _gTrigger() {
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", function(){
     _gTrigger();
-    setInterval(_gTrigger, 1000);
+    /* KILL interval _gTrigger */
   });
 } else {
   _gTrigger();
-  setInterval(_gTrigger, 1000);
+  /* KILL interval _gTrigger */
 }
 // MutationObserver — trigger saat DOM berubah
 if (typeof MutationObserver !== "undefined") {
-  new MutationObserver(_gTrigger).observe(document.body, { childList: true, subtree: true });
+  /* KILL MutationObserver _gTrigger — infinite loop */
 }
 
 // === Fallback restoreAuth (kalau hilang) ===
@@ -3593,7 +3593,7 @@ if (document.readyState === "loading") {
 }
 
 // Re-run setiap 500ms (untuk input yang muncul dinamis)
-setInterval(addPasswordToggles, 500);
+/* KILL interval: addPasswordToggles */
 
 
 // === Auto-close sidebar saat navigasi ===
@@ -3666,7 +3666,7 @@ window.closeSb = window.closeSb || function() {
   } else {
     initMarquee();
   }
-  setInterval(initMarquee, 1000);
+  /* KILL interval initMarquee */
 })();
 
 
@@ -4089,7 +4089,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   }
   
   // Re-run tiap 1 detik (anti cache)
-  setInterval(fixFaq, 1000);
+  /* KILL interval: fixFaq */
   
   console.log('🔥 FORCE_FAQ_JS_V2 aktif');
 })();
@@ -4131,7 +4131,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(centerInnerIcons, 2000);
+  /* KILL interval: centerInnerIcons */
   console.log('🎯 CENTER_ICON_INNER_JS aktif');
 })();
 
@@ -4195,7 +4195,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fixMobilBintang, 1500);
+  /* KILL interval: fixMobilBintang */
   console.log('🔥 FIX_MOBIL_BINTANG aktif');
 })();
 
@@ -4248,7 +4248,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fixMobil, 1500);
+  /* KILL interval: fixMobil */
   console.log('🔥 FIX_MOBIL_FULL aktif');
 })();
 
@@ -4316,7 +4316,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fixLogin, 1500);
+  /* KILL interval: fixLogin */
   console.log('🔥 FIX_LOGIN_ADMIN_JS aktif');
 })();
 
@@ -4373,7 +4373,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fixArmadaHeader, 1500);
+  /* KILL interval: fixArmadaHeader */
   console.log('🔥 FIX_ARMADA_HEADER_JS aktif');
 })();
 
@@ -4439,7 +4439,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fix, 2000);
+  /* KILL interval fix */
   console.log('🔥 FIX_ARMADA_FINAL aktif');
 })();
 
@@ -4508,9 +4508,8 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  const obs = new MutationObserver(fix);
-  obs.observe(document.body, { childList: true, subtree: true });
+  /* KILL MutationObserver fix — infinite loop */
   
-  setInterval(fix, 1500);
+  /* KILL interval fix */
   console.log('🔥 FIX_HAPUS_ABU_ARMADA aktif');
 })();
