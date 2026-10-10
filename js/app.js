@@ -509,12 +509,12 @@ function filteredVeh() {
 function vArmada() {
   const list = filteredVeh();
   const f = S.filters;
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5 overflow-hidden">
+  return `<section class="relative py-6 bg-ink-900 border-b border-white/5 overflow-hidden" style="padding-top:24px!important;padding-bottom:24px!important;">
     <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-15">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
       <span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Katalog Armada</span>
       <h1 class="font-display font-extrabold text-4xl mt-2">Pilih Mobil Anda</h1>
-      <p class="text-muted mt-2 text-sm">Semua unit terawat, diasuransikan, dan siap jalan. Harga per 24 jam.</p>
+      <p class="text-muted mt-2 text-sm" style="margin-top:6px!important;margin-bottom:0!important;padding:0!important;background:transparent!important;display:block!important;position:relative!important;top:auto!important;transform:none!important;">Semua unit terawat, diasuransikan, dan siap jalan. Harga per 24 jam.</p>
     </div>
   </section>
   <section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
@@ -4368,4 +4368,70 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   setInterval(fixArmadaHeader, 1500);
   console.log('🔥 FIX_ARMADA_HEADER_JS aktif');
+})();
+
+
+// ============================================
+// === FIX_ARMADA_FINAL — paksa posisi rapat
+// ============================================
+(function() {
+  function fix() {
+    // Cari h1 "Pilih Mobil Anda"
+    const h1 = [...document.querySelectorAll('h1, h2')].find(el =>
+      el.textContent.trim() === 'Pilih Mobil Anda'
+    );
+    if (!h1) return;
+    
+    // Cari parent wrapper (div dalam section)
+    const wrapper = h1.parentElement;
+    const section = h1.closest('section');
+    
+    // Paksa section padding kecil
+    if (section) {
+      section.style.setProperty('padding-top', '32px', 'important');
+      section.style.setProperty('padding-bottom', '32px', 'important');
+    }
+    
+    // Cari p deskripsi
+    const p = [...document.querySelectorAll('p')].find(el =>
+      el.textContent.includes('Semua unit terawat')
+    );
+    if (!p) return;
+    
+    // Paksa p rapat ke h1
+    p.style.setProperty('margin-top', '6px', 'important');
+    p.style.setProperty('margin-bottom', '0', 'important');
+    p.style.setProperty('padding', '0', 'important');
+    p.style.setProperty('background', 'transparent', 'important');
+    p.style.setProperty('background-color', 'transparent', 'important');
+    p.style.setProperty('color', '#9ca3af', 'important');
+    p.style.setProperty('font-size', '13px', 'important');
+    p.style.setProperty('line-height', '1.5', 'important');
+    p.style.setProperty('display', 'block', 'important');
+    p.style.setProperty('position', 'static', 'important');
+    p.style.setProperty('float', 'none', 'important');
+    p.style.setProperty('order', 'initial', 'important');
+    
+    // Kalau p bukan next sibling h1, pindahkan
+    if (h1.nextElementSibling !== p) {
+      h1.parentNode.insertBefore(p, h1.nextSibling);
+      console.log('✅ Pindah p ke bawah h1');
+    }
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 300);
+    setTimeout(fix, 800);
+    setTimeout(fix, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fix, 2000);
+  console.log('🔥 FIX_ARMADA_FINAL aktif');
 })();
