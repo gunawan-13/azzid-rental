@@ -3618,7 +3618,15 @@ window.closeSb = window.closeSb || function() {
 (function() {
   function initMarquee() {
     var bar = document.getElementById("annBar");
-    if (!bar || bar.dataset.mq === "v4") return;
+    if (!bar) return;
+    
+    // Paksa re-apply
+    bar.style.animation = "none";
+    void bar.offsetWidth;
+    bar.style.animation = "marqueeScroll 60s linear infinite";
+    bar.style.animationPlayState = "running";
+    
+    if (bar.dataset.mq === "v4") return;
     bar.dataset.mq = "v4";
     
     var safetyTimer = null;
