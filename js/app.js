@@ -4009,7 +4009,8 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       btn.style.setProperty('justify-content', 'space-between', 'important');
       btn.style.setProperty('padding', '20px 28px', 'important');
       btn.style.setProperty('gap', '12px', 'important');
-      btn.style.setProperty('min-height', '64px', 'important');
+      btn.style.setProperty('min-height', '72px', 'important');
+      btn.style.setProperty('padding', '14px 24px', 'important');
       btn.style.setProperty('text-align', 'left', 'important');
       btn.style.setProperty('cursor', 'pointer', 'important');
       
@@ -4017,7 +4018,9 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       const spans = btn.querySelectorAll('span');
       if (spans.length > 0) {
         const q = spans[0];
-        q.style.setProperty('display', 'block', 'important');
+        q.style.setProperty('display', 'flex', 'important');
+        q.style.setProperty('align-items', 'center', 'important');
+        q.style.setProperty('min-height', '44px', 'important');
         q.style.setProperty('flex', '1', 'important');
         q.style.setProperty('width', 'auto', 'important');
         q.style.setProperty('min-width', '0', 'important');
