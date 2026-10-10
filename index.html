@@ -940,5 +940,33 @@ img {
   position: relative !important;
 }
 </style>
+
+<style id="FIX_REVIEW_ALIGN">
+/* Card testimonial — paksa flex column */
+.card:has(.flex.gap-1):has(.rounded-full) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+/* Paragraf — dorong ke atas, kasih ruang */
+.card:has(.flex.gap-1) > p {
+  flex: 1 1 auto !important;
+}
+
+/* Avatar + nama — paksa di bawah */
+.card:has(.flex.gap-1) > .flex.items-center.gap-3 {
+  margin-top: auto !important;
+  padding-top: 16px !important;
+}
+
+/* Grid parent — paksa tinggi konsisten */
+.grid:has(> .card:has(.flex.gap-1)) {
+  align-items: stretch !important;
+}
+.grid:has(> .card:has(.flex.gap-1)) > .card {
+  height: 100% !important;
+}
+</style>
 </body>
 </html>
