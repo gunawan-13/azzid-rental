@@ -4191,3 +4191,56 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(fixMobilBintang, 1500);
   console.log('🔥 FIX_MOBIL_BINTANG aktif');
 })();
+
+
+// ============================================
+// === FIX_MOBIL_FULL — gambar mobil full width
+// ============================================
+(function() {
+  function fixMobil() {
+    document.querySelectorAll('.veh-card').forEach(function(card) {
+      // Card full width
+      card.style.setProperty('width', '100%', 'important');
+      card.style.setProperty('max-width', 'none', 'important');
+      card.style.setProperty('display', 'flex', 'important');
+      card.style.setProperty('flex-direction', 'column', 'important');
+      
+      // Container gambar — paksa tinggi + full width
+      const imgBox = card.querySelector('div:first-child');
+      if (imgBox) {
+        imgBox.style.setProperty('width', '100%', 'important');
+        imgBox.style.setProperty('height', '220px', 'important');
+        imgBox.style.setProperty('min-height', '220px', 'important');
+        imgBox.style.setProperty('max-height', '220px', 'important');
+        imgBox.style.setProperty('overflow', 'hidden', 'important');
+        imgBox.style.setProperty('position', 'relative', 'important');
+      }
+      
+      // Gambar — paksa full
+      const img = card.querySelector('img');
+      if (img) {
+        img.style.setProperty('width', '100%', 'important');
+        img.style.setProperty('height', '100%', 'important');
+        img.style.setProperty('object-fit', 'cover', 'important');
+        img.style.setProperty('object-position', 'center center', 'important');
+        img.style.setProperty('display', 'block', 'important');
+      }
+    });
+  }
+  
+  function run() {
+    fixMobil();
+    setTimeout(fixMobil, 300);
+    setTimeout(fixMobil, 800);
+    setTimeout(fixMobil, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fixMobil, 1500);
+  console.log('🔥 FIX_MOBIL_FULL aktif');
+})();
