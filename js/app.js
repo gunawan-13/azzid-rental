@@ -4641,9 +4641,16 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_V3_JS — fix final (2 header)
+
+
+
+// ============================================
+// === MARQUEE_FINAL_JS — fix 2 header + hover pause
 // ============================================
 (function() {
+  var hoverRed = false;
+  var hoverNavy = false;
+  
   function fix() {
     // annBar (header merah)
     var annBar = document.getElementById('annBar');
@@ -4653,7 +4660,8 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       annBar.style.setProperty('display', 'inline-block', 'important');
       annBar.style.setProperty('white-space', 'nowrap', 'important');
       annBar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      annBar.style.setProperty('animation-play-state', 'running', 'important');
+      annBar.style.setProperty('animation-play-state', hoverRed ? 'paused' : 'running', 'important');
+      annBar.style.setProperty('min-width', 'max-content', 'important');
     }
     
     // marquee-track (header navy)
@@ -4664,9 +4672,9 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       el.style.setProperty('flex-wrap', 'nowrap', 'important');
       el.style.setProperty('white-space', 'nowrap', 'important');
       el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      el.style.setProperty('animation-play-state', 'running', 'important');
+      el.style.setProperty('animation-play-state', hoverNavy ? 'paused' : 'running', 'important');
+      el.style.setProperty('min-width', 'max-content', 'important');
       
-      // Setiap child span — nowrap
       el.querySelectorAll(':scope > span').forEach(function(child) {
         child.style.setProperty('display', 'inline-flex', 'important');
         child.style.setProperty('white-space', 'nowrap', 'important');
@@ -4675,11 +4683,45 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     });
   }
   
+  // Hover listener — header merah
+  function attachHoverRed() {
+    var annBar = document.getElementById('annBar');
+    if (!annBar || annBar.dataset.hoverBound) return;
+    annBar.dataset.hoverBound = '1';
+    
+    annBar.addEventListener('mouseenter', function() {
+      hoverRed = true;
+      fix();
+    });
+    annBar.addEventListener('mouseleave', function() {
+      hoverRed = false;
+      fix();
+    });
+  }
+  
+  // Hover listener — header navy
+  function attachHoverNavy() {
+    document.querySelectorAll('.marquee-track').forEach(function(el) {
+      if (el.dataset.hoverBound) return;
+      el.dataset.hoverBound = '1';
+      
+      el.addEventListener('mouseenter', function() {
+        hoverNavy = true;
+        fix();
+      });
+      el.addEventListener('mouseleave', function() {
+        hoverNavy = false;
+        fix();
+      });
+    });
+  }
+  
   function run() {
     fix();
-    setTimeout(fix, 100);
-    setTimeout(fix, 500);
-    setTimeout(fix, 1500);
+    attachHoverRed();
+    attachHoverNavy();
+    setTimeout(function() { fix(); attachHoverRed(); attachHoverNavy(); }, 300);
+    setTimeout(function() { fix(); attachHoverRed(); attachHoverNavy(); }, 1000);
   }
   
   if (document.readyState === 'loading') {
@@ -4688,6 +4730,11 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fix, 1000);
-  console.log('🔥 MARQUEE_V3_JS aktif');
+  setInterval(function() {
+    fix();
+    attachHoverRed();
+    attachHoverNavy();
+  }, 1000);
+  
+  console.log('🔥 MARQUEE_FINAL_JS aktif');
 })();

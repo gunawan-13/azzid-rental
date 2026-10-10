@@ -1442,9 +1442,9 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="MARQUEE_V3">
+</style><style id="MARQUEE_FINAL">
 /* ============================================ */
-/* HEADER MERAH (annBar) — mulai dari kanan */
+/* HEADER MERAH (annBar) — mulai dari KANAN */
 /* ============================================ */
 #annBar {
   padding-left: 100vw !important;
@@ -1457,8 +1457,14 @@ img {
   will-change: transform !important;
 }
 
+/* Hover pause — header merah */
+#annBar:hover,
+#custApp > div.fixed.top-0:hover #annBar {
+  animation-play-state: paused !important;
+}
+
 /* ============================================ */
-/* HEADER NAVY (marquee-track) — 1 baris, tidak wrap */
+/* HEADER NAVY (marquee-track) — sama kecepatan */
 /* ============================================ */
 .marquee-track {
   padding-left: 100vw !important;
@@ -1478,8 +1484,14 @@ img {
   flex-shrink: 0 !important;
 }
 
+/* Hover pause — header navy */
+.marquee-track:hover,
+#custApp > div.bg-ink-900.border-y:hover .marquee-track {
+  animation-play-state: paused !important;
+}
+
 /* ============================================ */
-/* KEYFRAMES */
+/* KEYFRAMES — sama untuk kedua header */
 /* ============================================ */
 @keyframes marqueeScroll {
   0% { transform: translateX(0); }
