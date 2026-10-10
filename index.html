@@ -1085,5 +1085,43 @@ img {
 .veh-card:hover {
   transform: translateY(-8px) !important;
 }
+</style><style id="HAPUS_BORDER_ABU">
+/* Header Armada — hapus border, background, jarak */
+#custApp section:has(> div > h1) {
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  background: transparent !important;
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+#custApp section:has(> div > h1) > div {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Section berikutnya — hapus jarak & border */
+#custApp section + section {
+  margin-top: 0 !important;
+  border-top: none !important;
+}
+
+/* Hapus semua garis pembatas abu-abu */
+#custApp section[class*="border"] {
+  border-color: transparent !important;
+}
+
+#custApp .border-b,
+#custApp .border-t,
+#custApp .border-white/5,
+#custApp .border-white/10 {
+  border-color: transparent !important;
+}
 </style></body>
 </html>
