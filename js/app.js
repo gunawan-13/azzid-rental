@@ -4637,41 +4637,49 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FIX_MARQUEE_FINAL_JS — paksa animasi jalan tanpa hapus padding
+
+
+
+// ============================================
+// === MARQUEE_V3_JS — fix final (2 header)
 // ============================================
 (function() {
-  function fixMarquee() {
-    // Header merah (annBar) — paksa animation, tapi JANGAN hapus padding
+  function fix() {
+    // annBar (header merah)
     var annBar = document.getElementById('annBar');
     if (annBar) {
-      // Set animasi saja
-      annBar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      annBar.style.setProperty('animation-play-state', 'running', 'important');
-      annBar.style.setProperty('display', 'inline-block', 'important');
-      annBar.style.setProperty('white-space', 'nowrap', 'important');
-      // PADDING: paksa 100vw kiri
       annBar.style.setProperty('padding-left', '100vw', 'important');
       annBar.style.setProperty('padding-right', '0', 'important');
-      annBar.style.setProperty('min-width', 'max-content', 'important');
+      annBar.style.setProperty('display', 'inline-block', 'important');
+      annBar.style.setProperty('white-space', 'nowrap', 'important');
+      annBar.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+      annBar.style.setProperty('animation-play-state', 'running', 'important');
     }
     
-    // Header navy (marquee-track)
-    document.querySelectorAll('.marquee-track, [class*="marquee"]').forEach(function(el) {
-      el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      el.style.setProperty('animation-play-state', 'running', 'important');
-      el.style.setProperty('display', 'inline-block', 'important');
-      el.style.setProperty('white-space', 'nowrap', 'important');
+    // marquee-track (header navy)
+    document.querySelectorAll('.marquee-track').forEach(function(el) {
       el.style.setProperty('padding-left', '100vw', 'important');
       el.style.setProperty('padding-right', '0', 'important');
-      el.style.setProperty('min-width', 'max-content', 'important');
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('flex-wrap', 'nowrap', 'important');
+      el.style.setProperty('white-space', 'nowrap', 'important');
+      el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
+      el.style.setProperty('animation-play-state', 'running', 'important');
+      
+      // Setiap child span — nowrap
+      el.querySelectorAll(':scope > span').forEach(function(child) {
+        child.style.setProperty('display', 'inline-flex', 'important');
+        child.style.setProperty('white-space', 'nowrap', 'important');
+        child.style.setProperty('flex-shrink', '0', 'important');
+      });
     });
   }
   
   function run() {
-    fixMarquee();
-    setTimeout(fixMarquee, 100);
-    setTimeout(fixMarquee, 500);
-    setTimeout(fixMarquee, 1500);
+    fix();
+    setTimeout(fix, 100);
+    setTimeout(fix, 500);
+    setTimeout(fix, 1500);
   }
   
   if (document.readyState === 'loading') {
@@ -4680,6 +4688,6 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fixMarquee, 1000);
-  console.log('🔥 FIX_MARQUEE_FINAL_JS aktif');
+  setInterval(fix, 1000);
+  console.log('🔥 MARQUEE_V3_JS aktif');
 })();

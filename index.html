@@ -1442,8 +1442,10 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="FIX_MARQUEE_POSISI">
-/* Header merah (annBar) — mulai dari kanan viewport */
+</style><style id="MARQUEE_V3">
+/* ============================================ */
+/* HEADER MERAH (annBar) — mulai dari kanan */
+/* ============================================ */
 #annBar {
   padding-left: 100vw !important;
   padding-right: 0 !important;
@@ -1455,26 +1457,41 @@ img {
   will-change: transform !important;
 }
 
-/* Header navy (marquee-track) — mulai dari kanan juga */
-.marquee-track,
-#custApp .marquee-track {
+/* ============================================ */
+/* HEADER NAVY (marquee-track) — 1 baris, tidak wrap */
+/* ============================================ */
+.marquee-track {
   padding-left: 100vw !important;
   padding-right: 0 !important;
-  display: inline-block !important;
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
   white-space: nowrap !important;
   animation: marqueeScroll 60s linear infinite !important;
   animation-play-state: running !important;
   min-width: max-content !important;
+  will-change: transform !important;
 }
 
+.marquee-track > span {
+  display: inline-flex !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* ============================================ */
+/* KEYFRAMES */
+/* ============================================ */
 @keyframes marqueeScroll {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 }
 
-/* Container overflow */
+/* ============================================ */
+/* CONTAINER OVERFLOW HIDDEN */
+/* ============================================ */
 #custApp > div.fixed.top-0,
-#custApp > div.fixed.top-0 > div {
+#custApp > div.fixed.top-0 > div,
+#custApp > div.bg-ink-900.border-y {
   overflow: hidden !important;
   white-space: nowrap !important;
   width: 100% !important;
