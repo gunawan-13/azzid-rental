@@ -4512,3 +4512,49 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   /* KILL interval fix */
   console.log('🔥 FIX_HAPUS_ABU_ARMADA aktif');
 })();
+
+
+// ============================================
+// === HIDE_ARMADA_HEADER_JS — sembunyikan header Armada
+// ============================================
+(function() {
+  function hide() {
+    // Cari section yang mengandung "Katalog Armada" + "Pilih Mobil Anda"
+    var sections = document.querySelectorAll('section');
+    var found = 0;
+    
+    sections.forEach(function(sec) {
+      var text = sec.textContent || '';
+      // Section header Armada = punya "Katalog Armada" + "Pilih Mobil Anda" di dalamnya
+      if (text.indexOf('Katalog Armada') !== -1 && text.indexOf('Pilih Mobil Anda') !== -1) {
+        // Pastikan ini header (bukan section yang berisi card mobil)
+        var hasCard = sec.querySelector('.veh-card, .card');
+        if (!hasCard) {
+          sec.style.setProperty('display', 'none', 'important');
+          found++;
+        }
+      }
+    });
+    
+    if (found > 0) {
+      console.log('🗑️ Header Armada disembunyikan (' + found + ' section)');
+    }
+  }
+  
+  function run() {
+    hide();
+    setTimeout(hide, 300);
+    setTimeout(hide, 800);
+    setTimeout(hide, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  // Re-run tiap 2 detik (untuk handle render ulang)
+  setInterval(hide, 2000);
+  console.log('🔥 HIDE_ARMADA_HEADER_JS aktif');
+})();
