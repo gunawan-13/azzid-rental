@@ -509,7 +509,7 @@ function filteredVeh() {
 function vArmada() {
   const list = filteredVeh();
   const f = S.filters;
-  return `<section class="relative py-6 bg-ink-900 border-b border-white/5 overflow-hidden" style="padding-top:24px!important;padding-bottom:24px!important;">
+  return `<section class="relative py-6 bg-ink-900 border-b border-white/5 overflow-hidden armada-header" style="padding-top:24px!important;padding-bottom:24px!important;">
     <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-15">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
       <span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Katalog Armada</span>
@@ -4515,48 +4515,28 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === HIDE_ARMADA_HEADER_JS — sembunyikan header Armada
-// ============================================
+// === HIDE_ARMADA_HEADER_JS_V2 ===
 (function() {
   function hide() {
-    // Cari section yang mengandung "Katalog Armada" + "Pilih Mobil Anda"
-    var sections = document.querySelectorAll('section');
-    var found = 0;
-    
-    sections.forEach(function(sec) {
-      var text = sec.textContent || '';
-      // Section header Armada = punya "Katalog Armada" + "Pilih Mobil Anda" di dalamnya
-      if (text.indexOf('Katalog Armada') !== -1 && text.indexOf('Pilih Mobil Anda') !== -1) {
-        // Pastikan ini header (bukan section yang berisi card mobil)
-        var hasCard = sec.querySelector('.veh-card, .card');
-        if (!hasCard) {
-          sec.style.setProperty('display', 'none', 'important');
-          found++;
-        }
-      }
+    document.querySelectorAll('section.armada-header, .armada-header').forEach(function(sec) {
+      sec.style.setProperty('display', 'none', 'important');
+      sec.style.setProperty('visibility', 'hidden', 'important');
+      sec.style.setProperty('height', '0', 'important');
+      sec.style.setProperty('overflow', 'hidden', 'important');
     });
-    
-    if (found > 0) {
-      console.log('🗑️ Header Armada disembunyikan (' + found + ' section)');
-    }
   }
   
-  function run() {
-    hide();
-    setTimeout(hide, 300);
-    setTimeout(hide, 800);
-    setTimeout(hide, 1500);
-  }
+  // Hide SEGERA (sebelum DOMContentLoaded)
+  hide();
   
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
-  } else {
-    run();
+    document.addEventListener('DOMContentLoaded', hide);
   }
   
-  // Re-run tiap 2 detik (untuk handle render ulang)
-  setInterval(hide, 2000);
-  console.log('🔥 HIDE_ARMADA_HEADER_JS aktif');
+  setTimeout(hide, 100);
+  setTimeout(hide, 500);
+  setInterval(hide, 1000);
+  console.log('🔥 HIDE_ARMADA_HEADER_JS_V2 aktif');
 })();
 
 

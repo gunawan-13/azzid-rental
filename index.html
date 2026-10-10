@@ -1435,5 +1435,15 @@ img {
   filter: none !important;
   mix-blend-mode: normal !important;
 }
+</style><style id="HIDE_ARMADA_HEADER_CSS">
+/* Sembunyikan section header Armada via CSS — berlaku dari awal */
+#custApp section.armada-header {
+  display: none !important;
+}
+
+/* Fallback: cari section yang cuma punya span + h1 (tanpa card) */
+#custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
+  display: none !important;
+}
 </style></body>
 </html>
