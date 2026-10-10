@@ -1265,5 +1265,46 @@ img {
 .grid:has(> .card:has(.flex.gap-1)) {
   align-items: stretch !important;
 }
+</style><style id="HIDE_HOVER_BORDER">
+/* Card mobil — hilangkan border hover + kilatan */
+.veh-card,
+.veh-card:hover {
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.veh-card > div:first-child,
+.veh-card > div:first-child:hover {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.veh-card img,
+.veh-card img:hover {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Hilangkan highlight saat hover ke gambar */
+.veh-card > div:first-child::before,
+.veh-card > div:first-child::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+}
+
+/* Card Layanan + Testimonial — hilangkan border hover juga */
+.card:hover {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  outline: none !important;
+}
+
+/* Semua elemen di card mobil — hilangkan outline */
+.veh-card *:hover {
+  outline: none !important;
+}
 </style></body>
 </html>
