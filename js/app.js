@@ -4541,7 +4541,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  setInterval(fix, 2000);
+  /* KILL setInterval fix */
   console.log('🔥 FIX_MARQUEE_NAVY_JS aktif');
 })();
 
