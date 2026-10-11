@@ -1629,12 +1629,12 @@ footer a[href*="/faq"] {
   background: #dc2626 !important;
   color: #fff !important;
 }
-</style><style id="RAPATKAN_FAQ">
+</style><style id="CENTER_TEXT_FAQ">
 /* ============================================ */
-/* FAQ — perpendek + rapatkan jarak */
+/* FAQ — text center vertikal + rapat */
 /* ============================================ */
 
-/* Section FAQ — perpendek jadi 560px */
+/* Section FAQ — pendek */
 #custApp section:has(.acc),
 #custApp section:has(.acc button),
 #custApp section[class*="max-w-"]:has(.acc) {
@@ -1645,43 +1645,63 @@ footer a[href*="/faq"] {
   padding-right: 16px !important;
 }
 
-/* Container FAQ — rapatkan jarak antar item */
-#custApp .space-y-3,
-#custApp .space-y-3 > *,
-#custApp section:has(.acc) > .space-y-3 {
-  --tw-space-y-reverse: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-  gap: 8px !important;
-}
-
+/* Container FAQ — rapatkan gap */
 #custApp section:has(.acc) > div:has(.acc) {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
 }
 
-/* Setiap FAQ item — rapatkan */
+/* Setiap FAQ item — rapat */
 #custApp .acc {
-  margin-bottom: 8px !important;
-  margin-top: 0 !important;
+  margin: 0 !important;
 }
 
-#custApp .acc:last-child {
-  margin-bottom: 0 !important;
-}
-
-/* Button FAQ — padding lebih kecil */
+/* Button FAQ — text center vertikal */
 #custApp .acc button {
-  padding: 12px 20px !important;
-  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 14px 20px !important;
+  min-height: 52px !important;
+  height: auto !important;
   gap: 12px !important;
+  text-align: left !important;
+  background: transparent !important;
+  border: none !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-/* Text FAQ — font lebih kecil */
+/* Span text — center vertikal + flex */
 #custApp .acc button > span:first-child {
+  display: flex !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  text-align: left !important;
+  color: #fff !important;
+  font-weight: 600 !important;
   font-size: 13.5px !important;
   line-height: 1.4 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  word-break: normal !important;
+  white-space: normal !important;
+}
+
+/* Icon + center vertikal */
+#custApp .acc button > .acc-ic {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+  color: #f87171 !important;
+  font-size: 20px !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 </style></body>
 </html>
