@@ -4634,3 +4634,65 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 FORCE_VHOME siap');
 })();
+
+
+// ============================================
+// === CEGAH_KOSONG_FINAL — cegah cMain kosong
+// ============================================
+(function() {
+  var lastHtml = '';
+  
+  function checkAndFix() {
+    var cMain = document.getElementById('cMain');
+    if (!cMain) return;
+    
+    var len = cMain.innerHTML.trim().length;
+    
+    // Simpan backup kalau ada konten
+    if (len > 50) {
+      lastHtml = cMain.innerHTML;
+      return;
+    }
+    
+    // Kalau kosong DAN punya backup — restore
+    if (len < 50 && lastHtml.length > 50) {
+      cMain.innerHTML = lastHtml;
+      console.log('🔥 CEGAH_KOSONG: restore backup');
+      return;
+    }
+    
+    // Kalau kosong DAN tidak ada backup — render vHome
+    if (len < 50 && lastHtml.length < 50) {
+      var hash = location.hash || '#/';
+      if (hash === '#/' || hash === '#' || hash === '') {
+        try {
+          if (typeof window.vHome === 'function') {
+            var html = window.vHome();
+            if (html && html.length > 50) {
+              cMain.innerHTML = html;
+              lastHtml = html;
+              console.log('🔥 CEGAH_KOSONG: render vHome');
+            }
+          }
+        } catch(e) {
+          console.error('vHome error:', e.message);
+        }
+      }
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkAndFix);
+  } else {
+    checkAndFix();
+  }
+  
+  setTimeout(checkAndFix, 100);
+  setTimeout(checkAndFix, 500);
+  setTimeout(checkAndFix, 1500);
+  setTimeout(checkAndFix, 3000);
+  
+  setInterval(checkAndFix, 300);
+  
+  console.log('🔥 CEGAH_KOSONG_FINAL aktif');
+})();
