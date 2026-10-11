@@ -3363,12 +3363,7 @@ function renderC() {
   else if (p[0] === 'faq') html = vFaq();
   else if (p[0] === 'kontak') html = vKontak();
   else html = vHome();
-  // GUARD: jangan set kalau html kosong (cegah flash)
-  if (html && html.trim().length > 0) {
-    main.innerHTML = html;
-  } else {
-    console.log('🔥 renderC: html kosong, skip set cMain');
-  }
+  main.innerHTML = html;
   window.__firstRenderDone = true;
   revealInit();
   document.querySelectorAll('.navl').forEach(a => {
@@ -4541,7 +4536,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  /* KILL setInterval fix */
+  setInterval(fix, 2000);
   console.log('🔥 FIX_MARQUEE_NAVY_JS aktif');
 })();
 
@@ -4551,20 +4546,86 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-/* KILL: RENDER_ONCE dihapus */
+// === RENDER_ONCE — panggil renderC sekali saat load
+// ============================================
+(function() {
+  function render() {
+    var cMain = document.getElementById('cMain');
+    if (!cMain || cMain.innerHTML.trim().length > 50) return;
+    
+    try {
+      if (typeof window.renderC === 'function') {
+        window.renderC();
+        console.log('🔥 RENDER_ONCE: renderC() — cMain:', cMain.innerHTML.length);
+      }
+    } catch(e) {
+      console.error('🔥 RENDER_ONCE error:', e.message);
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', render);
+  } else {
+    render();
+  }
+  
+  setTimeout(render, 100);
+  setTimeout(render, 500);
+  setTimeout(render, 1500);
+  
+  console.log('🔥 RENDER_ONCE aktif');
+})();
 
 
 // ============================================
-
-
-
+// === FORCE_VHOME — paksa vHome() render
 // ============================================
-/* KILL: CEGAH_KOSONG_FINAL dihapus */
-
-
-// ============================================
-
-
-
-// ============================================
-/* KILL: LOCK_CMAIN dihapus */
+(function() {
+  function forceHome() {
+    var hash = location.hash || '#/';
+    if (hash !== '#/' && hash !== '#' && hash !== '') return;
+    
+    var cMain = document.getElementById('cMain');
+    if (!cMain) return;
+    if (cMain.innerHTML.trim().length > 50) return;
+    
+    console.log('🔥 FORCE_VHOME aktif');
+    
+    // Coba renderC dulu
+    try {
+      if (typeof window.renderC === 'function') {
+        window.renderC();
+        console.log('🔥 renderC() — cMain:', cMain.innerHTML.length);
+      }
+    } catch(e) {
+      console.error('🔥 renderC error:', e.message);
+    }
+    
+    // Kalau masih kosong, coba vHome langsung
+    if (cMain.innerHTML.trim().length < 50) {
+      try {
+        if (typeof window.vHome === 'function') {
+          var html = window.vHome();
+          if (html && html.length > 50) {
+            cMain.innerHTML = html;
+            console.log('🔥 vHome() langsung — cMain:', cMain.innerHTML.length);
+          }
+        }
+      } catch(e) {
+        console.error('🔥 vHome error:', e.message);
+      }
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', forceHome);
+  } else {
+    forceHome();
+  }
+  
+  setTimeout(forceHome, 100);
+  setTimeout(forceHome, 500);
+  setTimeout(forceHome, 1500);
+  
+  console.log('🔥 FORCE_VHOME siap');
+})();
