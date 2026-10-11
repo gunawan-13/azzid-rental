@@ -4583,57 +4583,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FORCE_VHOME — paksa vHome() render
-// ============================================
-(function() {
-  function forceHome() {
-    var hash = location.hash || '#/';
-    if (hash !== '#/' && hash !== '#' && hash !== '') return;
-    
-    var cMain = document.getElementById('cMain');
-    if (!cMain) return;
-    if (cMain.innerHTML.trim().length > 50) return;
-    
-    console.log('🔥 FORCE_VHOME aktif');
-    
-    // Coba renderC dulu
-    try {
-      if (typeof window.renderC === 'function') {
-        window.renderC();
-        console.log('🔥 renderC() — cMain:', cMain.innerHTML.length);
-      }
-    } catch(e) {
-      console.error('🔥 renderC error:', e.message);
-    }
-    
-    // Kalau masih kosong, coba vHome langsung
-    if (cMain.innerHTML.trim().length < 50) {
-      try {
-        if (typeof window.vHome === 'function') {
-          var html = window.vHome();
-          if (html && html.length > 50) {
-            cMain.innerHTML = html;
-            console.log('🔥 vHome() langsung — cMain:', cMain.innerHTML.length);
-          }
-        }
-      } catch(e) {
-        console.error('🔥 vHome error:', e.message);
-      }
-    }
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', forceHome);
-  } else {
-    forceHome();
-  }
-  
-  setTimeout(forceHome, 100);
-  setTimeout(forceHome, 500);
-  setTimeout(forceHome, 1500);
-  
-  console.log('🔥 FORCE_VHOME siap');
-})();
+
 
 
 // ============================================
@@ -4695,4 +4645,68 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(checkAndFix, 300);
   
   console.log('🔥 CEGAH_KOSONG_FINAL aktif');
+})();
+
+
+// ============================================
+// === FORCE_VHOME_FINAL — paksa set cMain langsung
+// ============================================
+(function() {
+  function paksa() {
+    var cMain = document.getElementById('cMain');
+    if (!cMain) return;
+    
+    // Kalau cMain sudah ada konten (>100 char), skip
+    if (cMain.innerHTML.trim().length > 100) return;
+    
+    var hash = location.hash || '#/';
+    var h = hash.replace(/^#\/?/, '').split('/')[0];
+    
+    try {
+      var html = '';
+      
+      if (!h || h === '' || h === 'home') {
+        html = window.vHome ? window.vHome() : '';
+      } else if (h === 'armada') {
+        html = window.vArmada ? window.vArmada() : '';
+      } else if (h === 'layanan') {
+        html = window.vLayanan ? window.vLayanan() : '';
+      } else if (h === 'tentang') {
+        html = window.vTentang ? window.vTentang() : '';
+      } else if (h === 'faq') {
+        html = window.vFaq ? window.vFaq() : '';
+      } else if (h === 'kontak') {
+        html = window.vKontak ? window.vKontak() : '';
+      } else {
+        html = window.vHome ? window.vHome() : '';
+      }
+      
+      if (html && html.length > 100) {
+        cMain.innerHTML = html;
+        console.log('🔥 FORCE_VHOME_FINAL: cMain diisi ' + html.length + ' char untuk "' + (h || 'home') + '"');
+        
+        if (typeof window.revealInit === 'function') {
+          try { window.revealInit(); } catch(e) {}
+        }
+      }
+    } catch(e) {
+      console.error('🔥 FORCE_VHOME_FINAL error:', e.message);
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', paksa);
+  } else {
+    paksa();
+  }
+  
+  setTimeout(paksa, 100);
+  setTimeout(paksa, 300);
+  setTimeout(paksa, 800);
+  setTimeout(paksa, 1500);
+  setTimeout(paksa, 3000);
+  
+  setInterval(paksa, 2000);
+  
+  console.log('🔥 FORCE_VHOME_FINAL aktif');
 })();
