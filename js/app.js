@@ -475,7 +475,7 @@ function vHome() {
   <section class="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
     <div class="text-center mb-10 rv"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">FAQ</span> <h2 class="font-display font-bold text-3xl mt-2">Pertanyaan yang Sering Diajukan</h2></div>
     <div class="space-y-3">${FAQS.slice(0, 6).map((f, i) => `<div class="acc rv card overflow-hidden" style="transition-delay:${i * 60}ms">
-      <button onclick="this.parentElement.classList.toggle('open')" class="w-full" style="display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;width:100%!important;padding:14px 20px!important;gap:16px!important;text-align:left!important;background:transparent!important;border:none!important;cursor:pointer!important;color:#fff!important;font-weight:600!important;font-size:13.5px!important;line-height:1.5!important;"><span style="display:block!important;flex:1 1 0%!important;min-width:0!important;width:auto!important;max-width:none!important;text-align:left!important;white-space:normal!important;word-break:normal!important;color:#fff!important;font-weight:600!important;font-size:13.5px!important;line-height:1.5!important;padding:0!important;margin:0!important;">${f.q}</span><span class="acc-ic" style="display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 24px!important;flex-shrink:0!important;width:24px!important;height:24px!important;color:#f87171!important;font-size:20px!important;line-height:1!important;padding:0!important;margin:0!important;pointer-events:none!important;">+</span></button>
+      <button onclick="this.parentElement.classList.toggle('open')" class="w-full flex items-center justify-between gap-4 px-6 py-4 text-left font-semibold text-[14.5px]" style="width:100%!important;display:flex!important;text-align:left!important;"><span style="flex:1 1 auto!important;min-width:0!important;width:auto!important;word-break:normal!important;text-align:left!important;">${f.q}</span><span class="acc-ic text-maroon-400 text-xl leading-none shrink-0">+</span></button>
       <div class="acc-body"><p class="px-6 pb-5 text-[13.5px] text-muted leading-relaxed">${f.a}</p></div>
     </div>`).join('')}
   </div>
@@ -509,7 +509,7 @@ function filteredVeh() {
 function vArmada() {
   const list = filteredVeh();
   const f = S.filters;
-  return `<section class="relative py-6 bg-ink-900 border-b border-white/5 overflow-hidden armada-header" style="padding-top:24px!important;padding-bottom:24px!important;">
+  return `<section class="relative py-6 bg-ink-900 border-b border-white/5 overflow-hidden" style="padding-top:24px!important;padding-bottom:24px!important;">
     <img src="${IMG.fleet}" class="absolute inset-0 w-full h-full object-cover opacity-15">
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
       <span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Katalog Armada</span>
@@ -618,7 +618,7 @@ function vTentang() {
 }
 
 function vFaq() {
-  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">FAQ</span><h1 class="font-display font-extrabold text-4xl mt-2">Butuh Jawaban Cepat?</h1></div></section><section class="max-w-lg mx-auto px-4 sm:px-6 py-14 space-y-3">${FAQS.map((f, i) => `<div class="acc rv card overflow-hidden" style="transition-delay:${i * 50}ms"><button onclick="this.parentElement.classList.toggle('open')" class="w-full" style="display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;width:100%!important;padding:14px 20px!important;gap:16px!important;text-align:left!important;background:transparent!important;border:none!important;cursor:pointer!important;color:#fff!important;font-weight:600!important;font-size:13.5px!important;line-height:1.5!important;"><span style="display:block!important;flex:1 1 0%!important;min-width:0!important;width:auto!important;max-width:none!important;text-align:left!important;white-space:normal!important;word-break:normal!important;color:#fff!important;font-weight:600!important;font-size:13.5px!important;line-height:1.5!important;padding:0!important;margin:0!important;">${f.q}</span><span class="acc-ic" style="display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 24px!important;flex-shrink:0!important;width:24px!important;height:24px!important;color:#f87171!important;font-size:20px!important;line-height:1!important;padding:0!important;margin:0!important;pointer-events:none!important;">+</span></button><div class="acc-body"><p class="px-6 pb-5 text-[13.5px] text-muted leading-relaxed">${f.a}</p></div></div>`).join('')}<div class="card p-8 text-center mt-8 rv"><h3 class="font-display font-semibold text-lg mb-2">Masih ada pertanyaan?</h3><p class="text-sm text-muted mb-5">Tim kami siap membantu 24/7.</p><a href="${waLink('Halo AZZID RENTCAR, saya punya pertanyaan.')}" target="_blank" class="btn btn-m">Chat WhatsApp</a></div></section>`;
+  return `<section class="relative py-16 bg-ink-900 border-b border-white/5"><div class="max-w-7xl mx-auto px-4 sm:px-6"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">FAQ</span><h1 class="font-display font-extrabold text-4xl mt-2">Butuh Jawaban Cepat?</h1></div></section><section class="max-w-lg mx-auto px-4 sm:px-6 py-14 space-y-3">${FAQS.map((f, i) => `<div class="acc rv card overflow-hidden" style="transition-delay:${i * 50}ms"><button onclick="this.parentElement.classList.toggle('open')" class="w-full flex items-center justify-between gap-4 px-6 py-4 text-left font-semibold text-[14.5px]" style="width:100%!important;display:flex!important;text-align:left!important;"><span style="flex:1 1 auto!important;min-width:0!important;width:auto!important;word-break:normal!important;text-align:left!important;">${f.q}</span><span class="acc-ic text-maroon-400 text-xl leading-none shrink-0">+</span></button><div class="acc-body"><p class="px-6 pb-5 text-[13.5px] text-muted leading-relaxed">${f.a}</p></div></div>`).join('')}<div class="card p-8 text-center mt-8 rv"><h3 class="font-display font-semibold text-lg mb-2">Masih ada pertanyaan?</h3><p class="text-sm text-muted mb-5">Tim kami siap membantu 24/7.</p><a href="${waLink('Halo AZZID RENTCAR, saya punya pertanyaan.')}" target="_blank" class="btn btn-m">Chat WhatsApp</a></div></section>`;
 }
 
 function vKontak() {
@@ -3185,7 +3185,7 @@ function saveCms() {
 
 function applyCms() {
   const bp = S.cms.bannerPromo;
-  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent = annText + '   •   ' + annText + '   •   ' + annText;
+  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent=annText+'   •   '+annText;
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
@@ -3988,7 +3988,110 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-/* KILL: FORCE_FAQ_JS_V2 dihapus */
+// === FORCE_FAQ_JS_V2 — super agresif, tiap 1 detik ===
+// ============================================
+(function() {
+  function fixFaq() {
+    document.querySelectorAll('.acc').forEach(function(acc) {
+      acc.style.setProperty('background', 'transparent', 'important');
+      acc.style.setProperty('background-color', 'transparent', 'important');
+      acc.style.setProperty('border', '1px solid rgba(255,255,255,0.06)', 'important');
+      acc.style.setProperty('border-radius', '12px', 'important');
+      acc.style.setProperty('overflow', 'hidden', 'important');
+    });
+    
+    document.querySelectorAll('.acc button').forEach(function(btn) {
+      // Reset semua background
+      btn.style.setProperty('background', 'transparent', 'important');
+      btn.style.setProperty('background-color', 'transparent', 'important');
+      btn.style.setProperty('background-image', 'none', 'important');
+      btn.style.setProperty('border', 'none', 'important');
+      btn.style.setProperty('box-shadow', 'none', 'important');
+      
+      // Layout
+      btn.style.setProperty('width', '100%', 'important');
+      btn.style.setProperty('display', 'flex', 'important');
+      btn.style.setProperty('align-items', 'center', 'important');
+      btn.style.setProperty('justify-content', 'space-between', 'important');
+      btn.style.setProperty('padding', '20px 28px', 'important');
+      btn.style.setProperty('gap', '12px', 'important');
+      btn.style.setProperty('min-height', '72px', 'important');
+      btn.style.setProperty('padding', '14px 24px', 'important');
+      btn.style.setProperty('text-align', 'left', 'important');
+      btn.style.setProperty('cursor', 'pointer', 'important');
+      
+      // Span pertanyaan
+      const spans = btn.querySelectorAll('span');
+      if (spans.length > 0) {
+        const q = spans[0];
+        q.style.setProperty('display', 'flex', 'important');
+        q.style.setProperty('align-items', 'center', 'important');
+        q.style.setProperty('min-height', '44px', 'important');
+        q.style.setProperty('flex', '1', 'important');
+        q.style.setProperty('width', 'auto', 'important');
+        q.style.setProperty('min-width', '0', 'important');
+        q.style.setProperty('max-width', 'none', 'important');
+        q.style.setProperty('background', 'transparent', 'important');
+        q.style.setProperty('background-color', 'transparent', 'important');
+        q.style.setProperty('background-image', 'none', 'important');
+        q.style.setProperty('color', '#ffffff', 'important');
+        q.style.setProperty('font-weight', '600', 'important');
+        q.style.setProperty('font-size', '14.5px', 'important');
+        q.style.setProperty('line-height', '1.4', 'important');
+        q.style.setProperty('text-align', 'left', 'important');
+        q.style.setProperty('padding', '0', 'important');
+        q.style.setProperty('margin', '0', 'important');
+        q.style.setProperty('border', 'none', 'important');
+        q.style.setProperty('word-break', 'normal', 'important');
+        q.style.setProperty('white-space', 'normal', 'important');
+        q.style.setProperty('overflow-wrap', 'break-word', 'important');
+      }
+      
+      // Icon +
+      const icon = btn.querySelector('.acc-ic');
+      if (icon) {
+        icon.style.setProperty('display', 'inline-flex', 'important');
+        icon.style.setProperty('align-items', 'center', 'important');
+        icon.style.setProperty('justify-content', 'center', 'important');
+        icon.style.setProperty('flex-shrink', '0', 'important');
+        icon.style.setProperty('color', '#f87171', 'important');
+        icon.style.setProperty('font-size', '22px', 'important');
+        icon.style.setProperty('line-height', '1', 'important');
+        icon.style.setProperty('width', '24px', 'important');
+        icon.style.setProperty('height', '24px', 'important');
+        icon.style.setProperty('background', 'transparent', 'important');
+      }
+    });
+    
+    // Paksa max-width section FAQ
+    document.querySelectorAll('section').forEach(function(s) {
+      if (s.textContent.includes('Pertanyaan yang Sering')) {
+        s.style.setProperty('max-width', '512px', 'important');
+        s.style.setProperty('margin-left', 'auto', 'important');
+        s.style.setProperty('margin-right', 'auto', 'important');
+      }
+    });
+  }
+  
+  function run() {
+    fixFaq();
+    setTimeout(fixFaq, 100);
+    setTimeout(fixFaq, 500);
+    setTimeout(fixFaq, 1000);
+    setTimeout(fixFaq, 2000);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  // Re-run tiap 1 detik (anti cache)
+  /* KILL interval: fixFaq */
+  
+  console.log('🔥 FORCE_FAQ_JS_V2 aktif');
+})();
 
 
 // ============================================
@@ -4412,130 +4515,42 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === HIDE_ARMADA_HEADER_JS_V2 ===
-(function() {
-  function hide() {
-    document.querySelectorAll('section.armada-header, .armada-header').forEach(function(sec) {
-      sec.style.setProperty('display', 'none', 'important');
-      sec.style.setProperty('visibility', 'hidden', 'important');
-      sec.style.setProperty('height', '0', 'important');
-      sec.style.setProperty('overflow', 'hidden', 'important');
-    });
-  }
-  
-  // Hide SEGERA (sebelum DOMContentLoaded)
-  hide();
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hide);
-  }
-  
-  setTimeout(hide, 100);
-  setTimeout(hide, 500);
-  setInterval(hide, 1000);
-  console.log('🔥 HIDE_ARMADA_HEADER_JS_V2 aktif');
-})();
-
-
-// ============================================
-
-
-
-// ============================================
-
-
-
-// ============================================
-
-
-
-// ============================================
-
-
-
-// ============================================
-
-
-
-// ============================================
-/* KILL: FAQ_NAV_V2_JS dihapus */
-
-
-// ============================================
-/* KILL: FAQ_FIX_NAV_JS dihapus */
-
-
-// ============================================
-
-
-
-// ============================================
-// === FIX_MARQUEE_NAVY_JS — paksa kedua marquee dari kanan
+// === AKSI_KILAT_FINAL — panggil renderC sekali + cek cMain
 // ============================================
 (function() {
-  function fix() {
-    // ============ HEADER MERAH ============
-    var annBar = document.getElementById('annBar');
-    if (annBar) {
-      annBar.style.setProperty('display', 'inline-block', 'important');
-      annBar.style.setProperty('padding-left', '100vw', 'important');
-      annBar.style.setProperty('padding-right', '0', 'important');
-      annBar.style.setProperty('height', '34px', 'important');
-      annBar.style.setProperty('line-height', '34px', 'important');
-      annBar.style.setProperty('white-space', 'nowrap', 'important');
-      annBar.style.setProperty('animation', 'marqueeScrollHeader 80s linear infinite', 'important');
-      annBar.style.setProperty('animation-play-state', 'running', 'important');
-      annBar.style.setProperty('min-width', 'max-content', 'important');
-    }
-    
-    // ============ HEADER NAVY (marquee-track) ============
-    document.querySelectorAll('.marquee-track').forEach(function(track) {
-      track.style.setProperty('display', 'inline-flex', 'important');
-      track.style.setProperty('flex-direction', 'row', 'important');
-      track.style.setProperty('flex-wrap', 'nowrap', 'important');
-      track.style.setProperty('align-items', 'center', 'important');
-      track.style.setProperty('white-space', 'nowrap', 'important');
-      track.style.setProperty('padding-left', '100vw', 'important');    /* ← dari kanan */
-      track.style.setProperty('padding-right', '0', 'important');
-      track.style.setProperty('margin', '0', 'important');
-      track.style.setProperty('animation', 'marqueeScrollNavy 60s linear infinite', 'important');
-      track.style.setProperty('animation-play-state', 'running', 'important');
-      track.style.setProperty('min-width', 'max-content', 'important');
+  function forceRender() {
+    try {
+      var cMain = document.getElementById('cMain');
+      if (!cMain) return;
       
-      // Child span
-      track.querySelectorAll(':scope > span').forEach(function(child) {
-        child.style.setProperty('display', 'inline-flex', 'important');
-        child.style.setProperty('flex-direction', 'row', 'important');
-        child.style.setProperty('flex-wrap', 'nowrap', 'important');
-        child.style.setProperty('align-items', 'center', 'important');
-        child.style.setProperty('white-space', 'nowrap', 'important');
-        child.style.setProperty('flex-shrink', '0', 'important');
-      });
-    });
-    
-    // Container marquee-track
-    document.querySelectorAll('div:has(.marquee-track)').forEach(function(container) {
-      container.style.setProperty('display', 'flex', 'important');
-      container.style.setProperty('align-items', 'center', 'important');
-      container.style.setProperty('overflow', 'hidden', 'important');
-      container.style.setProperty('white-space', 'nowrap', 'important');
-      container.style.setProperty('padding', '0', 'important');
-    });
-  }
-  
-  function run() {
-    fix();
-    setTimeout(fix, 100);
-    setTimeout(fix, 500);
-    setTimeout(fix, 1500);
+      var currentLen = cMain.innerHTML.trim().length;
+      console.log('AKSI_KILAT: cMain length =', currentLen);
+      
+      // Panggil renderC() — kalau cMain kosong, isi dengan konten dinamis
+      // Kalau cMain ada (dari HTML static), renderC akan replace dengan dinamis
+      if (typeof window.renderC === 'function') {
+        try {
+          console.log('AKSI_KILAT: panggil renderC()');
+          window.renderC();
+          var afterLen = cMain.innerHTML.trim().length;
+          console.log('AKSI_KILAT: setelah renderC, cMain =', afterLen);
+        } catch(e) {
+          console.error('AKSI_KILAT: renderC ERROR:', e.message);
+        }
+      }
+    } catch(e) {
+      console.error('AKSI_KILAT error:', e.message);
+    }
   }
   
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
+    document.addEventListener('DOMContentLoaded', forceRender);
   } else {
-    run();
+    forceRender();
   }
   
-  setInterval(fix, 2000);
-  console.log('🔥 FIX_MARQUEE_NAVY_JS aktif');
+  setTimeout(forceRender, 300);
+  setTimeout(forceRender, 1000);
+  
+  console.log('🔥 AKSI_KILAT_FINAL aktif');
 })();

@@ -21,7 +21,7 @@
 <script src="js/tailwind.config.js"></script>
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/custom.css">
-<style>#hdrAdminBtn:not(.auth-ready),#mobAdminBtn:not(.auth-ready){visibility:hidden}</style><style></style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe{max-width:100%;height:auto}.break-all{word-break:break-all}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe,table{max-width:100%}*{box-sizing:border-box}#custApp{padding-top:90px;contain:layout}@media(min-width:1024px){#custApp{padding-top:106px}}#adminApp{padding-top:0}</style>
+<style>#hdrAdminBtn:not(.auth-ready),#mobAdminBtn:not(.auth-ready){visibility:hidden}</style><style></style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe{max-width:100%;height:auto}.break-all{word-break:break-all}</style><style>html,body{overflow-x:hidden;max-width:100vw}img,video,iframe,table{max-width:100%}*{box-sizing:border-box}<style>#custApp{padding-top:90px;contain:layout}@media(min-width:1024px){#custApp{padding-top:106px}}#adminApp{padding-top:0}</style></style>
   
   
   
@@ -767,28 +767,27 @@ img {
 
 
 <body>
-<div id="noise"></div><!-- ============ CUSTOMER WEBSITE ============ --><div id="custApp">  <div class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-maroon-800 via-maroon-600 to-maroon-800 text-[12px] sm:text-[13px] font-semibold py-2 tracking-wide overflow-hidden whitespace-nowrap"><div id="annBar" class="inline-block animate-marquee" style="padding-left:100vw"></div></div>  <header id="cHeader" class="fixed top-[32px] left-0 right-0 z-50 transition-all duration-300 border-b border-transparent" style="top:34px">    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px] gap-2">      <a href="#/" class="flex items-center gap-2.5 min-w-0">        <img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">        <span class="font-display font-bold tracking-wide text-[15px] leading-none hidden min-[420px]:block">AZZID <span class="text-maroon-400">RENTCAR</span>          <span class="block text-[9px] font-medium tracking-[.28em] text-muted font-sans">PREMIUM CAR RENTAL</span></span>      </a>      <nav class="hidden lg:flex items-center gap-6 text-[13.5px] font-medium text-zinc-300">        <a class="navl hover:text-white transition" href="#/">Beranda</a>        <a class="navl hover:text-white transition" href="#/armada">Armada</a>        <a class="navl hover:text-white transition" href="#/layanan">Layanan</a>        <a class="navl hover:text-white transition" href="#/tentang">Tentang Kami</a>        <!-- FAQ hidden -->        <a class="navl hover:text-white transition" href="#/kontak">Kontak</a>      </nav>      <div class="flex items-center gap-2 shrink-0">        <div class="relative"><button id="userNotifBtn" onclick="toggleUserNotif()" class="p-2 relative text-zinc-400 hover:text-white" aria-label="Notifikasi"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="userNotifBadge" class="hidden absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 px-1 grid place-items-center">0</span></button><div id="userNotifD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div><div id="userNotifList"></div></div></div> <button onclick="openTrack()" class="btn btn-g btn-sm"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="hidden min-[380px]:inline">Lacak Booking</span><span class="min-[380px]:hidden">Lacak</span></button>        <button id="hdrUserBtn" class="btn btn-g btn-sm !px-3 md:!px-4" aria-label="Login User"><span class="hidden md:inline">Login User</span><span class="md:hidden">User</span></button><span id="hdrAdminBtn" style="display:none"></span>        <button id="mBtn" class="lg:hidden p-2" onclick="toggleMobNav()" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>      </div>    </div>    <div id="mobNav" class="hidden lg:hidden bg-ink-900 border-t border-white/5 px-6 py-4 flex flex-col gap-3 text-sm font-medium">      <a href="#/" onclick="toggleMobNav(1)">Beranda</a><a href="#/armada" onclick="toggleMobNav(1)">Armada</a>      <a href="#/layanan" onclick="toggleMobNav(1)">Layanan</a><a href="#/tentang" onclick="toggleMobNav(1)">Tentang Kami</a>      <!-- FAQ hidden --><a href="#/kontak" onclick="toggleMobNav(1)">Kontak</a>      <div class="border-t border-white/10 pt-3 flex flex-col gap-3">        <button id="mobUserBtn" class="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3.5 font-bold text-white">Login User</button>        <p class="text-[10.5px] text-zinc-500 leading-relaxed">Overview · Booking · Calendar · Armada · Customer · Driver · Payment · Promo · Reports · CMS · Users & Roles · Settings.</p>      </div>    </div>  </header>  <main id="cMain"><!-- STATIC_HOME_BERANDA -->
-<section class="relative min-h-[85vh] flex items-center overflow-hidden">
-  <div class="absolute inset-0"><img src="assets/img/hero.jpg" alt="AZZID" class="w-full h-full object-cover opacity-40" onerror="this.style.display='none'"><div class="absolute inset-0 bg-gradient-to-r from-black/95 via-black/70 to-transparent"></div></div>
+<div id="noise"></div><!-- ============ CUSTOMER WEBSITE ============ --><div id="custApp">  <div class="fixed top-0 left-0 right-0 z-40 bg-gradient-to-r from-maroon-800 via-maroon-600 to-maroon-800 text-[12px] sm:text-[13px] font-semibold py-2 tracking-wide overflow-hidden whitespace-nowrap"><div id="annBar" class="inline-block animate-marquee" style="padding-left:100vw"></div></div>  <header id="cHeader" class="fixed top-[32px] left-0 right-0 z-50 transition-all duration-300 border-b border-transparent" style="top:34px">    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 lg:h-[72px] gap-2">      <a href="#/" class="flex items-center gap-2.5 min-w-0">        <img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">        <span class="font-display font-bold tracking-wide text-[15px] leading-none hidden min-[420px]:block">AZZID <span class="text-maroon-400">RENTCAR</span>          <span class="block text-[9px] font-medium tracking-[.28em] text-muted font-sans">PREMIUM CAR RENTAL</span></span>      </a>      <nav class="hidden lg:flex items-center gap-6 text-[13.5px] font-medium text-zinc-300">        <a class="navl hover:text-white transition" href="#/">Beranda</a>        <a class="navl hover:text-white transition" href="#/armada">Armada</a>        <a class="navl hover:text-white transition" href="#/layanan">Layanan</a>        <a class="navl hover:text-white transition" href="#/tentang">Tentang Kami</a>        <a class="navl hover:text-white transition" href="#/faq">FAQ</a>        <a class="navl hover:text-white transition" href="#/kontak">Kontak</a>      </nav>      <div class="flex items-center gap-2 shrink-0">        <div class="relative"><button id="userNotifBtn" onclick="toggleUserNotif()" class="p-2 relative text-zinc-400 hover:text-white" aria-label="Notifikasi"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span id="userNotifBadge" class="hidden absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 px-1 grid place-items-center">0</span></button><div id="userNotifD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div><div id="userNotifList"></div></div></div> <button onclick="openTrack()" class="btn btn-g btn-sm"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><span class="hidden min-[380px]:inline">Lacak Booking</span><span class="min-[380px]:hidden">Lacak</span></button>        <button id="hdrUserBtn" class="btn btn-g btn-sm !px-3 md:!px-4" aria-label="Login User"><span class="hidden md:inline">Login User</span><span class="md:hidden">User</span></button><span id="hdrAdminBtn" style="display:none"></span>        <button id="mBtn" class="lg:hidden p-2" onclick="toggleMobNav()" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>      </div>    </div>    <div id="mobNav" class="hidden lg:hidden bg-ink-900 border-t border-white/5 px-6 py-4 flex flex-col gap-3 text-sm font-medium">      <a href="#/" onclick="toggleMobNav(1)">Beranda</a><a href="#/armada" onclick="toggleMobNav(1)">Armada</a>      <a href="#/layanan" onclick="toggleMobNav(1)">Layanan</a><a href="#/tentang" onclick="toggleMobNav(1)">Tentang Kami</a>      <a href="#/faq" onclick="toggleMobNav(1)">FAQ</a><a href="#/kontak" onclick="toggleMobNav(1)">Kontak</a>      <div class="border-t border-white/10 pt-3 flex flex-col gap-3">        <button id="mobUserBtn" class="flex items-center justify-between rounded-xl border border-white/10 px-4 py-3.5 font-bold text-white">Login User</button>        <p class="text-[10.5px] text-zinc-500 leading-relaxed">Overview · Booking · Calendar · Armada · Customer · Driver · Payment · Promo · Reports · CMS · Users & Roles · Settings.</p>      </div>    </div>  </header>  <main id="cMain"><!-- STATIC_HOME_BERANDA -->
+<section class="relative min-h-[85vh] flex items-center overflow-hidden" style="background:#0a0a0c;">
   <div class="relative max-w-7xl mx-auto px-4 sm:px-6 py-20 w-full">
     <div class="max-w-2xl">
       <span class="inline-block px-3 py-1 rounded-full bg-red-900/30 border border-red-700/40 text-red-300 text-[11px] font-bold tracking-wider mb-6">PREMIUM &amp; RELIABLE CAR RENTAL</span>
-      <h1 class="font-display font-extrabold text-4xl sm:text-5xl xl:text-[62px] leading-[1.05] tracking-tight text-white">PERJALANAN LEBIH NYAMAN.<br><span class="text-red-500">MOBIL SIAP JALAN.</span></h1>
-      <p class="mt-5 text-zinc-300 max-w-xl text-[15px] sm:text-base leading-relaxed">Nikmati layanan rental mobil yang praktis, nyaman, dan terpercaya untuk kebutuhan perjalanan pribadi, bisnis, maupun wisata.</p>
-      <div class="mt-8 flex flex-wrap gap-4">
-        <a href="https://wa.me/6283890354333" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-red-700 hover:bg-red-600 text-white font-bold transition">Hubungi Kami</a>
-        <a href="#/armada" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/15 hover:border-red-500/40 text-white font-bold transition">Lihat Armada</a>
+      <h1 style="font-size:48px;font-weight:900;line-height:1.05;color:white;margin:20px 0;">PERJALANAN LEBIH NYAMAN.<br><span style="color:#dc2626;">MOBIL SIAP JALAN.</span></h1>
+      <p style="color:#a1a1aa;max-width:600px;font-size:15px;line-height:1.6;">Nikmati layanan rental mobil yang praktis, nyaman, dan terpercaya untuk kebutuhan perjalanan pribadi, bisnis, maupun wisata.</p>
+      <div style="margin-top:30px;display:flex;gap:16px;flex-wrap:wrap;">
+        <a href="https://wa.me/6283890354333" target="_blank" style="display:inline-block;padding:14px 24px;background:#b91c1c;color:white;font-weight:bold;border-radius:12px;text-decoration:none;">Hubungi Kami</a>
+        <a href="#/armada" style="display:inline-block;padding:14px 24px;border:1px solid rgba(255,255,255,0.15);color:white;font-weight:bold;border-radius:12px;text-decoration:none;">Lihat Armada</a>
       </div>
-      <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-lg">
-        <div><div class="font-display font-extrabold text-2xl text-white">1.200+</div><div class="text-[11px] uppercase tracking-widest text-zinc-500 mt-1">Pelanggan</div></div>
-        <div><div class="font-display font-extrabold text-2xl text-white">3.500+</div><div class="text-[11px] uppercase tracking-widest text-zinc-500 mt-1">Perjalanan</div></div>
-        <div><div class="font-display font-extrabold text-2xl text-white">4.9</div><div class="text-[11px] uppercase tracking-widest text-zinc-500 mt-1">Rating /5</div></div>
-        <div><div class="font-display font-extrabold text-2xl text-white">5+</div><div class="text-[11px] uppercase tracking-widest text-zinc-500 mt-1">Tahun</div></div>
+      <div style="margin-top:40px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:500px;">
+        <div><div style="font-size:24px;font-weight:900;color:white;">1.200+</div><div style="font-size:11px;letter-spacing:0.1em;color:#71717a;text-transform:uppercase;margin-top:4px;">Pelanggan</div></div>
+        <div><div style="font-size:24px;font-weight:900;color:white;">3.500+</div><div style="font-size:11px;letter-spacing:0.1em;color:#71717a;text-transform:uppercase;margin-top:4px;">Perjalanan</div></div>
+        <div><div style="font-size:24px;font-weight:900;color:white;">4.9</div><div style="font-size:11px;letter-spacing:0.1em;color:#71717a;text-transform:uppercase;margin-top:4px;">Rating /5</div></div>
+        <div><div style="font-size:24px;font-weight:900;color:white;">5+</div><div style="font-size:11px;letter-spacing:0.1em;color:#71717a;text-transform:uppercase;margin-top:4px;">Tahun</div></div>
       </div>
     </div>
   </div>
 </section>
-<!-- END STATIC_HOME_BERANDA --></main>  <footer class="bg-ink-900 border-t border-white/5">    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">      <div>        <div class="flex items-center gap-2.5 mb-4"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">        <span class="font-display font-bold">AZZID RENTCAR</span></div>        <p class="text-sm text-muted leading-relaxed mb-4">Solusi rental mobil yang nyaman, mudah, dan terpercaya untuk kebutuhan perjalanan pribadi, bisnis, maupun wisata. <em class="text-zinc-300 not-italic font-semibold">“Mobil Siap Jalan, Perjalanan Lebih Nyaman.”</em></p>        <div class="flex flex-wrap gap-2 text-[10px] font-bold tracking-wider text-zinc-400">          <span class="px-2 py-1 border border-white/10 rounded">QRIS</span><span class="px-2 py-1 border border-white/10 rounded">VA BCA</span><span class="px-2 py-1 border border-white/10 rounded">MANDIRI</span><span class="px-2 py-1 border border-white/10 rounded">GOPAY</span><span class="px-2 py-1 border border-white/10 rounded">OVO</span>        </div>      </div>      <div>        <h4 class="font-display font-semibold text-sm mb-4 tracking-wide">NAVIGASI</h4>        <ul class="space-y-2.5 text-sm text-muted">          <li><a class="hover:text-maroon-400 transition" href="#/">Beranda</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/armada">Armada</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/layanan">Layanan</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/tentang">Tentang Kami</a></li>          <!-- FAQ footer hidden -->          <li><a class="hover:text-maroon-400 transition" href="#/kontak">Kontak</a></li>        </ul>      </div>      <div>        <h4 class="font-display font-semibold text-sm mb-4 tracking-wide">LAYANAN</h4>        <ul class="space-y-2.5 text-sm text-muted">          <li>Rental Lepas Kunci</li><li>Rental Dengan Driver</li><li>Antar-Jemput Bandara</li>          <li>Paket Wisata & Luar Kota</li><li>Sewa Bulanan / Corporate</li><li>Wedding & Event Premium</li>        </ul>      </div>      <div>        <h4 class="font-display font-semibold text-sm mb-4 tracking-wide">HUBUNGI KAMI</h4>        <ul class="space-y-3 text-sm text-muted">          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> <span id="footAlamat">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur</span></li>          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> <span id="footTelepon">+62 838-9035-4333</span></li>          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> <span id="footEmail">azzidrentalmobil@gmail.com</span></li>          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> Operasional 24/7</li>        </ul>        <div class="flex gap-2 mt-4"><a id="footWa" href="#" target="_blank" class="btn btn-m btn-sm">Chat WhatsApp</a><a href="#/admin" class="btn btn-g btn-sm">Admin</a></div>      </div>    </div>    <div class="border-t border-white/5 py-5 px-4 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-7xl mx-auto text-[12px] text-zinc-500">      <span>© 2026 AZZID RENTCAR. All rights reserved.</span>      <span class="flex gap-5"><button onclick="openTrack()" class="hover:text-zinc-300">Lacak Booking</button><a href="#/admin" class="hover:text-zinc-300">Admin Dashboard →</a></span>    </div>  </footer>  <a id="waFloat" href="#" target="_blank" class="wa-float fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] grid place-items-center shadow-2xl hover:scale-105 transition" aria-label="Chat WhatsApp">    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>  </a></div><!-- ============ ADMIN DASHBOARD ============ --><div id="adminApp" class="hidden"></div><div id="modalRoot"></div><div id="toasts" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] flex flex-col gap-2 items-center w-max max-w-[92vw]"></div><div id="printSheet"></div>
+<!-- END STATIC_HOME_BERANDA --></main>  <footer class="bg-ink-900 border-t border-white/5">    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">      <div>        <div class="flex items-center gap-2.5 mb-4"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID RENTCAR" class="w-9 h-9 rounded-lg shadow-glow shrink-0 object-cover">        <span class="font-display font-bold">AZZID RENTCAR</span></div>        <p class="text-sm text-muted leading-relaxed mb-4">Solusi rental mobil yang nyaman, mudah, dan terpercaya untuk kebutuhan perjalanan pribadi, bisnis, maupun wisata. <em class="text-zinc-300 not-italic font-semibold">“Mobil Siap Jalan, Perjalanan Lebih Nyaman.”</em></p>        <div class="flex flex-wrap gap-2 text-[10px] font-bold tracking-wider text-zinc-400">          <span class="px-2 py-1 border border-white/10 rounded">QRIS</span><span class="px-2 py-1 border border-white/10 rounded">VA BCA</span><span class="px-2 py-1 border border-white/10 rounded">MANDIRI</span><span class="px-2 py-1 border border-white/10 rounded">GOPAY</span><span class="px-2 py-1 border border-white/10 rounded">OVO</span>        </div>      </div>      <div>        <h4 class="font-display font-semibold text-sm mb-4 tracking-wide">NAVIGASI</h4>        <ul class="space-y-2.5 text-sm text-muted">          <li><a class="hover:text-maroon-400 transition" href="#/">Beranda</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/armada">Armada</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/layanan">Layanan</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/tentang">Tentang Kami</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/faq">FAQ</a></li>          <li><a class="hover:text-maroon-400 transition" href="#/kontak">Kontak</a></li>        </ul>      </div>      <div>        <h4 class="font-display font-semibold text-sm mb-4 tracking-wide">LAYANAN</h4>        <ul class="space-y-2.5 text-sm text-muted">          <li>Rental Lepas Kunci</li><li>Rental Dengan Driver</li><li>Antar-Jemput Bandara</li>          <li>Paket Wisata & Luar Kota</li><li>Sewa Bulanan / Corporate</li><li>Wedding & Event Premium</li>        </ul>      </div>      <div>        <h4 class="font-display font-semibold text-sm mb-4 tracking-wide">HUBUNGI KAMI</h4>        <ul class="space-y-3 text-sm text-muted">          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> <span id="footAlamat">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur</span></li>          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> <span id="footTelepon">+62 838-9035-4333</span></li>          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> <span id="footEmail">azzidrentalmobil@gmail.com</span></li>          <li class="flex gap-2.5"><span class="text-maroon-400">◆</span> Operasional 24/7</li>        </ul>        <div class="flex gap-2 mt-4"><a id="footWa" href="#" target="_blank" class="btn btn-m btn-sm">Chat WhatsApp</a><a href="#/admin" class="btn btn-g btn-sm">Admin</a></div>      </div>    </div>    <div class="border-t border-white/5 py-5 px-4 flex flex-col sm:flex-row items-center justify-between gap-3 max-w-7xl mx-auto text-[12px] text-zinc-500">      <span>© 2026 AZZID RENTCAR. All rights reserved.</span>      <span class="flex gap-5"><button onclick="openTrack()" class="hover:text-zinc-300">Lacak Booking</button><a href="#/admin" class="hover:text-zinc-300">Admin Dashboard →</a></span>    </div>  </footer>  <a id="waFloat" href="#" target="_blank" class="wa-float fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#25D366] grid place-items-center shadow-2xl hover:scale-105 transition" aria-label="Chat WhatsApp">    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>  </a></div><!-- ============ ADMIN DASHBOARD ============ --><div id="adminApp" class="hidden"></div><div id="modalRoot"></div><div id="toasts" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] flex flex-col gap-2 items-center w-max max-w-[92vw]"></div><div id="printSheet"></div>
 
 <script src="js/config.js"></script>
 <script src="js/data.js"></script>
@@ -812,7 +811,67 @@ img {
 }
 </style>
 
+<style id="FORCE_FAQ_FIX">
+/* Hapus background dari semua elemen FAQ */
+.acc, .acc *, .acc button, .acc button *,
+.acc-body, .acc-body *,
+.acc .rv, .acc .card {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
 
+/* Span pertanyaan — horizontal + putih + presisi */
+.acc button > span:first-child {
+  display: flex !important;
+  align-items: center !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  white-space: normal !important;
+  text-align: left !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  font-size: 14.5px !important;
+  line-height: 1.4 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
+
+/* Button — padding + tinggi konsisten */
+.acc button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding: 14px 24px !important;
+  border: none !important;
+  gap: 12px !important;
+  min-height: 72px !important;
+  line-height: 1.4 !important;
+}
+
+/* Icon + tetap kanan, rata tengah vertikal */
+.acc button > .acc-ic {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  color: #f87171 !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+</style>
 <style id="KILL_FAQ_RED_BG">
 /* Paksa SEMUA elemen FAQ tanpa background */
 .acc, .acc *, .acc button, .acc button *,
@@ -1111,531 +1170,6 @@ img {
   z-index: 1 !important;
   padding: 0 !important;
   margin: 0 !important;
-}
-</style><style id="HAPUS_DESKRIPSI_HEADER">
-/* Hapus <p> di section header — target spesifik by section */
-#custApp section:has(h1):has(+ section) > div > p {
-  display: none !important;
-}
-
-/* Pengecualian: jangan hapus <p> di dalam card */
-#custApp section:has(h1) > div > p:not(.text-muted) {
-  display: block !important;
-}
-
-/* Atau target by text (kalau didukung) */
-#custApp section:has(h1) p:has-text("Semua unit terawat"),
-#custApp section:has(h1) p:has-text("Dari perjalanan harian"),
-#custApp section:has(h1) p:has-text("Drive Comfort") {
-  display: none !important;
-}
-</style><style id="HIDE_ARMADA_HEADER">
-/* Sembunyikan section header Armada (Katalog Armada + Pilih Mobil Anda + deskripsi) */
-#custApp section:has(> div > span:first-child:has-text("Katalog Armada")),
-#custApp section:has(> div > h1:has-text("Pilih Mobil Anda")),
-#custApp section:has(h1):has(+ section):has(span) {
-  display: none !important;
-}
-</style><style id="RESTORE_FIXES">
-/* ============ FAQ — horizontal, rapat, putih ============ */
-.acc button {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 100% !important;
-  padding: 16px 24px !important;
-  gap: 16px !important;
-  min-height: 56px !important;
-  text-align: left !important;
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-}
-
-.acc button > span:first-child {
-  display: block !important;
-  flex: 1 1 auto !important;
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  text-align: left !important;
-  color: #fff !important;
-  font-weight: 600 !important;
-  font-size: 14.5px !important;
-  line-height: 1.5 !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-  white-space: normal !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
-}
-
-.acc button > span.acc-ic {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  width: 24px !important;
-  height: 24px !important;
-  color: #f87171 !important;
-  font-size: 20px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
-}
-
-.acc {
-  background: transparent !important;
-  border-radius: 12px !important;
-}
-
-/* ============ BINTANG REVIEW — rapat kiri ============ */
-.card > .flex.gap-1 {
-  display: inline-flex !important;
-  gap: 4px !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-  width: auto !important;
-  max-width: fit-content !important;
-  margin-bottom: 12px !important;
-}
-
-.card > .flex.gap-1 svg {
-  width: 16px !important;
-  height: 16px !important;
-  flex-shrink: 0 !important;
-}
-
-/* ============ NAMA TESTIMONIAL — sejajar di bawah ============ */
-.card:has(.flex.gap-1 svg):has(.rounded-full) {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-}
-
-.card:has(.flex.gap-1 svg):has(.rounded-full) > p {
-  flex: 1 1 auto !important;
-}
-
-.card:has(.flex.gap-1 svg):has(.rounded-full) > .flex.items-center.gap-3 {
-  margin-top: auto !important;
-  padding-top: 16px !important;
-}
-
-.grid:has(> .card:has(.flex.gap-1)) {
-  align-items: stretch !important;
-}
-</style><style id="HIDE_HOVER_BORDER">
-/* Card mobil — hilangkan border hover + kilatan */
-.veh-card,
-.veh-card:hover {
-  border-color: transparent !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.veh-card > div:first-child,
-.veh-card > div:first-child:hover {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.veh-card img,
-.veh-card img:hover {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Hilangkan highlight saat hover ke gambar */
-.veh-card > div:first-child::before,
-.veh-card > div:first-child::after {
-  display: none !important;
-  content: none !important;
-  background: none !important;
-}
-
-/* Card Layanan + Testimonial — hilangkan border hover juga */
-.card:hover {
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  outline: none !important;
-}
-
-/* Semua elemen di card mobil — hilangkan outline */
-.veh-card *:hover {
-  outline: none !important;
-}
-</style><style id="FIX_IMG_RESPONSIVE">
-/* Card mobil — layout konsisten */
-.veh-card {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-  overflow: hidden !important;
-  background: #1a1a1d !important;
-  border-radius: 12px !important;
-}
-
-/* Container gambar — aspect ratio + overflow hidden */
-.veh-card > div:first-child {
-  position: relative !important;
-  width: 100% !important;
-  aspect-ratio: 4 / 3 !important;
-  height: auto !important;
-  min-height: 0 !important;
-  overflow: hidden !important;
-  border-radius: 12px 12px 0 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Gambar — isi penuh, no border */
-.veh-card img,
-.veh-card > div:first-child img {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-  object-position: center !important;
-  display: block !important;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Hover — JANGAN ubah ukuran/border */
-.veh-card:hover,
-.veh-card:hover > div:first-child,
-.veh-card:hover img {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  transform: none !important;
-  height: 100% !important;
-}
-
-/* Hover — cuma ubah translateY di card */
-.veh-card:hover {
-  transform: translateY(-6px) !important;
-  transition: transform 0.3s ease !important;
-}
-
-/* Grid parent — paksa rata */
-.grid:has(> .veh-card) {
-  align-items: stretch !important;
-  gap: 20px !important;
-}
-
-.grid:has(> .veh-card) > .veh-card {
-  width: 100% !important;
-  max-width: none !important;
-  min-width: 0 !important;
-}
-
-/* Hilangkan pseudo-element kilat */
-.veh-card > div:first-child::before,
-.veh-card > div:first-child::after,
-.veh-card:hover > div:first-child::before,
-.veh-card:hover > div:first-child::after {
-  display: none !important;
-  content: none !important;
-}
-</style><style id="KILL_GARIS_CAHAYA">
-/* Card mobil — hapus gradient overlay + border yang bikin kilat */
-.veh-card > div:first-child > div[class*="gradient"],
-.veh-card > div:first-child > div[class*="absolute"] {
-  display: none !important;
-  background: none !important;
-  background-image: none !important;
-  opacity: 0 !important;
-}
-
-/* Hapus SEMUA border di card mobil */
-.veh-card,
-.veh-card > *,
-.veh-card > div:first-child,
-.veh-card > div:first-child > * {
-  border: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Hapus pseudo-element */
-.veh-card *::before,
-.veh-card *::after,
-.veh-card > div:first-child *::before,
-.veh-card > div:first-child *::after {
-  display: none !important;
-  content: none !important;
-  background: none !important;
-  opacity: 0 !important;
-}
-
-/* Hapus garis abu di bawah gambar */
-.veh-card > div:first-child {
-  border-bottom: none !important;
-  box-shadow: none !important;
-}
-
-/* Card info section (Automatic, 7 seats) — hapus garis atas */
-.veh-card > div:not(:first-child) {
-  border-top: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* Gambar mobil — hapus filter/brightness */
-.veh-card img {
-  filter: none !important;
-  mix-blend-mode: normal !important;
-}
-</style><style id="HIDE_ARMADA_HEADER_CSS">
-/* Sembunyikan section header Armada via CSS — berlaku dari awal */
-#custApp section.armada-header {
-  display: none !important;
-}
-
-/* Fallback: cari section yang cuma punya span + h1 (tanpa card) */
-#custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
-  display: none !important;
-}
-</style><style id="HIDE_FAQ_MENU">
-/* Sembunyikan FAQ di nav header */
-nav a[href="#/faq"],
-nav a[href*="/faq"] {
-  display: none !important;
-}
-
-/* Sembunyikan FAQ di mobile nav */
-#mobNav a[href="#/faq"],
-#mobNav a[href*="/faq"] {
-  display: none !important;
-}
-
-/* Sembunyikan FAQ di footer */
-footer a[href="#/faq"],
-footer a[href*="/faq"] {
-  display: none !important;
-}
-</style><style id="RAPAT_FILTER">
-/* Button filter armada — rapatkan */
-#custApp section:has(.veh-card) .flex.flex-wrap.gap-2,
-#custApp section:has(.veh-card) div:has(> button),
-#custApp .card .flex.flex-wrap {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 8px !important;
-  justify-content: flex-start !important;
-  align-items: center !important;
-}
-
-/* Setiap button filter */
-#custApp .card button,
-#custApp .card button.chip,
-#custApp button.chip {
-  padding: 8px 16px !important;
-  margin: 0 !important;
-  font-size: 13px !important;
-  line-height: 1.2 !important;
-  border-radius: 999px !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-}
-
-/* Active button (Semua) */
-#custApp .card button.chip.active,
-#custApp .card button[class*="bg-maroon"],
-#custApp button.chip[class*="bg-maroon"] {
-  background: #dc2626 !important;
-  color: #fff !important;
-}
-</style><style id="FAQ_HORIZONTAL">
-/* ============================================ */
-/* FAQ — horizontal + tidak flash + bisa diklik */
-/* ============================================ */
-
-/* Section FAQ */
-#custApp section:has(.acc) {
-  max-width: 560px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 16px !important;
-  padding-right: 16px !important;
-}
-
-/* Container — gap rapat */
-#custApp section:has(.acc) > div:has(.acc) {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-}
-
-/* FAQ item */
-#custApp .acc {
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 12px !important;
-  background: rgba(26, 26, 29, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  overflow: hidden !important;
-}
-
-/* ============================================ */
-/* BUTTON — flex row, sekarang PERMANEN */
-/* ============================================ */
-#custApp .acc button {
-  display: flex !important;
-  flex-direction: row !important;              /* ← row = horizontal */
-  align-items: center !important;              /* vertikal center */
-  justify-content: space-between !important;   /* text kiri, icon kanan */
-  width: 100% !important;
-  min-height: 56px !important;
-  padding: 14px 20px !important;
-  gap: 16px !important;
-  text-align: left !important;
-  background: transparent !important;
-  border: none !important;
-  cursor: pointer !important;
-  box-sizing: border-box !important;
-  white-space: normal !important;
-}
-
-/* ============================================ */
-/* SPAN TEXT — PAKSA horizontal via flex child */
-/* ============================================ */
-#custApp .acc button > span:first-child {
-  display: block !important;                   /* ← block, bukan inline */
-  flex: 1 1 0% !important;                     /* ← flex basis 0 */
-  min-width: 0 !important;                     /* ← min 0 — biar tidak wrap per karakter */
-  width: auto !important;
-  max-width: none !important;
-  text-align: left !important;
-  white-space: normal !important;
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-  hyphens: none !important;
-  color: #fff !important;
-  font-weight: 600 !important;
-  font-size: 13.5px !important;
-  line-height: 1.5 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  align-self: center !important;               /* vertikal center */
-}
-
-/* ============================================ */
-/* ICON + — kanan, center vertikal */
-/* ============================================ */
-#custApp .acc button > .acc-ic {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex: 0 0 auto !important;
-  flex-shrink: 0 !important;
-  width: 24px !important;
-  height: 24px !important;
-  color: #f87171 !important;
-  font-size: 20px !important;
-  line-height: 1 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  align-self: center !important;
-  pointer-events: none !important;
-}
-</style><style id="FIX_HEADER_MERAH">
-/* ============================================ */
-/* HEADER MERAH (annBar) — dari kanan + center vertikal */
-/* ============================================ */
-#custApp > div.fixed.top-0,
-#custApp > div.fixed.top-0 > div:first-child {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-#annBar {
-  display: inline-block !important;
-  padding-left: 100vw !important;
-  padding-right: 0 !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  line-height: 34px !important;
-  white-space: nowrap !important;
-  animation: marqueeScrollHeader 80s linear infinite !important;
-  animation-play-state: running !important;
-  min-width: max-content !important;
-  will-change: transform !important;
-  vertical-align: middle !important;
-}
-
-#annBar:hover {
-  animation-play-state: paused !important;
-}
-
-@keyframes marqueeScrollHeader {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ============================================ */
-/* HEADER NAVY (marquee-track) — DARI KANAN */
-/* ============================================ */
-#custApp > div.bg-ink-900.border-y,
-#custApp > div:has(.marquee-track) {
-  display: flex !important;
-  align-items: center !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-.marquee-track {
-  display: inline-flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  white-space: nowrap !important;
-  padding-left: 100vw !important;                /* ← dari KANAN */
-  padding-right: 0 !important;
-  margin: 0 !important;
-  animation: marqueeScrollNavy 60s linear infinite !important;
-  animation-play-state: running !important;
-  min-width: max-content !important;
-  will-change: transform !important;
-}
-
-.marquee-track > span {
-  display: inline-flex !important;
-  flex-direction: row !important;
-  flex-wrap: nowrap !important;
-  align-items: center !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused !important;
-}
-
-@keyframes marqueeScrollNavy {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
 }
 </style></body>
 </html>
