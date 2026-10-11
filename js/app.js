@@ -4466,33 +4466,61 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FIX_HEADER_MERAH_JS — dari kanan + center vertikal
+
+
+
+// ============================================
+// === FIX_MARQUEE_NAVY_JS — paksa kedua marquee dari kanan
 // ============================================
 (function() {
   function fix() {
+    // ============ HEADER MERAH ============
     var annBar = document.getElementById('annBar');
-    if (!annBar) return;
-    
-    // Paksa annBar — dari kanan + center vertikal
-    annBar.style.setProperty('display', 'inline-block', 'important');
-    annBar.style.setProperty('padding-left', '100vw', 'important');
-    annBar.style.setProperty('padding-right', '0', 'important');
-    annBar.style.setProperty('height', '34px', 'important');
-    annBar.style.setProperty('line-height', '34px', 'important');
-    annBar.style.setProperty('white-space', 'nowrap', 'important');
-    annBar.style.setProperty('animation', 'marqueeScrollHeader 80s linear infinite', 'important');
-    annBar.style.setProperty('animation-play-state', 'running', 'important');
-    annBar.style.setProperty('min-width', 'max-content', 'important');
-    annBar.style.setProperty('vertical-align', 'middle', 'important');
-    
-    // Container — flex center vertikal
-    var parent = annBar.parentElement;
-    if (parent) {
-      parent.style.setProperty('display', 'flex', 'important');
-      parent.style.setProperty('align-items', 'center', 'important');
-      parent.style.setProperty('height', '34px', 'important');
-      parent.style.setProperty('overflow', 'hidden', 'important');
+    if (annBar) {
+      annBar.style.setProperty('display', 'inline-block', 'important');
+      annBar.style.setProperty('padding-left', '100vw', 'important');
+      annBar.style.setProperty('padding-right', '0', 'important');
+      annBar.style.setProperty('height', '34px', 'important');
+      annBar.style.setProperty('line-height', '34px', 'important');
+      annBar.style.setProperty('white-space', 'nowrap', 'important');
+      annBar.style.setProperty('animation', 'marqueeScrollHeader 80s linear infinite', 'important');
+      annBar.style.setProperty('animation-play-state', 'running', 'important');
+      annBar.style.setProperty('min-width', 'max-content', 'important');
     }
+    
+    // ============ HEADER NAVY (marquee-track) ============
+    document.querySelectorAll('.marquee-track').forEach(function(track) {
+      track.style.setProperty('display', 'inline-flex', 'important');
+      track.style.setProperty('flex-direction', 'row', 'important');
+      track.style.setProperty('flex-wrap', 'nowrap', 'important');
+      track.style.setProperty('align-items', 'center', 'important');
+      track.style.setProperty('white-space', 'nowrap', 'important');
+      track.style.setProperty('padding-left', '100vw', 'important');    /* ← dari kanan */
+      track.style.setProperty('padding-right', '0', 'important');
+      track.style.setProperty('margin', '0', 'important');
+      track.style.setProperty('animation', 'marqueeScrollNavy 60s linear infinite', 'important');
+      track.style.setProperty('animation-play-state', 'running', 'important');
+      track.style.setProperty('min-width', 'max-content', 'important');
+      
+      // Child span
+      track.querySelectorAll(':scope > span').forEach(function(child) {
+        child.style.setProperty('display', 'inline-flex', 'important');
+        child.style.setProperty('flex-direction', 'row', 'important');
+        child.style.setProperty('flex-wrap', 'nowrap', 'important');
+        child.style.setProperty('align-items', 'center', 'important');
+        child.style.setProperty('white-space', 'nowrap', 'important');
+        child.style.setProperty('flex-shrink', '0', 'important');
+      });
+    });
+    
+    // Container marquee-track
+    document.querySelectorAll('div:has(.marquee-track)').forEach(function(container) {
+      container.style.setProperty('display', 'flex', 'important');
+      container.style.setProperty('align-items', 'center', 'important');
+      container.style.setProperty('overflow', 'hidden', 'important');
+      container.style.setProperty('white-space', 'nowrap', 'important');
+      container.style.setProperty('padding', '0', 'important');
+    });
   }
   
   function run() {
@@ -4509,5 +4537,5 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   }
   
   setInterval(fix, 2000);
-  console.log('🔥 FIX_HEADER_MERAH_JS aktif');
+  console.log('🔥 FIX_MARQUEE_NAVY_JS aktif');
 })();
