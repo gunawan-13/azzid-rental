@@ -3363,7 +3363,12 @@ function renderC() {
   else if (p[0] === 'faq') html = vFaq();
   else if (p[0] === 'kontak') html = vKontak();
   else html = vHome();
-  main.innerHTML = html;
+  // GUARD: jangan set kalau html kosong (cegah flash)
+  if (html && html.trim().length > 0) {
+    main.innerHTML = html;
+  } else {
+    console.log('🔥 renderC: html kosong, skip set cMain');
+  }
   window.__firstRenderDone = true;
   revealInit();
   document.querySelectorAll('.navl').forEach(a => {
