@@ -1629,14 +1629,13 @@ footer a[href*="/faq"] {
   background: #dc2626 !important;
   color: #fff !important;
 }
-</style><style id="FIX_FAQ_FINAL">
+</style><style id="FIX_FAQ_CENTER_BENAR">
 /* ============================================ */
-/* FAQ — FINAL: center vertikal + bisa diklik */
+/* FAQ — BENAR-BENAR CENTER VERTIKAL */
 /* ============================================ */
 
-/* Section FAQ — pendek */
+/* Section FAQ */
 #custApp section:has(.acc),
-#custApp section:has(.acc button),
 #custApp section[class*="max-w-"]:has(.acc) {
   max-width: 560px !important;
   margin-left: auto !important;
@@ -1645,7 +1644,7 @@ footer a[href*="/faq"] {
   padding-right: 16px !important;
 }
 
-/* Container rapat */
+/* Container */
 #custApp section:has(.acc) > div:has(.acc) {
   display: flex !important;
   flex-direction: column !important;
@@ -1656,8 +1655,8 @@ footer a[href*="/faq"] {
 #custApp .acc {
   margin: 0 !important;
   padding: 0 !important;
-  height: auto !important;
-  min-height: 0 !important;
+  height: 56px !important;
+  min-height: 56px !important;
   overflow: hidden !important;
   border-radius: 12px !important;
   background: rgba(26, 26, 29, 0.6) !important;
@@ -1665,92 +1664,80 @@ footer a[href*="/faq"] {
 }
 
 /* ============================================ */
-/* BUTTON — pointer-events AUTO + center */
+/* BUTTON — tinggi FIXED 56px + display BLOCK */
 /* ============================================ */
 #custApp .acc button {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  justify-content: space-between !important;
+  display: block !important;                   /* ← BLOCK, bukan flex */
   width: 100% !important;
   height: 56px !important;
   min-height: 56px !important;
   max-height: 56px !important;
-  padding: 0 20px !important;
+  padding: 0 !important;                       /* ← padding 0 */
   margin: 0 !important;
-  gap: 12px !important;
-  text-align: left !important;
-  background: transparent !important;
   border: none !important;
   outline: none !important;
-  box-sizing: border-box !important;
-  cursor: pointer !important;                  /* ← bisa diklik */
-  pointer-events: auto !important;             /* ← pastikan bisa diklik */
+  background: transparent !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  text-align: left !important;
   position: relative !important;
-  z-index: 1 !important;
+  box-sizing: border-box !important;
+  line-height: 56px !important;                /* ← KUNCI 1: line-height = height */
 }
 
-/* SPAN text — paksa center vertikal */
+/* ============================================ */
+/* SPAN TEXT — line-height 56px + vertical-align middle */
+/* ============================================ */
 #custApp .acc button > span:first-child {
-  display: flex !important;
-  align-items: center !important;              /* ← center vertikal */
-  justify-content: flex-start !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  height: 100% !important;
+  display: inline-block !important;
+  vertical-align: middle !important;           /* ← KUNCI 2 */
+  line-height: 56px !important;                /* ← KUNCI 3: samakan dengan button */
+  height: 56px !important;
+  max-width: calc(100% - 60px) !important;
+  padding: 0 0 0 20px !important;
+  margin: 0 !important;
   text-align: left !important;
   color: #fff !important;
   font-weight: 600 !important;
   font-size: 13.5px !important;
-  line-height: 1.4 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  word-break: normal !important;
-  white-space: normal !important;
-  background: transparent !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
 }
 
-/* ICON + center vertikal */
+/* ============================================ */
+/* ICON + — absolute kanan + center vertikal */
+/* ============================================ */
 #custApp .acc button > .acc-ic {
+  position: absolute !important;               /* ← KUNCI 4: absolute */
+  right: 20px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;      /* ← center vertikal */
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  flex-shrink: 0 !important;
   width: 24px !important;
   height: 24px !important;
+  line-height: 1 !important;
   color: #f87171 !important;
   font-size: 20px !important;
   padding: 0 !important;
   margin: 0 !important;
-  line-height: 1 !important;
-  transition: transform 0.2s ease !important;
+  pointer-events: none !important;
 }
 
-/* Body FAQ — hidden by default, bisa dibuka */
+/* Body FAQ */
 #custApp .acc-body {
   max-height: 0 !important;
   overflow: hidden !important;
   transition: max-height 0.3s ease !important;
 }
-
-/* Open state */
 #custApp .acc.open .acc-body {
   max-height: 500px !important;
-  padding-top: 0 !important;
-  padding-bottom: 16px !important;
 }
-
-/* Icon rotate saat open */
 #custApp .acc.open .acc-ic {
-  transform: rotate(45deg) !important;
-}
-
-/* Hilangkan overlay yang mungkin nutupin */
-#custApp .acc button::before,
-#custApp .acc button::after {
-  display: none !important;
-  content: none !important;
-  pointer-events: none !important;
+  transform: translateY(-50%) rotate(45deg) !important;
 }
 </style></body>
 </html>
