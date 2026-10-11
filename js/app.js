@@ -4649,64 +4649,107 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === FORCE_VHOME_FINAL — paksa set cMain langsung
+
+
+
+// ============================================
+// === LOCK_CMAIN — paksa cMain tidak bisa dikosongkan
 // ============================================
 (function() {
-  function paksa() {
-    var cMain = document.getElementById('cMain');
-    if (!cMain) return;
-    
-    // Kalau cMain sudah ada konten (>100 char), skip
-    if (cMain.innerHTML.trim().length > 100) return;
-    
+  var __lastHtml = '';
+  var __isRestoring = false;
+  
+  function getHtmlForHash() {
     var hash = location.hash || '#/';
     var h = hash.replace(/^#\/?/, '').split('/')[0];
     
     try {
-      var html = '';
-      
-      if (!h || h === '' || h === 'home') {
-        html = window.vHome ? window.vHome() : '';
-      } else if (h === 'armada') {
-        html = window.vArmada ? window.vArmada() : '';
-      } else if (h === 'layanan') {
-        html = window.vLayanan ? window.vLayanan() : '';
-      } else if (h === 'tentang') {
-        html = window.vTentang ? window.vTentang() : '';
-      } else if (h === 'faq') {
-        html = window.vFaq ? window.vFaq() : '';
-      } else if (h === 'kontak') {
-        html = window.vKontak ? window.vKontak() : '';
-      } else {
-        html = window.vHome ? window.vHome() : '';
-      }
-      
-      if (html && html.length > 100) {
-        cMain.innerHTML = html;
-        console.log('🔥 FORCE_VHOME_FINAL: cMain diisi ' + html.length + ' char untuk "' + (h || 'home') + '"');
-        
-        if (typeof window.revealInit === 'function') {
-          try { window.revealInit(); } catch(e) {}
-        }
-      }
+      if (!h || h === '' || h === 'home') return window.vHome ? window.vHome() : '';
+      if (h === 'armada') return window.vArmada ? window.vArmada() : '';
+      if (h === 'layanan') return window.vLayanan ? window.vLayanan() : '';
+      if (h === 'tentang') return window.vTentang ? window.vTentang() : '';
+      if (h === 'faq') return window.vFaq ? window.vFaq() : '';
+      if (h === 'kontak') return window.vKontak ? window.vKontak() : '';
+      return window.vHome ? window.vHome() : '';
     } catch(e) {
-      console.error('🔥 FORCE_VHOME_FINAL error:', e.message);
+      console.error('🔥 getHtmlForHash error:', e.message);
+      return '';
     }
   }
   
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', paksa);
-  } else {
-    paksa();
+  function render() {
+    var cMain = document.getElementById('cMain');
+    if (!cMain) return;
+    
+    var currentLen = cMain.innerHTML.trim().length;
+    
+    // Kalau ada konten, simpan backup
+    if (currentLen > 100) {
+      __lastHtml = cMain.innerHTML;
+      return;
+    }
+    
+    // Kalau kosong, restore
+    if (__isRestoring) return;
+    __isRestoring = true;
+    
+    console.log('🔥 LOCK_CMAIN: cMain kosong, paksa isi ulang');
+    
+    var html = getHtmlForHash();
+    if (html && html.length > 100) {
+      cMain.innerHTML = html;
+      __lastHtml = html;
+      console.log('🔥 LOCK_CMAIN: diisi ' + html.length + ' char');
+      
+      if (typeof window.revealInit === 'function') {
+        try { window.revealInit(); } catch(e) {}
+      }
+    } else if (__lastHtml.length > 100) {
+      // Fallback: pakai backup
+      cMain.innerHTML = __lastHtml;
+      console.log('🔥 LOCK_CMAIN: restore backup ' + __lastHtml.length + ' char');
+    }
+    
+    __isRestoring = false;
   }
   
-  setTimeout(paksa, 100);
-  setTimeout(paksa, 300);
-  setTimeout(paksa, 800);
-  setTimeout(paksa, 1500);
-  setTimeout(paksa, 3000);
+  function startObserver() {
+    var cMain = document.getElementById('cMain');
+    if (!cMain) return;
+    
+    // Observer — cek setiap perubahan cMain
+    var observer = new MutationObserver(function(mutations) {
+      if (__isRestoring) return;
+      
+      var currentLen = cMain.innerHTML.trim().length;
+      if (currentLen < 100 && __lastHtml.length > 100) {
+        console.log('🔥 LOCK_CMAIN: cMain dikosongkan, restore!');
+        render();
+      }
+    });
+    
+    observer.observe(cMain, { childList: true, subtree: false, characterData: true });
+    console.log('🔥 LOCK_CMAIN: observer aktif');
+  }
   
-  setInterval(paksa, 2000);
+  // Init
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      render();
+      startObserver();
+    });
+  } else {
+    render();
+    startObserver();
+  }
   
-  console.log('🔥 FORCE_VHOME_FINAL aktif');
+  setTimeout(render, 100);
+  setTimeout(render, 500);
+  setTimeout(render, 1500);
+  setTimeout(render, 3000);
+  
+  // Interval backup tiap 1 detik
+  setInterval(render, 1000);
+  
+  console.log('🔥 LOCK_CMAIN aktif');
 })();
