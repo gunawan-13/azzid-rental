@@ -3320,81 +3320,1291 @@ function openInvoice(id) {
 
 /* ================= ROUTER ================= */
 function renderC() {
-  // GUARD DIHAPUS (fix halaman kosong)
-  // RENDER_C_GUARD dihapus
+  // DOUBLE_RENDER_GUARD — cegah render ulang dalam 300ms
+  var __now = Date.now();
+  if (window.__lastRenderCTime && (__now - window.__lastRenderCTime) < 300) {
+    console.log("[SKIP] renderC double call");
+    return;
+  }
+  window.__lastRenderCTime = __now;
+  // RENDER_C_GUARD — skip kalau di admin
+  if (location.hash.indexOf("#/admin") === 0) {
+    var aa = document.getElementById("adminApp");
+    if (aa && !aa.classList.contains("hidden")) {
+      console.log("🔒 renderC diblok — di admin");
+      return;
+    }
+  }
+  // LOCK_ADMIN_STATE — kalau di admin, jangan renderC
+  if (location.hash.startsWith("#/admin") && window.__adminLocked) {
+    console.log("🔒 renderC diblok — di admin");
+    return;
+  }
+  // SKIP_RERENDER — skip kalau sudah render & hash sama
+  if (window.__firstRenderDone && window.__lastRenderedHash === location.hash) {
+    console.log("[SKIP] renderC skip — hash sama");
+    return;
+  }
+  window.__lastRenderedHash = location.hash;
+  try{const _sca=document.getElementById("custApp");if(_sca)_sca.style.display="block";const _saa=document.getElementById("adminApp");if(_saa)_saa.style.display="none";}catch(_){}
+  if(location.hash.startsWith("#/admin"))return;
+  const h = location.hash.replace(/^#\/?/, '');
+  const p = h.split('/');
+  const main = $('cMain');
+  $('custApp').classList.remove('hidden');
+  $('adminApp').classList.add('hidden');
+  let html = '';
+  if (!p[0]) html = vHome();
+  else if (p[0] === 'armada' && !p[1]) html = vArmada();
+  else if (p[0] === 'armada') html = vDetail(p[1]);
+  else if (p[0] === 'booking') { if (S.step < 2) { if (S.draft?.veh) S.step = 2; else { location.hash = '#/armada'; return; } } html = vBooking(); }
+  else if (p[0] === 'layanan') html = vLayanan();
+  else if (p[0] === 'tentang') html = vTentang();
+  else if (p[0] === 'faq') html = vFaq();
+  else if (p[0] === 'kontak') html = vKontak();
+  else html = vHome();
+  main.innerHTML = html;
+  window.__firstRenderDone = true;
+  revealInit();
+  document.querySelectorAll('.navl').forEach(a => {
+    const t = a.getAttribute('href').replace(/^#\//, '');
+    const cur = p[0] || '';
+    a.classList.toggle('!text-maroon-400', (t === 'armada' && cur === 'armada') || (t === 'layanan' && cur === 'layanan') || (t === 'tentang' && cur === 'tentang') || (t === 'faq' && cur === 'faq') || (t === 'kontak' && cur === 'kontak') || (t === '' && cur === ''));
+  });
+  window.scrollTo({ top: 0 });
+  syncAdminBtns();
+  // trigger initGoogleButton dihapus — pakai MutationObserver
+}
+
+function route() {
+  var __newRoute = location.hash || "#/";
+  if (window.__lastRoute === __newRoute) {
+    console.log("route skip — masih di", __newRoute);
+    return;
+  }
+  window.__lastRoute = __newRoute;
   
-  // Panggil di multiple timing
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', forceRender);
-  } else {
-    forceRender();
+  var h = location.hash || "#/";
+  
+  // === ADMIN ROUTE ===
+  if (h.indexOf("#/admin") === 0) {
+    // Cek localStorage SINKRON — tidak tunggu async
+    if (!S.session) {
+      try {
+        var sess = localStorage.getItem("azzid_session");
+        if (sess) {
+          var parsed = JSON.parse(sess);
+          if (parsed && parsed.role === "admin") {
+            S.session = parsed;
+          }
+        }
+      } catch(e) {}
+    }
+    
+    // Tampilkan adminApp
+    var ca = document.getElementById("custApp");
+    var aa = document.getElementById("adminApp");
+    if (ca) { ca.style.display = "none"; ca.classList.add("hidden"); }
+    if (aa) { aa.style.display = "block"; aa.classList.remove("hidden"); }
+    if (typeof renderA === "function") renderA();
+    window.__adminLocked = true;
+    return;
   }
   
-  setTimeout(forceRender, 100);
-  setTimeout(forceRender, 500);
-  setTimeout(forceRender, 1500);
-  setTimeout(forceRender, 3000);
-  window.addEventListener('load', forceRender);
+  // === PUBLIC ROUTE ===
+  var ca2 = document.getElementById("custApp");
+  var aa2 = document.getElementById("adminApp");
+  if (ca2) { ca2.style.display = ""; ca2.classList.remove("hidden"); }
+  if (aa2) { aa2.style.display = "none"; aa2.classList.add("hidden"); }
+  window.__adminLocked = false;
+  if (typeof renderC === "function") renderC();
+}
+
+// Hashchange → route()
+// hashchange removed
+// FIX_HEADER_STATIC: Header selalu transparan, tidak berubah saat scroll
+window.addEventListener('scroll', () => {
+  const hd = $('cHeader');
+  if (!hd) return;
+  hd.style.background = 'transparent';
+  hd.style.backdropFilter = 'none';
+  hd.style.borderColor = 'transparent';
+});
+
+applyCms();
+loadVehiclesFromAPI();
+loadDriversFromAPI();
+window.addEventListener('DOMContentLoaded', () => {
+  window.__exportBtnAttached = true;
+  document.addEventListener('click', (e) => {
+  // Tutup dropdown bell hanya kalau klik DI LUAR
+  const bellD = document.getElementById('bellD');
+  if (bellD && !bellD.classList.contains('hidden')) {
+    const insideBell = e.target.closest('#bellD');
+    const bellBtn = e.target.closest('[onclick*="bellD"]') || e.target.closest('[data-bell-toggle]');
+    if (!insideBell && !bellBtn) {
+      bellD.classList.add('hidden');
+    }
+  }
+});
+
+  window.__authReady = false;
+  restoreAuth().then(() => {
+    // FORCE_ADMIN_LOAD
+    if (location.hash.indexOf('#/admin') === 0) {
+      try {
+        var ca = document.getElementById('custApp');
+        var aa = document.getElementById('adminApp');
+        if (ca) { ca.style.display = 'none'; ca.classList.add('hidden'); }
+        if (aa) { aa.style.display = 'block'; aa.classList.remove('hidden'); }
+        if (typeof renderA === 'function') renderA();
+      } catch(e) {}
+    }
+    window.__authReady = true;document.body.classList.add('ready');
+    syncAdminBtns();
+    if (location.hash.startsWith('#/admin')) renderA();
+    else renderC();
+  });
+});
+const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
+// force redeploy Mon, Sep 21, 2026 10:45:25 AM
+
+// === Auto-close dropdown bell saat klik di mana saja (capture phase) ===
+document.addEventListener('click', function(e) {
+  try {
+    var bellD = document.getElementById('bellD');
+    if (!bellD) return;
+    if (bellD.classList.contains('hidden')) return;
+    // Klik di dalam dropdown? biarkan
+    if (e.target.closest('#bellD')) return;
+    // Klik tombol bell? biarkan (biar toggle)
+    var btn = e.target.closest('button');
+    if (btn) {
+      var oc = btn.getAttribute('onclick') || '';
+      if (oc.indexOf('bellD') !== -1) return;
+    }
+    // Nutup
+    bellD.classList.add('hidden');
+  } catch (err) {
+    console.warn('auto-close bell error:', err);
+  }
+}, true); // capture phase — jalan duluan
+
+
+
+
+
+// === Auto-trigger initGoogleButton ===
+function _gTrigger() {
+  if (document.getElementById("googleLoginBtn")) {
+    if (typeof initGoogleButton === "function") initGoogleButton();
+  }
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function(){
+    _gTrigger();
+    /* KILL interval _gTrigger */
+  });
+} else {
+  _gTrigger();
+  /* KILL interval _gTrigger */
+}
+// MutationObserver — trigger saat DOM berubah
+if (typeof MutationObserver !== "undefined") {
+  /* KILL MutationObserver _gTrigger — infinite loop */
+}
+
+// === Fallback restoreAuth (kalau hilang) ===
+if (typeof restoreAuth === "undefined") {
+  window.restoreAuth = async function() {
+    try {
+      const local = localStorage.getItem("azzid_session");
+      if (local) {
+        S.session = JSON.parse(local);
+        if (S.session && S.session.role === "admin") {
+          window.__authReady = true;
+          if (typeof syncAdminBtns === "function") syncAdminBtns();
+          if (location.hash.startsWith("#/admin")) renderA();
+          return;
+        }
+      }
+      S.session = null;
+      S.custSession = null;
+      if (typeof syncAdminBtns === "function") syncAdminBtns();
+    } catch (e) {
+      console.warn("restoreAuth error:", e);
+    }
+  };
+}
+
+// === Auto-add Eye Icon ke Semua Password Input ===
+function addPasswordToggles() {
+  document.querySelectorAll('input[type="password"]').forEach(function(inp) {
+    if (inp.dataset.eyeAdded === "1") return;
+    inp.dataset.eyeAdded = "1";
+    
+    // Buat wrapper
+    var wrap = document.createElement("div");
+    wrap.style.position = "relative";
+    wrap.style.display = "block";
+    inp.parentNode.insertBefore(wrap, inp);
+    wrap.appendChild(inp);
+    
+    // Style input biar ada ruang untuk icon
+    inp.style.paddingRight = "44px";
+    
+    // Buat tombol mata
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.tabIndex = -1;
+    btn.style.position = "absolute";
+    btn.style.right = "12px";
+    btn.style.top = "50%";
+    btn.style.transform = "translateY(-50%)";
+    btn.style.background = "transparent";
+    btn.style.border = "none";
+    btn.style.cursor = "pointer";
+    btn.style.color = "#a1a1aa";
+    btn.style.padding = "4px";
+    btn.style.zIndex = "5";
+    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    
+    btn.addEventListener("click", function(ev) {
+      ev.preventDefault();
+      if (inp.type === "password") {
+        inp.type = "text";
+        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+      } else {
+        inp.type = "password";
+        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+      }
+    });
+    
+    wrap.appendChild(btn);
+  });
+}
+
+// Jalankan saat DOM ready + setiap render
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", addPasswordToggles);
+} else {
+  addPasswordToggles();
+}
+
+// Re-run setiap 500ms (untuk input yang muncul dinamis)
+/* KILL interval: addPasswordToggles */
+
+
+// === Auto-close sidebar saat navigasi ===
+window.closeSb = window.closeSb || function() {
+  var sb = document.getElementById("admSb") || document.querySelector(".adm-sb") || document.querySelector("aside");
+  if (sb) sb.classList.add("hidden");
+  var overlay = document.querySelector(".sb-overlay");
+  if (overlay) overlay.remove();
+  document.body.style.overflow = "";
+};
+
+
+
+
+
+
+
+
+
+
+
+// === Marquee HP Fix Final ===
+(function() {
+  function initMarquee() {
+    var bar = document.getElementById("annBar");
+    if (!bar || bar.dataset.mq === "v4") return;
+    bar.dataset.mq = "v4";
+    
+    var safetyTimer = null;
+    
+    function pause() {
+      // Force reflow biar animasi benar-benar pause
+      bar.style.animation = "none";
+      void bar.offsetWidth;
+      bar.style.animation = "marqueeScroll 60s linear infinite";
+      bar.style.animationPlayState = "paused";
+      
+      // Safety: auto resume max 1.5 detik
+      if (safetyTimer) clearTimeout(safetyTimer);
+      safetyTimer = setTimeout(resume, 1500);
+    }
+    
+    function resume() {
+      if (safetyTimer) { clearTimeout(safetyTimer); safetyTimer = null; }
+      bar.style.animation = "none";
+      void bar.offsetWidth;
+      bar.style.animation = "marqueeScroll 60s linear infinite";
+      bar.style.animationPlayState = "running";
+    }
+    
+    // HP
+    bar.addEventListener("touchstart", pause, { passive: true });
+    bar.addEventListener("touchend", resume, { passive: true });
+    bar.addEventListener("touchcancel", resume, { passive: true });
+    
+    // Desktop
+    bar.addEventListener("mouseenter", pause);
+    bar.addEventListener("mouseleave", resume);
+    
+    // Global fallback — touch di mana saja = resume
+    document.addEventListener("touchstart", function(e) {
+      if (!bar.contains(e.target)) {
+        resume();
+      }
+    }, { passive: true });
+  }
   
-  console.log('🔥 FORCE_RENDER_PAKSA aktif');
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMarquee);
+  } else {
+    initMarquee();
+  }
+  /* KILL interval initMarquee */
+})();
+
+
+// === LOAD BOOKINGS DARI SUPABASE ===
+async function loadBookingsFromSupabase() {
+  if (!window.supabaseClient) return;
+  try {
+    const res = await window.supabaseClient
+      .from("bookings")
+      .select("*")
+      .order("created_at", { ascending: false });
+    
+    if (res.error) throw res.error;
+    
+    if (res.data && Array.isArray(res.data)) {
+      BOOKINGS = res.data.map(function(b) {
+        return {
+          id: b.id,
+          user: b.user_email,
+          veh: b.veh_id,
+          cust: b.cust,
+          wa: b.wa,
+          email: b.email,
+          start: b.start,
+          end: b.end,
+          dur: b.dur,
+          type: b.type,
+          pickup: b.pickup,
+          sub: b.sub,
+          drv: b.drv,
+          disc: b.disc,
+          total: b.total,
+          method: b.method,
+          promo: b.promo,
+          status: b.status,
+          pay: { at: b.pay_at, s: b.pay_status },
+          ktp_file: b.ktp_file
+        };
+      });
+      console.log("✅ Loaded", BOOKINGS.length, "bookings dari Supabase");
+      // Guard: hanya render kalau perlu
+      if (typeof renderAdminBody === "function") renderAdminBody();
+      // renderC() dihapus — biar tidak re-render home berulang
+    }
+  } catch (e) {
+    console.warn("Load error:", e.message);
+  }
+}
+
+// Auto-load saat Supabase ready — HANYA 1x (guard anti-loop)
+if (!window.__supabaseLoadDone) {
+  window.addEventListener("supabase-ready", function() {
+    if (window.__supabaseLoadDone) {
+      console.log("⏭️ Supabase load skip — sudah pernah");
+      return;
+    }
+    window.__supabaseLoadDone = true;
+    console.log("Supabase ready — load bookings...");
+    setTimeout(loadBookingsFromSupabase, 500);
+  });
+}
+
+// Kalau Supabase sudah ready
+if (window.supabaseClient) {
+  setTimeout(loadBookingsFromSupabase, 1000);
+}
+
+
+// === Auto-close sidebar saat resize ke desktop ===
+window.addEventListener("resize", function() {
+  if (window.innerWidth >= 1024) {
+    var sb = document.getElementById("aSb");
+    if (sb) sb.classList.remove("adm-sidebar-open");
+    var ov = document.getElementById("sbOverlay");
+    if (ov) ov.style.display = "none";
+    document.body.style.overflow = "";
+  }
+});
+
+
+
+
+
+// === SIDEBAR FINAL ===
+
+
+
+
+
+// === SIDEBAR FINAL (dari kiri) ===
+function openSb() {
+  var sb = document.getElementById("aSb");
+  if (!sb) return;
+  sb.classList.add("sb-open");
+  var ov = document.getElementById("sbOverlay");
+  if (!ov) {
+    ov = document.createElement("div");
+    ov.id = "sbOverlay";
+    ov.onclick = closeSb;
+    document.body.appendChild(ov);
+  }
+  ov.classList.add("sb-show");
+}
+
+function closeSb() {
+  var sb = document.getElementById("aSb");
+  if (sb) sb.classList.remove("sb-open");
+  var ov = document.getElementById("sbOverlay");
+  if (ov) ov.classList.remove("sb-show");
+}
+
+
+// ============================================
+// === SCROLL_TOP_MANUAL ===
+// ============================================
+// 1. Cegah browser auto-restore scroll position
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+// 2. Force scroll top saat homepage load
+function forceScrollTopOnHome() {
+  var h = location.hash || "";
+  var isHome = (h === "" || h === "#" || h === "#/");
+  var isAdmin = h.indexOf("#/admin") === 0;
+  
+  // Hanya scroll top kalau BUKAN admin dan di homepage
+  if (isHome && !isAdmin) {
+    setTimeout(function() {
+      try { window.scrollTo(0, 0); } catch(e) {}
+    }, 5);
+  }
+}
+
+// 3. Jalankan saat DOM ready + load
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", forceScrollTopOnHome);
+} else {
+  forceScrollTopOnHome();
+}
+window.addEventListener("load", forceScrollTopOnHome);
+
+// 4. Handle saat hash change (pindah halaman)
+// hashchange removed
+
+console.log("✅ SCROLL_TOP_MANUAL: aktif");
+
+
+// ============================================
+// === NO_SHIFT_JS ===
+// ============================================
+// Cegah browser auto-restore scroll
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+// Force scroll top hanya di homepage
+function __scrollTopHome() {
+  var h = location.hash || "";
+  if (h === "" || h === "#" || h === "#/") {
+    try { window.scrollTo(0, 0); } catch(e) {}
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", __scrollTopHome);
+} else {
+  __scrollTopHome();
+}
+
+console.log("✅ NO_SHIFT_JS: aktif");
+
+
+// ============================================
+// === FINAL_NO_SHIFT ===
+// ============================================
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+function __topHomeFinal() {
+  var h = location.hash || "";
+  if (h === "" || h === "#" || h === "#/") {
+    try { window.scrollTo(0, 0); } catch(e) {}
+  }
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", __topHomeFinal);
+} else {
+  __topHomeFinal();
+}
+window.addEventListener("load", __topHomeFinal);
+
+console.log("✅ FINAL_NO_SHIFT aktif");
+
+
+// ============================================
+// === FINAL_HASHCHANGE ===
+// ============================================
+window.addEventListener("hashchange", function() {
+  if (typeof route === "function") route();
+});
+
+// Force route saat load — handle refresh
+function __forceAdminRoute() {
+  // Skip kalau bukan admin route
+  var __h = location.hash || "";
+  if (__h.indexOf("#/admin") !== 0) {
+    return;
+  }
+  if (typeof route === "function") route();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    /* KILL: setTimeout __forceAdminRoute */
+  });
+} else {
+  /* KILL: setTimeout __forceAdminRoute */
+}
+
+// Handle saat load (setelah resource load)
+window.addEventListener("load", function() {
+  /* KILL: setTimeout __forceAdminRoute */
+});
+
+// Cegah beforeunload reset
+window.addEventListener("beforeunload", function() {
+  // Jangan hapus localStorage
+  var s = localStorage.getItem("azzid_session");
+  if (s) {
+    // Pastikan tetap ada
+    localStorage.setItem("azzid_session", s);
+  }
+});
+
+console.log("✅ FINAL_HASHCHANGE aktif");
+
+
+// ============================================
+// === FORCE_SCROLL_HOME_V2 ===
+// ============================================
+function __forceTop() {
+  var h = location.hash || "";
+  var isHome = (h === "" || h === "#" || h === "#/");
+  if (!isHome) return;
+  
+  // Multiple method untuk memastikan
+  try { window.scrollTo({ top: 0, left: 0, behavior: "instant" }); } catch(e) {}
+  try { window.scrollTo(0, 0); } catch(e) {}
+  try { document.documentElement.scrollTop = 0; } catch(e) {}
+  try { document.body.scrollTop = 0; } catch(e) {}
+}
+
+// Panggil di multiple timing — anti-fail
+__forceTop();
+/* KILL: forceTop loop dihapus */
+
+// DOM ready
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", function() {
+    __forceTop();
+    /* KILL: forceTop loop dihapus */
+  });
+}
+
+// Window load
+window.addEventListener("load", function() {
+  __forceTop();
+  /* KILL: forceTop loop dihapus */
+});
+
+// Page show (bfcache)
+window.addEventListener("pageshow", function() { __forceTop(); });
+
+console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
+
+
+// ============================================
+
+
+
+// ============================================
+// === ANIM_FLAG_LOGIC ===
+// ============================================
+(function() {
+  var KEY = "azzid_anim_shown";
+  var isFirstLoad = !sessionStorage.getItem(KEY);
+
+  if (isFirstLoad) {
+    // Set flag — animation hanya 1x per session
+    try { sessionStorage.setItem(KEY, "1"); } catch(e) {}
+
+    // Tambah class anim-first-load ke body
+    function addAnimClass() {
+      try {
+        if (document.body.classList.contains("anim-first-load")) {
+          console.log("🎬 anim-first-load SUDAH ADA, skip add");
+          return;
+        }
+        document.body.classList.add("anim-first-load");
+        console.log("🎬 anim-first-load ADDED at", new Date().toISOString().slice(11,23));
+      } catch(e) {}
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", addAnimClass);
+    } else {
+      addAnimClass();
+    }
+
+    console.log("🎬 Animasi first load aktif");
+  } else {
+    console.log("⏭️ Animasi skip (bukan first load)");
+  }
+})();
+
+
+
+
+// ============================================
+/* KILL: FORCE_FAQ_JS_V2 dihapus */
+
+
+// ============================================
+// === CENTER_ICON_INNER_JS — icon SVG di tengah kotak
+// ============================================
+(function() {
+  function centerInnerIcons() {
+    document.querySelectorAll('#custApp section .card > div').forEach(function(box) {
+      // Cek apakah ini kotak icon (punya w-11/w-12 + rounded + gradient)
+      const cls = box.className || '';
+      if (!cls.match(/w-1[12]/) || !cls.match(/rounded/)) return;
+      
+      // Paksa flex center
+      box.style.setProperty('display', 'flex', 'important');
+      box.style.setProperty('align-items', 'center', 'important');
+      box.style.setProperty('justify-content', 'center', 'important');
+      
+      // Icon SVG di dalam — pastikan center
+      const svg = box.querySelector('svg');
+      if (svg) {
+        svg.style.setProperty('margin', '0', 'important');
+        svg.style.setProperty('display', 'block', 'important');
+      }
+    });
+  }
+  
+  function run() {
+    centerInnerIcons();
+    setTimeout(centerInnerIcons, 500);
+    setTimeout(centerInnerIcons, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL interval: centerInnerIcons */
+  console.log('🎯 CENTER_ICON_INNER_JS aktif');
 })();
 
 
 // ============================================
-// === FORCE_RENDER_FINAL — paksa render + cegah kosong
+// === FIX_MOBIL_BINTANG — paksa layout presisi
 // ============================================
 (function() {
-  var __lastForcedLength = 0;
+  function fixMobilBintang() {
+    // 1. Card mobil — paksa layout
+    document.querySelectorAll('.veh-card').forEach(function(card) {
+      card.style.setProperty('display', 'flex', 'important');
+      card.style.setProperty('flex-direction', 'column', 'important');
+      card.style.setProperty('height', '100%', 'important');
+    });
+    
+    // 2. Container gambar mobil — paksa tinggi konsisten
+    document.querySelectorAll('.veh-card > div:first-child').forEach(function(box) {
+      box.style.setProperty('height', '208px', 'important');
+      box.style.setProperty('min-height', '208px', 'important');
+      box.style.setProperty('overflow', 'hidden', 'important');
+      box.style.setProperty('position', 'relative', 'important');
+    });
+    
+    // 3. Gambar mobil — paksa isi penuh
+    document.querySelectorAll('.veh-card img, .veh-img').forEach(function(img) {
+      img.style.setProperty('width', '100%', 'important');
+      img.style.setProperty('height', '100%', 'important');
+      img.style.setProperty('object-fit', 'cover', 'important');
+      img.style.setProperty('display', 'block', 'important');
+    });
+    
+    // 4. Bintang review — paksa rapat kiri
+    document.querySelectorAll('.card > .flex.gap-1').forEach(function(el) {
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('gap', '4px', 'important');
+      el.style.setProperty('justify-content', 'flex-start', 'important');
+      el.style.setProperty('align-items', 'center', 'important');
+      el.style.setProperty('width', 'auto', 'important');
+      el.style.setProperty('max-width', 'fit-content', 'important');
+    });
+    
+    // 5. SVG bintang — paksa ukuran kecil
+    document.querySelectorAll('.card > .flex.gap-1 svg').forEach(function(svg) {
+      svg.style.setProperty('width', '16px', 'important');
+      svg.style.setProperty('height', '16px', 'important');
+      svg.style.setProperty('flex-shrink', '0', 'important');
+    });
+  }
   
+  function run() {
+    fixMobilBintang();
+    setTimeout(fixMobilBintang, 300);
+    setTimeout(fixMobilBintang, 800);
+    setTimeout(fixMobilBintang, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL interval: fixMobilBintang */
+  console.log('🔥 FIX_MOBIL_BINTANG aktif');
+})();
+
+
+// ============================================
+// === FIX_MOBIL_FULL — gambar mobil full width
+// ============================================
+(function() {
+  function fixMobil() {
+    document.querySelectorAll('.veh-card').forEach(function(card) {
+      // Card full width
+      card.style.setProperty('width', '100%', 'important');
+      card.style.setProperty('max-width', 'none', 'important');
+      card.style.setProperty('display', 'flex', 'important');
+      card.style.setProperty('flex-direction', 'column', 'important');
+      
+      // Container gambar — paksa tinggi + full width
+      const imgBox = card.querySelector('div:first-child');
+      if (imgBox) {
+        imgBox.style.setProperty('width', '100%', 'important');
+        imgBox.style.setProperty('height', '220px', 'important');
+        imgBox.style.setProperty('min-height', '220px', 'important');
+        imgBox.style.setProperty('max-height', '220px', 'important');
+        imgBox.style.setProperty('overflow', 'hidden', 'important');
+        imgBox.style.setProperty('position', 'relative', 'important');
+      }
+      
+      // Gambar — paksa full
+      const img = card.querySelector('img');
+      if (img) {
+        img.style.setProperty('width', '100%', 'important');
+        img.style.setProperty('height', '100%', 'important');
+        img.style.setProperty('object-fit', 'cover', 'important');
+        img.style.setProperty('object-position', 'center center', 'important');
+        img.style.setProperty('display', 'block', 'important');
+      }
+    });
+  }
+  
+  function run() {
+    fixMobil();
+    setTimeout(fixMobil, 300);
+    setTimeout(fixMobil, 800);
+    setTimeout(fixMobil, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL interval: fixMobil */
+  console.log('🔥 FIX_MOBIL_FULL aktif');
+})();
+
+
+// ============================================
+// === FIX_LOGIN_ADMIN_JS — form center + icon mata presisi
+// ============================================
+(function() {
+  function fixLogin() {
+    const pwdInput = document.querySelector('input[type="password"]');
+    if (!pwdInput) return;
+    
+    // Naik ke card login
+    let card = pwdInput.closest('[class*="card"]') || pwdInput.closest('[class*="rounded"]');
+    if (!card) {
+      card = pwdInput.closest('section') || pwdInput.parentElement.parentElement.parentElement;
+    }
+    
+    if (card) {
+      card.style.setProperty('max-width', '960px', 'important');
+      card.style.setProperty('width', '100%', 'important');
+      card.style.setProperty('margin-left', 'auto', 'important');
+      card.style.setProperty('margin-right', 'auto', 'important');
+    }
+    
+    // Input password wrapper + icon mata
+    document.querySelectorAll('input[type="password"], input[type="text"]').forEach(function(inp) {
+      inp.style.setProperty('padding-right', '48px', 'important');
+      
+      const wrapper = inp.parentElement;
+      if (wrapper) {
+        wrapper.style.setProperty('position', 'relative', 'important');
+        
+        const btn = wrapper.querySelector('button');
+        if (btn && btn.querySelector('svg')) {
+          btn.style.setProperty('position', 'absolute', 'important');
+          btn.style.setProperty('right', '16px', 'important');
+          btn.style.setProperty('top', '50%', 'important');
+          btn.style.setProperty('transform', 'translateY(-50%)', 'important');
+          btn.style.setProperty('width', '24px', 'important');
+          btn.style.setProperty('height', '24px', 'important');
+          btn.style.setProperty('padding', '0', 'important');
+          btn.style.setProperty('display', 'inline-flex', 'important');
+          btn.style.setProperty('align-items', 'center', 'important');
+          btn.style.setProperty('justify-content', 'center', 'important');
+          btn.style.setProperty('background', 'transparent', 'important');
+          btn.style.setProperty('border', 'none', 'important');
+          btn.style.setProperty('color', '#9ca3af', 'important');
+          btn.style.setProperty('cursor', 'pointer', 'important');
+        }
+      }
+    });
+  }
+  
+  function run() {
+    fixLogin();
+    setTimeout(fixLogin, 300);
+    setTimeout(fixLogin, 800);
+    setTimeout(fixLogin, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL interval: fixLogin */
+  console.log('🔥 FIX_LOGIN_ADMIN_JS aktif');
+})();
+
+
+// ============================================
+// === FIX_ARMADA_HEADER_JS — rapatkan deskripsi ke judul
+// ============================================
+(function() {
+  function fixArmadaHeader() {
+    // Cari h1 "Pilih Mobil Anda"
+    const h1 = [...document.querySelectorAll('h1, h2')].find(el =>
+      el.textContent.includes('Pilih Mobil Anda') ||
+      el.textContent.includes('Katalog Armada')
+    );
+    if (!h1) return;
+    
+    // Cari <p> yang berisi "Semua unit terawat"
+    const p = [...document.querySelectorAll('p')].find(el =>
+      el.textContent.includes('Semua unit terawat') ||
+      el.textContent.includes('diasuransikan, dan siap jalan')
+    );
+    if (!p) return;
+    
+    // Hapus background merah di p
+    p.style.setProperty('background', 'transparent', 'important');
+    p.style.setProperty('background-color', 'transparent', 'important');
+    p.style.setProperty('padding', '0', 'important');
+    p.style.setProperty('margin-top', '8px', 'important');
+    p.style.setProperty('margin-bottom', '0', 'important');
+    
+    // Kalau parent p adalah section terpisah, rapatkan
+    const headerSection = h1.closest('section');
+    const pSection = p.closest('section');
+    
+    if (headerSection && pSection && headerSection !== pSection) {
+      // Kurangi padding atas section p
+      pSection.style.setProperty('padding-top', '8px', 'important');
+      
+      // Kurangi padding bawah header
+      headerSection.style.setProperty('padding-bottom', '0', 'important');
+    }
+  }
+  
+  function run() {
+    fixArmadaHeader();
+    setTimeout(fixArmadaHeader, 300);
+    setTimeout(fixArmadaHeader, 800);
+    setTimeout(fixArmadaHeader, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL interval: fixArmadaHeader */
+  console.log('🔥 FIX_ARMADA_HEADER_JS aktif');
+})();
+
+
+// ============================================
+// === FIX_ARMADA_FINAL — paksa posisi rapat
+// ============================================
+(function() {
+  function fix() {
+    // Cari h1 "Pilih Mobil Anda"
+    const h1 = [...document.querySelectorAll('h1, h2')].find(el =>
+      el.textContent.trim() === 'Pilih Mobil Anda'
+    );
+    if (!h1) return;
+    
+    // Cari parent wrapper (div dalam section)
+    const wrapper = h1.parentElement;
+    const section = h1.closest('section');
+    
+    // Paksa section padding kecil
+    if (section) {
+      section.style.setProperty('padding-top', '32px', 'important');
+      section.style.setProperty('padding-bottom', '32px', 'important');
+    }
+    
+    // Cari p deskripsi
+    const p = [...document.querySelectorAll('p')].find(el =>
+      el.textContent.includes('Semua unit terawat')
+    );
+    if (!p) return;
+    
+    // Paksa p rapat ke h1
+    p.style.setProperty('margin-top', '6px', 'important');
+    p.style.setProperty('margin-bottom', '0', 'important');
+    p.style.setProperty('padding', '0', 'important');
+    p.style.setProperty('background', 'transparent', 'important');
+    p.style.setProperty('background-color', 'transparent', 'important');
+    p.style.setProperty('color', '#9ca3af', 'important');
+    p.style.setProperty('font-size', '13px', 'important');
+    p.style.setProperty('line-height', '1.5', 'important');
+    p.style.setProperty('display', 'block', 'important');
+    p.style.setProperty('position', 'static', 'important');
+    p.style.setProperty('float', 'none', 'important');
+    p.style.setProperty('order', 'initial', 'important');
+    
+    // Kalau p bukan next sibling h1, pindahkan
+    if (h1.nextElementSibling !== p) {
+      h1.parentNode.insertBefore(p, h1.nextSibling);
+      console.log('✅ Pindah p ke bawah h1');
+    }
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 300);
+    setTimeout(fix, 800);
+    setTimeout(fix, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL interval fix */
+  console.log('🔥 FIX_ARMADA_FINAL aktif');
+})();
+
+
+// ============================================
+// === FIX_HAPUS_ABU_ARMADA — hapus kotak abu-abu + rapatkan teks
+// ============================================
+(function() {
+  function fix() {
+    const h1 = [...document.querySelectorAll('h1, h2')].find(el =>
+      el.textContent.trim() === 'Pilih Mobil Anda'
+    );
+    if (!h1) return;
+    
+    const sec = h1.closest('section');
+    if (!sec) return;
+    
+    // 1. Hapus semua overlay/image di section header
+    sec.querySelectorAll('img, div[class*="absolute"]').forEach(function(el) {
+      if (el === h1 || el.contains(h1)) return;
+      const cls = el.className || '';
+      if (cls.includes('absolute') || el.tagName === 'IMG') {
+        el.style.setProperty('display', 'none', 'important');
+        console.log('🗑️ Hapus overlay:', el.tagName, cls.substring(0, 40));
+      }
+    });
+    
+    // 2. Hapus min-height section
+    sec.style.setProperty('min-height', '0', 'important');
+    sec.style.setProperty('height', 'auto', 'important');
+    sec.style.setProperty('padding-top', '24px', 'important');
+    sec.style.setProperty('padding-bottom', '24px', 'important');
+    
+    // 3. Rapatkan wrapper
+    const wrapper = h1.parentElement;
+    wrapper.style.setProperty('padding', '0', 'important');
+    wrapper.style.setProperty('min-height', '0', 'important');
+    wrapper.style.setProperty('height', 'auto', 'important');
+    wrapper.style.setProperty('display', 'block', 'important');
+    wrapper.style.setProperty('gap', '0', 'important');
+    
+    // 4. Hapus background abu-abu di wrapper
+    wrapper.style.setProperty('background', 'transparent', 'important');
+    wrapper.style.setProperty('background-color', 'transparent', 'important');
+    
+    // 5. Rapatkan <p>
+    const p = [...sec.querySelectorAll('p')].find(el =>
+      el.textContent.includes('Semua unit terawat')
+    );
+    if (p) {
+      p.style.cssText = 'margin:8px 0 0 0!important;padding:0!important;background:transparent!important;background-color:transparent!important;color:#9ca3af!important;font-size:13px!important;line-height:1.5!important;display:block!important;position:static!important;';
+    }
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 200);
+    setTimeout(fix, 500);
+    setTimeout(fix, 1000);
+    setTimeout(fix, 2000);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  /* KILL MutationObserver fix — infinite loop */
+  
+  /* KILL interval fix */
+  console.log('🔥 FIX_HAPUS_ABU_ARMADA aktif');
+})();
+
+
+// ============================================
+// === HIDE_ARMADA_HEADER_JS_V2 ===
+(function() {
+  function hide() {
+    document.querySelectorAll('section.armada-header, .armada-header').forEach(function(sec) {
+      sec.style.setProperty('display', 'none', 'important');
+      sec.style.setProperty('visibility', 'hidden', 'important');
+      sec.style.setProperty('height', '0', 'important');
+      sec.style.setProperty('overflow', 'hidden', 'important');
+    });
+  }
+  
+  // Hide SEGERA (sebelum DOMContentLoaded)
+  hide();
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hide);
+  }
+  
+  setTimeout(hide, 100);
+  setTimeout(hide, 500);
+  setInterval(hide, 1000);
+  console.log('🔥 HIDE_ARMADA_HEADER_JS_V2 aktif');
+})();
+
+
+// ============================================
+
+
+
+// ============================================
+
+
+
+// ============================================
+
+
+
+// ============================================
+
+
+
+// ============================================
+
+
+
+// ============================================
+/* KILL: FAQ_NAV_V2_JS dihapus */
+
+
+// ============================================
+/* KILL: FAQ_FIX_NAV_JS dihapus */
+
+
+// ============================================
+
+
+
+// ============================================
+// === FIX_MARQUEE_NAVY_JS — paksa kedua marquee dari kanan
+// ============================================
+(function() {
+  function fix() {
+    // ============ HEADER MERAH ============
+    var annBar = document.getElementById('annBar');
+    if (annBar) {
+      annBar.style.setProperty('display', 'inline-block', 'important');
+      annBar.style.setProperty('padding-left', '100vw', 'important');
+      annBar.style.setProperty('padding-right', '0', 'important');
+      annBar.style.setProperty('height', '34px', 'important');
+      annBar.style.setProperty('line-height', '34px', 'important');
+      annBar.style.setProperty('white-space', 'nowrap', 'important');
+      annBar.style.setProperty('animation', 'marqueeScrollHeader 80s linear infinite', 'important');
+      annBar.style.setProperty('animation-play-state', 'running', 'important');
+      annBar.style.setProperty('min-width', 'max-content', 'important');
+    }
+    
+    // ============ HEADER NAVY (marquee-track) ============
+    document.querySelectorAll('.marquee-track').forEach(function(track) {
+      track.style.setProperty('display', 'inline-flex', 'important');
+      track.style.setProperty('flex-direction', 'row', 'important');
+      track.style.setProperty('flex-wrap', 'nowrap', 'important');
+      track.style.setProperty('align-items', 'center', 'important');
+      track.style.setProperty('white-space', 'nowrap', 'important');
+      track.style.setProperty('padding-left', '100vw', 'important');    /* ← dari kanan */
+      track.style.setProperty('padding-right', '0', 'important');
+      track.style.setProperty('margin', '0', 'important');
+      track.style.setProperty('animation', 'marqueeScrollNavy 60s linear infinite', 'important');
+      track.style.setProperty('animation-play-state', 'running', 'important');
+      track.style.setProperty('min-width', 'max-content', 'important');
+      
+      // Child span
+      track.querySelectorAll(':scope > span').forEach(function(child) {
+        child.style.setProperty('display', 'inline-flex', 'important');
+        child.style.setProperty('flex-direction', 'row', 'important');
+        child.style.setProperty('flex-wrap', 'nowrap', 'important');
+        child.style.setProperty('align-items', 'center', 'important');
+        child.style.setProperty('white-space', 'nowrap', 'important');
+        child.style.setProperty('flex-shrink', '0', 'important');
+      });
+    });
+    
+    // Container marquee-track
+    document.querySelectorAll('div:has(.marquee-track)').forEach(function(container) {
+      container.style.setProperty('display', 'flex', 'important');
+      container.style.setProperty('align-items', 'center', 'important');
+      container.style.setProperty('overflow', 'hidden', 'important');
+      container.style.setProperty('white-space', 'nowrap', 'important');
+      container.style.setProperty('padding', '0', 'important');
+    });
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 100);
+    setTimeout(fix, 500);
+    setTimeout(fix, 1500);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  setInterval(fix, 2000);
+  console.log('🔥 FIX_MARQUEE_NAVY_JS aktif');
+})();
+
+
+// ============================================
+// === FORCE_RENDER_PAKSA — paksa render dengan reset guard
+// ============================================
+(function() {
   function forceRender() {
     try {
       var cMain = document.getElementById('cMain');
       if (!cMain) return;
       
-      var currentLength = cMain.innerHTML.trim().length;
+      // Cek apakah cMain kosong
+      if (cMain.innerHTML.trim().length > 50) {
+        return; // Sudah ada konten
+      }
       
-      // Kalau cMain kosong DAN sebelumnya ada konten — berarti di-reset
-      if (currentLength < 50) {
-        console.log('🔥 FORCE_RENDER_FINAL: cMain kosong (' + currentLength + '), paksa render');
-        
-        // Pastikan custApp tampil
-        var custApp = document.getElementById('custApp');
-        if (custApp) {
-          custApp.style.setProperty('display', 'block', 'important');
-          custApp.classList.remove('hidden');
-        }
-        
-        // Pastikan adminApp hidden
-        var adminApp = document.getElementById('adminApp');
-        if (adminApp) {
-          adminApp.style.setProperty('display', 'none', 'important');
-          adminApp.classList.add('hidden');
-        }
-        
-        // Panggil renderC langsung
-        if (typeof window.renderC === 'function') {
-          try {
-            window.renderC();
-            console.log('🔥 renderC() — cMain:', cMain.innerHTML.length);
-          } catch(e) {
-            console.error('🔥 renderC error:', e.message);
-          }
-        }
-        
-        // Fallback: vHome() langsung
-        if (cMain.innerHTML.trim().length < 50 && typeof window.vHome === 'function') {
-          try {
-            cMain.innerHTML = window.vHome();
-            console.log('🔥 vHome() — cMain:', cMain.innerHTML.length);
-          } catch(e) {
-            console.error('🔥 vHome error:', e.message);
-          }
+      console.log('🔥 FORCE_RENDER_PAKSA: cMain kosong, reset guard + render');
+      
+      // RESET GUARD
+      window.__lastRoute = null;
+      window.__firstRenderDone = false;
+      window.__lastRenderedHash = null;
+      window.__lastRenderCTime = null;
+      window.__adminLocked = false;
+      
+      // Pastikan custApp tampil
+      var custApp = document.getElementById('custApp');
+      if (custApp) {
+        custApp.style.setProperty('display', 'block', 'important');
+        custApp.classList.remove('hidden');
+      }
+      
+      // Pastikan adminApp hidden
+      var adminApp = document.getElementById('adminApp');
+      if (adminApp) {
+        adminApp.style.setProperty('display', 'none', 'important');
+        adminApp.classList.add('hidden');
+      }
+      
+      // Panggil renderC langsung (paling andal)
+      if (typeof window.renderC === 'function') {
+        console.log('🔥 Panggil renderC() langsung');
+        window.renderC();
+        console.log('🔥 cMain sekarang:', cMain.innerHTML.length, 'char');
+      }
+      
+      // Kalau masih kosong, coba route
+      if (cMain.innerHTML.trim().length < 50) {
+        if (typeof window.route === 'function') {
+          window.__lastRoute = null;
+          console.log('🔥 Panggil route()');
+          window.route();
+          console.log('🔥 cMain setelah route:', cMain.innerHTML.length, 'char');
         }
       }
       
-      __lastForcedLength = cMain.innerHTML.trim().length;
+      // Fallback: panggil vHome() langsung
+      if (cMain.innerHTML.trim().length < 50) {
+        if (typeof window.vHome === 'function') {
+          console.log('🔥 Panggil vHome() langsung');
+          cMain.innerHTML = window.vHome();
+          console.log('🔥 cMain setelah vHome:', cMain.innerHTML.length, 'char');
+        }
+      }
     } catch(e) {
-      console.error('🔥 FORCE_RENDER_FINAL error:', e.message);
+      console.error('🔥 FORCE_RENDER_PAKSA error:', e.message, e.stack);
     }
   }
   
@@ -3411,8 +4621,5 @@ function renderC() {
   setTimeout(forceRender, 3000);
   window.addEventListener('load', forceRender);
   
-  // Panggil tiap 1 detik — cegah cMain dikosongkan
-  setInterval(forceRender, 1000);
-  
-  console.log('🔥 FORCE_RENDER_FINAL aktif');
+  console.log('🔥 FORCE_RENDER_PAKSA aktif');
 })();
