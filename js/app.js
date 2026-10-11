@@ -4539,3 +4539,87 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(fix, 2000);
   console.log('🔥 FIX_MARQUEE_NAVY_JS aktif');
 })();
+
+
+// ============================================
+// === FORCE_RENDER_PAKSA — paksa render dengan reset guard
+// ============================================
+(function() {
+  function forceRender() {
+    try {
+      var cMain = document.getElementById('cMain');
+      if (!cMain) return;
+      
+      // Cek apakah cMain kosong
+      if (cMain.innerHTML.trim().length > 50) {
+        return; // Sudah ada konten
+      }
+      
+      console.log('🔥 FORCE_RENDER_PAKSA: cMain kosong, reset guard + render');
+      
+      // RESET GUARD
+      window.__lastRoute = null;
+      window.__firstRenderDone = false;
+      window.__lastRenderedHash = null;
+      window.__lastRenderCTime = null;
+      window.__adminLocked = false;
+      
+      // Pastikan custApp tampil
+      var custApp = document.getElementById('custApp');
+      if (custApp) {
+        custApp.style.setProperty('display', 'block', 'important');
+        custApp.classList.remove('hidden');
+      }
+      
+      // Pastikan adminApp hidden
+      var adminApp = document.getElementById('adminApp');
+      if (adminApp) {
+        adminApp.style.setProperty('display', 'none', 'important');
+        adminApp.classList.add('hidden');
+      }
+      
+      // Panggil renderC langsung (paling andal)
+      if (typeof window.renderC === 'function') {
+        console.log('🔥 Panggil renderC() langsung');
+        window.renderC();
+        console.log('🔥 cMain sekarang:', cMain.innerHTML.length, 'char');
+      }
+      
+      // Kalau masih kosong, coba route
+      if (cMain.innerHTML.trim().length < 50) {
+        if (typeof window.route === 'function') {
+          window.__lastRoute = null;
+          console.log('🔥 Panggil route()');
+          window.route();
+          console.log('🔥 cMain setelah route:', cMain.innerHTML.length, 'char');
+        }
+      }
+      
+      // Fallback: panggil vHome() langsung
+      if (cMain.innerHTML.trim().length < 50) {
+        if (typeof window.vHome === 'function') {
+          console.log('🔥 Panggil vHome() langsung');
+          cMain.innerHTML = window.vHome();
+          console.log('🔥 cMain setelah vHome:', cMain.innerHTML.length, 'char');
+        }
+      }
+    } catch(e) {
+      console.error('🔥 FORCE_RENDER_PAKSA error:', e.message, e.stack);
+    }
+  }
+  
+  // Panggil di multiple timing
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', forceRender);
+  } else {
+    forceRender();
+  }
+  
+  setTimeout(forceRender, 100);
+  setTimeout(forceRender, 500);
+  setTimeout(forceRender, 1500);
+  setTimeout(forceRender, 3000);
+  window.addEventListener('load', forceRender);
+  
+  console.log('🔥 FORCE_RENDER_PAKSA aktif');
+})();
