@@ -4551,35 +4551,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === RENDER_ONCE — panggil renderC sekali saat load
-// ============================================
-(function() {
-  function render() {
-    var cMain = document.getElementById('cMain');
-    if (!cMain || cMain.innerHTML.trim().length > 50) return;
-    
-    try {
-      if (typeof window.renderC === 'function') {
-        window.renderC();
-        console.log('🔥 RENDER_ONCE: renderC() — cMain:', cMain.innerHTML.length);
-      }
-    } catch(e) {
-      console.error('🔥 RENDER_ONCE error:', e.message);
-    }
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
-  } else {
-    render();
-  }
-  
-  setTimeout(render, 100);
-  setTimeout(render, 500);
-  setTimeout(render, 1500);
-  
-  console.log('🔥 RENDER_ONCE aktif');
-})();
+/* KILL: RENDER_ONCE dihapus */
 
 
 // ============================================
@@ -4587,65 +4559,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === CEGAH_KOSONG_FINAL — cegah cMain kosong
-// ============================================
-(function() {
-  var lastHtml = '';
-  
-  function checkAndFix() {
-    var cMain = document.getElementById('cMain');
-    if (!cMain) return;
-    
-    var len = cMain.innerHTML.trim().length;
-    
-    // Simpan backup kalau ada konten
-    if (len > 50) {
-      lastHtml = cMain.innerHTML;
-      return;
-    }
-    
-    // Kalau kosong DAN punya backup — restore
-    if (len < 50 && lastHtml.length > 50) {
-      cMain.innerHTML = lastHtml;
-      console.log('🔥 CEGAH_KOSONG: restore backup');
-      return;
-    }
-    
-    // Kalau kosong DAN tidak ada backup — render vHome
-    if (len < 50 && lastHtml.length < 50) {
-      var hash = location.hash || '#/';
-      if (hash === '#/' || hash === '#' || hash === '') {
-        try {
-          if (typeof window.vHome === 'function') {
-            var html = window.vHome();
-            if (html && html.length > 50) {
-              cMain.innerHTML = html;
-              lastHtml = html;
-              console.log('🔥 CEGAH_KOSONG: render vHome');
-            }
-          }
-        } catch(e) {
-          console.error('vHome error:', e.message);
-        }
-      }
-    }
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', checkAndFix);
-  } else {
-    checkAndFix();
-  }
-  
-  setTimeout(checkAndFix, 100);
-  setTimeout(checkAndFix, 500);
-  setTimeout(checkAndFix, 1500);
-  setTimeout(checkAndFix, 3000);
-  
-  setInterval(checkAndFix, 300);
-  
-  console.log('🔥 CEGAH_KOSONG_FINAL aktif');
-})();
+/* KILL: CEGAH_KOSONG_FINAL dihapus */
 
 
 // ============================================
@@ -4653,103 +4567,4 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === LOCK_CMAIN — paksa cMain tidak bisa dikosongkan
-// ============================================
-(function() {
-  var __lastHtml = '';
-  var __isRestoring = false;
-  
-  function getHtmlForHash() {
-    var hash = location.hash || '#/';
-    var h = hash.replace(/^#\/?/, '').split('/')[0];
-    
-    try {
-      if (!h || h === '' || h === 'home') return window.vHome ? window.vHome() : '';
-      if (h === 'armada') return window.vArmada ? window.vArmada() : '';
-      if (h === 'layanan') return window.vLayanan ? window.vLayanan() : '';
-      if (h === 'tentang') return window.vTentang ? window.vTentang() : '';
-      if (h === 'faq') return window.vFaq ? window.vFaq() : '';
-      if (h === 'kontak') return window.vKontak ? window.vKontak() : '';
-      return window.vHome ? window.vHome() : '';
-    } catch(e) {
-      console.error('🔥 getHtmlForHash error:', e.message);
-      return '';
-    }
-  }
-  
-  function render() {
-    var cMain = document.getElementById('cMain');
-    if (!cMain) return;
-    
-    var currentLen = cMain.innerHTML.trim().length;
-    
-    // Kalau ada konten, simpan backup
-    if (currentLen > 100) {
-      __lastHtml = cMain.innerHTML;
-      return;
-    }
-    
-    // Kalau kosong, restore
-    if (__isRestoring) return;
-    __isRestoring = true;
-    
-    console.log('🔥 LOCK_CMAIN: cMain kosong, paksa isi ulang');
-    
-    var html = getHtmlForHash();
-    if (html && html.length > 100) {
-      cMain.innerHTML = html;
-      __lastHtml = html;
-      console.log('🔥 LOCK_CMAIN: diisi ' + html.length + ' char');
-      
-      if (typeof window.revealInit === 'function') {
-        try { window.revealInit(); } catch(e) {}
-      }
-    } else if (__lastHtml.length > 100) {
-      // Fallback: pakai backup
-      cMain.innerHTML = __lastHtml;
-      console.log('🔥 LOCK_CMAIN: restore backup ' + __lastHtml.length + ' char');
-    }
-    
-    __isRestoring = false;
-  }
-  
-  function startObserver() {
-    var cMain = document.getElementById('cMain');
-    if (!cMain) return;
-    
-    // Observer — cek setiap perubahan cMain
-    var observer = new MutationObserver(function(mutations) {
-      if (__isRestoring) return;
-      
-      var currentLen = cMain.innerHTML.trim().length;
-      if (currentLen < 100 && __lastHtml.length > 100) {
-        console.log('🔥 LOCK_CMAIN: cMain dikosongkan, restore!');
-        render();
-      }
-    });
-    
-    observer.observe(cMain, { childList: true, subtree: false, characterData: true });
-    console.log('🔥 LOCK_CMAIN: observer aktif');
-  }
-  
-  // Init
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      render();
-      startObserver();
-    });
-  } else {
-    render();
-    startObserver();
-  }
-  
-  setTimeout(render, 100);
-  setTimeout(render, 500);
-  setTimeout(render, 1500);
-  setTimeout(render, 3000);
-  
-  // Interval backup tiap 1 detik
-  setInterval(render, 1000);
-  
-  console.log('🔥 LOCK_CMAIN aktif');
-})();
+/* KILL: LOCK_CMAIN dihapus */
