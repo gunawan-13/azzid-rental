@@ -3185,7 +3185,7 @@ function saveCms() {
 
 function applyCms() {
   const bp = S.cms.bannerPromo;
-  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent = annText + '   •   ' + annText + '   •   ' + annText + '   •   ' + annText;
+  const annText=(bp&&bp.aktif&&bp.teks)?bp.teks:S.cms.ann; $('annBar').textContent = annText + '   •   ' + annText + '   •   ' + annText;
   const wl = waLink('Halo AZZID RENTCAR, saya ingin bertanya.');
   $('waFloat').href = wl;
   $('footWa').href = wl;
@@ -4446,35 +4446,53 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_CENTER_PAKSA_JS — paksa header merah di tengah
+
+
+
+// ============================================
+
+
+
+// ============================================
+
+
+
+// ============================================
+/* KILL: FAQ_NAV_V2_JS dihapus */
+
+
+// ============================================
+/* KILL: FAQ_FIX_NAV_JS dihapus */
+
+
+// ============================================
+// === FIX_HEADER_MERAH_JS — dari kanan + center vertikal
 // ============================================
 (function() {
   function fix() {
-    // annBar — paksa center
     var annBar = document.getElementById('annBar');
-    if (annBar) {
-      annBar.style.setProperty('display', 'block', 'important');
-      annBar.style.setProperty('width', '100%', 'important');
-      annBar.style.setProperty('text-align', 'center', 'important');
-      annBar.style.setProperty('padding', '0', 'important');
-      annBar.style.setProperty('margin', '0 auto', 'important');
-      annBar.style.setProperty('white-space', 'nowrap', 'important');
-      annBar.style.setProperty('animation', 'marqueeScrollCenter 80s linear infinite', 'important');
-      annBar.style.setProperty('animation-play-state', 'running', 'important');
-      annBar.style.setProperty('min-width', '0', 'important');
-      annBar.style.setProperty('will-change', 'transform', 'important');
-    }
+    if (!annBar) return;
     
-    // marquee-track — tetap
-    document.querySelectorAll('.marquee-track').forEach(function(el) {
-      el.style.setProperty('padding-left', '100vw', 'important');
-      el.style.setProperty('padding-right', '0', 'important');
-      el.style.setProperty('display', 'inline-flex', 'important');
-      el.style.setProperty('flex-wrap', 'nowrap', 'important');
-      el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('animation', 'marqueeScrollNavy 60s linear infinite', 'important');
-      el.style.setProperty('min-width', 'max-content', 'important');
-    });
+    // Paksa annBar — dari kanan + center vertikal
+    annBar.style.setProperty('display', 'inline-block', 'important');
+    annBar.style.setProperty('padding-left', '100vw', 'important');
+    annBar.style.setProperty('padding-right', '0', 'important');
+    annBar.style.setProperty('height', '34px', 'important');
+    annBar.style.setProperty('line-height', '34px', 'important');
+    annBar.style.setProperty('white-space', 'nowrap', 'important');
+    annBar.style.setProperty('animation', 'marqueeScrollHeader 80s linear infinite', 'important');
+    annBar.style.setProperty('animation-play-state', 'running', 'important');
+    annBar.style.setProperty('min-width', 'max-content', 'important');
+    annBar.style.setProperty('vertical-align', 'middle', 'important');
+    
+    // Container — flex center vertikal
+    var parent = annBar.parentElement;
+    if (parent) {
+      parent.style.setProperty('display', 'flex', 'important');
+      parent.style.setProperty('align-items', 'center', 'important');
+      parent.style.setProperty('height', '34px', 'important');
+      parent.style.setProperty('overflow', 'hidden', 'important');
+    }
   }
   
   function run() {
@@ -4490,85 +4508,6 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     run();
   }
   
-  // Hover pause
-  document.addEventListener('mouseover', function(e) {
-    var bar = e.target.closest('#annBar, .marquee-track');
-    if (bar) bar.style.setProperty('animation-play-state', 'paused', 'important');
-  });
-  document.addEventListener('mouseout', function(e) {
-    var bar = e.target.closest('#annBar, .marquee-track');
-    if (bar) bar.style.setProperty('animation-play-state', 'running', 'important');
-  });
-  
-  /* Interval fix dihapus */
-  console.log('🔥 MARQUEE_CENTER_PAKSA_JS aktif');
+  setInterval(fix, 2000);
+  console.log('🔥 FIX_HEADER_MERAH_JS aktif');
 })();
-
-
-// ============================================
-// === MARQUEE_CENTER_JS — header merah dari tengah
-// ============================================
-(function() {
-  function fix() {
-    // annBar (header merah) — text di tengah (50vw) + duplikat
-    var annBar = document.getElementById('annBar');
-    if (annBar) {
-      // Padding 50vw = mulai dari tengah viewport
-      annBar.style.setProperty('padding-left', '50vw', 'important');
-      annBar.style.setProperty('padding-right', '50vw', 'important');
-      annBar.style.setProperty('display', 'inline-block', 'important');
-      annBar.style.setProperty('white-space', 'nowrap', 'important');
-      annBar.style.setProperty('animation', 'marqueeScroll 80s linear infinite', 'important');
-      annBar.style.setProperty('min-width', 'max-content', 'important');
-      annBar.style.setProperty('will-change', 'transform', 'important');
-    }
-    
-    // marquee-track (header navy) — tetap dari kanan
-    document.querySelectorAll('.marquee-track').forEach(function(el) {
-      el.style.setProperty('padding-left', '100vw', 'important');
-      el.style.setProperty('padding-right', '0', 'important');
-      el.style.setProperty('display', 'inline-flex', 'important');
-      el.style.setProperty('flex-wrap', 'nowrap', 'important');
-      el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('animation', 'marqueeScroll 60s linear infinite', 'important');
-      el.style.setProperty('min-width', 'max-content', 'important');
-    });
-  }
-  
-  function run() {
-    fix();
-    setTimeout(fix, 300);
-    setTimeout(fix, 1000);
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', run);
-  } else {
-    run();
-  }
-  
-  // Hover pause
-  document.addEventListener('mouseover', function(e) {
-    var bar = e.target.closest('#annBar, .marquee-track');
-    if (bar) bar.style.setProperty('animation-play-state', 'paused', 'important');
-  });
-  document.addEventListener('mouseout', function(e) {
-    var bar = e.target.closest('#annBar, .marquee-track');
-    if (bar) bar.style.setProperty('animation-play-state', 'running', 'important');
-  });
-  
-  /* Interval fix dihapus */
-  console.log('🔥 MARQUEE_CENTER_JS aktif');
-})();
-
-
-// ============================================
-
-
-
-// ============================================
-/* KILL: FAQ_NAV_V2_JS dihapus */
-
-
-// ============================================
-/* KILL: FAQ_FIX_NAV_JS dihapus */

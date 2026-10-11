@@ -1385,140 +1385,6 @@ img {
 #custApp section:has(> div > span:first-child):not(:has(.card)):not(:has(.veh-card)) {
   display: none !important;
 }
-</style><style id="MARQUEE_CENTER_PAKSA">
-/* ============================================ */
-/* HEADER MERAH (annBar) — PAKSA text di tengah */
-/* ============================================ */
-#annBar {
-  /* Paksa lebar container penuh */
-  display: block !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  text-align: center !important;
-  padding: 0 !important;
-  margin: 0 auto !important;
-  
-  /* Animasi */
-  animation: marqueeScrollCenter 80s linear infinite !important;
-  animation-play-state: running !important;
-  white-space: nowrap !important;
-  min-width: 0 !important;
-  will-change: transform !important;
-}
-
-/* Hover pause */
-#annBar:hover {
-  animation-play-state: paused !important;
-}
-
-/* Keyframes — geser 50% untuk seamless loop */
-@keyframes marqueeScrollCenter {
-  0% { transform: translateX(50%); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ============================================ */
-/* HEADER NAVY (marquee-track) — tetap seperti sekarang */
-/* ============================================ */
-.marquee-track {
-  padding-left: 100vw !important;
-  padding-right: 0 !important;
-  display: inline-flex !important;
-  flex-wrap: nowrap !important;
-  white-space: nowrap !important;
-  animation: marqueeScrollNavy 60s linear infinite !important;
-  animation-play-state: running !important;
-  min-width: max-content !important;
-}
-
-.marquee-track > span {
-  display: inline-flex !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused !important;
-}
-
-@keyframes marqueeScrollNavy {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
-}
-
-/* ============================================ */
-/* CONTAINER — paksa full width */
-/* ============================================ */
-#custApp > div.fixed.top-0,
-#custApp > div.fixed.top-0 > div,
-#custApp > div.bg-ink-900.border-y {
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-</style><style id="MARQUEE_CENTER">
-/* ============================================ */
-/* HEADER MERAH (annBar) — mulai dari TENGAH */
-/* ============================================ */
-#annBar {
-  padding-left: 50vw !important;
-  padding-right: 50vw !important;
-  display: inline-block !important;
-  white-space: nowrap !important;
-  animation: marqueeScroll 80s linear infinite !important;
-  animation-play-state: running !important;
-  min-width: max-content !important;
-  will-change: transform !important;
-}
-
-/* Hover pause */
-#annBar:hover {
-  animation-play-state: paused !important;
-}
-
-/* ============================================ */
-/* HEADER NAVY (marquee-track) — tetap dari kanan */
-/* ============================================ */
-.marquee-track {
-  padding-left: 100vw !important;
-  padding-right: 0 !important;
-  display: inline-flex !important;
-  flex-wrap: nowrap !important;
-  white-space: nowrap !important;
-  animation: marqueeScroll 60s linear infinite !important;
-  animation-play-state: running !important;
-  min-width: max-content !important;
-}
-
-.marquee-track > span {
-  display: inline-flex !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused !important;
-}
-
-/* ============================================ */
-/* KEYFRAMES */
-/* ============================================ */
-@keyframes marqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* ============================================ */
-/* CONTAINER */
-/* ============================================ */
-#custApp > div.fixed.top-0,
-#custApp > div.fixed.top-0 > div,
-#custApp > div.bg-ink-900.border-y {
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-}
 </style><style id="HIDE_FAQ_MENU">
 /* Sembunyikan FAQ di nav header */
 nav a[href="#/faq"],
@@ -1661,6 +1527,81 @@ footer a[href*="/faq"] {
   margin: 0 !important;
   align-self: center !important;
   pointer-events: none !important;
+}
+</style><style id="FIX_HEADER_MERAH">
+/* ============================================ */
+/* HEADER MERAH (annBar) — dari kanan + center vertikal */
+/* ============================================ */
+
+/* Container — paksa height + align */
+#custApp > div.fixed.top-0,
+#custApp > div.fixed.top-0 > div:first-child {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  max-height: 34px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* annBar — dari kanan + center vertikal */
+#annBar {
+  display: inline-block !important;
+  padding-left: 100vw !important;                /* ← text mulai dari kanan */
+  padding-right: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  line-height: 34px !important;                  /* ← center vertikal */
+  white-space: nowrap !important;
+  animation: marqueeScrollHeader 80s linear infinite !important;
+  animation-play-state: running !important;
+  min-width: max-content !important;
+  will-change: transform !important;
+  vertical-align: middle !important;
+}
+
+/* Hover pause */
+#annBar:hover {
+  animation-play-state: paused !important;
+}
+
+@keyframes marqueeScrollHeader {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ============================================ */
+/* HEADER NAVY (marquee-track) — tetap seperti sekarang */
+/* ============================================ */
+.marquee-track {
+  padding-left: 100vw !important;
+  padding-right: 0 !important;
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  animation: marqueeScrollNavy 60s linear infinite !important;
+  animation-play-state: running !important;
+  min-width: max-content !important;
+}
+
+.marquee-track > span {
+  display: inline-flex !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused !important;
+}
+
+@keyframes marqueeScrollNavy {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
 }
 </style></body>
 </html>
