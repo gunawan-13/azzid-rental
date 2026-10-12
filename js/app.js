@@ -5074,7 +5074,11 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_FORCE_JS — paksa marquee jalan via inline style
+
+
+
+// ============================================
+// === MARQUEE_FORCE_JS — paksa jalan kanan ke kiri
 // ============================================
 (function() {
   function paksa() {
@@ -5086,24 +5090,10 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       el.style.setProperty('white-space', 'nowrap', 'important');
       el.style.setProperty('padding', '0', 'important');
       el.style.setProperty('margin', '0', 'important');
-      el.style.setProperty('opacity', '1', 'important');
-      el.style.setProperty('visibility', 'visible', 'important');
       el.style.setProperty('min-width', 'max-content', 'important');
-      el.style.setProperty('animation', 'marqueeGo 50s linear infinite', 'important');
-      el.style.setProperty('animation-play-state', 'running', 'important');
       el.style.setProperty('will-change', 'transform', 'important');
-    });
-    
-    // Child span
-    document.querySelectorAll('.marquee-track > span').forEach(function(child) {
-      child.style.setProperty('display', 'inline-flex', 'important');
-      child.style.setProperty('flex-direction', 'row', 'important');
-      child.style.setProperty('flex-wrap', 'nowrap', 'important');
-      child.style.setProperty('align-items', 'center', 'important');
-      child.style.setProperty('gap', '48px', 'important');
-      child.style.setProperty('padding-right', '48px', 'important');
-      child.style.setProperty('white-space', 'nowrap', 'important');
-      child.style.setProperty('flex-shrink', '0', 'important');
+      el.style.setProperty('animation', 'marqueeKanan 50s linear infinite', 'important');
+      el.style.setProperty('animation-play-state', 'running', 'important');
     });
   }
   
