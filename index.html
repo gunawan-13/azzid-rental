@@ -2509,8 +2509,6 @@ a#waFloat:hover,
   animation-play-state: paused !important;
 }
 
-
-
 /* ============================================ */
 /* DOT REAL-TIME — TETAP ANIMASI */
 /* ============================================ */
@@ -2796,6 +2794,46 @@ a#waFloat:hover,
   background: #b91c1c !important;
   transform: rotate(45deg) !important;
   flex-shrink: 0 !important;
+}
+</style>
+
+<style id="HILANG_SHADOW_CARD">
+/* ============================================ */
+/* Card mobil — hilangkan shadow saat hover */
+/* ============================================ */
+
+/* Card mobil — no shadow */
+.veh-card,
+.veh-card:hover,
+.veh-card:focus,
+.veh-card:focus-visible {
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Container gambar */
+.veh-card > div:first-child,
+.veh-card > div:first-child:hover {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Gambar mobil */
+.veh-card img,
+.veh-card:hover img {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Card layanan + review — no shadow saat hover juga */
+.card:hover {
+  box-shadow: none !important;
+}
+
+/* Kecuali border — tetap ada */
+.veh-card:hover {
+  border-color: rgba(220, 38, 38, 0.3) !important;
 }
 </style>
 </body>
