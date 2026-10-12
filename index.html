@@ -1485,63 +1485,57 @@ img {
 .veh-card:hover [class*="border"] {
   border-color: transparent !important;
 }
-</style><style id="CARD_NAMA_MOBIL">
+</style><style id="NAMA_MOBIL_KONTRAS">
 /* ============================================ */
-/* Nama mobil — kasih card/kolom warna */
+/* Nama mobil — TANPA card, cukup warna kontras */
 /* ============================================ */
 
-/* Container nama mobil — badge/pill dengan background */
-.veh-card > div:first-child > div:has(.font-display),
-.veh-card > div:first-child > div[class*="absolute"]:has(h3),
-.veh-card > div:first-child > div[class*="absolute"]:has(.font-display) {
+/* Nama mobil — putih tebal + shadow teks */
+.veh-card h3,
+.veh-card .font-display.font-bold,
+.veh-card > div:first-child .font-display,
+.veh-card > div:first-child h3 {
   display: inline-block !important;
-  padding: 8px 16px !important;
-  background: rgba(0, 0, 0, 0.75) !important;
-  backdrop-filter: blur(8px) !important;
-  border-radius: 10px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-  bottom: 16px !important;
-  left: 16px !important;
-  right: auto !important;
-  top: auto !important;
-}
-
-/* Nama mobil — teks putih tebal */
-.veh-card > div:first-child > div:has(.font-display) h3,
-.veh-card > div:first-child > div:has(.font-display) .font-display,
-.veh-card > div:first-child > div:has(.font-display) > * {
-  font-size: 16px !important;
-  font-weight: 800 !important;
-  color: #ffffff !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-  margin: 0 !important;
   padding: 0 !important;
-  letter-spacing: 0.02em !important;
-}
-
-/* Kalau nama di luar container gambar — kasih background */
-.veh-card h3.font-display,
-.veh-card .font-display.text-white,
-.veh-card .font-bold:has(+ .text-muted) {
-  display: inline-block !important;
-  padding: 6px 14px !important;
-  background: rgba(220, 38, 38, 0.9) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  
+  /* Warna teks */
   color: #ffffff !important;
-  border-radius: 8px !important;
-  font-weight: 800 !important;
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+  font-weight: 900 !important;
+  font-size: 18px !important;
+  letter-spacing: 0.02em !important;
+  
+  /* Shadow teks biar kontras */
+  text-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.8),
+    0 2px 6px rgba(0, 0, 0, 0.9),
+    0 0 20px rgba(0, 0, 0, 0.6) !important;
+  
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Spesifik: nama mobil di bottom-left gambar */
-.veh-card > div:first-child > .absolute.bottom-3,
-.veh-card > div:first-child > .absolute.bottom-4,
-.veh-card > div:first-child > .absolute:last-child {
-  background: rgba(0, 0, 0, 0.7) !important;
-  backdrop-filter: blur(6px) !important;
-  padding: 8px 16px !important;
-  border-radius: 10px !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+/* Nama mobil di gambar — pastikan shadow kuat */
+.veh-card > div:first-child h3,
+.veh-card > div:first-child .font-display {
+  text-shadow: 
+    0 0 10px rgba(0, 0, 0, 0.9),
+    0 3px 8px rgba(0, 0, 0, 1),
+    0 0 30px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Badge AVAILABLE + PREMIUM — tetap seperti sekarang */
+.veh-card .badge {
+  text-shadow: none !important;
+}
+
+/* Harga — tetap */
+.veh-card .text-maroon-400,
+.veh-card [class*="text-red"] {
+  text-shadow: none !important;
 }
 </style></body>
 </html>
