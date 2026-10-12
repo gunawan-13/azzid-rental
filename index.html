@@ -1743,89 +1743,111 @@ body:not([data-home]) #custApp section:first-child * {
 #custApp #userNotifBadge {
   animation: badgePulse 2s ease-in-out infinite !important;
 }
-</style><style id="BELL_DOT_KOTAK">
+</style><style id="GLOW_PULSE">
 /* ============================================ */
-/* REAL-TIME — KOTAK (bukan pill) */
+/* PULSE GLOW RING — bayangan menyebar */
 /* ============================================ */
+
+/* ============ REAL-TIME — KOTAK ============ */
 #custApp .badge:has(.dot-live),
-#custApp .badge:has([class*="emerald"]),
-#custApp [class*="bg-emerald-400"]:not(.dot-live) {
-  border-radius: 6px !important;              /* ← KOTAK */
+#custApp .badge:has([class*="emerald"]) {
+  border-radius: 6px !important;
   padding: 4px 10px !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 6px !important;
 }
 
-/* Dot REAL-TIME — tetap bulat + pulse */
+/* Dot REAL-TIME — dengan glow ring menyebar */
 #custApp .dot-live,
 #custApp [class*="bg-emerald-400"] {
+  position: relative !important;
   border-radius: 50% !important;
-  animation: pulseLiveDot 2s ease-in-out infinite !important;
-  will-change: transform, box-shadow, opacity !important;
+  background: #10b981 !important;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7) !important;
+  animation: dotGlowRing 2s ease-out infinite !important;
+  will-change: box-shadow, opacity !important;
 }
 
-@keyframes pulseLiveDot {
-  0%, 100% {
+@keyframes dotGlowRing {
+  0% {
+    box-shadow: 
+      0 0 0 0 rgba(16, 185, 129, 0.8),
+      0 0 0 0 rgba(16, 185, 129, 0.6),
+      0 0 0 0 rgba(16, 185, 129, 0.4);
     opacity: 1;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    transform: scale(1);
   }
-  50% {
-    opacity: 0.85;
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-    transform: scale(1.15);
+  70% {
+    box-shadow: 
+      0 0 0 6px rgba(16, 185, 129, 0),
+      0 0 0 10px rgba(16, 185, 129, 0),
+      0 0 0 14px rgba(16, 185, 129, 0);
+    opacity: 0.9;
+  }
+  100% {
+    box-shadow: 
+      0 0 0 0 rgba(16, 185, 129, 0),
+      0 0 0 0 rgba(16, 185, 129, 0),
+      0 0 0 0 rgba(16, 185, 129, 0);
+    opacity: 1;
   }
 }
 
-/* ============================================ */
-/* LONCENG — TAMBAH DOT DENYUT */
-/* ============================================ */
-
-/* Lonceng notifikasi — button */
+/* ============ LONCENG — DOT + GLOW RING ============ */
 #custApp #userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   border-radius: 8px !important;
 }
 
-/* DOT DENYUT di atas lonceng — pakai ::before */
+/* Dot + Ring denyut di lonceng */
 #custApp #userNotifBtn::before {
   content: '' !important;
   position: absolute !important;
-  top: 6px !important;
-  right: 6px !important;
-  width: 8px !important;
-  height: 8px !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 10px !important;
+  height: 10px !important;
   background: #ef4444 !important;
   border-radius: 50% !important;
-  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7) !important;
-  animation: bellDotPulse 2s ease-in-out infinite !important;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8) !important;
+  animation: bellGlowRing 2s ease-out infinite !important;
   pointer-events: none !important;
   z-index: 10 !important;
 }
 
-/* Kalau ada badge notif, sembunyikan dot default */
+@keyframes bellGlowRing {
+  0% {
+    box-shadow: 
+      0 0 0 0 rgba(239, 68, 68, 0.9),
+      0 0 0 0 rgba(239, 68, 68, 0.6);
+    transform: scale(1);
+    opacity: 1;
+  }
+  70% {
+    box-shadow: 
+      0 0 0 8px rgba(239, 68, 68, 0),
+      0 0 0 14px rgba(239, 68, 68, 0);
+    transform: scale(1.1);
+    opacity: 0.95;
+  }
+  100% {
+    box-shadow: 
+      0 0 0 0 rgba(239, 68, 68, 0),
+      0 0 0 0 rgba(239, 68, 68, 0);
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Sembunyikan dot kalau ada badge angka */
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before {
   display: none !important;
 }
 
-@keyframes bellDotPulse {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
-    transform: scale(1.3);
-  }
-}
-
-/* Badge notif (angka) — pulse juga */
+/* Badge angka — glow ring juga */
 #custApp #userNotifBadge:not(.hidden) {
-  animation: bellBadgePulse 2s ease-in-out infinite !important;
+  animation: bellBadgeGlow 2s ease-out infinite !important;
   border-radius: 999px !important;
   min-width: 18px !important;
   height: 18px !important;
@@ -1842,34 +1864,82 @@ body:not([data-home]) #custApp section:first-child * {
   z-index: 11 !important;
 }
 
-@keyframes bellBadgePulse {
-  0%, 100% {
+@keyframes bellBadgeGlow {
+  0% {
+    box-shadow: 
+      0 0 0 0 rgba(239, 68, 68, 0.9),
+      0 0 0 0 rgba(239, 68, 68, 0.5);
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
   }
-  50% {
-    transform: scale(1.15);
-    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  70% {
+    box-shadow: 
+      0 0 0 6px rgba(239, 68, 68, 0),
+      0 0 0 12px rgba(239, 68, 68, 0);
+    transform: scale(1.1);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 0 rgba(239, 68, 68, 0),
+      0 0 0 0 rgba(239, 68, 68, 0);
+    transform: scale(1);
   }
 }
 
-/* Lonceng — hover goyang */
+/* Lonceng hover */
 #custApp #userNotifBtn:hover {
   background: rgba(255, 255, 255, 0.05) !important;
   transform: scale(1.05) !important;
   transition: transform 0.2s ease, background 0.2s ease !important;
 }
 
-#custApp #userNotifBtn:hover svg {
-  animation: bellShake 0.6s ease-in-out !important;
+/* ============================================ */
+/* WHATSAPP FLOAT — DOT + GLOW RING */
+/* ============================================ */
+
+/* WA Float button */
+#waFloat,
+.wa-float {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 50 !important;
+  animation: waGlowRing 2s ease-out infinite !important;
+  will-change: box-shadow, transform !important;
 }
 
-@keyframes bellShake {
-  0%, 100% { transform: rotate(0deg); }
-  20% { transform: rotate(-12deg); }
-  40% { transform: rotate(12deg); }
-  60% { transform: rotate(-8deg); }
-  80% { transform: rotate(8deg); }
+@keyframes waGlowRing {
+  0% {
+    box-shadow: 
+      0 0 0 0 rgba(37, 211, 102, 0.7),
+      0 0 0 0 rgba(37, 211, 102, 0.4),
+      0 0 20px 0 rgba(37, 211, 102, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 10px rgba(37, 211, 102, 0),
+      0 0 0 18px rgba(37, 211, 102, 0),
+      0 0 30px 5px rgba(37, 211, 102, 0.4);
+    transform: scale(1.05);
+  }
+  100% {
+    box-shadow: 
+      0 0 0 0 rgba(37, 211, 102, 0),
+      0 0 0 0 rgba(37, 211, 102, 0),
+      0 0 20px 0 rgba(37, 211, 102, 0.3);
+    transform: scale(1);
+  }
+}
+
+/* WA hover — extra glow */
+#waFloat:hover,
+.wa-float:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 
+    0 0 0 0 rgba(37, 211, 102, 0.6),
+    0 0 30px 8px rgba(37, 211, 102, 0.5) !important;
+  animation-play-state: paused !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 </style></body>
 </html>
