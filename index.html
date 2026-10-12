@@ -2427,14 +2427,29 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="RING_MERATA">
+</style><style id="RING_POJOK">
 /* ============================================ */
-/* NUCLEAR — overflow visible semua */
+/* NUCLEAR OVERFLOW — paksa semua visible */
 /* ============================================ */
-* {
+*,
+*::before,
+*::after {
   overflow: visible !important;
   clip-path: none !important;
   contain: none !important;
+}
+
+/* Header + Bell parent */
+#custApp header,
+#custApp header > div,
+#custApp header > div > div,
+#custApp header > div > div > div,
+#custApp header .flex,
+#custApp header .relative,
+#custApp #userNotifBtn,
+#custApp #userNotifBtn > div {
+  overflow: visible !important;
+  clip-path: none !important;
 }
 
 /* ============================================ */
@@ -2463,7 +2478,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* REAL-TIME — Dot hijau (tetap) */
+/* REAL-TIME — Dot hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2540,7 +2555,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* LONCENG — Dot di TENGAH biar ring merata */
+/* LONCENG — Dot di POJOK KANAN ATAS */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
@@ -2550,21 +2565,20 @@ a#waFloat:hover,
   transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah — DI TENGAH button (biar ring merata) */
+/* Dot merah — POJOK KANAN ATAS */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: 8px !important;
-  height: 8px !important;
-  min-width: 8px !important;
-  min-height: 8px !important;
-  max-width: 8px !important;
-  max-height: 8px !important;
+  top: -2px !important;
+  right: -2px !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
+  max-width: 10px !important;
+  max-height: 10px !important;
   background: #ef4444 !important;
   border: none !important;
   border-radius: 50% !important;
@@ -2574,24 +2588,23 @@ a#waFloat:hover,
   z-index: 1000 !important;
   box-sizing: border-box !important;
   animation: none !important;
+  transform: none !important;
 }
 
-/* Ring merah — DI TENGAH, menyebar merata */
+/* Ring merah — POJOK KANAN ATAS, scale dari center dot */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  margin-top: -4px !important;
-  margin-left: -4px !important;
-  width: 8px !important;
-  height: 8px !important;
-  min-width: 8px !important;
-  min-height: 8px !important;
-  max-width: 8px !important;
-  max-height: 8px !important;
+  top: -2px !important;
+  right: -2px !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
+  max-width: 10px !important;
+  max-height: 10px !important;
   border-radius: 50% !important;
   border: 2px solid #ef4444 !important;
   animation: ringScale 1.5s ease-out infinite !important;
@@ -2624,8 +2637,8 @@ a#waFloat:hover,
   background: #ef4444 !important;
   color: white !important;
   border: none !important;
-  top: 2px !important;
-  right: 2px !important;
+  top: 0 !important;
+  right: 0 !important;
   z-index: 21 !important;
 }
 
