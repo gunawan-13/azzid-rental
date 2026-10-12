@@ -2320,7 +2320,7 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="FIX_BELL_ALIGN">
+</style><style id="BELL_BESAR_RING">
 /* ============================================ */
 /* KEYFRAMES — SAMA untuk semua */
 /* ============================================ */
@@ -2364,7 +2364,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau SEJAJAR */
+/* 1. REAL-TIME — Dot hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2380,7 +2380,6 @@ a#waFloat:hover,
   line-height: 1 !important;
 }
 
-/* Dot hijau — position absolute di tengah untuk align sempurna */
 #custApp .badge .dot-live,
 #custApp .badge i,
 #custApp .dot-live {
@@ -2398,8 +2397,6 @@ a#waFloat:hover,
   box-shadow: none !important;
   filter: none !important;
   animation: none !important;
-  
-  /* SEJAJAR TENGAH — pakai align-self center */
   align-self: center !important;
   margin: 0 !important;
   transform: translateY(0) !important;
@@ -2407,7 +2404,6 @@ a#waFloat:hover,
   top: 0 !important;
 }
 
-/* Ring samping dot — SAMA */
 #custApp .badge .dot-live::after,
 #custApp .badge i::after,
 #custApp .dot-live::after {
@@ -2443,7 +2439,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah + ring SAMA REAL-TIME */
+/* 2. LONCENG — Dot merah LEBIH BESAR + ring SAMA */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn,
@@ -2457,7 +2453,7 @@ a#waFloat:hover,
   overflow: visible !important;
 }
 
-/* Dot merah */
+/* Dot merah — BESAR 12px */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
@@ -2465,10 +2461,10 @@ a#waFloat:hover,
   position: absolute !important;
   top: 4px !important;
   right: 4px !important;
-  width: 8px !important;
-  height: 8px !important;
-  min-width: 8px !important;
-  min-height: 8px !important;
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
   background: #ef4444 !important;
   border: 2px solid #09090b !important;
   border-radius: 50% !important;
@@ -2489,8 +2485,8 @@ a#waFloat:hover,
   position: absolute !important;
   top: 4px !important;
   right: 4px !important;
-  width: 8px !important;
-  height: 8px !important;
+  width: 12px !important;
+  height: 12px !important;
   border-radius: 50% !important;
   border: 1.5px solid rgba(239, 68, 68, 0.9) !important;
   animation: ringPulseRed 1.5s ease-out infinite !important;
