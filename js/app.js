@@ -4641,3 +4641,80 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 CARD_4LANGKAH_JS aktif');
 })();
+
+
+// ============================================
+// === NOMOR_KIRI_JS — paksa nomor 01-04 rata kiri
+// ============================================
+(function() {
+  function fix() {
+    // Cari h2 "4 Langkah"
+    var h2 = null;
+    document.querySelectorAll('h2').forEach(function(el) {
+      if (el.textContent.indexOf('4 Langkah') > -1) h2 = el;
+    });
+    if (!h2) return;
+    
+    var section = h2.closest('section');
+    if (!section) return;
+    
+    var grid = section.querySelector('.grid');
+    if (!grid) return;
+    
+    // Setiap child grid — paksa rata kiri
+    Array.from(grid.children).forEach(function(child) {
+      // Child — flex column, align-items flex-start
+      child.style.setProperty('display', 'flex', 'important');
+      child.style.setProperty('flex-direction', 'column', 'important');
+      child.style.setProperty('align-items', 'flex-start', 'important');
+      child.style.setProperty('justify-content', 'flex-start', 'important');
+      child.style.setProperty('text-align', 'left', 'important');
+      
+      // Nomor kotak (child pertama)
+      var nomor = child.querySelector('div');
+      if (nomor) {
+        nomor.style.setProperty('margin-left', '0', 'important');
+        nomor.style.setProperty('margin-right', 'auto', 'important');
+        nomor.style.setProperty('align-self', 'flex-start', 'important');
+        nomor.style.setProperty('display', 'inline-flex', 'important');
+        nomor.style.setProperty('align-items', 'center', 'important');
+        nomor.style.setProperty('justify-content', 'center', 'important');
+      }
+      
+      // Judul h3 — rata kiri
+      var h3 = child.querySelector('h3, .font-display, .font-bold');
+      if (h3 && !nomor.contains(h3)) {
+        h3.style.setProperty('text-align', 'left', 'important');
+        h3.style.setProperty('margin-left', '0', 'important');
+        h3.style.setProperty('align-self', 'flex-start', 'important');
+        h3.style.setProperty('width', '100%', 'important');
+      }
+      
+      // Paragraf — rata kiri
+      var p = child.querySelector('p');
+      if (p) {
+        p.style.setProperty('text-align', 'left', 'important');
+        p.style.setProperty('margin-left', '0', 'important');
+        p.style.setProperty('align-self', 'flex-start', 'important');
+        p.style.setProperty('width', '100%', 'important');
+      }
+    });
+    
+    console.log('🔥 NOMOR_KIRI_JS: nomor + judul + paragraf rata kiri');
+  }
+  
+  function run() {
+    fix();
+    setTimeout(fix, 300);
+    setTimeout(fix, 1000);
+    setTimeout(fix, 2000);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  console.log('🔥 NOMOR_KIRI_JS aktif');
+})();
