@@ -5016,7 +5016,11 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_FORCE_JS — paksa marquee jalan via inline style
+
+
+
+// ============================================
+// === MARQUEE_KANAN_JS — paksa marquee dari kanan
 // ============================================
 (function() {
   function paksa() {
@@ -5026,17 +5030,17 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       el.style.setProperty('flex-wrap', 'nowrap', 'important');
       el.style.setProperty('align-items', 'center', 'important');
       el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('padding', '0', 'important');
+      el.style.setProperty('padding-left', '100vw', 'important');
+      el.style.setProperty('padding-right', '0', 'important');
       el.style.setProperty('margin', '0', 'important');
       el.style.setProperty('opacity', '1', 'important');
       el.style.setProperty('visibility', 'visible', 'important');
       el.style.setProperty('min-width', 'max-content', 'important');
-      el.style.setProperty('animation', 'marqueeGo 50s linear infinite', 'important');
+      el.style.setProperty('animation', 'marqueeKanan 50s linear infinite', 'important');
       el.style.setProperty('animation-play-state', 'running', 'important');
       el.style.setProperty('will-change', 'transform', 'important');
     });
     
-    // Child span
     document.querySelectorAll('.marquee-track > span').forEach(function(child) {
       child.style.setProperty('display', 'inline-flex', 'important');
       child.style.setProperty('flex-direction', 'row', 'important');
@@ -5061,5 +5065,5 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setTimeout(paksa, 3000);
   setInterval(paksa, 2000);
   
-  console.log('🔥 MARQUEE_FORCE_JS aktif');
+  console.log('🔥 MARQUEE_KANAN_JS aktif');
 })();
