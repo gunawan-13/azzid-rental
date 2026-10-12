@@ -1941,99 +1941,52 @@ body:not([data-home]) #custApp section:first-child * {
   animation-play-state: paused !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
-</style><style id="BELL_WA_ANIM">
+</style><style id="DOT_RING_ONLY">
 /* ============================================ */
-/* REAL-TIME — KOTAK (tetap) */
-/* ============================================ */
-#custApp .badge:has(.dot-live),
-#custApp .badge:has([class*="emerald"]) {
-  border-radius: 6px !important;
-  padding: 4px 10px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-}
-
-#custApp .dot-live,
-#custApp [class*="bg-emerald-400"] {
-  border-radius: 50% !important;
-  animation: pulseLiveDot 2s ease-in-out infinite !important;
-  will-change: transform, box-shadow, opacity !important;
-}
-
-@keyframes pulseLiveDot {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.85;
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-    transform: scale(1.15);
-  }
-}
-
-/* ============================================ */
-/* LONCENG — PULSE dengan BAYANGAN (glow) */
+/* LONCENG — HANYA DOT yang denyut */
 /* ============================================ */
 #custApp #userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   border-radius: 8px !important;
   transition: transform 0.3s ease, background 0.3s ease !important;
-  animation: bellShadowPulse 2.5s ease-in-out infinite !important;
-  will-change: transform, box-shadow !important;
+  /* JANGAN animasi di tombol — hanya dot */
+  animation: none !important;
+  box-shadow: none !important;
 }
 
-/* Bayangan/glow pulse di sekitar lonceng */
-@keyframes bellShadowPulse {
-  0%, 100% {
-    box-shadow: 
-      0 0 0 0 rgba(239, 68, 68, 0.4),
-      0 0 0 0 rgba(239, 68, 68, 0.2);
-    transform: scale(1);
-  }
-  50% {
-    box-shadow: 
-      0 0 12px 4px rgba(239, 68, 68, 0.25),
-      0 0 24px 8px rgba(239, 68, 68, 0.1);
-    transform: scale(1.05);
-  }
-}
-
-/* Dot tetap ada tapi lebih subtle */
+/* Dot lonceng — denyut + glow shadow */
 #custApp #userNotifBtn::before {
   content: '' !important;
   position: absolute !important;
   top: 6px !important;
   right: 6px !important;
-  width: 8px !important;
-  height: 8px !important;
+  width: 10px !important;
+  height: 10px !important;
   background: #ef4444 !important;
   border-radius: 50% !important;
   box-shadow: 
-    0 0 0 0 rgba(239, 68, 68, 0.7),
-    0 0 8px 2px rgba(239, 68, 68, 0.5) !important;
-  animation: bellDotShadow 2.5s ease-in-out infinite !important;
+    0 0 0 0 rgba(239, 68, 68, 0.8),
+    0 0 8px 2px rgba(239, 68, 68, 0.6) !important;
+  animation: dotPulseGlow 1.8s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 10 !important;
 }
 
-@keyframes bellDotShadow {
+@keyframes dotPulseGlow {
   0%, 100% {
     opacity: 1;
-    box-shadow: 
-      0 0 0 0 rgba(239, 68, 68, 0.7),
-      0 0 8px 2px rgba(239, 68, 68, 0.5);
     transform: scale(1);
+    box-shadow: 
+      0 0 0 0 rgba(239, 68, 68, 0.8),
+      0 0 8px 2px rgba(239, 68, 68, 0.6);
   }
   50% {
-    opacity: 0.9;
+    opacity: 0.85;
+    transform: scale(1.25);
     box-shadow: 
-      0 0 0 8px rgba(239, 68, 68, 0),
-      0 0 16px 4px rgba(239, 68, 68, 0.3);
-    transform: scale(1.15);
+      0 0 0 10px rgba(239, 68, 68, 0),
+      0 0 16px 4px rgba(239, 68, 68, 0.4);
   }
 }
 
@@ -2042,31 +1995,15 @@ body:not([data-home]) #custApp section:first-child * {
   display: none !important;
 }
 
-/* Lonceng hover — goyang + glow */
+/* Lonceng hover — cuma warna, TANPA animasi */
 #custApp #userNotifBtn:hover {
-  background: rgba(239, 68, 68, 0.1) !important;
-  transform: scale(1.1) !important;
-  animation-play-state: paused !important;
-  box-shadow: 
-    0 0 20px 6px rgba(239, 68, 68, 0.3),
-    0 0 40px 12px rgba(239, 68, 68, 0.15) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  transform: scale(1.05) !important;
 }
 
-#custApp #userNotifBtn:hover svg {
-  animation: bellShake 0.6s ease-in-out !important;
-}
-
-@keyframes bellShake {
-  0%, 100% { transform: rotate(0deg); }
-  20% { transform: rotate(-12deg); }
-  40% { transform: rotate(12deg); }
-  60% { transform: rotate(-8deg); }
-  80% { transform: rotate(8deg); }
-}
-
-/* Badge notif — pulse + shadow */
+/* Badge notif — pulse cuma di badge */
 #custApp #userNotifBadge:not(.hidden) {
-  animation: bellBadgeGlow 2.5s ease-in-out infinite !important;
+  animation: badgePulse 1.8s ease-in-out infinite !important;
   border-radius: 999px !important;
   min-width: 18px !important;
   height: 18px !important;
@@ -2083,70 +2020,86 @@ body:not([data-home]) #custApp section:first-child * {
   z-index: 11 !important;
 }
 
-@keyframes bellBadgeGlow {
+@keyframes badgePulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 
-      0 0 0 0 rgba(239, 68, 68, 0.6),
-      0 0 8px 2px rgba(239, 68, 68, 0.4);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6);
   }
   50% {
     transform: scale(1.15);
-    box-shadow: 
-      0 0 0 6px rgba(239, 68, 68, 0),
-      0 0 16px 4px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
   }
 }
 
 /* ============================================ */
-/* TOMBOL WA FLOATING — ANIMASI PULSE + HOVER */
+/* WA FLOAT — HANYA RING SAMPING yang denyut */
 /* ============================================ */
 #waFloat,
 a#waFloat,
 .wa-float {
-  animation: waPulse 2.5s ease-in-out infinite !important;
-  will-change: transform, box-shadow !important;
-  transition: transform 0.3s ease !important;
+  /* Tombol WA — DIAM (tidak animasi) */
+  animation: none !important;
+  transform: none !important;
+  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 }
 
-@keyframes waPulse {
-  0%, 100% {
+/* Ring samping WA — denyut + glow */
+#waFloat::before,
+a#waFloat::before,
+.wa-float::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -4px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(37, 211, 102, 0.6) !important;
+  animation: waRingPulse 2s ease-out infinite !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* Ring kedua — delay */
+#waFloat::after,
+a#waFloat::after,
+.wa-float::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: -4px !important;
+  border-radius: 50% !important;
+  border: 2px solid rgba(37, 211, 102, 0.4) !important;
+  animation: waRingPulse 2s ease-out infinite 1s !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+@keyframes waRingPulse {
+  0% {
     transform: scale(1);
-    box-shadow: 
-      0 10px 30px rgba(37, 211, 102, 0.3),
-      0 0 0 0 rgba(37, 211, 102, 0.5);
+    opacity: 0.8;
+    border-color: rgba(37, 211, 102, 0.7);
   }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 
-      0 15px 40px rgba(37, 211, 102, 0.4),
-      0 0 0 12px rgba(37, 211, 102, 0);
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+    border-color: rgba(37, 211, 102, 0);
   }
 }
 
-/* WA Float — hover */
+/* Tombol WA hover — scale + glow, icon bounce */
 #waFloat:hover,
 a#waFloat:hover,
 .wa-float:hover {
-  transform: scale(1.15) rotate(5deg) !important;
+  transform: scale(1.1) !important;
   box-shadow: 
-    0 20px 50px rgba(37, 211, 102, 0.5),
+    0 15px 40px rgba(37, 211, 102, 0.5),
     0 0 30px rgba(37, 211, 102, 0.4) !important;
-  animation-play-state: paused !important;
 }
 
-/* Icon WA — subtle bounce */
+/* Icon WA — DIAM (tidak bounce) */
 #waFloat svg,
 .wa-float svg {
-  animation: waIconBounce 2.5s ease-in-out infinite !important;
-  will-change: transform !important;
-}
-
-@keyframes waIconBounce {
-  0%, 100% { transform: translateY(0) scale(1); }
-  25% { transform: translateY(-2px) scale(1.05); }
-  50% { transform: translateY(0) scale(1); }
-  75% { transform: translateY(-1px) scale(1.02); }
+  animation: none !important;
+  transform: none !important;
 }
 </style></body>
 </html>
