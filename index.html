@@ -2101,27 +2101,13 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="DOT_KECIL">
+</style><style id="DOT_NAIK">
 /* ============================================ */
-/* DOT KECIL — 6px (dari 10px) */
+/* DOT — naik 2px biar sejajar huruf */
 /* ============================================ */
 
-/* Ring pulse — sama */
-@keyframes ringPulseClean {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-    border-color: rgba(255, 255, 255, 0.6);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2.5);
-    border-color: rgba(255, 255, 255, 0);
-  }
-}
-
 /* ============================================ */
-/* 1. DOT REAL-TIME — Hijau */
+/* 1. REAL-TIME — Dot hijau naik */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2136,7 +2122,7 @@ a#waFloat:hover,
   color: #34d399 !important;
 }
 
-/* Dot hijau — KECIL 6px */
+/* Dot hijau — naik -2px */
 #custApp .badge .dot-live,
 #custApp .badge i,
 #custApp .dot-live {
@@ -2154,9 +2140,14 @@ a#waFloat:hover,
   box-shadow: none !important;
   filter: none !important;
   animation: none !important;
+  
+  /* NAIK 2px */
+  transform: translateY(-2px) !important;
+  margin-top: -1px !important;
+  vertical-align: middle !important;
 }
 
-/* Ring samping dot — denyut */
+/* Ring samping dot — posisi ikut dot */
 #custApp .badge .dot-live::after,
 #custApp .badge i::after,
 #custApp .dot-live::after {
@@ -2169,6 +2160,19 @@ a#waFloat:hover,
   pointer-events: none !important;
 }
 
+@keyframes ringPulseClean {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    border-color: rgba(16, 185, 129, 0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.5);
+    border-color: rgba(16, 185, 129, 0);
+  }
+}
+
 #custApp .badge .dot-live::before,
 #custApp .badge i::before,
 #custApp .dot-live::before {
@@ -2179,8 +2183,23 @@ a#waFloat:hover,
   display: inline-block !important;
 }
 
+/* Teks REAL-TIME — tetap sejajar */
+#custApp .badge:has(.dot-live) {
+  line-height: 1 !important;
+}
+
+#custApp .badge:has(.dot-live) span,
+#custApp .badge:has(.dot-live) {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  text-shadow: none !important;
+  line-height: 1 !important;
+}
+
 /* ============================================ */
-/* 2. LONCENG — Dot merah KECIL 6px */
+/* 2. LONCENG — dot naik juga */
 /* ============================================ */
 #custApp #userNotifBtn {
   position: relative !important;
@@ -2191,11 +2210,11 @@ a#waFloat:hover,
   transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah — KECIL 6px */
+/* Dot merah — naik -2px */
 #custApp #userNotifBtn::before {
   content: '' !important;
   position: absolute !important;
-  top: 8px !important;
+  top: 6px !important;
   right: 8px !important;
   width: 6px !important;
   height: 6px !important;
@@ -2208,13 +2227,14 @@ a#waFloat:hover,
   animation: none !important;
   pointer-events: none !important;
   z-index: 10 !important;
+  transform: translateY(-2px) !important;
 }
 
-/* Ring samping lonceng — denyut */
+/* Ring lonceng */
 #custApp #userNotifBtn::after {
   content: '' !important;
   position: absolute !important;
-  top: 8px !important;
+  top: 6px !important;
   right: 8px !important;
   width: 6px !important;
   height: 6px !important;
@@ -2223,17 +2243,18 @@ a#waFloat:hover,
   animation: ringPulseRedClean 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: 9 !important;
+  transform: translateY(-2px) !important;
 }
 
 @keyframes ringPulseRedClean {
   0% {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(-2px) scale(1);
     border-color: rgba(239, 68, 68, 0.8);
   }
   100% {
     opacity: 0;
-    transform: scale(2.5);
+    transform: translateY(-2px) scale(2.5);
     border-color: rgba(239, 68, 68, 0);
   }
 }
@@ -2269,7 +2290,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 3. WA FLOAT — Ring saja (tombol tetap) */
+/* 3. WA FLOAT — tetap */
 /* ============================================ */
 #waFloat::before,
 .wa-float::before {
@@ -2326,16 +2347,6 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
   filter: none !important;
-}
-
-/* Teks REAL-TIME */
-#custApp .badge:has(.dot-live) span,
-#custApp .badge:has(.dot-live) {
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
-  text-shadow: none !important;
 }
 </style></body>
 </html>
