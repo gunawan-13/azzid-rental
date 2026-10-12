@@ -1537,5 +1537,96 @@ img {
 .veh-card [class*="text-red"] {
   text-shadow: none !important;
 }
+</style><style id="HOVER_SOFT">
+/* ============================================ */
+/* HOVER SOFT — animasi halus untuk card mobil */
+/* ============================================ */
+
+/* Base — transition smooth */
+.veh-card {
+  transition: 
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.6s ease,
+    border-color 0.4s ease !important;
+  will-change: transform !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Hover — naik halus + sedikit scale + shadow glow */
+.veh-card:hover {
+  transform: translateY(-10px) scale(1.02) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(220, 38, 38, 0.3),
+    0 10px 30px rgba(220, 38, 38, 0.15) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Gambar — zoom halus saat hover */
+.veh-card > div:first-child {
+  overflow: hidden !important;
+}
+
+.veh-card img,
+.veh-card > div:first-child img {
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  transform: scale(1) !important;
+}
+
+.veh-card:hover img,
+.veh-card:hover > div:first-child img {
+  transform: scale(1.08) !important;
+}
+
+/* Nama mobil — shadow bertambah */
+.veh-card h3,
+.veh-card .font-display {
+  transition: text-shadow 0.5s ease, letter-spacing 0.5s ease !important;
+}
+
+.veh-card:hover h3,
+.veh-card:hover .font-display {
+  letter-spacing: 0.03em !important;
+}
+
+/* Card Layanan + Review — hover soft juga */
+.card {
+  transition: 
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.5s ease,
+    border-color 0.4s ease !important;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.01) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Card testimonial — sama */
+.card:has(.flex.gap-1):has(.rounded-full):hover {
+  transform: translateY(-6px) scale(1.01) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Card 4 langkah — sama */
+section:has(h2) .grid > div {
+  transition: 
+    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.5s ease,
+    border-color 0.4s ease !important;
+}
+
+section:has(h2) .grid > div:hover {
+  transform: translateY(-6px) scale(1.01) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Matikan transition lama biar tidak konflik */
+.veh-card,
+.veh-card *,
+.card,
+.card * {
+  transition-delay: 0s !important;
+}
 </style></body>
 </html>
