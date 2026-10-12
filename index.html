@@ -2427,7 +2427,7 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="DOT_ORDER_ONLY">
+</style><style id="QB_NO_UP_ANIM">
 /* ============================================ */
 /* NUCLEAR OVERFLOW */
 /* ============================================ */
@@ -2447,6 +2447,30 @@ a#waFloat:hover,
 @keyframes ringScaleWA {
   0% { transform: scale(1); opacity: 1; }
   100% { transform: scale(1.8); opacity: 0; }
+}
+
+/* ============================================ */
+/* QB — JANGAN NAIK SAAT HOVER */
+/* ============================================ */
+#custApp section:first-child .card,
+#custApp section:first-child .card:hover,
+#custApp .card:has(.badge:has(.dot-live)),
+#custApp .card:has(.badge:has(.dot-live)):hover,
+#custApp .card:has(input[type="date"]),
+#custApp .card:has(input[type="date"]):hover {
+  /* Paksa tidak ada transform */
+  transform: none !important;
+  transition: box-shadow 0.4s ease, border-color 0.3s ease !important;
+  will-change: auto !important;
+}
+
+/* Hover QB — cuma shadow/border, tidak naik */
+#custApp section:first-child .card:hover,
+#custApp .card:has(.badge:has(.dot-live)):hover,
+#custApp .card:has(input[type="date"]):hover {
+  transform: none !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
+  border-color: rgba(220, 38, 38, 0.25) !important;
 }
 
 /* ============================================ */
@@ -2527,7 +2551,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* LONCENG — Dot default HIDDEN */
+/* LONCENG — Dot saat ada pesanan */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
@@ -2546,11 +2570,10 @@ a#waFloat:hover,
   transform: none !important;
 }
 
-/* Dot merah — DEFAULT HIDDEN */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
-  display: none !important;                /* ← DEFAULT HIDDEN */
+  display: none !important;
   position: absolute !important;
   top: 2px !important;
   right: 2px !important;
@@ -2571,11 +2594,10 @@ a#waFloat:hover,
   animation: none !important;
 }
 
-/* Ring merah — DEFAULT HIDDEN */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
-  display: none !important;                /* ← DEFAULT HIDDEN */
+  display: none !important;
   position: absolute !important;
   top: 2px !important;
   right: 2px !important;
@@ -2594,7 +2616,6 @@ a#waFloat:hover,
   z-index: 999 !important;
 }
 
-/* SHOW saat body punya .has-order */
 body.has-order #userNotifBtn::before,
 body.has-order #custApp #userNotifBtn::before {
   display: block !important;
@@ -2605,7 +2626,6 @@ body.has-order #custApp #userNotifBtn::after {
   display: block !important;
 }
 
-/* Kalau ada badge notif, hide dot */
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::after {
   display: none !important;
