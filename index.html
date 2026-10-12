@@ -2101,9 +2101,9 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="DOT_WA_DENYUT">
+</style><style id="DOT_CAHAYA_WA">
 /* ============================================ */
-/* REAL-TIME — Dot Hijau Berdenyut */
+/* REAL-TIME — Dot dengan CAHAYA (glow kuat) */
 /* ============================================ */
 
 /* Badge REAL-TIME — kotak */
@@ -2114,29 +2114,57 @@ a#waFloat:hover,
   padding: 5px 10px 5px 8px !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 6px !important;
-  background: rgba(16, 185, 129, 0.1) !important;
-  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  gap: 8px !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
   color: #34d399 !important;
+  position: relative !important;
 }
 
-/* Dot hijau — DENYUT */
+/* Dot hijau — dengan cahaya menyala */
 #custApp .badge .dot-live,
 #custApp .badge i,
 #custApp .dot-live,
 #custApp .badge > i,
 #custApp .badge i[class*="bg-emerald"] {
   display: inline-block !important;
-  width: 8px !important;
-  height: 8px !important;
-  min-width: 8px !important;
-  min-height: 8px !important;
-  background: #10b981 !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
+  background: radial-gradient(circle at 50% 50%, #6ee7b7 0%, #10b981 60%, #059669 100%) !important;
   border-radius: 50% !important;
-  box-shadow: 0 0 8px 1px rgba(16, 185, 129, 0.6) !important;
-  animation: dotDenyut 1.5s ease-in-out infinite !important;
-  will-change: transform, opacity, box-shadow !important;
+  position: relative !important;
   flex-shrink: 0 !important;
+  animation: dotGlowPulse 1.8s ease-in-out infinite !important;
+  will-change: box-shadow, transform !important;
+}
+
+/* Halo cahaya luar — pakai ::before */
+#custApp .badge .dot-live::before,
+#custApp .badge i::before,
+#custApp .dot-live::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: -4px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.5) 0%, rgba(16, 185, 129, 0) 70%) !important;
+  animation: dotHaloPulse 1.8s ease-in-out infinite !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* Halo cahaya luar 2 — pakai ::after */
+#custApp .badge .dot-live::after,
+#custApp .badge i::after,
+#custApp .dot-live::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: -2px !important;
+  border-radius: 50% !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.6) !important;
+  animation: dotRingPulse 1.8s ease-out infinite !important;
+  pointer-events: none !important;
 }
 
 /* Hapus hidden class */
@@ -2144,54 +2172,103 @@ a#waFloat:hover,
   display: inline-block !important;
 }
 
-@keyframes dotDenyut {
+/* Animasi dot — glow + scale + bright */
+@keyframes dotGlowPulse {
   0%, 100% {
     transform: scale(1);
-    opacity: 1;
-    box-shadow: 0 0 8px 1px rgba(16, 185, 129, 0.6);
+    box-shadow: 
+      0 0 4px 1px rgba(16, 185, 129, 0.9),
+      0 0 8px 2px rgba(16, 185, 129, 0.6),
+      0 0 14px 4px rgba(16, 185, 129, 0.3),
+      inset 0 0 4px rgba(110, 231, 183, 0.8);
+    filter: brightness(1);
   }
   50% {
-    transform: scale(1.4);
-    opacity: 0.75;
-    box-shadow: 0 0 14px 3px rgba(16, 185, 129, 0.4);
+    transform: scale(1.15);
+    box-shadow: 
+      0 0 8px 2px rgba(16, 185, 129, 1),
+      0 0 16px 4px rgba(16, 185, 129, 0.7),
+      0 0 28px 8px rgba(16, 185, 129, 0.4),
+      inset 0 0 8px rgba(110, 231, 183, 1);
+    filter: brightness(1.3);
   }
 }
 
-/* ============================================ */
-/* WA FLOAT — Denyut Sederhana (bukan ring) */
-/* ============================================ */
+/* Halo cahaya luar — memancar */
+@keyframes dotHaloPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+}
 
-/* Hapus ring lama */
+/* Ring memancar keluar */
+@keyframes dotRingPulse {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+    border-color: rgba(16, 185, 129, 0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+    border-color: rgba(16, 185, 129, 0);
+  }
+}
+
+/* Teks REAL-TIME */
+#custApp .badge:has(.dot-live) span,
+#custApp .badge:has(.dot-live) {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.5) !important;
+}
+
+/* ============================================ */
+/* WA FLOAT — dengan CAHAYA + DENYUT */
+/* ============================================ */
 #waFloat::before,
 #waFloat::after,
 .wa-float::before,
 .wa-float::after {
   content: none !important;
   display: none !important;
-  animation: none !important;
 }
 
-/* WA Float — denyut halus (scale + opacity) */
 #waFloat,
 a#waFloat,
 .wa-float {
-  animation: waDenyut 2s ease-in-out infinite !important;
-  will-change: transform, box-shadow !important;
+  position: fixed !important;
+  animation: waGlowPulse 2s ease-in-out infinite !important;
+  will-change: transform, box-shadow, filter !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  background: radial-gradient(circle at 30% 30%, #4ade80 0%, #25D366 60%, #128C7E 100%) !important;
 }
 
-@keyframes waDenyut {
+@keyframes waGlowPulse {
   0%, 100% {
     transform: scale(1);
     box-shadow: 
-      0 10px 30px rgba(37, 211, 102, 0.35),
-      0 0 0 0 rgba(37, 211, 102, 0.4);
+      0 10px 30px rgba(37, 211, 102, 0.4),
+      0 0 12px 2px rgba(37, 211, 102, 0.5),
+      0 0 20px 4px rgba(37, 211, 102, 0.25),
+      inset 0 0 10px rgba(74, 222, 128, 0.3);
+    filter: brightness(1);
   }
   50% {
     transform: scale(1.08);
     box-shadow: 
-      0 15px 35px rgba(37, 211, 102, 0.5),
-      0 0 12px 4px rgba(37, 211, 102, 0.25);
+      0 15px 40px rgba(37, 211, 102, 0.6),
+      0 0 20px 4px rgba(37, 211, 102, 0.7),
+      0 0 35px 10px rgba(37, 211, 102, 0.4),
+      inset 0 0 18px rgba(74, 222, 128, 0.5);
+    filter: brightness(1.15);
   }
 }
 
@@ -2202,19 +2279,22 @@ a#waFloat:hover,
   animation-play-state: paused !important;
   transform: scale(1.15) !important;
   box-shadow: 
-    0 20px 50px rgba(37, 211, 102, 0.6),
-    0 0 20px rgba(37, 211, 102, 0.4) !important;
+    0 20px 50px rgba(37, 211, 102, 0.7),
+    0 0 30px 8px rgba(37, 211, 102, 0.6),
+    0 0 60px 16px rgba(37, 211, 102, 0.3) !important;
+  filter: brightness(1.2) !important;
 }
 
-/* Icon WA — tetap */
+/* Icon WA */
 #waFloat svg,
 .wa-float svg {
   animation: none !important;
   transform: none !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
 }
 
 /* ============================================ */
-/* LONCENG — Dot denyut (tetap) */
+/* LONCENG — Dot dengan cahaya juga */
 /* ============================================ */
 #custApp #userNotifBtn {
   position: relative !important;
@@ -2232,24 +2312,29 @@ a#waFloat:hover,
   right: 6px !important;
   width: 10px !important;
   height: 10px !important;
-  background: #ef4444 !important;
+  background: radial-gradient(circle at 50% 50%, #fca5a5 0%, #ef4444 60%, #b91c1c 100%) !important;
   border-radius: 50% !important;
-  box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.6) !important;
-  animation: bellDotDenyut 1.5s ease-in-out infinite !important;
+  animation: bellDotGlow 1.8s ease-in-out infinite !important;
   pointer-events: none !important;
   z-index: 10 !important;
 }
 
-@keyframes bellDotDenyut {
+@keyframes bellDotGlow {
   0%, 100% {
-    opacity: 1;
     transform: scale(1);
-    box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.6);
+    box-shadow: 
+      0 0 6px 1px rgba(239, 68, 68, 0.9),
+      0 0 10px 2px rgba(239, 68, 68, 0.6),
+      0 0 16px 4px rgba(239, 68, 68, 0.3);
+    filter: brightness(1);
   }
   50% {
-    opacity: 0.8;
-    transform: scale(1.3);
-    box-shadow: 0 0 14px 4px rgba(239, 68, 68, 0.3);
+    transform: scale(1.2);
+    box-shadow: 
+      0 0 10px 2px rgba(239, 68, 68, 1),
+      0 0 20px 6px rgba(239, 68, 68, 0.7),
+      0 0 30px 10px rgba(239, 68, 68, 0.4);
+    filter: brightness(1.3);
   }
 }
 
@@ -2262,9 +2347,9 @@ a#waFloat:hover,
   transform: scale(1.05) !important;
 }
 
-/* Badge notif — denyut */
+/* Badge notif */
 #custApp #userNotifBadge:not(.hidden) {
-  animation: bellDotDenyut 1.5s ease-in-out infinite !important;
+  animation: bellDotGlow 1.8s ease-in-out infinite !important;
   border-radius: 999px !important;
   min-width: 18px !important;
   height: 18px !important;
