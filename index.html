@@ -1384,5 +1384,106 @@ img {
 
 /* CATATAN: CSS :has-text() tidak jalan di Chrome stabil
    — pakai JS force kalau perlu. Sekarang: JANGAN sentuh card mobil/review */
+</style><style id="HAPUS_GLOW_HOVER">
+/* ============================================ */
+/* HILANGKAN GLOW/BORDER saat hover card mobil */
+/* ============================================ */
+
+/* Base — no border */
+.veh-card,
+.veh-card *,
+.veh-card > div,
+.veh-card > div > *,
+.veh-card img {
+  border: none !important;
+  outline: none !important;
+}
+
+/* Hover — JANGAN munculkan border/glow */
+.veh-card:hover,
+.veh-card:hover *,
+.veh-card:hover > div,
+.veh-card:hover > div > *,
+.veh-card:hover img {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Container gambar */
+.veh-card > div:first-child,
+.veh-card > div:first-child:hover {
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Spek area */
+.veh-card > div:not(:first-child),
+.veh-card > div:not(:first-child):hover {
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* Gambar */
+.veh-card img,
+.veh-card img:hover {
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  transition: none !important;
+}
+
+/* Pseudo */
+.veh-card *::before,
+.veh-card *::after,
+.veh-card:hover *::before,
+.veh-card:hover *::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Container gambar — hapus overlay/gradient */
+.veh-card > div:first-child > div[class*="absolute"],
+.veh-card > div:first-child > div[class*="gradient"] {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* Hover card tetap naik — TAPI tanpa border/glow */
+.veh-card {
+  transition: transform 0.4s ease !important;
+}
+
+.veh-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Card Layanan + Review — hapus glow hover juga */
+.card:hover,
+.card:hover * {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: none !important;
+}
+
+/* Card mobil — hapus semua border dari Tailwind class */
+[class*="border"] {
+  border-color: transparent !important;
+}
+
+.veh-card [class*="border"],
+.veh-card:hover [class*="border"] {
+  border-color: transparent !important;
+}
 </style></body>
 </html>
