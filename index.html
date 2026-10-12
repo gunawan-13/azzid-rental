@@ -2907,5 +2907,74 @@ a#waFloat:hover,
   background: transparent !important;
 }
 </style>
+
+<style id="RAPIKAN_ARMADA_HEADER">
+/* ============================================ */
+/* Armada — geser ke kanan + dekatkan + rapatkan filter */
+/* ============================================ */
+
+/* 1. Header Armada — geser ke kanan + kurangi jarak */
+#custApp main section:has(h1:has-text("Pilih Mobil Anda")) > div,
+#custApp main section:has(h1) > div {
+  padding-left: 10% !important;
+  padding-right: 5% !important;
+}
+
+/* Khusus span KATALOG ARMADA — margin kiri */
+#custApp main section:has(h1) > div > span:first-child {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* h1 Pilih Mobil Anda — margin kiri */
+#custApp main section:has(h1) h1 {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* 2. Section header Armada — kurangi padding bawah */
+#custApp main section:has(h1):has(+ section) {
+  padding-bottom: 8px !important;
+  margin-bottom: 0 !important;
+}
+
+/* 3. Section filter — kurangi padding atas */
+#custApp main section:has(.chip) {
+  padding-top: 8px !important;
+  margin-top: 0 !important;
+}
+
+/* 4. Filter kategory (Semua, City Car, MPV, SUV, Premium, Commercial) — rapat */
+#custApp main section:has(.chip) .flex.flex-wrap,
+#custApp main .chip:first-child,
+#custApp main div:has(> button.chip),
+#custApp main div:has(> .chip) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+}
+
+/* 5. Button chip — rapat */
+#custApp main button.chip,
+#custApp main .chip {
+  padding: 6px 16px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* 6. Card filter wrapper — kurangi padding */
+#custApp main section:has(.chip) .card {
+  padding: 16px 20px !important;
+  margin-bottom: 12px !important;
+}
+
+/* 7. Hapus semua margin-top default */
+#custApp main section + section {
+  margin-top: 0 !important;
+}
+</style>
 </body>
 </html>
