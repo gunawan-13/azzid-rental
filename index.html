@@ -1537,97 +1537,6 @@ img {
 .veh-card [class*="text-red"] {
   text-shadow: none !important;
 }
-</style><style id="HOVER_SOFT">
-/* ============================================ */
-/* HOVER SOFT — animasi halus untuk card mobil */
-/* ============================================ */
-
-/* Base — transition smooth */
-.veh-card {
-  transition: 
-    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.6s ease,
-    border-color 0.4s ease !important;
-  will-change: transform !important;
-  transform: translateY(0) scale(1) !important;
-}
-
-/* Hover — naik halus + sedikit scale + shadow glow */
-.veh-card:hover {
-  transform: translateY(-10px) scale(1.02) !important;
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(220, 38, 38, 0.3),
-    0 10px 30px rgba(220, 38, 38, 0.15) !important;
-  border-color: rgba(220, 38, 38, 0.4) !important;
-}
-
-/* Gambar — zoom halus saat hover */
-.veh-card > div:first-child {
-  overflow: hidden !important;
-}
-
-.veh-card img,
-.veh-card > div:first-child img {
-  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-  transform: scale(1) !important;
-}
-
-.veh-card:hover img,
-.veh-card:hover > div:first-child img {
-  transform: scale(1.08) !important;
-}
-
-/* Nama mobil — shadow bertambah */
-.veh-card h3,
-.veh-card .font-display {
-  transition: text-shadow 0.5s ease, letter-spacing 0.5s ease !important;
-}
-
-.veh-card:hover h3,
-.veh-card:hover .font-display {
-  letter-spacing: 0.03em !important;
-}
-
-/* Card Layanan + Review — hover soft juga */
-.card {
-  transition: 
-    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.5s ease,
-    border-color 0.4s ease !important;
-}
-
-.card:hover {
-  transform: translateY(-6px) scale(1.01) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Card testimonial — sama */
-.card:has(.flex.gap-1):has(.rounded-full):hover {
-  transform: translateY(-6px) scale(1.01) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Card 4 langkah — sama */
-section:has(h2) .grid > div {
-  transition: 
-    transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.5s ease,
-    border-color 0.4s ease !important;
-}
-
-section:has(h2) .grid > div:hover {
-  transform: translateY(-6px) scale(1.01) !important;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Matikan transition lama biar tidak konflik */
-.veh-card,
-.veh-card *,
-.card,
-.card * {
-  transition-delay: 0s !important;
-}
 </style><style id="HERO_ANIM_UP">
 /* ============================================ */
 /* HERO ANIMASI UP saat load */
@@ -1718,36 +1627,43 @@ body:not([data-home]) #custApp section:first-child,
 body:not([data-home]) #custApp section:first-child * {
   animation: none !important;
 }
-</style><style id="QB_SAMAKAN">
+</style><style id="QB_FIX_ROOT">
 /* ============================================ */
-/* QUICK BOOKING — SAMA dengan card lain */
+/* QB — FIX ROOT CAUSE: transition-transform SAJA */
 /* ============================================ */
 
-/* Card QB — HAPUS backdrop-filter biar smooth */
+/* ============ QUICK BOOKING CARD ============ */
 #custApp section:first-child .card,
 #custApp .card:has(.dot-live),
-#custApp .card:has(input[type="date"]) {
-  /* Transisi sama dengan card lain */
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 0.5s ease,
-              border-color 0.4s ease !important;
+#custApp .card:has(input[type="date"]),
+#custApp .card:has(.badge:has(.dot-live)) {
+  /* Paksa pakai transition-transform SAJA */
+  transition-property: transform, box-shadow, border-color !important;
+  transition-duration: 0.5s, 0.5s, 0.3s !important;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1), ease, ease !important;
+  
+  /* GPU Layer */
   will-change: transform !important;
   transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
   
-  /* PENTING: hapus backdrop-filter (penyebab kasar) */
+  /* HAPUS backdrop-filter */
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  filter: none !important;
   
-  /* Background solid (ganti blur) */
+  /* Background solid */
   background: #18181b !important;
 }
 
-/* Hover — sama seperti card mobil */
+/* Hover — paksa pakai translate3d */
 #custApp section:first-child .card:hover,
 #custApp .card:has(.dot-live):hover,
-#custApp .card:has(input[type="date"]):hover {
+#custApp .card:has(input[type="date"]):hover,
+#custApp .card:has(.badge:has(.dot-live)):hover {
   transform: translate3d(0, -8px, 0) scale(1.01) !important;
+  -webkit-transform: translate3d(0, -8px, 0) scale(1.01) !important;
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.4),
     0 0 0 1px rgba(220, 38, 38, 0.3),
@@ -1755,7 +1671,103 @@ body:not([data-home]) #custApp section:first-child * {
   border-color: rgba(220, 38, 38, 0.4) !important;
 }
 
-/* Card Layanan + Review — samakan juga */
+/* ============ MATIKAN transition-all di QB ============ */
+#custApp section:first-child .card *,
+#custApp .card:has(input[type="date"]) * {
+  /* Kecuali input/select — yang butuh border transition */
+}
+
+/* Element QB yang JANGAN ada transition */
+#custApp section:first-child .card > *,
+#custApp section:first-child .card div,
+#custApp section:first-child .card label,
+#custApp section:first-child .card h3,
+#custApp section:first-child .card p {
+  transition: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Input, select, tombol — tetap punya transition sendiri */
+#custApp section:first-child .card input,
+#custApp section:first-child .card select,
+#custApp section:first-child .card .inp {
+  transition: 
+    border-color 0.4s ease,
+    box-shadow 0.4s ease !important;
+  backdrop-filter: none !important;
+  will-change: auto !important;
+}
+
+#custApp section:first-child .card input:hover,
+#custApp section:first-child .card select:hover {
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* Tombol Booking */
+#custApp section:first-child .card button,
+#custApp section:first-child .card a.btn,
+#custApp section:first-child .card .btn-m {
+  transition: 
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease !important;
+  will-change: transform !important;
+  backdrop-filter: none !important;
+}
+
+#custApp section:first-child .card button:hover,
+#custApp section:first-child .card a.btn:hover,
+#custApp section:first-child .card .btn-m:hover {
+  transform: translate3d(0, -2px, 0) !important;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Icon */
+#custApp section:first-child .card .w-10,
+#custApp section:first-child .card .w-11,
+#custApp section:first-child .card .w-12 {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  will-change: auto !important;
+}
+
+#custApp section:first-child .card:hover .w-10,
+#custApp section:first-child .card:hover .w-11,
+#custApp section:first-child .card:hover .w-12 {
+  transform: scale(1.08) !important;
+}
+
+/* Dot live — matikan backdrop */
+#custApp .dot-live {
+  backdrop-filter: none !important;
+}
+
+/* ============ CARD LAIN — samakan ============ */
+.veh-card {
+  transition-property: transform, box-shadow, border-color !important;
+  transition-duration: 0.5s, 0.5s, 0.3s !important;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1), ease, ease !important;
+  will-change: transform !important;
+  transform: translate3d(0, 0, 0) !important;
+  backface-visibility: hidden !important;
+}
+
+.veh-card:hover {
+  transform: translate3d(0, -8px, 0) scale(1.01) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(220, 38, 38, 0.3) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Card Layanan + Review */
+.card:has(h3),
+.card:has(.flex.gap-1) {
+  transition-property: transform, box-shadow, border-color !important;
+  transition-duration: 0.5s, 0.5s, 0.3s !important;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1), ease, ease !important;
+  will-change: transform !important;
+}
+
 .card:has(h3):hover,
 .card:has(.flex.gap-1):hover {
   transform: translate3d(0, -8px, 0) scale(1.01) !important;
@@ -1765,80 +1777,10 @@ body:not([data-home]) #custApp section:first-child * {
   border-color: rgba(220, 38, 38, 0.4) !important;
 }
 
-/* Card mobil — samakan juga */
-.veh-card:hover {
-  transform: translate3d(0, -8px, 0) scale(1.01) !important;
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(220, 38, 38, 0.3),
-    0 10px 30px rgba(220, 38, 38, 0.15) !important;
-  border-color: rgba(220, 38, 38, 0.4) !important;
-}
-
-/* Input di QB — smooth */
-#custApp .card select,
-#custApp .card input,
-#custApp .card .inp {
-  transition: 
-    border-color 0.4s ease,
-    background 0.4s ease,
-    box-shadow 0.4s ease !important;
-  backdrop-filter: none !important;
-}
-
-#custApp .card select:hover,
-#custApp .card input:hover,
-#custApp .card .inp:hover {
-  border-color: rgba(220, 38, 38, 0.5) !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
-}
-
-/* Tombol Booking — smooth */
-#custApp .card .btn-m,
-#custApp .card button[class*="bg-maroon"],
-#custApp .card a[class*="bg-maroon"] {
-  transition: 
-    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
-    box-shadow 0.4s ease !important;
-  will-change: transform !important;
-  backdrop-filter: none !important;
-}
-
-#custApp .card .btn-m:hover,
-#custApp .card button[class*="bg-maroon"]:hover {
-  transform: translate3d(0, -2px, 0) !important;
-  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4) !important;
-}
-
-/* Icon QB — smooth */
-#custApp .card .w-10,
-#custApp .card .w-11,
-#custApp .card .w-12 {
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
-  backdrop-filter: none !important;
-}
-
-#custApp .card:hover .w-10,
-#custApp .card:hover .w-11,
-#custApp .card:hover .w-12 {
-  transform: scale(1.08) !important;
-}
-
-/* Dot live — pulse smooth */
-@keyframes pulseDotQB {
-  0%, 100% { 
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
-  }
-  50% { 
-    opacity: 0.85;
-    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
-  }
-}
-
-#custApp .dot-live {
-  animation: pulseDotQB 2.5s ease-in-out infinite !important;
-  backdrop-filter: none !important;
+/* Matikan transition-all bawaan Tailwind di semua card */
+.card,
+.veh-card {
+  transition-property: transform, box-shadow, border-color !important;
 }
 </style></body>
 </html>
