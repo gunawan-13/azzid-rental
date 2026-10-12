@@ -2695,43 +2695,54 @@ a#waFloat:hover,
 .wa-float:hover {
   transform: scale(1.15) !important;
 }
-</style><style id="AVAILABLE_KOTAK_V2">
+</style><style id="AVAILABLE_SAMAKAN">
 /* ============================================ */
-/* BADGE AVAILABLE — PAKSA KOTAK (nuclear) */
+/* BADGE AVAILABLE — samakan dengan PREMIUM */
 /* ============================================ */
 
-/* Target SEMUA kemungkinan badge AVAILABLE */
-.veh-card .badge,
-.veh-card .badge *,
-.veh-card span.badge,
-.veh-card [class*="rounded-full"],
-.veh-card [class*="badge"],
-.veh-card [class*="emerald"],
-.veh-card [class*="bg-emerald"],
-.veh-card [class*="border-emerald"],
-.veh-card span[class*="bg-emerald-400"],
-.veh-card div[class*="badge"],
-.veh-card span:has(.dot-live),
-.veh-card span:has(i),
-.veh-card div:has(.dot-live) {
+/* Target badge pertama (kiri atas) — AVAILABLE */
+.veh-card > div:first-child > span:first-child,
+.veh-card > div:first-child > div:first-child > span:first-child,
+.veh-card .badge:first-child,
+.veh-card span.badge:first-of-type,
+.veh-card .badge.absolute.top-3.left-3,
+.veh-card .badge[class*="left"],
+.veh-card .badge[class*="emerald"],
+.veh-card .badge:has(.dot-live),
+.veh-card .badge:has(i) {
   /* PAKSA KOTAK */
   border-radius: 6px !important;
   -webkit-border-radius: 6px !important;
-  -moz-border-radius: 6px !important;
+  
+  /* Padding + font samakan */
+  padding: 6px 12px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+  
+  /* Layout */
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  
+  /* Warna hijau */
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.5) !important;
+  color: #34d399 !important;
+  
+  /* Hapus pill */
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+  border-bottom-left-radius: 6px !important;
+  border-bottom-right-radius: 6px !important;
 }
 
-/* Semua elemen yang punya rounded-full di dalam card — matikan */
-.veh-card [class*="rounded-full"] {
-  border-radius: 6px !important;
-}
-
-/* Dot hijau — kembalikan ke bulat */
+/* Dot hijau di AVAILABLE — biarkan bulat */
 .veh-card .badge .dot-live,
 .veh-card .badge i,
-.veh-card .badge > i,
-.veh-card .dot-live,
-.veh-card .badge .w-1.5,
-.veh-card .badge i[class*="rounded-full"] {
+.veh-card .badge > i {
   border-radius: 50% !important;
   width: 6px !important;
   height: 6px !important;
@@ -2742,54 +2753,20 @@ a#waFloat:hover,
   flex-shrink: 0 !important;
 }
 
-/* Badge AVAILABLE — warna + padding */
-.veh-card .badge {
-  padding: 6px 12px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  line-height: 1 !important;
-}
-
-/* AVAILABLE badge — hijau */
-.veh-card .badge[class*="emerald"],
-.veh-card .badge[class*="bg-emerald"],
-.veh-card .badge:has(.dot-live),
-.veh-card .badge:has(i) {
-  border-radius: 6px !important;
-  background: rgba(16, 185, 129, 0.15) !important;
-  border: 1px solid rgba(16, 185, 129, 0.5) !important;
-  color: #34d399 !important;
-  padding: 6px 12px !important;
-}
-
-/* PREMIUM/CITY CAR/SUV/MPV — juga kotak (biar konsisten) */
-.veh-card .badge[class*="zinc"],
-.veh-card .badge[class*="gray"],
-.veh-card .badge[class*="slate"],
-.veh-card .badge[class*="bg-white"] {
-  border-radius: 6px !important;
-  padding: 6px 12px !important;
-}
-
-/* FORCE OVERRIDE — paksa tidak ada rounded-full sama sekali */
-.veh-card span,
-.veh-card div {
-  border-radius: 6px;
-}
-
-.veh-card .badge,
-.veh-card span.badge {
+/* Kanan atas (PREMIUM/CITY CAR/SUV/MPV) — biarkan seperti sekarang */
+.veh-card .badge:not([class*="emerald"]):not(:has(.dot-live)) {
   border-radius: 6px !important;
 }
 
-/* KECUALI: gambar + avatar (biar tetap bulat kalau ada) */
-.veh-card img,
-.veh-card .rounded-full:not(.badge):not([class*="badge"]) {
+/* Override rounded-full yang mungkin ke-apply */
+.veh-card .rounded-full,
+.veh-card [class*="rounded-full"] {
+  border-radius: 6px !important;
+}
+
+/* Kecuali dot (harus tetap bulat) */
+.veh-card .dot-live.rounded-full,
+.veh-card i[class*="rounded-full"] {
   border-radius: 50% !important;
 }
 </style></body>
