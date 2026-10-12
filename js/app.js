@@ -4740,3 +4740,40 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setTimeout(detect, 1500);
   console.log('🔥 HERO_HOME_DETECT aktif');
 })();
+
+
+// ============================================
+// === QB_JS_SMOOTH — hover pakai JS (anti naik-turun)
+// ============================================
+(function() {
+  function fix() {
+    document.querySelectorAll('#custApp section:first-child .card').forEach(function(card) {
+      if (card.dataset.hoverFixed) return;
+      card.dataset.hoverFixed = '1';
+      
+      var hoverTimer = null;
+      
+      card.addEventListener('mouseenter', function() {
+        if (hoverTimer) clearTimeout(hoverTimer);
+        card.style.setProperty('transform', 'translate3d(0, -4px, 0)', 'important');
+        card.style.setProperty('transition', 'transform 450ms cubic-bezier(0.4, 0, 0.6, 1)', 'important');
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        hoverTimer = setTimeout(function() {
+          card.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
+        }, 100);
+      });
+    });
+    console.log('🔥 QB_JS_SMOOTH: hover fix');
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fix);
+  } else {
+    fix();
+  }
+  setTimeout(fix, 500);
+  setTimeout(fix, 1500);
+  console.log('🔥 QB_JS_SMOOTH aktif');
+})();
