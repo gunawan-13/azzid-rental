@@ -4912,3 +4912,43 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 DOT_ORDER_LOGIC aktif');
 })();
+
+
+// ============================================
+// === PAKSA_BADGE_KOTAK_JS — paksa badge kotak saja
+// ============================================
+(function() {
+  function paksa() {
+    document.querySelectorAll('.veh-card .badge, .veh-card span.badge, .veh-card span.absolute').forEach(function(el) {
+      // Lewati dot kecil
+      if (el.tagName === 'I') return;
+      if (el.classList.contains('dot-live')) return;
+      if (el.tagName === 'IMG') return;
+      
+      el.style.setProperty('border-radius', '6px', 'important');
+      el.style.setProperty('padding', '4px 10px', 'important');
+      el.style.setProperty('font-size', '10px', 'important');
+      el.style.setProperty('font-weight', '800', 'important');
+      el.style.setProperty('letter-spacing', '0.08em', 'important');
+      el.style.setProperty('text-transform', 'uppercase', 'important');
+      el.style.setProperty('white-space', 'nowrap', 'important');
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('align-items', 'center', 'important');
+    });
+    console.log('🔥 PAKSA_BADGE_KOTAK_JS: badges dipaksa kotak');
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', paksa);
+  } else {
+    paksa();
+  }
+  
+  setTimeout(paksa, 100);
+  setTimeout(paksa, 500);
+  setTimeout(paksa, 1500);
+  setTimeout(paksa, 3000);
+  setInterval(paksa, 2000);
+  
+  console.log('🔥 PAKSA_BADGE_KOTAK_JS aktif');
+})();
