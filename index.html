@@ -1610,84 +1610,138 @@ body:not([data-home]) #custApp section:first-child * {
 .veh-card:hover > div:first-child {
   box-shadow: none !important;
 }
-</style><style id="QB_NO_UP">
+</style><style id="QB_PULSE">
 /* ============================================ */
-/* QB — NO HOVER UP, hanya tombol yang ada animasi */
+/* QB — Header diam, tombol hover, dot pulse */
 /* ============================================ */
 
-/* Card QB — matikan hover up */
+/* Card QB — no hover up */
 #custApp section:first-child .card,
 #custApp .card:has(.dot-live),
 #custApp .card:has(input[type="date"]) {
-  /* No transition, no transform */
-  transition: none !important;
+  transition: box-shadow 400ms ease, border-color 300ms ease !important;
   transform: none !important;
   will-change: auto !important;
 }
 
-/* Hover QB card — JANGAN transform */
-#custApp section:first-child .card:hover,
-#custApp .card:has(.dot-live):hover,
-#custApp .card:has(input[type="date"]):hover {
+#custApp section:first-child .card:hover {
   transform: none !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;  /* subtle shadow saja */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
   border-color: rgba(220, 38, 38, 0.2) !important;
 }
 
-/* ============================================ */
-/* TOMBOL BOOKING — tetap ada animasi up */
-/* ============================================ */
-#custApp section:first-child .card .btn-m,
+/* Header QB — "Quick Booking" + "REAL-TIME" — JANGAN gerak */
+#custApp section:first-child .card h3,
+#custApp section:first-child .card .font-display,
+#custApp section:first-child .card .badge,
+#custApp section:first-child .card .badge *,
+#custApp section:first-child .card > div:first-child,
+#custApp section:first-child .card > div:first-child * {
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Icon QB — jangan gerak */
+#custApp section:first-child .card > div:first-child > div:first-child,
+#custApp section:first-child .card .w-10,
+#custApp section:first-child .card .w-11,
+#custApp section:first-child .card .w-12 {
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Tombol Booking — tetap hover up */
 #custApp section:first-child .card button[class*="bg-maroon"],
-#custApp section:first-child .card a[class*="bg-maroon"],
-#custApp section:first-child .card button:last-of-type,
-#custApp section:first-child .card a:last-of-type {
+#custApp section:first-child .card .btn-m,
+#custApp section:first-child .card a[class*="bg-maroon"] {
   transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1),
               box-shadow 400ms ease !important;
   will-change: transform !important;
 }
 
-#custApp section:first-child .card .btn-m:hover,
 #custApp section:first-child .card button[class*="bg-maroon"]:hover,
-#custApp section:first-child .card a[class*="bg-maroon"]:hover,
-#custApp section:first-child .card button:last-of-type:hover,
-#custApp section:first-child .card a:last-of-type:hover {
+#custApp section:first-child .card .btn-m:hover,
+#custApp section:first-child .card a[class*="bg-maroon"]:hover {
   transform: translate3d(0, -3px, 0) !important;
   box-shadow: 0 12px 24px rgba(220, 38, 38, 0.4) !important;
 }
 
-/* Input/select — tetap smooth */
-#custApp section:first-child .card input,
-#custApp section:first-child .card select {
-  transition: border-color 300ms ease, box-shadow 300ms ease !important;
+/* ============================================ */
+/* DOT REAL-TIME — PULSE DENYUT */
+/* ============================================ */
+@keyframes pulseLive {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+    transform: scale(1.1);
+  }
 }
 
-#custApp section:first-child .card input:focus,
-#custApp section:first-child .card select:focus {
-  border-color: rgba(220, 38, 38, 0.6) !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12) !important;
+/* Dot di REAL-TIME badge */
+#custApp .dot-live,
+#custApp .badge .dot-live,
+#custApp .badge i.dot-live,
+#custApp [class*="bg-emerald-400"] {
+  animation: pulseLive 2s ease-in-out infinite !important;
+  will-change: transform, box-shadow, opacity !important;
+  border-radius: 50% !important;
 }
 
-/* Matikan transition-all dari child */
-#custApp section:first-child .card > *,
-#custApp section:first-child .card > * > * {
-  transition-delay: 0ms !important;
+/* ============================================ */
+/* LONCENG NOTIFIKASI — PULSE DENYUT */
+/* ============================================ */
+@keyframes bellPulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  10%, 30% {
+    transform: scale(1.05) rotate(-8deg);
+  }
+  20%, 40% {
+    transform: scale(1.05) rotate(8deg);
+  }
+  50% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
-/* Card lain — tetap hover up */
-.veh-card,
-.card:has(h3),
-.card:has(.flex.gap-1) {
-  transition: transform 500ms cubic-bezier(0.4, 0, 0.6, 1),
-              box-shadow 500ms cubic-bezier(0.4, 0, 0.6, 1) !important;
-  will-change: transform !important;
+/* Bell SVG */
+#userNotifBtn svg,
+#userNotifBtn,
+#custApp header button[aria-label="Notifikasi"],
+#custApp #userNotifBtn {
+  transition: transform 200ms ease !important;
 }
 
-.veh-card:hover,
-.card:has(h3):hover,
-.card:has(.flex.gap-1):hover {
-  transform: translate3d(0, -8px, 0) !important;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35) !important;
+#custApp #userNotifBtn:hover {
+  transform: scale(1.1) !important;
+  color: #ffffff !important;
+}
+
+#custApp #userNotifBtn:hover svg {
+  animation: bellPulse 0.6s ease-in-out !important;
+}
+
+/* Bell badge — pulse merah (kalau ada notif) */
+@keyframes badgePulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+}
+
+#userNotifBadge:not(.hidden),
+#custApp #userNotifBadge {
+  animation: badgePulse 2s ease-in-out infinite !important;
 }
 </style></body>
 </html>
