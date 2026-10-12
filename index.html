@@ -2976,5 +2976,64 @@ a#waFloat:hover,
   margin-top: 0 !important;
 }
 </style>
+
+<style id="RAPATKAN_FILTER_CHIP">
+/* ============================================ */
+/* Rapatkan filter kategory — chip horizontal */
+/* ============================================ */
+
+/* 1. Container filter — rapatkan */
+#custApp main .flex.flex-wrap,
+#custApp main div:has(> button.chip),
+#custApp main div:has(> .chip),
+#custApp main section:has(.chip) .flex.flex-wrap,
+#custApp main section:has(.chip) > .flex,
+#custApp main section:has(.chip) div:has(> button) {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  row-gap: 8px !important;
+  column-gap: 8px !important;
+}
+
+/* 2. Button chip — rapat, tidak ada margin */
+#custApp main button.chip,
+#custApp main .chip,
+#custApp main button[class*="chip"],
+#custApp main button[class*="rounded-full"] {
+  padding: 6px 16px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  white-space: nowrap !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+/* 3. Card filter wrapper — rapatkan padding */
+#custApp main section:has(.chip) .card,
+#custApp main section:has(button.chip) .card {
+  padding: 16px 20px !important;
+}
+
+/* 4. Grid/gap — kecilkan */
+#custApp main section:has(.chip) .grid {
+  gap: 12px !important;
+}
+
+/* 5. Mobile — wrap 2 baris */
+@media (max-width: 768px) {
+  #custApp main .flex.flex-wrap {
+    gap: 6px !important;
+  }
+  #custApp main button.chip,
+  #custApp main .chip {
+    padding: 5px 12px !important;
+    font-size: 11px !important;
+  }
+}
+</style>
 </body>
 </html>
