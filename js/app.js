@@ -5013,3 +5013,53 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setInterval(bungkus, 3000);
   console.log('🔥 CARD_4LANGKAH_JS aktif');
 })();
+
+
+// ============================================
+// === MARQUEE_FORCE_JS — paksa marquee jalan via inline style
+// ============================================
+(function() {
+  function paksa() {
+    document.querySelectorAll('.marquee-track').forEach(function(el) {
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('flex-direction', 'row', 'important');
+      el.style.setProperty('flex-wrap', 'nowrap', 'important');
+      el.style.setProperty('align-items', 'center', 'important');
+      el.style.setProperty('white-space', 'nowrap', 'important');
+      el.style.setProperty('padding', '0', 'important');
+      el.style.setProperty('margin', '0', 'important');
+      el.style.setProperty('opacity', '1', 'important');
+      el.style.setProperty('visibility', 'visible', 'important');
+      el.style.setProperty('min-width', 'max-content', 'important');
+      el.style.setProperty('animation', 'marqueeGo 50s linear infinite', 'important');
+      el.style.setProperty('animation-play-state', 'running', 'important');
+      el.style.setProperty('will-change', 'transform', 'important');
+    });
+    
+    // Child span
+    document.querySelectorAll('.marquee-track > span').forEach(function(child) {
+      child.style.setProperty('display', 'inline-flex', 'important');
+      child.style.setProperty('flex-direction', 'row', 'important');
+      child.style.setProperty('flex-wrap', 'nowrap', 'important');
+      child.style.setProperty('align-items', 'center', 'important');
+      child.style.setProperty('gap', '48px', 'important');
+      child.style.setProperty('padding-right', '48px', 'important');
+      child.style.setProperty('white-space', 'nowrap', 'important');
+      child.style.setProperty('flex-shrink', '0', 'important');
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', paksa);
+  } else {
+    paksa();
+  }
+  
+  setTimeout(paksa, 100);
+  setTimeout(paksa, 500);
+  setTimeout(paksa, 1500);
+  setTimeout(paksa, 3000);
+  setInterval(paksa, 2000);
+  
+  console.log('🔥 MARQUEE_FORCE_JS aktif');
+})();
