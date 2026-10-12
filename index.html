@@ -2697,36 +2697,61 @@ a#waFloat:hover,
 }
 </style><style id="AVAILABLE_KOTAK">
 /* ============================================ */
-/* BADGE AVAILABLE — KOTAK (bukan pill) */
+/* BADGE AVAILABLE — dari lonjong ke KOTAK */
 /* ============================================ */
-.badge:has(svg),
-.veh-card .badge:first-of-type,
-.veh-card > div:first-child .badge,
-[class*="badge"][class*="emerald"] {
-  border-radius: 6px !important;              /* ← KOTAK */
-  padding: 4px 10px !important;
+
+/* Semua badge "AVAILABLE" — ganti rounded-full jadi rounded-md */
+.veh-card .badge,
+.veh-card span.badge,
+.veh-card [class*="badge"],
+.card .badge[class*="emerald"],
+.card .badge[class*="green"] {
+  border-radius: 6px !important;           /* ← KOTAK */
+  padding: 6px 12px !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 5px !important;
-  font-size: 10px !important;
+  gap: 6px !important;
+  font-size: 11px !important;
   font-weight: 800 !important;
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase !important;
   line-height: 1 !important;
 }
 
-/* Paksa semua badge di card mobil jadi kotak */
-.veh-card .badge,
-.veh-card > div:first-child > .badge,
-.veh-card > div:first-child > span:first-child {
+/* Badge "AVAILABLE" — warna hijau */
+.veh-card .badge:has(.dot-live),
+.veh-card .badge:has([class*="emerald"]),
+.veh-card .badge:has([class*="green"]),
+.veh-card .badge.bg-emerald-400/10,
+.veh-card .badge[class*="bg-emerald"],
+.veh-card .badge[class*="border-emerald"] {
   border-radius: 6px !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.5) !important;
+  color: #34d399 !important;
+  padding: 6px 12px !important;
 }
 
-/* PREMIUM, CITY CAR, SUV, MPV — tetap pill? Atau kotak? */
-/* Kalau mau SEMUA kotak: */
-.veh-card > div:first-child > span:last-child,
-.veh-card > div:first-child > .badge:last-child {
+/* Dot hijau di badge AVAILABLE — tetap bulat */
+.veh-card .badge .dot-live,
+.veh-card .badge i,
+.veh-card .badge > i {
+  border-radius: 50% !important;
+  width: 6px !important;
+  height: 6px !important;
+  min-width: 6px !important;
+  min-height: 6px !important;
+  background: #10b981 !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Badge PREMIUM/CITY CAR/SUV/MPV — tetap seperti sekarang (kalau mau kotak juga) */
+.veh-card .badge:has([class*="zinc"]),
+.veh-card .badge[class*="bg-zinc"],
+.veh-card .badge[class*="bg-gray"] {
   border-radius: 6px !important;
+  padding: 6px 12px !important;
 }
 </style></body>
 </html>
