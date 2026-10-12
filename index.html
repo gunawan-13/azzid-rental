@@ -2836,5 +2836,76 @@ a#waFloat:hover,
   border-color: rgba(220, 38, 38, 0.3) !important;
 }
 </style>
+
+<style id="HAPUS_CARD_DALAM">
+/* ============================================ */
+/* Hilangkan card abu di dalam card mobil */
+/* ============================================ */
+
+/* 1. Bagasi — hapus background + border */
+.veh-card .flex.flex-wrap .flex.items-center,
+.veh-card div:has(> span:has-text("Bagasi")),
+.veh-card div:has(> .text-muted):has(> span) {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* 2. Info text bawah (Bagasi + spek) — hapus background */
+.veh-card .p-4,
+.veh-card .p-4 > div,
+.veh-card .grow > div {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 3. Area harga + tombol — hapus background/border-top */
+.veh-card .mt-auto,
+.veh-card .mt-auto.pt-3,
+.veh-card > div:last-child {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 4. Container tombol — hilangkan card wrapper */
+.veh-card .flex.gap-2,
+.veh-card .flex.items-center.justify-between {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* 5. Tombol Detail + Booking — hilangkan background abu */
+.veh-card button,
+.veh-card a.btn {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 6. Tombol Detail (btn-g) — border tetap, background transparan */
+.veh-card button.btn-g,
+.veh-card .btn-g {
+  background: transparent !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 7. Tombol Booking (btn-m) — tetap merah */
+.veh-card button.btn-m,
+.veh-card .btn-m {
+  background: #b91c1c !important;
+  border: none !important;
+}
+
+/* 8. Bagasi icon + text — tetap */
+.veh-card .text-muted {
+  background: transparent !important;
+}
+</style>
 </body>
 </html>
