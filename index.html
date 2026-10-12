@@ -2427,7 +2427,7 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="QB_DIAM_TOTAL">
+</style><style id="QB_DIAM_DOT_JALAN">
 /* ============================================ */
 /* NUCLEAR OVERFLOW */
 /* ============================================ */
@@ -2437,36 +2437,181 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* QB CARD — DIAM TOTAL (override ALL) */
+/* KEYFRAMES */
+/* ============================================ */
+@keyframes ringScale {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes ringScaleWA {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+@keyframes headerMerahMarquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ============================================ */
+/* HEADER MERAH — dari kanan */
+/* ============================================ */
+#custApp > div.fixed.top-0,
+#custApp > div.fixed.top-0 > div:first-child {
+  display: flex !important;
+  align-items: center !important;
+  height: 34px !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+#annBar {
+  display: inline-block !important;
+  padding-left: 100vw !important;
+  padding-right: 0 !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  white-space: nowrap !important;
+  animation: headerMerahMarquee 60s linear infinite !important;
+  min-width: max-content !important;
+  will-change: transform !important;
+}
+
+#annBar:hover {
+  animation-play-state: paused !important;
+}
+
+.marquee-track {
+  padding-left: 100vw !important;
+  padding-right: 0 !important;
+  display: inline-flex !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  animation: headerMerahMarquee 60s linear infinite !important;
+  min-width: max-content !important;
+}
+
+.marquee-track > span {
+  display: inline-flex !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused !important;
+}
+
+/* ============================================ */
+/* QB CARD — DIAM saat hover (TAPI dot tetap animasi) */
 /* ============================================ */
 #custApp section:first-child .card,
-#custApp section:first-child .card *,
 #custApp section:first-child .card:hover,
-#custApp section:first-child .card:hover *,
 #custApp .card:has(.badge:has(.dot-live)),
 #custApp .card:has(.badge:has(.dot-live)):hover,
 #custApp .card:has(input[type="date"]),
-#custApp .card:has(input[type="date"]):hover,
-#custApp .card:has(input[type="date"]):hover * {
+#custApp .card:has(input[type="date"]):hover {
   /* Paksa tidak ada transform */
   transform: none !important;
-  -webkit-transform: none !important;
   transition: none !important;
+  animation: none !important;
   will-change: auto !important;
+}
+
+/* Hover QB — cuma shadow/border, tidak naik */
+#custApp section:first-child .card:hover,
+#custApp .card:has(.badge:has(.dot-live)):hover,
+#custApp .card:has(input[type="date"]):hover {
+  transform: none !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(220, 38, 38, 0.2) !important;
+}
+
+/* ============================================ */
+/* KECUALI: dot REAL-TIME — TETAP ANIMASI */
+/* ============================================ */
+#custApp section:first-child .card .dot-live,
+#custApp section:first-child .card .badge i,
+#custApp .card:has(.badge:has(.dot-live)) .dot-live,
+#custApp .card:has(input[type="date"]) .dot-live {
+  /* Override reset di atas */
+  display: inline-block !important;
+  width: 8px !important;
+  height: 8px !important;
+  min-width: 8px !important;
+  min-height: 8px !important;
+  max-width: 8px !important;
+  max-height: 8px !important;
+  background: #10b981 !important;
+  border-radius: 50% !important;
+  border: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+  flex-shrink: 0 !important;
+  overflow: visible !important;
+  position: relative !important;
+  align-self: center !important;
+  transform: none !important;
+  transition: none !important;
   animation: none !important;
 }
 
-/* KECUALI: dot REAL-TIME + ring-nya (harus tetap animasi) */
-#custApp section:first-child .card .dot-live,
+/* Ring dot — TETAP ANIMASI */
 #custApp section:first-child .card .dot-live::after,
-#custApp section:first-child .card .badge i,
-#custApp section:first-child .card .badge i::after {
-  transform: revert !important;
-  animation: revert !important;
-  transition: revert !important;
+#custApp section:first-child .card .badge i::after,
+#custApp .card:has(.badge:has(.dot-live)) .dot-live::after,
+#custApp .card:has(input[type="date"]) .dot-live::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  border: 2px solid #10b981 !important;
+  animation: ringScale 1.5s ease-out infinite !important;
+  pointer-events: none !important;
+  box-sizing: border-box !important;
+  transform-origin: center center !important;
 }
 
-/* Tombol Booking — tetap punya hover (up) */
+#custApp section:first-child .card .dot-live::before,
+#custApp section:first-child .card .badge i::before,
+#custApp .card:has(.badge:has(.dot-live)) .dot-live::before,
+#custApp .card:has(input[type="date"]) .dot-live::before {
+  content: none !important;
+}
+
+/* Badge container REAL-TIME */
+#custApp .badge:has(.dot-live),
+#custApp .badge:has([class*="emerald"]),
+#custApp .badge:has(i) {
+  border-radius: 6px !important;
+  padding: 4px 8px 4px 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  color: #34d399 !important;
+  line-height: 1 !important;
+  overflow: visible !important;
+}
+
+#custApp .badge:has(.dot-live) span,
+#custApp .badge:has(.dot-live) {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+}
+
+/* Tombol Booking — tetap hover */
 #custApp section:first-child .card button:hover,
 #custApp section:first-child .card a.btn:hover,
 #custApp section:first-child .card .btn-m:hover {
@@ -2484,95 +2629,6 @@ a#waFloat:hover,
 #custApp section:first-child .card select:focus {
   border-color: rgba(220, 38, 38, 0.5) !important;
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
-}
-
-/* ============================================ */
-/* KEYFRAMES */
-/* ============================================ */
-@keyframes ringScale {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(2.5); opacity: 0; }
-}
-
-@keyframes ringScaleWA {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.8); opacity: 0; }
-}
-
-/* ============================================ */
-/* REAL-TIME — Dot hijau (tetap) */
-/* ============================================ */
-#custApp .badge:has(.dot-live),
-#custApp .badge:has([class*="emerald"]),
-#custApp .badge:has(i) {
-  border-radius: 6px !important;
-  padding: 4px 8px 4px 6px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  background: rgba(16, 185, 129, 0.08) !important;
-  border: 1px solid rgba(16, 185, 129, 0.3) !important;
-  color: #34d399 !important;
-  line-height: 1 !important;
-  overflow: visible !important;
-}
-
-#custApp .badge .dot-live,
-#custApp .badge i,
-#custApp .dot-live {
-  display: inline-block !important;
-  width: 8px !important;
-  height: 8px !important;
-  min-width: 8px !important;
-  min-height: 8px !important;
-  max-width: 8px !important;
-  max-height: 8px !important;
-  background: #10b981 !important;
-  border-radius: 50% !important;
-  border: none !important;
-  filter: none !important;
-  box-shadow: none !important;
-  flex-shrink: 0 !important;
-  overflow: visible !important;
-  position: relative !important;
-  align-self: center !important;
-}
-
-#custApp .badge .dot-live::after,
-#custApp .badge i::after,
-#custApp .dot-live::after {
-  content: '' !important;
-  display: block !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 50% !important;
-  border: 2px solid #10b981 !important;
-  animation: ringScale 1.5s ease-out infinite !important;
-  pointer-events: none !important;
-  box-sizing: border-box !important;
-  transform-origin: center center !important;
-}
-
-#custApp .badge .dot-live::before,
-#custApp .badge i::before,
-#custApp .dot-live::before {
-  content: none !important;
-}
-
-#custApp .badge .dot-live.hidden {
-  display: inline-block !important;
-}
-
-#custApp .badge:has(.dot-live) span,
-#custApp .badge:has(.dot-live) {
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
-  line-height: 1 !important;
 }
 
 /* ============================================ */
@@ -2641,10 +2697,7 @@ a#waFloat:hover,
 }
 
 body.has-order #userNotifBtn::before,
-body.has-order #custApp #userNotifBtn::before {
-  display: block !important;
-}
-
+body.has-order #custApp #userNotifBtn::before,
 body.has-order #userNotifBtn::after,
 body.has-order #custApp #userNotifBtn::after {
   display: block !important;
@@ -2706,96 +2759,6 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
   filter: none !important;
-}
-</style><style id="HEADER_MERAH_KANAN">
-/* ============================================ */
-/* HEADER MERAH — text muncul dari KANAN */
-/* ============================================ */
-
-/* Container header merah — paksa flex row + overflow hidden */
-#custApp > div.fixed.top-0,
-#custApp > div.fixed.top-0 > div:first-child {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  height: 34px !important;
-  min-height: 34px !important;
-  max-height: 34px !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  width: 100% !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* annBar — text mulai dari KANAN, jalan ke KIRI */
-#annBar {
-  display: inline-block !important;
-  
-  /* PADDING KIRI = 100vw — biar mulai dari kanan viewport */
-  padding-left: 100vw !important;
-  padding-right: 0 !important;
-  
-  /* Tinggi fixed — center vertikal */
-  height: 34px !important;
-  min-height: 34px !important;
-  line-height: 34px !important;
-  
-  /* Text tidak wrap */
-  white-space: nowrap !important;
-  
-  /* Animasi marquee — kanan ke kiri */
-  animation: headerMerahMarquee 60s linear infinite !important;
-  animation-play-state: running !important;
-  
-  /* Performa */
-  min-width: max-content !important;
-  will-change: transform !important;
-  vertical-align: middle !important;
-}
-
-/* Keyframes — geser dari kanan ke kiri */
-@keyframes headerMerahMarquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-/* Hover pause */
-#annBar:hover {
-  animation-play-state: paused !important;
-}
-
-/* ============================================ */
-/* HEADER NAVY (marquee-track) — tetap dari kanan */
-/* ============================================ */
-.marquee-track {
-  padding-left: 100vw !important;
-  padding-right: 0 !important;
-  display: inline-flex !important;
-  flex-wrap: nowrap !important;
-  white-space: nowrap !important;
-  animation: navyMarquee 60s linear infinite !important;
-  animation-play-state: running !important;
-  min-width: max-content !important;
-}
-
-.marquee-track > span {
-  display: inline-flex !important;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused !important;
-}
-
-@keyframes navyMarquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
 }
 </style></body>
 </html>
