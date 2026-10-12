@@ -1332,5 +1332,47 @@ img {
   margin-top: auto !important;
   padding-top: 16px !important;
 }
+</style><style id="HOVER_LAYANAN">
+/* ============================================ */
+/* HOVER CARD — up + border + shadow (SEMUA card) */
+/* ============================================ */
+
+/* Base card — transition */
+#custApp .card,
+#custApp .veh-card,
+#custApp .card:has(h3),
+#custApp .card:has(button) {
+  transition: transform 0.4s ease, border-color 0.3s ease, box-shadow 0.4s ease !important;
+  will-change: transform !important;
+}
+
+/* Hover — up + border merah + shadow */
+#custApp .card:hover,
+#custApp .card:has(h3):hover,
+#custApp .card:has(button):hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+  box-shadow: 0 12px 30px rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Veh-card — sama */
+#custApp .veh-card:hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+  box-shadow: 0 12px 30px rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Testimonial card — hover */
+#custApp .card:has(.flex.gap-1):has(.rounded-full):hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+  box-shadow: 0 12px 30px rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Icon dalam card — hover naik dikit */
+#custApp .card:hover > div:first-child {
+  transform: translateY(-2px) !important;
+  transition: transform 0.3s ease !important;
+}
 </style></body>
 </html>
