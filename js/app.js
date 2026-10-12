@@ -5172,3 +5172,65 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 MARQUEE_HARDCORE_JS aktif');
 })();
+
+
+// ============================================
+// === MARQUEE_INLINE_JS — paksa jalan via inline style
+// ============================================
+(function() {
+  // Inject keyframes SEKALI ke head — nama unik
+  function injectKeyframes() {
+    if (document.getElementById('marqueeKfInline')) return;
+    var style = document.createElement('style');
+    style.id = 'marqueeKfInline';
+    style.textContent = '@keyframes marqueeKfInlineX { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }';
+    document.head.appendChild(style);
+  }
+  
+  function paksa() {
+    injectKeyframes();
+    
+    document.querySelectorAll('.marquee-track').forEach(function(el) {
+      // Clear dulu
+      el.style.removeProperty('animation');
+      void el.offsetWidth;
+      
+      // Set inline style — paling kuat, cuma nempel di elemen ini
+      el.style.setProperty('display', 'inline-flex', 'important');
+      el.style.setProperty('flex-direction', 'row', 'important');
+      el.style.setProperty('flex-wrap', 'nowrap', 'important');
+      el.style.setProperty('align-items', 'center', 'important');
+      el.style.setProperty('white-space', 'nowrap', 'important');
+      el.style.setProperty('padding', '0', 'important');
+      el.style.setProperty('margin', '0', 'important');
+      el.style.setProperty('min-width', 'max-content', 'important');
+      el.style.setProperty('opacity', '1', 'important');
+      el.style.setProperty('visibility', 'visible', 'important');
+      el.style.setProperty('animation-name', 'marqueeKfInlineX', 'important');
+      el.style.setProperty('animation-duration', '45s', 'important');
+      el.style.setProperty('animation-timing-function', 'linear', 'important');
+      el.style.setProperty('animation-iteration-count', 'infinite', 'important');
+      el.style.setProperty('animation-play-state', 'running', 'important');
+      el.style.setProperty('animation-direction', 'normal', 'important');
+      el.style.setProperty('-webkit-animation-name', 'marqueeKfInlineX', 'important');
+      el.style.setProperty('-webkit-animation-duration', '45s', 'important');
+      el.style.setProperty('-webkit-animation-timing-function', 'linear', 'important');
+      el.style.setProperty('-webkit-animation-iteration-count', 'infinite', 'important');
+      el.style.setProperty('-webkit-animation-play-state', 'running', 'important');
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', paksa);
+  } else {
+    paksa();
+  }
+  
+  setTimeout(paksa, 100);
+  setTimeout(paksa, 500);
+  setTimeout(paksa, 1500);
+  setTimeout(paksa, 3000);
+  setInterval(paksa, 2000);
+  
+  console.log('🔥 MARQUEE_INLINE_JS aktif');
+})();
