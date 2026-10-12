@@ -1374,5 +1374,131 @@ img {
   transform: translateY(-2px) !important;
   transition: transform 0.3s ease !important;
 }
+</style><style id="RAPIKAN_SECTION">
+/* ============================================ */
+/* SECTION "INSPEKSI" + BADGE */
+/* ============================================ */
+#custApp section:has(img) {
+  position: relative !important;
+}
+
+/* Badge "inspeksi" — kanan bawah, rapi */
+#custApp section div[class*="absolute"][class*="bottom"],
+#custApp section div[class*="absolute"][class*="right"] {
+  padding: 16px 20px !important;
+  border-radius: 12px !important;
+  background: rgba(180, 30, 30, 0.95) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+  max-width: 200px !important;
+  text-align: left !important;
+}
+
+#custApp section div[class*="absolute"][class*="bottom"] h3,
+#custApp section div[class*="absolute"][class*="bottom"] h4,
+#custApp section div[class*="absolute"][class*="bottom"] .font-display {
+  font-size: 18px !important;
+  line-height: 1.2 !important;
+  margin-bottom: 4px !important;
+  color: #fff !important;
+}
+
+#custApp section div[class*="absolute"][class*="bottom"] p,
+#custApp section div[class*="absolute"][class*="bottom"] span {
+  font-size: 10px !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin: 0 !important;
+}
+
+/* ============================================ */
+/* TOMBOL — "Booking Sekarang" + "Chat WhatsApp" */
+/* ============================================ */
+#custApp .btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 14px 28px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+  height: auto !important;
+  min-height: 48px !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+}
+
+#custApp .btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Tombol putih (Booking Sekarang) */
+#custApp .btn.bg-white,
+#custApp .btn[class*="bg-white"] {
+  background: #ffffff !important;
+  color: #7f1d1d !important;
+  border: none !important;
+}
+
+/* Tombol outline (Chat WhatsApp) */
+#custApp .btn.border,
+#custApp .btn[class*="border-white"] {
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+#custApp .btn.border:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Icon dalam tombol */
+#custApp .btn svg {
+  width: 18px !important;
+  height: 18px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ============================================ */
+/* NOMOR 01-04 — rapatkan */
+/* ============================================ */
+#custApp .grid:has(> div > .font-display):has(> div > div[class*="w-12"]),
+#custApp .grid:has(> div [class*="rounded-xl"]) {
+  gap: 16px !important;
+}
+
+#custApp div:has(> .font-display):has(> div) {
+  gap: 20px !important;
+}
+
+/* Kotak nomor — rapi */
+#custApp div[class*="bg-maroon"]:has(> .font-display),
+#custApp div[class*="rounded-xl"][class*="bg-maroon"] {
+  width: 56px !important;
+  height: 56px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 12px !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+}
+
+/* Container nomor — flex row rapat */
+#custApp .flex:has(> div[class*="bg-maroon"]) {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 24px !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
 </style></body>
 </html>
