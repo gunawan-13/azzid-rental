@@ -2101,12 +2101,12 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="NO_GLOW">
+</style><style id="DOT_KECIL">
 /* ============================================ */
-/* TANPA EFEK CAHAYA — cuma dot + ring denyut */
+/* DOT KECIL — 6px (dari 10px) */
 /* ============================================ */
 
-/* Keyframes ring — sama untuk semua */
+/* Ring pulse — sama */
 @keyframes ringPulseClean {
   0% {
     opacity: 1;
@@ -2121,35 +2121,36 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 1. DOT REAL-TIME — HIJAU */
+/* 1. DOT REAL-TIME — Hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
 #custApp .badge:has(i) {
   border-radius: 6px !important;
-  padding: 5px 10px 5px 8px !important;
+  padding: 4px 8px 4px 6px !important;
   display: inline-flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
   background: rgba(16, 185, 129, 0.08) !important;
   border: 1px solid rgba(16, 185, 129, 0.3) !important;
   color: #34d399 !important;
 }
 
-/* Dot hijau — TANPA glow, TANPA shadow */
+/* Dot hijau — KECIL 6px */
 #custApp .badge .dot-live,
 #custApp .badge i,
 #custApp .dot-live {
   display: inline-block !important;
-  width: 10px !important;
-  height: 10px !important;
-  min-width: 10px !important;
-  min-height: 10px !important;
+  width: 6px !important;
+  height: 6px !important;
+  min-width: 6px !important;
+  min-height: 6px !important;
+  max-width: 6px !important;
+  max-height: 6px !important;
   background: #10b981 !important;
   border-radius: 50% !important;
   position: relative !important;
   flex-shrink: 0 !important;
-  /* TANPA box-shadow, TANPA filter, TANPA radial-gradient */
   box-shadow: none !important;
   filter: none !important;
   animation: none !important;
@@ -2163,7 +2164,7 @@ a#waFloat:hover,
   position: absolute !important;
   inset: 0 !important;
   border-radius: 50% !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.8) !important;
+  border: 1px solid rgba(16, 185, 129, 0.8) !important;
   animation: ringPulseClean 1.5s ease-out infinite !important;
   pointer-events: none !important;
 }
@@ -2172,7 +2173,6 @@ a#waFloat:hover,
 #custApp .badge i::before,
 #custApp .dot-live::before {
   content: none !important;
-  display: none !important;
 }
 
 #custApp .badge .dot-live.hidden {
@@ -2180,7 +2180,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 2. LONCENG — MERAH */
+/* 2. LONCENG — Dot merah KECIL 6px */
 /* ============================================ */
 #custApp #userNotifBtn {
   position: relative !important;
@@ -2191,14 +2191,16 @@ a#waFloat:hover,
   transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah — TANPA glow */
+/* Dot merah — KECIL 6px */
 #custApp #userNotifBtn::before {
   content: '' !important;
   position: absolute !important;
-  top: 6px !important;
-  right: 6px !important;
-  width: 10px !important;
-  height: 10px !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 6px !important;
+  height: 6px !important;
+  min-width: 6px !important;
+  min-height: 6px !important;
   background: #ef4444 !important;
   border-radius: 50% !important;
   box-shadow: none !important;
@@ -2212,12 +2214,12 @@ a#waFloat:hover,
 #custApp #userNotifBtn::after {
   content: '' !important;
   position: absolute !important;
-  top: 6px !important;
-  right: 6px !important;
-  width: 10px !important;
-  height: 10px !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 6px !important;
+  height: 6px !important;
   border-radius: 50% !important;
-  border: 1.5px solid rgba(239, 68, 68, 0.8) !important;
+  border: 1px solid rgba(239, 68, 68, 0.8) !important;
   animation: ringPulseRedClean 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: 9 !important;
@@ -2246,16 +2248,16 @@ a#waFloat:hover,
   transform: scale(1.05) !important;
 }
 
-/* Badge notif — TANPA glow */
+/* Badge notif */
 #custApp #userNotifBadge:not(.hidden) {
   animation: none !important;
   border-radius: 999px !important;
-  min-width: 18px !important;
-  height: 18px !important;
-  padding: 0 5px !important;
+  min-width: 16px !important;
+  height: 16px !important;
+  padding: 0 4px !important;
   display: grid !important;
   place-items: center !important;
-  font-size: 10px !important;
+  font-size: 9px !important;
   font-weight: bold !important;
   background: #ef4444 !important;
   color: white !important;
@@ -2267,7 +2269,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 3. WA FLOAT — HIJAU */
+/* 3. WA FLOAT — Ring saja (tombol tetap) */
 /* ============================================ */
 #waFloat::before,
 .wa-float::before {
@@ -2326,7 +2328,7 @@ a#waFloat:hover,
   filter: none !important;
 }
 
-/* Teks REAL-TIME — tanpa glow */
+/* Teks REAL-TIME */
 #custApp .badge:has(.dot-live) span,
 #custApp .badge:has(.dot-live) {
   font-size: 10px !important;
