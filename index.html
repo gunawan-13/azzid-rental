@@ -3088,5 +3088,18 @@ a#waFloat:hover,
   justify-content: flex-start;
 }
 </style>
+
+<style id="HIDE_KATALOG_ARMADA">
+/* Sembunyikan label "KATALOG ARMADA" di header armada */
+#custApp main > section:has(h1) > div > span:first-child {
+  display: none !important;
+}
+
+/* Rapikan jarak atas header setelah label hilang */
+#custApp main > section:has(h1) h1 {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+</style>
 </body>
 </html>
