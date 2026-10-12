@@ -4955,31 +4955,38 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === PAKSA_AVAILABLE_TRANSPARAN — paksa hijau transparan
+
+
+
+// ============================================
+// === PAKSA_AVAILABLE_KONTRAS — teks putih + glow ijo
 // ============================================
 (function() {
   function paksa() {
     document.querySelectorAll('.veh-card .badge, .veh-card span').forEach(function(el) {
       var text = el.textContent.trim();
       
-      // Cek apakah badge ini AVAILABLE
       if (text === 'AVAILABLE' || text.indexOf('AVAILABLE') === 0) {
-        el.style.setProperty('background', 'rgba(16, 185, 129, 0.12)', 'important');
-        el.style.setProperty('background-color', 'rgba(16, 185, 129, 0.12)', 'important');
-        el.style.setProperty('backdrop-filter', 'blur(10px)', 'important');
-        el.style.setProperty('-webkit-backdrop-filter', 'blur(10px)', 'important');
-        el.style.setProperty('border', '1px solid rgba(52, 211, 153, 0.5)', 'important');
+        el.style.setProperty('background', 'rgba(16, 185, 129, 0.15)', 'important');
+        el.style.setProperty('backdrop-filter', 'blur(12px)', 'important');
+        el.style.setProperty('border', '1px solid rgba(110, 231, 183, 0.7)', 'important');
         el.style.setProperty('border-radius', '6px', 'important');
-        el.style.setProperty('color', '#6ee7b7', 'important');
-        el.style.setProperty('text-shadow', '0 0 4px rgba(16, 185, 129, 0.5)', 'important');
+        el.style.setProperty('color', '#ffffff', 'important');
+        el.style.setProperty('text-shadow', '0 0 6px rgba(110, 231, 183, 0.9), 0 0 12px rgba(16, 185, 129, 0.7), 0 1px 2px rgba(0, 0, 0, 0.8)', 'important');
         el.style.setProperty('padding', '4px 10px', 'important');
-        el.style.setProperty('font-weight', '800', 'important');
+        el.style.setProperty('font-weight', '900', 'important');
         el.style.setProperty('font-size', '10px', 'important');
-        el.style.setProperty('letter-spacing', '0.08em', 'important');
+        el.style.setProperty('letter-spacing', '0.1em', 'important');
         el.style.setProperty('text-transform', 'uppercase', 'important');
         el.style.setProperty('white-space', 'nowrap', 'important');
         el.style.setProperty('display', 'inline-flex', 'important');
         el.style.setProperty('align-items', 'center', 'important');
+        
+        // Child text
+        Array.from(el.children).forEach(function(child) {
+          child.style.setProperty('color', '#ffffff', 'important');
+          child.style.setProperty('text-shadow', '0 0 6px rgba(110, 231, 183, 0.9), 0 1px 2px rgba(0, 0, 0, 0.8)', 'important');
+        });
       }
     });
   }
@@ -4996,5 +5003,5 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setTimeout(paksa, 3000);
   setInterval(paksa, 2000);
   
-  console.log('🔥 PAKSA_AVAILABLE_TRANSPARAN aktif');
+  console.log('🔥 PAKSA_AVAILABLE_KONTRAS aktif');
 })();
