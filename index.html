@@ -1628,5 +1628,95 @@ section:has(h2) .grid > div:hover {
 .card * {
   transition-delay: 0s !important;
 }
+</style><style id="HERO_ANIM_UP">
+/* ============================================ */
+/* HERO ANIMASI UP saat load */
+/* ============================================ */
+
+@keyframes heroSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroFadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Target: hero section di home page */
+#custApp section:first-child,
+#custApp main > section:first-child {
+  animation: heroFadeIn 0.6s ease-out !important;
+}
+
+/* Badge hero */
+#custApp section:first-child .badge,
+#custApp section:first-child > div > div > span:first-child,
+#custApp section:first-child span[class*="badge"] {
+  animation: heroSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both !important;
+}
+
+/* Judul H1 */
+#custApp section:first-child h1 {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both !important;
+}
+
+/* Paragraf */
+#custApp section:first-child p,
+#custApp section:first-child > div > div > p {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both !important;
+}
+
+/* Tombol */
+#custApp section:first-child .btn,
+#custApp section:first-child a.btn,
+#custApp section:first-child > div > div > div.flex > a {
+  animation: heroSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both !important;
+}
+
+/* Stats */
+#custApp section:first-child .grid > div,
+#custApp section:first-child > div > div > div.grid > div {
+  animation: heroSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+#custApp section:first-child .grid > div:nth-child(1) { animation-delay: 0.6s !important; }
+#custApp section:first-child .grid > div:nth-child(2) { animation-delay: 0.7s !important; }
+#custApp section:first-child .grid > div:nth-child(3) { animation-delay: 0.8s !important; }
+#custApp section:first-child .grid > div:nth-child(4) { animation-delay: 0.9s !important; }
+
+/* Quick Booking card — slide dari kanan */
+#custApp section:first-child .card,
+#custApp section:first-child > div > div > .card {
+  animation: heroSlideRight 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both !important;
+}
+
+@keyframes heroSlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Reset animasi kalau halaman lain */
+#custApp main > section:not(:first-child) {
+  animation: none !important;
+}
+
+/* Hanya berlaku di home page — cek hash */
+body:not([data-home]) #custApp section:first-child,
+body:not([data-home]) #custApp section:first-child * {
+  animation: none !important;
+}
 </style></body>
 </html>

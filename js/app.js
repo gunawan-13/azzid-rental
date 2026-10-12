@@ -4718,3 +4718,25 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 NOMOR_KIRI_JS aktif');
 })();
+
+
+// ============================================
+// === HERO_HOME_DETECT — cek kalau di home
+// ============================================
+(function() {
+  function detect() {
+    var hash = location.hash || '#/';
+    var isHome = hash === '#/' || hash === '#' || hash === '';
+    if (isHome) {
+      document.body.setAttribute('data-home', '1');
+    } else {
+      document.body.removeAttribute('data-home');
+    }
+  }
+  
+  detect();
+  window.addEventListener('hashchange', detect);
+  setTimeout(detect, 500);
+  setTimeout(detect, 1500);
+  console.log('🔥 HERO_HOME_DETECT aktif');
+})();
