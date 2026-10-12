@@ -4826,3 +4826,89 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 ADD_RING_ATTR aktif');
 })();
+
+
+// ============================================
+// === DOT_ORDER_LOGIC — dot lonceng kalau ada pesanan
+// ============================================
+(function() {
+  // Status yang dianggap "ada pesanan aktif"
+  var ACTIVE_STATUSES = ['Confirmed', 'Ongoing', 'Pending', 'Menunggu'];
+  
+  function hasActiveOrder() {
+    try {
+      // Ambil session user
+      var session = null;
+      try {
+        var s = localStorage.getItem('azzid_session') || sessionStorage.getItem('azzid_session');
+        if (s) session = JSON.parse(s);
+      } catch(e) {}
+      
+      if (!session) return false;
+      
+      // Ambil bookings dari berbagai sumber
+      var bookings = [];
+      if (window.BOOKINGS && Array.isArray(window.BOOKINGS)) {
+        bookings = window.BOOKINGS;
+      } else if (window.S && window.S.bookings && Array.isArray(window.S.bookings)) {
+        bookings = window.S.bookings;
+      }
+      
+      if (!bookings.length) return false;
+      
+      // Cek apakah ada booking milik user + status aktif
+      var userId = session.id || session.email;
+      var activeCount = 0;
+      
+      bookings.forEach(function(b) {
+        // Cek kepemilikan
+        var isOwner = (b.user_id === userId) || 
+                      (b.email === session.email) || 
+                      (b.customer_name === session.name) ||
+                      (b.user === session.email);
+        
+        if (!isOwner) return;
+        
+        // Cek status
+        var status = b.status || '';
+        if (ACTIVE_STATUSES.indexOf(status) > -1) {
+          activeCount++;
+        }
+      });
+      
+      return activeCount > 0;
+    } catch(e) {
+      console.error('DOT_ORDER_LOGIC error:', e.message);
+      return false;
+    }
+  }
+  
+  function updateDot() {
+    var active = hasActiveOrder();
+    
+    if (active) {
+      document.body.classList.add('has-order');
+      console.log('🔔 DOT_ORDER_LOGIC: ada pesanan aktif — dot muncul');
+    } else {
+      document.body.classList.remove('has-order');
+      console.log('🔕 DOT_ORDER_LOGIC: tidak ada pesanan — dot hidden');
+    }
+  }
+  
+  // Jalankan
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateDot);
+  } else {
+    updateDot();
+  }
+  
+  // Re-check tiap 3 detik
+  setInterval(updateDot, 3000);
+  
+  // Re-check saat event booking
+  window.addEventListener('booking-created', updateDot);
+  window.addEventListener('booking-updated', updateDot);
+  window.addEventListener('storage', updateDot);
+  
+  console.log('🔥 DOT_ORDER_LOGIC aktif');
+})();

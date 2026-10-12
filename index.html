@@ -2427,7 +2427,7 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="DOT_TANPA_BORDER">
+</style><style id="DOT_ORDER_ONLY">
 /* ============================================ */
 /* NUCLEAR OVERFLOW */
 /* ============================================ */
@@ -2450,7 +2450,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* REAL-TIME — Dot hijau */
+/* REAL-TIME — Dot hijau (tetap) */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2527,7 +2527,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* LONCENG — Dot tanpa border hitam */
+/* LONCENG — Dot default HIDDEN */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
@@ -2546,11 +2546,11 @@ a#waFloat:hover,
   transform: none !important;
 }
 
-/* Dot merah — TANPA BORDER HITAM */
+/* Dot merah — DEFAULT HIDDEN */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
-  display: block !important;
+  display: none !important;                /* ← DEFAULT HIDDEN */
   position: absolute !important;
   top: 2px !important;
   right: 2px !important;
@@ -2561,7 +2561,7 @@ a#waFloat:hover,
   max-width: 10px !important;
   max-height: 10px !important;
   background: #ef4444 !important;
-  border: none !important;              /* ← HAPUS BORDER */
+  border: none !important;
   border-radius: 50% !important;
   filter: none !important;
   box-shadow: none !important;
@@ -2571,11 +2571,11 @@ a#waFloat:hover,
   animation: none !important;
 }
 
-/* Ring merah */
+/* Ring merah — DEFAULT HIDDEN */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
-  display: block !important;
+  display: none !important;                /* ← DEFAULT HIDDEN */
   position: absolute !important;
   top: 2px !important;
   right: 2px !important;
@@ -2594,26 +2594,21 @@ a#waFloat:hover,
   z-index: 999 !important;
 }
 
+/* SHOW saat body punya .has-order */
+body.has-order #userNotifBtn::before,
+body.has-order #custApp #userNotifBtn::before {
+  display: block !important;
+}
+
+body.has-order #userNotifBtn::after,
+body.has-order #custApp #userNotifBtn::after {
+  display: block !important;
+}
+
+/* Kalau ada badge notif, hide dot */
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::after {
   display: none !important;
-}
-
-#custApp #userNotifBadge:not(.hidden) {
-  border-radius: 999px !important;
-  min-width: 16px !important;
-  height: 16px !important;
-  padding: 0 4px !important;
-  display: grid !important;
-  place-items: center !important;
-  font-size: 9px !important;
-  font-weight: bold !important;
-  background: #ef4444 !important;
-  color: white !important;
-  border: none !important;
-  top: 0 !important;
-  right: 0 !important;
-  z-index: 21 !important;
 }
 
 /* ============================================ */
