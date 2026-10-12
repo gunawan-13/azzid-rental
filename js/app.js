@@ -5020,7 +5020,11 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === MARQUEE_KANAN_JS — paksa marquee dari kanan
+
+
+
+// ============================================
+// === MARQUEE_SEAMLESS_JS — paksa seamless
 // ============================================
 (function() {
   function paksa() {
@@ -5030,13 +5034,13 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       el.style.setProperty('flex-wrap', 'nowrap', 'important');
       el.style.setProperty('align-items', 'center', 'important');
       el.style.setProperty('white-space', 'nowrap', 'important');
-      el.style.setProperty('padding-left', '100vw', 'important');
+      el.style.setProperty('padding-left', '0', 'important');
       el.style.setProperty('padding-right', '0', 'important');
       el.style.setProperty('margin', '0', 'important');
       el.style.setProperty('opacity', '1', 'important');
       el.style.setProperty('visibility', 'visible', 'important');
       el.style.setProperty('min-width', 'max-content', 'important');
-      el.style.setProperty('animation', 'marqueeKanan 50s linear infinite', 'important');
+      el.style.setProperty('animation', 'marqueeSeamless 40s linear infinite', 'important');
       el.style.setProperty('animation-play-state', 'running', 'important');
       el.style.setProperty('will-change', 'transform', 'important');
     });
@@ -5065,5 +5069,5 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setTimeout(paksa, 3000);
   setInterval(paksa, 2000);
   
-  console.log('🔥 MARQUEE_KANAN_JS aktif');
+  console.log('🔥 MARQUEE_SEAMLESS_JS aktif');
 })();
