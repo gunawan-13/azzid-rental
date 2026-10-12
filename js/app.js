@@ -4952,3 +4952,49 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 PAKSA_BADGE_KOTAK_JS aktif');
 })();
+
+
+// ============================================
+// === PAKSA_AVAILABLE_TRANSPARAN — paksa hijau transparan
+// ============================================
+(function() {
+  function paksa() {
+    document.querySelectorAll('.veh-card .badge, .veh-card span').forEach(function(el) {
+      var text = el.textContent.trim();
+      
+      // Cek apakah badge ini AVAILABLE
+      if (text === 'AVAILABLE' || text.indexOf('AVAILABLE') === 0) {
+        el.style.setProperty('background', 'rgba(16, 185, 129, 0.12)', 'important');
+        el.style.setProperty('background-color', 'rgba(16, 185, 129, 0.12)', 'important');
+        el.style.setProperty('backdrop-filter', 'blur(10px)', 'important');
+        el.style.setProperty('-webkit-backdrop-filter', 'blur(10px)', 'important');
+        el.style.setProperty('border', '1px solid rgba(52, 211, 153, 0.5)', 'important');
+        el.style.setProperty('border-radius', '6px', 'important');
+        el.style.setProperty('color', '#6ee7b7', 'important');
+        el.style.setProperty('text-shadow', '0 0 4px rgba(16, 185, 129, 0.5)', 'important');
+        el.style.setProperty('padding', '4px 10px', 'important');
+        el.style.setProperty('font-weight', '800', 'important');
+        el.style.setProperty('font-size', '10px', 'important');
+        el.style.setProperty('letter-spacing', '0.08em', 'important');
+        el.style.setProperty('text-transform', 'uppercase', 'important');
+        el.style.setProperty('white-space', 'nowrap', 'important');
+        el.style.setProperty('display', 'inline-flex', 'important');
+        el.style.setProperty('align-items', 'center', 'important');
+      }
+    });
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', paksa);
+  } else {
+    paksa();
+  }
+  
+  setTimeout(paksa, 100);
+  setTimeout(paksa, 500);
+  setTimeout(paksa, 1500);
+  setTimeout(paksa, 3000);
+  setInterval(paksa, 2000);
+  
+  console.log('🔥 PAKSA_AVAILABLE_TRANSPARAN aktif');
+})();
