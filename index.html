@@ -2320,51 +2320,48 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="RING_BUYAR_FIX">
+</style><style id="RING_SATU_ELEMEN">
 /* ============================================ */
-/* KEYFRAMES — RING BUYAR */
+/* KEYFRAMES — Ring buyar via BOX-SHADOW */
 /* ============================================ */
 @keyframes ringPulseGreen {
   0% {
-    opacity: 1;
-    transform: scale(1);
-    border-color: rgba(16, 185, 129, 1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.9);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
   }
   100% {
-    opacity: 0;
-    transform: scale(2.5);
-    border-color: rgba(16, 185, 129, 0);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
   }
 }
 
 @keyframes ringPulseRed {
   0% {
-    opacity: 1;
-    transform: scale(1);
-    border-color: rgba(239, 68, 68, 1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(239, 68, 68, 0);
   }
   100% {
-    opacity: 0;
-    transform: scale(2.5);
-    border-color: rgba(239, 68, 68, 0);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
   }
 }
 
 @keyframes ringPulseWA {
   0% {
-    opacity: 1;
-    transform: scale(1);
-    border-color: rgba(37, 211, 102, 1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.9);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
   }
   100% {
-    opacity: 0;
-    transform: scale(1.5);
-    border-color: rgba(37, 211, 102, 0);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
   }
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau */
+/* 1. REAL-TIME — Dot hijau + ring box-shadow */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2381,6 +2378,7 @@ a#waFloat:hover,
   overflow: visible !important;
 }
 
+/* Dot hijau — 1 element, pakai box-shadow untuk ring */
 #custApp .badge .dot-live,
 #custApp .badge i,
 #custApp .dot-live {
@@ -2393,32 +2391,22 @@ a#waFloat:hover,
   border-radius: 50% !important;
   position: relative !important;
   flex-shrink: 0 !important;
-  box-shadow: none !important;
+  border: none !important;
   filter: none !important;
-  animation: none !important;
   align-self: center !important;
   overflow: visible !important;
-  /* TANPA border hitam */
-  border: none !important;
+  animation: ringPulseGreen 1.8s ease-out infinite !important;
 }
 
+/* Hapus pseudo-element */
 #custApp .badge .dot-live::after,
 #custApp .badge i::after,
-#custApp .dot-live::after {
-  content: '' !important;
-  position: absolute !important;
-  inset: -1px !important;
-  border-radius: 50% !important;
-  border: 1.5px solid rgba(16, 185, 129, 1) !important;
-  animation: ringPulseGreen 1.5s ease-out infinite !important;
-  pointer-events: none !important;
-  z-index: 1 !important;
-}
-
+#custApp .dot-live::after,
 #custApp .badge .dot-live::before,
 #custApp .badge i::before,
 #custApp .dot-live::before {
   content: none !important;
+  display: none !important;
 }
 
 #custApp .badge .dot-live.hidden {
@@ -2435,7 +2423,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah + ring buyar */
+/* 2. LONCENG — Dot merah + ring box-shadow */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
@@ -2446,10 +2434,9 @@ a#waFloat:hover,
   box-shadow: none !important;
   transition: transform 0.3s ease, background 0.3s ease !important;
   overflow: visible !important;
-  clip-path: none !important;
 }
 
-/* Dot merah — TANPA border hitam */
+/* Dot merah — 1 pseudo, pakai box-shadow untuk ring */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
@@ -2465,41 +2452,22 @@ a#waFloat:hover,
   max-height: 10px !important;
   background: #ef4444 !important;
   border-radius: 50% !important;
-  /* TANPA border hitam — biar ring kelihatan */
   border: none !important;
-  box-shadow: none !important;
   filter: none !important;
-  animation: none !important;
   pointer-events: none !important;
   z-index: 20 !important;
   box-sizing: border-box !important;
+  animation: ringPulseRed 1.8s ease-out infinite !important;
 }
 
-/* Ring lonceng — BUYAR */
+/* Hapus ::after — biar tidak dobel */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
-  content: '' !important;
-  display: block !important;
-  position: absolute !important;
-  top: 6px !important;
-  right: 6px !important;
-  width: 10px !important;
-  height: 10px !important;
-  min-width: 10px !important;
-  min-height: 10px !important;
-  max-width: 10px !important;
-  max-height: 10px !important;
-  border-radius: 50% !important;
-  border: 1.5px solid rgba(239, 68, 68, 1) !important;
-  animation: ringPulseRed 1.5s ease-out infinite !important;
-  pointer-events: none !important;
-  z-index: 19 !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
+  content: none !important;
+  display: none !important;
 }
 
-#custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
-#custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::after {
+#custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before {
   display: none !important;
 }
 
@@ -2508,7 +2476,7 @@ a#waFloat:hover,
   transform: scale(1.05) !important;
 }
 
-/* Pastikan parent header tidak overflow hidden */
+/* Header — overflow visible */
 #custApp header,
 #custApp header > div,
 #custApp header > div > div,
@@ -2516,7 +2484,7 @@ a#waFloat:hover,
   overflow: visible !important;
 }
 
-/* Badge notif — TANPA border hitam juga */
+/* Badge notif */
 #custApp #userNotifBadge:not(.hidden) {
   animation: none !important;
   border-radius: 999px !important;
@@ -2537,36 +2505,23 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 3. WA — Ring buyar */
+/* 3. WA — Ring box-shadow */
 /* ============================================ */
 #waFloat,
 a#waFloat,
 .wa-float {
   position: fixed !important;
   background: #25D366 !important;
-  animation: none !important;
-  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4) !important;
   filter: none !important;
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
   overflow: visible !important;
   z-index: 50 !important;
-  isolation: auto !important;
+  animation: ringPulseWA 1.8s ease-out infinite !important;
 }
 
 #waFloat::before,
 a#waFloat::before,
-.wa-float::before {
-  content: '' !important;
-  display: block !important;
-  position: absolute !important;
-  inset: -1px !important;
-  border-radius: 50% !important;
-  border: 2px solid rgba(37, 211, 102, 1) !important;
-  animation: ringPulseWA 1.5s ease-out infinite !important;
-  pointer-events: none !important;
-  z-index: 51 !important;
-}
-
+.wa-float::before,
 #waFloat::after,
 a#waFloat::after,
 .wa-float::after {
