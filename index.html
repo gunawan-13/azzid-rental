@@ -2320,25 +2320,51 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="SAMA_PERSIS">
+</style><style id="FIX_BELL_ALIGN">
 /* ============================================ */
-/* ANIMASI SAMA PERSIS — 3 DOT */
+/* KEYFRAMES — SAMA untuk semua */
 /* ============================================ */
-@keyframes ringPulseUnified {
+@keyframes ringPulseGreen {
   0% {
     opacity: 1;
     transform: scale(1);
-    border-color: currentColor;
+    border-color: rgba(16, 185, 129, 0.9);
   }
   100% {
     opacity: 0;
     transform: scale(2.5);
-    border-color: transparent;
+    border-color: rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes ringPulseRed {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    border-color: rgba(239, 68, 68, 0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.5);
+    border-color: rgba(239, 68, 68, 0);
+  }
+}
+
+@keyframes ringPulseWA {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    border-color: rgba(37, 211, 102, 0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+    border-color: rgba(37, 211, 102, 0);
   }
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau (ACUAN) */
+/* 1. REAL-TIME — Dot hijau SEJAJAR */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2354,16 +2380,17 @@ a#waFloat:hover,
   line-height: 1 !important;
 }
 
+/* Dot hijau — position absolute di tengah untuk align sempurna */
 #custApp .badge .dot-live,
 #custApp .badge i,
 #custApp .dot-live {
   display: inline-block !important;
-  width: 6px !important;
-  height: 6px !important;
-  min-width: 6px !important;
-  min-height: 6px !important;
-  max-width: 6px !important;
-  max-height: 6px !important;
+  width: 8px !important;
+  height: 8px !important;
+  min-width: 8px !important;
+  min-height: 8px !important;
+  max-width: 8px !important;
+  max-height: 8px !important;
   background: #10b981 !important;
   border-radius: 50% !important;
   position: relative !important;
@@ -2371,9 +2398,16 @@ a#waFloat:hover,
   box-shadow: none !important;
   filter: none !important;
   animation: none !important;
-  transform: translateY(-2px) !important;
+  
+  /* SEJAJAR TENGAH — pakai align-self center */
+  align-self: center !important;
+  margin: 0 !important;
+  transform: translateY(0) !important;
+  vertical-align: middle !important;
+  top: 0 !important;
 }
 
+/* Ring samping dot — SAMA */
 #custApp .badge .dot-live::after,
 #custApp .badge i::after,
 #custApp .dot-live::after {
@@ -2381,8 +2415,8 @@ a#waFloat:hover,
   position: absolute !important;
   inset: 0 !important;
   border-radius: 50% !important;
-  border: 1px solid rgba(16, 185, 129, 0.8) !important;
-  animation: ringPulseUnified 1.5s ease-out infinite !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.9) !important;
+  animation: ringPulseGreen 1.5s ease-out infinite !important;
   pointer-events: none !important;
 }
 
@@ -2404,10 +2438,12 @@ a#waFloat:hover,
   text-transform: uppercase !important;
   text-shadow: none !important;
   line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah SAMA PERSIS */
+/* 2. LONCENG — Dot merah + ring SAMA REAL-TIME */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn,
@@ -2421,7 +2457,7 @@ a#waFloat:hover,
   overflow: visible !important;
 }
 
-/* Dot merah — 8px + posisi samakan */
+/* Dot merah */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
@@ -2445,7 +2481,7 @@ a#waFloat:hover,
   opacity: 1 !important;
 }
 
-/* Ring lonceng — SAMA PERSIS dengan realtime */
+/* Ring lonceng — SAMA PERSIS */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
@@ -2456,8 +2492,8 @@ a#waFloat:hover,
   width: 8px !important;
   height: 8px !important;
   border-radius: 50% !important;
-  border: 1px solid rgba(239, 68, 68, 0.8) !important;
-  animation: ringPulseUnified 1.5s ease-out infinite !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.9) !important;
+  animation: ringPulseRed 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: 19 !important;
   visibility: visible !important;
@@ -2493,7 +2529,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 3. WA FLOAT — Ring SAMA PERSIS */
+/* 3. WA FLOAT — ring SAMA */
 /* ============================================ */
 #waFloat,
 a#waFloat,
@@ -2506,9 +2542,9 @@ a#waFloat,
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
   overflow: visible !important;
   z-index: 50 !important;
+  isolation: isolate !important;
 }
 
-/* WA ring — SAMA PERSIS dengan realtime */
 #waFloat::before,
 a#waFloat::before,
 .wa-float::before {
@@ -2517,8 +2553,8 @@ a#waFloat::before,
   position: absolute !important;
   inset: 0 !important;
   border-radius: 50% !important;
-  border: 2px solid rgba(37, 211, 102, 0.8) !important;
-  animation: ringPulseUnifiedWA 1.5s ease-out infinite !important;
+  border: 2px solid rgba(37, 211, 102, 0.9) !important;
+  animation: ringPulseWA 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: -1 !important;
   visibility: visible !important;
@@ -2529,19 +2565,6 @@ a#waFloat::after,
 .wa-float::after {
   content: none !important;
   display: none !important;
-}
-
-@keyframes ringPulseUnifiedWA {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-    border-color: rgba(37, 211, 102, 0.8);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.5);
-    border-color: rgba(37, 211, 102, 0);
-  }
 }
 
 #waFloat:hover,
@@ -2556,13 +2579,6 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
   filter: none !important;
-}
-
-/* Isolation untuk ring WA keluar */
-#waFloat,
-a#waFloat,
-.wa-float {
-  isolation: isolate !important;
 }
 </style></body>
 </html>
