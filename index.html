@@ -1643,5 +1643,89 @@ body:not([data-home]) #custApp section:first-child * {
 #custApp .dot-live {
   animation: pulseDotQB 2.5s ease-in-out infinite !important;
 }
+</style><style id="HAPUS_GARIS_GAMBAR">
+/* ============================================ */
+/* HAPUS GARIS CAHAYA di batas gambar mobil */
+/* ============================================ */
+
+/* Card mobil — hapus semua border */
+.veh-card,
+.veh-card *,
+.veh-card > div,
+.veh-card > div > *,
+.veh-card img {
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
+}
+
+/* Container gambar — hapus border + shadow */
+.veh-card > div:first-child,
+.veh-card > div:first-child:hover {
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Spek area (di bawah gambar) — hapus border-top */
+.veh-card > div:not(:first-child),
+.veh-card > div:not(:first-child):hover {
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+/* Gambar — hapus filter/shadow */
+.veh-card img,
+.veh-card > div:first-child img,
+.veh-card > div:first-child img:hover {
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  outline: none !important;
+}
+
+/* Gradient overlay di gambar — hapus */
+.veh-card > div:first-child > div[class*="gradient"],
+.veh-card > div:first-child > div[class*="absolute"] {
+  background: none !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Pseudo-element — hapus */
+.veh-card *::before,
+.veh-card *::after,
+.veh-card > div:first-child::before,
+.veh-card > div:first-child::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Card — pastikan overflow hidden */
+.veh-card {
+  overflow: hidden !important;
+  border-radius: 12px !important;
+}
+
+/* Hover — no border */
+.veh-card:hover,
+.veh-card:hover > div,
+.veh-card:hover * {
+  border: none !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+.veh-card:hover > div:first-child {
+  box-shadow: none !important;
+}
 </style></body>
 </html>
