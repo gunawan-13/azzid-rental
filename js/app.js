@@ -4791,3 +4791,38 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   setTimeout(fix, 1500);
   console.log('🔥 QB_TOMBOL_HOVER aktif');
 })();
+
+
+// ============================================
+// === ADD_RING_ATTR — tambah data-ring untuk animasi
+// ============================================
+(function() {
+  function addAttr() {
+    // Dot REAL-TIME
+    document.querySelectorAll('.dot-live, .badge i[class*="bg-emerald"]').forEach(function(el) {
+      el.setAttribute('data-ring', 'dot');
+    });
+    
+    // Bell
+    var bell = document.getElementById('userNotifBtn');
+    if (bell) bell.setAttribute('data-ring', 'bell');
+    
+    // WA
+    var wa = document.getElementById('waFloat');
+    if (wa) wa.setAttribute('data-ring', 'wa');
+    
+    console.log('🔥 ADD_RING_ATTR: data-ring ditambahkan');
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', addAttr);
+  } else {
+    addAttr();
+  }
+  setTimeout(addAttr, 500);
+  setTimeout(addAttr, 1500);
+  setTimeout(addAttr, 3000);
+  setInterval(addAttr, 2000);
+  
+  console.log('🔥 ADD_RING_ATTR aktif');
+})();
