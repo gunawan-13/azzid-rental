@@ -1526,53 +1526,58 @@ body:not([data-home]) #custApp section:first-child,
 body:not([data-home]) #custApp section:first-child * {
   animation: none !important;
 }
-</style><style id="QB_UP_SMOOTH">
+</style><style id="QB_NUCLEAR">
 /* ============================================ */
-/* QB — ANIMASI UP SMOOTH (tanpa jedag-jedug) */
+/* QB NUCLEAR — paksa smooth, no compromise */
 /* ============================================ */
 
-/* Card QB — transition super halus */
+/* HAPUS backdrop-filter + filter DI SEMUA ELEMEN */
+#custApp,
+#custApp *,
+#custApp *::before,
+#custApp *::after,
+body,
+body * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Card QB — animasi transform only */
 #custApp section:first-child .card,
 #custApp .card:has(.dot-live),
 #custApp .card:has(input[type="date"]) {
-  /* Transisi HALUS — 700ms ease-out */
-  transition: 
-    transform 700ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 700ms cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 500ms ease !important;
+  /* Cuma transform */
+  transition: transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  transition-property: transform !important;
+  transition-duration: 500ms !important;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  transition-delay: 0ms !important;
   
-  /* GPU Layer */
-  will-change: transform, box-shadow !important;
-  transform: translate3d(0, 0, 0) !important;
-  -webkit-transform: translate3d(0, 0, 0) !important;
+  /* GPU */
+  will-change: transform !important;
+  transform: translateZ(0) !important;
+  -webkit-transform: translateZ(0) !important;
   backface-visibility: hidden !important;
   -webkit-backface-visibility: hidden !important;
-  transform-origin: center center !important;
-  
-  /* HAPUS backdrop-filter — biar tidak berat */
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  perspective: 1000px !important;
+  transform-style: preserve-3d !important;
   
   /* Background solid */
   background: #18181b !important;
-  
-  /* Matikan semua transition dari parent */
-  transition-delay: 0ms !important;
 }
 
-/* Hover — UP -8px HALUS */
+/* Hover — up 8px, no scale */
 #custApp section:first-child .card:hover,
 #custApp .card:has(.dot-live):hover,
 #custApp .card:has(input[type="date"]):hover {
   transform: translate3d(0, -8px, 0) !important;
   -webkit-transform: translate3d(0, -8px, 0) !important;
-  box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(220, 38, 38, 0.25) !important;
-  border-color: rgba(220, 38, 38, 0.35) !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* === MATIKAN semua transition di child QB === */
+/* MATIKAN transition di child QB */
 #custApp section:first-child .card > *,
 #custApp section:first-child .card > * > *,
 #custApp section:first-child .card div:not(.dot-live),
@@ -1580,100 +1585,64 @@ body:not([data-home]) #custApp section:first-child * {
 #custApp section:first-child .card h3,
 #custApp section:first-child .card p,
 #custApp section:first-child .card span:not(.dot-live),
-#custApp section:first-child .card svg {
+#custApp section:first-child .card svg,
+#custApp section:first-child .card img {
   transition: none !important;
+  transition-property: none !important;
   transform: none !important;
-  backdrop-filter: none !important;
   will-change: auto !important;
-  filter: none !important;
 }
 
-/* === KECUALI input/select — smooth sendiri === */
+/* Input/select/tombol — smooth sendiri, TRANSFORM ONLY */
 #custApp section:first-child .card input,
 #custApp section:first-child .card select {
-  transition: border-color 400ms ease, box-shadow 400ms ease !important;
-  will-change: auto !important;
-}
-
-#custApp section:first-child .card input:hover,
-#custApp section:first-child .card select:hover {
-  border-color: rgba(220, 38, 38, 0.4) !important;
+  transition: border-color 300ms ease !important;
 }
 
 #custApp section:first-child .card input:focus,
 #custApp section:first-child .card select:focus {
   border-color: rgba(220, 38, 38, 0.6) !important;
-  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12) !important;
-  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
 }
 
-/* === Tombol Booking — smooth sendiri === */
 #custApp section:first-child .card button,
-#custApp section:first-child .card a.btn,
-#custApp section:first-child .card .btn-m {
-  transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 500ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+#custApp section:first-child .card a.btn {
+  transition: transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1),
+              box-shadow 300ms ease !important;
   will-change: transform !important;
 }
 
 #custApp section:first-child .card button:hover,
-#custApp section:first-child .card a.btn:hover,
-#custApp section:first-child .card .btn-m:hover {
-  transform: translate3d(0, -2px, 0) !important;
-  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4) !important;
+#custApp section:first-child .card a.btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35) !important;
 }
 
-/* === MATIKAN transition-all dari Tailwind === */
-#custApp section:first-child .card,
-#custApp section:first-child .card * {
-  transition-property: transform, box-shadow, border-color, background !important;
-}
-
-/* === Dot live — tetap pulse === */
-@keyframes pulseDotSmooth {
-  0%, 100% {
-    opacity: 1;
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
-  }
-  50% {
-    opacity: 0.85;
-    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
-  }
+/* Dot live — tetap pulse */
+@keyframes pulseDotQB {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  50% { opacity: 0.85; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
 }
 
 #custApp .dot-live {
-  animation: pulseDotSmooth 2.5s ease-in-out infinite !important;
-  backdrop-filter: none !important;
-  transition: none !important;
+  animation: pulseDotQB 2.5s ease-in-out infinite !important;
 }
 
-/* === Card Lain — tetap smooth === */
-.veh-card {
-  transition: 
-    transform 700ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 700ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+/* Card Lain — samakan */
+.veh-card,
+.card:has(h3),
+.card:has(.flex.gap-1) {
+  transition: transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1) !important;
   will-change: transform !important;
-  transform: translate3d(0, 0, 0) !important;
+  transform: translateZ(0) !important;
   backface-visibility: hidden !important;
 }
 
-.veh-card:hover {
-  transform: translate3d(0, -8px, 0) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
-}
-
-.card:has(h3),
-.card:has(.flex.gap-1) {
-  transition: 
-    transform 700ms cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 700ms cubic-bezier(0.4, 0, 0.2, 1) !important;
-  will-change: transform !important;
-}
-
+.veh-card:hover,
 .card:has(h3):hover,
 .card:has(.flex.gap-1):hover {
   transform: translate3d(0, -8px, 0) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35) !important;
 }
 </style></body>
 </html>
