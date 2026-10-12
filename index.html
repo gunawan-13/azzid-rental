@@ -2320,9 +2320,9 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="BELL_BESAR_RING">
+</style><style id="BELL_RING_SAMA">
 /* ============================================ */
-/* KEYFRAMES — SAMA untuk semua */
+/* KEYFRAMES — SAMA untuk SEMUA dot */
 /* ============================================ */
 @keyframes ringPulseGreen {
   0% {
@@ -2364,7 +2364,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau */
+/* 1. REAL-TIME — Dot hijau (ACUAN) */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2388,8 +2388,6 @@ a#waFloat:hover,
   height: 8px !important;
   min-width: 8px !important;
   min-height: 8px !important;
-  max-width: 8px !important;
-  max-height: 8px !important;
   background: #10b981 !important;
   border-radius: 50% !important;
   position: relative !important;
@@ -2398,12 +2396,9 @@ a#waFloat:hover,
   filter: none !important;
   animation: none !important;
   align-self: center !important;
-  margin: 0 !important;
-  transform: translateY(0) !important;
-  vertical-align: middle !important;
-  top: 0 !important;
 }
 
+/* Ring hijau */
 #custApp .badge .dot-live::after,
 #custApp .badge i::after,
 #custApp .dot-live::after {
@@ -2432,18 +2427,14 @@ a#waFloat:hover,
   font-weight: 800 !important;
   letter-spacing: 0.1em !important;
   text-transform: uppercase !important;
-  text-shadow: none !important;
   line-height: 1 !important;
-  display: flex !important;
-  align-items: center !important;
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah LEBIH BESAR + ring SAMA */
+/* 2. LONCENG — Dot merah + RING BUYAR (SAMA) */
 /* ============================================ */
 #userNotifBtn,
-#custApp #userNotifBtn,
-#custApp header #userNotifBtn {
+#custApp #userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   border-radius: 8px !important;
@@ -2453,7 +2444,7 @@ a#waFloat:hover,
   overflow: visible !important;
 }
 
-/* Dot merah — BESAR 12px */
+/* Dot merah — 10px */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
@@ -2461,10 +2452,10 @@ a#waFloat:hover,
   position: absolute !important;
   top: 4px !important;
   right: 4px !important;
-  width: 12px !important;
-  height: 12px !important;
-  min-width: 12px !important;
-  min-height: 12px !important;
+  width: 10px !important;
+  height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
   background: #ef4444 !important;
   border: 2px solid #09090b !important;
   border-radius: 50% !important;
@@ -2473,11 +2464,9 @@ a#waFloat:hover,
   animation: none !important;
   pointer-events: none !important;
   z-index: 20 !important;
-  visibility: visible !important;
-  opacity: 1 !important;
 }
 
-/* Ring lonceng — SAMA PERSIS */
+/* Ring lonceng — BUYAR (SAMA REAL-TIME) */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
@@ -2485,14 +2474,13 @@ a#waFloat:hover,
   position: absolute !important;
   top: 4px !important;
   right: 4px !important;
-  width: 12px !important;
-  height: 12px !important;
+  width: 10px !important;
+  height: 10px !important;
   border-radius: 50% !important;
   border: 1.5px solid rgba(239, 68, 68, 0.9) !important;
   animation: ringPulseRed 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: 19 !important;
-  visibility: visible !important;
 }
 
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
@@ -2525,7 +2513,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 3. WA FLOAT — ring SAMA */
+/* 3. WA FLOAT — Ring sama */
 /* ============================================ */
 #waFloat,
 a#waFloat,
@@ -2553,7 +2541,6 @@ a#waFloat::before,
   animation: ringPulseWA 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: -1 !important;
-  visibility: visible !important;
 }
 
 #waFloat::after,
