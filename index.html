@@ -2320,15 +2320,15 @@ a#waFloat:hover,
   animation: none !important;
   transform: none !important;
 }
-</style><style id="BELL_RING_SAMA">
+</style><style id="RING_BUYAR_FIX">
 /* ============================================ */
-/* KEYFRAMES — SAMA untuk SEMUA dot */
+/* KEYFRAMES — RING BUYAR */
 /* ============================================ */
 @keyframes ringPulseGreen {
   0% {
     opacity: 1;
     transform: scale(1);
-    border-color: rgba(16, 185, 129, 0.9);
+    border-color: rgba(16, 185, 129, 1);
   }
   100% {
     opacity: 0;
@@ -2341,7 +2341,7 @@ a#waFloat:hover,
   0% {
     opacity: 1;
     transform: scale(1);
-    border-color: rgba(239, 68, 68, 0.9);
+    border-color: rgba(239, 68, 68, 1);
   }
   100% {
     opacity: 0;
@@ -2354,7 +2354,7 @@ a#waFloat:hover,
   0% {
     opacity: 1;
     transform: scale(1);
-    border-color: rgba(37, 211, 102, 0.9);
+    border-color: rgba(37, 211, 102, 1);
   }
   100% {
     opacity: 0;
@@ -2364,7 +2364,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau (ACUAN) */
+/* 1. REAL-TIME — Dot hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2378,6 +2378,7 @@ a#waFloat:hover,
   border: 1px solid rgba(16, 185, 129, 0.3) !important;
   color: #34d399 !important;
   line-height: 1 !important;
+  overflow: visible !important;
 }
 
 #custApp .badge .dot-live,
@@ -2396,19 +2397,22 @@ a#waFloat:hover,
   filter: none !important;
   animation: none !important;
   align-self: center !important;
+  overflow: visible !important;
+  /* TANPA border hitam */
+  border: none !important;
 }
 
-/* Ring hijau */
 #custApp .badge .dot-live::after,
 #custApp .badge i::after,
 #custApp .dot-live::after {
   content: '' !important;
   position: absolute !important;
-  inset: 0 !important;
+  inset: -1px !important;
   border-radius: 50% !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.9) !important;
+  border: 1.5px solid rgba(16, 185, 129, 1) !important;
   animation: ringPulseGreen 1.5s ease-out infinite !important;
   pointer-events: none !important;
+  z-index: 1 !important;
 }
 
 #custApp .badge .dot-live::before,
@@ -2431,7 +2435,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah + RING BUYAR (SAMA) */
+/* 2. LONCENG — Dot merah + ring buyar */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
@@ -2442,45 +2446,56 @@ a#waFloat:hover,
   box-shadow: none !important;
   transition: transform 0.3s ease, background 0.3s ease !important;
   overflow: visible !important;
+  clip-path: none !important;
 }
 
-/* Dot merah — 10px */
+/* Dot merah — TANPA border hitam */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: 4px !important;
-  right: 4px !important;
+  top: 6px !important;
+  right: 6px !important;
   width: 10px !important;
   height: 10px !important;
   min-width: 10px !important;
   min-height: 10px !important;
+  max-width: 10px !important;
+  max-height: 10px !important;
   background: #ef4444 !important;
-  border: 2px solid #09090b !important;
   border-radius: 50% !important;
+  /* TANPA border hitam — biar ring kelihatan */
+  border: none !important;
   box-shadow: none !important;
   filter: none !important;
   animation: none !important;
   pointer-events: none !important;
   z-index: 20 !important;
+  box-sizing: border-box !important;
 }
 
-/* Ring lonceng — BUYAR (SAMA REAL-TIME) */
+/* Ring lonceng — BUYAR */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: 4px !important;
-  right: 4px !important;
+  top: 6px !important;
+  right: 6px !important;
   width: 10px !important;
   height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
+  max-width: 10px !important;
+  max-height: 10px !important;
   border-radius: 50% !important;
-  border: 1.5px solid rgba(239, 68, 68, 0.9) !important;
+  border: 1.5px solid rgba(239, 68, 68, 1) !important;
   animation: ringPulseRed 1.5s ease-out infinite !important;
   pointer-events: none !important;
   z-index: 19 !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
 }
 
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
@@ -2493,6 +2508,15 @@ a#waFloat:hover,
   transform: scale(1.05) !important;
 }
 
+/* Pastikan parent header tidak overflow hidden */
+#custApp header,
+#custApp header > div,
+#custApp header > div > div,
+#custApp header .flex {
+  overflow: visible !important;
+}
+
+/* Badge notif — TANPA border hitam juga */
 #custApp #userNotifBadge:not(.hidden) {
   animation: none !important;
   border-radius: 999px !important;
@@ -2505,15 +2529,15 @@ a#waFloat:hover,
   font-weight: bold !important;
   background: #ef4444 !important;
   color: white !important;
-  border: 2px solid #09090b !important;
+  border: none !important;
   top: 2px !important;
   right: 2px !important;
-  z-index: 11 !important;
+  z-index: 21 !important;
   box-shadow: none !important;
 }
 
 /* ============================================ */
-/* 3. WA FLOAT — Ring sama */
+/* 3. WA — Ring buyar */
 /* ============================================ */
 #waFloat,
 a#waFloat,
@@ -2526,7 +2550,7 @@ a#waFloat,
   transition: transform 0.3s ease, box-shadow 0.3s ease !important;
   overflow: visible !important;
   z-index: 50 !important;
-  isolation: isolate !important;
+  isolation: auto !important;
 }
 
 #waFloat::before,
@@ -2535,12 +2559,12 @@ a#waFloat::before,
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  inset: 0 !important;
+  inset: -1px !important;
   border-radius: 50% !important;
-  border: 2px solid rgba(37, 211, 102, 0.9) !important;
+  border: 2px solid rgba(37, 211, 102, 1) !important;
   animation: ringPulseWA 1.5s ease-out infinite !important;
   pointer-events: none !important;
-  z-index: -1 !important;
+  z-index: 51 !important;
 }
 
 #waFloat::after,
