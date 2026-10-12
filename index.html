@@ -1485,5 +1485,63 @@ img {
 .veh-card:hover [class*="border"] {
   border-color: transparent !important;
 }
+</style><style id="CARD_NAMA_MOBIL">
+/* ============================================ */
+/* Nama mobil — kasih card/kolom warna */
+/* ============================================ */
+
+/* Container nama mobil — badge/pill dengan background */
+.veh-card > div:first-child > div:has(.font-display),
+.veh-card > div:first-child > div[class*="absolute"]:has(h3),
+.veh-card > div:first-child > div[class*="absolute"]:has(.font-display) {
+  display: inline-block !important;
+  padding: 8px 16px !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  bottom: 16px !important;
+  left: 16px !important;
+  right: auto !important;
+  top: auto !important;
+}
+
+/* Nama mobil — teks putih tebal */
+.veh-card > div:first-child > div:has(.font-display) h3,
+.veh-card > div:first-child > div:has(.font-display) .font-display,
+.veh-card > div:first-child > div:has(.font-display) > * {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* Kalau nama di luar container gambar — kasih background */
+.veh-card h3.font-display,
+.veh-card .font-display.text-white,
+.veh-card .font-bold:has(+ .text-muted) {
+  display: inline-block !important;
+  padding: 6px 14px !important;
+  background: rgba(220, 38, 38, 0.9) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Spesifik: nama mobil di bottom-left gambar */
+.veh-card > div:first-child > .absolute.bottom-3,
+.veh-card > div:first-child > .absolute.bottom-4,
+.veh-card > div:first-child > .absolute:last-child {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(6px) !important;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
 </style></body>
 </html>
