@@ -1171,67 +1171,59 @@ img {
   padding: 0 !important;
   margin: 0 !important;
 }
-</style><style id="PAKSA_FAQ_KIRI">
+</style><style id="FAQ_SAMA_SEMUA_HALAMAN">
 /* ============================================ */
-/* FAQ — PAKSA RATA KIRI — paling kuat */
+/* FAQ — sama di SEMUA halaman */
 /* ============================================ */
-#custApp .acc button,
-#custApp .acc button *,
-#custApp .acc button > span,
-#custApp .acc button > span:first-child,
-html body #custApp .acc button > span:first-child {
-  text-align: left !important;
-  margin-left: 0 !important;
+
+/* Section FAQ — pendek + center */
+#custApp section:has(.acc) {
+  max-width: 560px !important;
+  margin-left: auto !important;
   margin-right: auto !important;
-  padding-left: 0 !important;
-  justify-content: flex-start !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
 }
 
-#custApp .acc button {
+/* Container FAQ */
+#custApp section:has(.acc) > div:has(.acc),
+#custApp section:has(.acc) .space-y-3 {
   display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  width: 100% !important;
+  flex-direction: column !important;
+  gap: 8px !important;
 }
 
-#custApp .acc button > span:first-child {
-  display: block !important;
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-  width: 100% !important;
-  text-align: left !important;
+/* Item FAQ */
+#custApp .acc {
   margin: 0 !important;
   padding: 0 !important;
+  border-radius: 12px !important;
+  background: rgba(26, 26, 29, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  overflow: hidden !important;
 }
 
-#custApp .acc button > .acc-ic {
-  margin-left: auto !important;
-  margin-right: 0 !important;
-  flex-shrink: 0 !important;
-}
-</style><style id="FAQ_HALAMAN_LAIN">
-/* FAQ — berlaku SEMUA halaman */
-#custApp .acc button,
-#custApp section .acc button,
-#custApp section:has(.acc) button {
+/* Button FAQ */
+#custApp .acc button {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
   justify-content: space-between !important;
   width: 100% !important;
-  padding: 16px 20px !important;
+  min-height: 52px !important;
+  padding: 14px 20px !important;
   gap: 12px !important;
+  text-align: left !important;
   background: transparent !important;
   border: none !important;
   cursor: pointer !important;
-  text-align: left !important;
+  box-sizing: border-box !important;
 }
 
-#custApp .acc button > span:first-child,
-#custApp section .acc button > span:first-child,
-#custApp section:has(.acc) button > span:first-child {
-  display: inline-block !important;
-  flex: 1 1 auto !important;
+/* Span pertanyaan — rata kiri */
+#custApp .acc button > span:first-child {
+  display: block !important;
+  flex: 1 1 0% !important;
   min-width: 0 !important;
   width: auto !important;
   max-width: none !important;
@@ -1248,8 +1240,8 @@ html body #custApp .acc button > span:first-child {
   background: transparent !important;
 }
 
-#custApp .acc button > .acc-ic,
-#custApp section .acc button > .acc-ic {
+/* Icon + */
+#custApp .acc button > .acc-ic {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -1258,15 +1250,26 @@ html body #custApp .acc button > span:first-child {
   height: 24px !important;
   color: #f87171 !important;
   font-size: 20px !important;
+  line-height: 1 !important;
   padding: 0 !important;
   margin: 0 !important;
+  pointer-events: none !important;
 }
 
-#custApp .acc {
-  background: rgba(26, 26, 29, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  border-radius: 12px !important;
+/* Body FAQ */
+#custApp .acc-body {
+  max-height: 0 !important;
   overflow: hidden !important;
+  transition: max-height 0.3s ease !important;
+}
+
+#custApp .acc.open .acc-body {
+  max-height: 500px !important;
+  padding-bottom: 16px !important;
+}
+
+#custApp .acc.open .acc-ic {
+  transform: rotate(45deg) !important;
 }
 </style></body>
 </html>
