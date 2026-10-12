@@ -1526,123 +1526,6 @@ body:not([data-home]) #custApp section:first-child,
 body:not([data-home]) #custApp section:first-child * {
   animation: none !important;
 }
-</style><style id="QB_VERY_SMOOTH">
-/* ============================================ */
-/* QB — SUPER SMOOTH, terkontrol */
-/* ============================================ */
-
-/* HAPUS semua blur/filter */
-#custApp, #custApp *, body, body * {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-/* Card QB — animasi lambat + subtle */
-#custApp section:first-child .card,
-#custApp .card:has(.dot-live),
-#custApp .card:has(input[type="date"]) {
-  /* Animasi LAMBAT + terkontrol */
-  transition: 
-    transform 450ms cubic-bezier(0.4, 0, 0.6, 1),
-    box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1) !important;
-  transition-property: transform, box-shadow !important;
-  transition-duration: 450ms, 450ms !important;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.6, 1), cubic-bezier(0.4, 0, 0.6, 1) !important;
-  transition-delay: 0ms !important;
-  
-  /* GPU */
-  will-change: transform !important;
-  transform: translate3d(0, 0, 0) !important;
-  -webkit-transform: translate3d(0, 0, 0) !important;
-  backface-visibility: hidden !important;
-  -webkit-backface-visibility: hidden !important;
-  transform-origin: center center !important;
-  
-  /* Background */
-  background: #18181b !important;
-}
-
-/* Hover — naik HANYA 4px, subtle + smooth */
-#custApp section:first-child .card:hover,
-#custApp .card:has(.dot-live):hover,
-#custApp .card:has(input[type="date"]):hover {
-  transform: translate3d(0, -4px, 0) !important;
-  -webkit-transform: translate3d(0, -4px, 0) !important;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* PENTING: Saat hover child, card tetap hover (tidak hilang hover) */
-#custApp section:first-child .card:hover *,
-#custApp section:first-child .card * {
-  pointer-events: auto !important;
-}
-
-/* Child QB — no transition */
-#custApp section:first-child .card > *,
-#custApp section:first-child .card > * > *,
-#custApp section:first-child .card div:not(.dot-live),
-#custApp section:first-child .card label,
-#custApp section:first-child .card h3,
-#custApp section:first-child .card p,
-#custApp section:first-child .card span:not(.dot-live),
-#custApp section:first-child .card svg,
-#custApp section:first-child .card img,
-#custApp section:first-child .card input,
-#custApp section:first-child .card select {
-  transition: none !important;
-  transition-property: none !important;
-  will-change: auto !important;
-  transform: none !important;
-}
-
-/* Input/select — smooth sendiri */
-#custApp section:first-child .card input,
-#custApp section:first-child .card select {
-  transition: border-color 300ms ease !important;
-}
-
-/* Tombol Booking — smooth sendiri */
-#custApp section:first-child .card button,
-#custApp section:first-child .card a.btn {
-  transition: transform 300ms cubic-bezier(0.4, 0, 0.6, 1),
-              box-shadow 300ms ease !important;
-  will-change: transform !important;
-}
-
-#custApp section:first-child .card button:hover,
-#custApp section:first-child .card a.btn:hover {
-  transform: translate3d(0, -2px, 0) !important;
-  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35) !important;
-}
-
-/* Card lain — SAMA persis */
-.veh-card,
-.card:has(h3),
-.card:has(.flex.gap-1) {
-  transition: 
-    transform 450ms cubic-bezier(0.4, 0, 0.6, 1),
-    box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1) !important;
-  will-change: transform !important;
-  transform: translate3d(0, 0, 0) !important;
-  backface-visibility: hidden !important;
-  transform-origin: center center !important;
-}
-
-.veh-card:hover,
-.card:has(h3):hover,
-.card:has(.flex.gap-1):hover {
-  transform: translate3d(0, -4px, 0) !important;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Dot live */
-@keyframes pulseDotQB {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
-  50% { opacity: 0.85; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-}
-#custApp .dot-live {
-  animation: pulseDotQB 2.5s ease-in-out infinite !important;
-}
 </style><style id="HAPUS_GARIS_GAMBAR">
 /* ============================================ */
 /* HAPUS GARIS CAHAYA di batas gambar mobil */
@@ -1726,6 +1609,85 @@ body:not([data-home]) #custApp section:first-child * {
 
 .veh-card:hover > div:first-child {
   box-shadow: none !important;
+}
+</style><style id="QB_NO_UP">
+/* ============================================ */
+/* QB — NO HOVER UP, hanya tombol yang ada animasi */
+/* ============================================ */
+
+/* Card QB — matikan hover up */
+#custApp section:first-child .card,
+#custApp .card:has(.dot-live),
+#custApp .card:has(input[type="date"]) {
+  /* No transition, no transform */
+  transition: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Hover QB card — JANGAN transform */
+#custApp section:first-child .card:hover,
+#custApp .card:has(.dot-live):hover,
+#custApp .card:has(input[type="date"]):hover {
+  transform: none !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;  /* subtle shadow saja */
+  border-color: rgba(220, 38, 38, 0.2) !important;
+}
+
+/* ============================================ */
+/* TOMBOL BOOKING — tetap ada animasi up */
+/* ============================================ */
+#custApp section:first-child .card .btn-m,
+#custApp section:first-child .card button[class*="bg-maroon"],
+#custApp section:first-child .card a[class*="bg-maroon"],
+#custApp section:first-child .card button:last-of-type,
+#custApp section:first-child .card a:last-of-type {
+  transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 400ms ease !important;
+  will-change: transform !important;
+}
+
+#custApp section:first-child .card .btn-m:hover,
+#custApp section:first-child .card button[class*="bg-maroon"]:hover,
+#custApp section:first-child .card a[class*="bg-maroon"]:hover,
+#custApp section:first-child .card button:last-of-type:hover,
+#custApp section:first-child .card a:last-of-type:hover {
+  transform: translate3d(0, -3px, 0) !important;
+  box-shadow: 0 12px 24px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Input/select — tetap smooth */
+#custApp section:first-child .card input,
+#custApp section:first-child .card select {
+  transition: border-color 300ms ease, box-shadow 300ms ease !important;
+}
+
+#custApp section:first-child .card input:focus,
+#custApp section:first-child .card select:focus {
+  border-color: rgba(220, 38, 38, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12) !important;
+}
+
+/* Matikan transition-all dari child */
+#custApp section:first-child .card > *,
+#custApp section:first-child .card > * > * {
+  transition-delay: 0ms !important;
+}
+
+/* Card lain — tetap hover up */
+.veh-card,
+.card:has(h3),
+.card:has(.flex.gap-1) {
+  transition: transform 500ms cubic-bezier(0.4, 0, 0.6, 1),
+              box-shadow 500ms cubic-bezier(0.4, 0, 0.6, 1) !important;
+  will-change: transform !important;
+}
+
+.veh-card:hover,
+.card:has(h3):hover,
+.card:has(.flex.gap-1):hover {
+  transform: translate3d(0, -8px, 0) !important;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35) !important;
 }
 </style></body>
 </html>

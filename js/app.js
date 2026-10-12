@@ -4743,29 +4743,42 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 
 
 // ============================================
-// === QB_JS_SMOOTH — hover pakai JS (anti naik-turun)
+
+
+
+// ============================================
+// === QB_TOMBOL_HOVER — hanya tombol Booking yang hover
 // ============================================
 (function() {
   function fix() {
+    // Matikan hover pada card QB
     document.querySelectorAll('#custApp section:first-child .card').forEach(function(card) {
-      if (card.dataset.hoverFixed) return;
-      card.dataset.hoverFixed = '1';
+      card.style.setProperty('transition', 'none', 'important');
+      card.style.setProperty('transform', 'none', 'important');
       
-      var hoverTimer = null;
-      
-      card.addEventListener('mouseenter', function() {
-        if (hoverTimer) clearTimeout(hoverTimer);
-        card.style.setProperty('transform', 'translate3d(0, -4px, 0)', 'important');
-        card.style.setProperty('transition', 'transform 450ms cubic-bezier(0.4, 0, 0.6, 1)', 'important');
-      });
-      
-      card.addEventListener('mouseleave', function() {
-        hoverTimer = setTimeout(function() {
-          card.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
-        }, 100);
-      });
+      // Tombol Booking — beri hover
+      var btn = card.querySelector('button:last-of-type, a:last-of-type, .btn-m, button[class*="bg-maroon"]');
+      if (btn) {
+        btn.style.setProperty('transition', 'transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 400ms ease', 'important');
+        btn.style.setProperty('will-change', 'transform', 'important');
+        
+        if (!btn.dataset.hoverBound) {
+          btn.dataset.hoverBound = '1';
+          
+          btn.addEventListener('mouseenter', function() {
+            btn.style.setProperty('transform', 'translate3d(0, -3px, 0)', 'important');
+            btn.style.setProperty('box-shadow', '0 12px 24px rgba(220, 38, 38, 0.4)', 'important');
+          });
+          
+          btn.addEventListener('mouseleave', function() {
+            btn.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
+            btn.style.setProperty('box-shadow', 'none', 'important');
+          });
+        }
+      }
     });
-    console.log('🔥 QB_JS_SMOOTH: hover fix');
+    
+    console.log('🔥 QB_TOMBOL_HOVER: hanya tombol yang hover');
   }
   
   if (document.readyState === 'loading') {
@@ -4773,7 +4786,8 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   } else {
     fix();
   }
+  
   setTimeout(fix, 500);
   setTimeout(fix, 1500);
-  console.log('🔥 QB_JS_SMOOTH aktif');
+  console.log('🔥 QB_TOMBOL_HOVER aktif');
 })();
