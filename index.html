@@ -2695,5 +2695,38 @@ a#waFloat:hover,
 .wa-float:hover {
   transform: scale(1.15) !important;
 }
+</style><style id="AVAILABLE_KOTAK">
+/* ============================================ */
+/* BADGE AVAILABLE — KOTAK (bukan pill) */
+/* ============================================ */
+.badge:has(svg),
+.veh-card .badge:first-of-type,
+.veh-card > div:first-child .badge,
+[class*="badge"][class*="emerald"] {
+  border-radius: 6px !important;              /* ← KOTAK */
+  padding: 4px 10px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  line-height: 1 !important;
+}
+
+/* Paksa semua badge di card mobil jadi kotak */
+.veh-card .badge,
+.veh-card > div:first-child > .badge,
+.veh-card > div:first-child > span:first-child {
+  border-radius: 6px !important;
+}
+
+/* PREMIUM, CITY CAR, SUV, MPV — tetap pill? Atau kotak? */
+/* Kalau mau SEMUA kotak: */
+.veh-card > div:first-child > span:last-child,
+.veh-card > div:first-child > .badge:last-child {
+  border-radius: 6px !important;
+}
 </style></body>
 </html>
