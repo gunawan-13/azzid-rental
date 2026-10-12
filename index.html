@@ -2427,9 +2427,31 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="BELL_DOT_SAMA">
+</style><style id="BELL_RING_PAKSA">
 /* ============================================ */
-/* KEYFRAMES — SAMA untuk semua dot */
+/* OVERFLOW VISIBLE — FORCE semua parent bell */
+/* ============================================ */
+html,
+body,
+#custApp,
+#custApp header,
+#custApp header > div,
+#custApp header > div > div,
+#custApp header > div > div > div,
+#custApp header .flex,
+#custApp header .relative,
+#custApp #userNotifBtn,
+#custApp #userNotifBtn > div,
+#custApp #userNotifBtn > div > button,
+#userNotifBtn {
+  overflow: visible !important;
+  clip-path: none !important;
+  contain: none !important;
+  isolation: auto !important;
+}
+
+/* ============================================ */
+/* KEYFRAMES */
 /* ============================================ */
 @keyframes ringScaleGreen {
   0% {
@@ -2471,7 +2493,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau (ACUAN) */
+/* 1. REAL-TIME — Dot hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2549,10 +2571,11 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah BARU, SAMA PERSIS */
+/* 2. LONCENG — Dot merah + ring buyar */
 /* ============================================ */
 #custApp #userNotifBtn,
-#userNotifBtn {
+#userNotifBtn,
+#custApp button#userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   overflow: visible !important;
@@ -2562,7 +2585,7 @@ a#waFloat:hover,
   transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah — SAMA PERSIS dengan realtime */
+/* Dot merah */
 #custApp #userNotifBtn::before,
 #userNotifBtn::before {
   content: '' !important;
@@ -2582,13 +2605,14 @@ a#waFloat:hover,
   filter: none !important;
   box-shadow: none !important;
   pointer-events: none !important;
-  z-index: 20 !important;
+  z-index: 100 !important;
   box-sizing: border-box !important;
   animation: none !important;
-  transform-origin: center center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
-/* Ring merah — SAMA PERSIS */
+/* Ring merah — z-index lebih rendah, tapi kelihatan */
 #custApp #userNotifBtn::after,
 #userNotifBtn::after {
   content: '' !important;
@@ -2609,9 +2633,10 @@ a#waFloat:hover,
   box-sizing: border-box !important;
   background: transparent !important;
   transform-origin: center center !important;
+  z-index: 99 !important;
+  visibility: visible !important;
 }
 
-/* Kalau ada badge notif, sembunyikan dot */
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::after {
   display: none !important;
