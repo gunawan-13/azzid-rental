@@ -3298,7 +3298,7 @@ function saveSettings() {
 function openInvoice(id) {
   const b = BOOKINGS.find(x => x.id === id);
   const v = veh(b.veh) || { name: '—' };
-  $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0 auto;padding:32px">
+  $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
       <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 838-9035-4333 · azzidrentalmobil@gmail.com</div></div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
