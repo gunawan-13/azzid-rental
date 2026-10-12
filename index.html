@@ -1718,5 +1718,116 @@ body:not([data-home]) #custApp section:first-child,
 body:not([data-home]) #custApp section:first-child * {
   animation: none !important;
 }
+</style><style id="QB_SOFT">
+/* ============================================ */
+/* QUICK BOOKING — hover smooth */
+/* ============================================ */
+
+/* Card Quick Booking — transition smooth */
+#custApp section:first-child .card,
+#custApp .card:has(.badge:has(.dot-live)) {
+  transition: 
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.6s ease,
+    border-color 0.4s ease,
+    background 0.4s ease !important;
+  will-change: transform !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+/* Hover — naik halus + glow */
+#custApp section:first-child .card:hover,
+#custApp .card:has(.badge:has(.dot-live)):hover {
+  transform: translateY(-8px) scale(1.01) !important;
+  box-shadow: 
+    0 24px 48px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(220, 38, 38, 0.2),
+    0 12px 32px rgba(220, 38, 38, 0.12) !important;
+  border-color: rgba(220, 38, 38, 0.3) !important;
+}
+
+/* Input di dalam Quick Booking — hover soft */
+#custApp .card select,
+#custApp .card input,
+#custApp .card .inp {
+  transition: 
+    border-color 0.4s ease,
+    background 0.4s ease,
+    box-shadow 0.4s ease !important;
+}
+
+#custApp .card select:hover,
+#custApp .card input:hover,
+#custApp .card .inp:hover {
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08) !important;
+}
+
+#custApp .card select:focus,
+#custApp .card input:focus,
+#custApp .card .inp:focus {
+  border-color: rgba(220, 38, 38, 0.7) !important;
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15) !important;
+  outline: none !important;
+}
+
+/* Tombol Booking — hover halus */
+#custApp .card .btn-m,
+#custApp .card button[class*="bg-maroon"],
+#custApp .card a[class*="bg-maroon"] {
+  transition: 
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.4s ease,
+    background 0.3s ease !important;
+}
+
+#custApp .card .btn-m:hover,
+#custApp .card button[class*="bg-maroon"]:hover,
+#custApp .card a[class*="bg-maroon"]:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Badge REAL-TIME — pulse halus */
+#custApp .badge:has(.dot-live) {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+#custApp .badge:has(.dot-live):hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Dot live — pulse animation */
+@keyframes pulseDot {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+}
+
+#custApp .dot-live {
+  animation: pulseDot 2s ease-in-out infinite !important;
+}
+
+/* Icon di header QB — subtle rotate */
+#custApp .card .w-10,
+#custApp .card .w-11,
+#custApp .card .w-12 {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+#custApp .card:hover .w-10,
+#custApp .card:hover .w-11,
+#custApp .card:hover .w-12 {
+  transform: scale(1.1) rotate(-5deg) !important;
+}
 </style></body>
 </html>
