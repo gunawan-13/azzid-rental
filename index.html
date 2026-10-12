@@ -1171,12 +1171,12 @@ img {
   padding: 0 !important;
   margin: 0 !important;
 }
-</style><style id="FAQ_SAMA_SEMUA_HALAMAN">
+</style><style id="FAQ_CENTER_VERTIKAL">
 /* ============================================ */
-/* FAQ — sama di SEMUA halaman */
+/* FAQ — text center vertikal + rata kiri */
 /* ============================================ */
 
-/* Section FAQ — pendek + center */
+/* Section FAQ */
 #custApp section:has(.acc) {
   max-width: 560px !important;
   margin-left: auto !important;
@@ -1203,28 +1203,38 @@ img {
   overflow: hidden !important;
 }
 
-/* Button FAQ */
+/* ============================================ */
+/* BUTTON — tinggi fixed + flex center vertikal */
+/* ============================================ */
 #custApp .acc button {
   display: flex !important;
   flex-direction: row !important;
-  align-items: center !important;
+  align-items: center !important;        /* ← vertikal center */
   justify-content: space-between !important;
   width: 100% !important;
-  min-height: 52px !important;
-  padding: 14px 20px !important;
+  height: 64px !important;               /* ← tinggi fixed */
+  min-height: 64px !important;
+  max-height: 64px !important;
+  padding: 0 20px !important;            /* ← padding vertikal 0 */
   gap: 12px !important;
   text-align: left !important;
   background: transparent !important;
   border: none !important;
   cursor: pointer !important;
   box-sizing: border-box !important;
+  line-height: 1 !important;
 }
 
-/* Span pertanyaan — rata kiri */
+/* ============================================ */
+/* SPAN pertanyaan — center vertikal + rata kiri */
+/* ============================================ */
 #custApp .acc button > span:first-child {
-  display: block !important;
+  display: flex !important;
+  align-items: center !important;        /* ← vertikal center */
+  justify-content: flex-start !important; /* ← horizontal kiri */
   flex: 1 1 0% !important;
   min-width: 0 !important;
+  height: 100% !important;                /* ← penuh tinggi button */
   width: auto !important;
   max-width: none !important;
   text-align: left !important;
@@ -1240,7 +1250,9 @@ img {
   background: transparent !important;
 }
 
-/* Icon + */
+/* ============================================ */
+/* ICON + — center vertikal */
+/* ============================================ */
 #custApp .acc button > .acc-ic {
   display: inline-flex !important;
   align-items: center !important;
@@ -1253,6 +1265,7 @@ img {
   line-height: 1 !important;
   padding: 0 !important;
   margin: 0 !important;
+  align-self: center !important;
   pointer-events: none !important;
 }
 
