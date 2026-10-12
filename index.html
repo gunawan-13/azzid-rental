@@ -2427,26 +2427,14 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="PAKSA_RING_FINAL">
+</style><style id="RING_MERATA">
 /* ============================================ */
-/* NUCLEAR — PAKSA semua visible */
+/* NUCLEAR — overflow visible semua */
 /* ============================================ */
 * {
   overflow: visible !important;
   clip-path: none !important;
   contain: none !important;
-}
-
-/* Bell — paksa overflow + z-index */
-#userNotifBtn,
-#custApp #userNotifBtn,
-#custApp button#userNotifBtn {
-  position: relative !important;
-  overflow: visible !important;
-  z-index: 100 !important;
-  isolation: auto !important;
-  contain: none !important;
-  clip-path: none !important;
 }
 
 /* ============================================ */
@@ -2475,7 +2463,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* REAL-TIME — Dot hijau + ring */
+/* REAL-TIME — Dot hijau (tetap) */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2552,7 +2540,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* LONCENG — PAKSA ring muncul */
+/* LONCENG — Dot di TENGAH biar ring merata */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
@@ -2562,14 +2550,15 @@ a#waFloat:hover,
   transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah */
+/* Dot merah — DI TENGAH button (biar ring merata) */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: 4px !important;
-  right: 4px !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   width: 8px !important;
   height: 8px !important;
   min-width: 8px !important;
@@ -2585,17 +2574,18 @@ a#waFloat:hover,
   z-index: 1000 !important;
   box-sizing: border-box !important;
   animation: none !important;
-  transform: none !important;
 }
 
-/* Ring merah — PAKSA pakai FIXED position untuk bypass overflow */
+/* Ring merah — DI TENGAH, menyebar merata */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: 4px !important;
-  right: 4px !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin-top: -4px !important;
+  margin-left: -4px !important;
   width: 8px !important;
   height: 8px !important;
   min-width: 8px !important;
