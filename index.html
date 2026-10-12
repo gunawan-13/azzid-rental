@@ -1526,58 +1526,58 @@ body:not([data-home]) #custApp section:first-child,
 body:not([data-home]) #custApp section:first-child * {
   animation: none !important;
 }
-</style><style id="QB_NUCLEAR">
+</style><style id="QB_VERY_SMOOTH">
 /* ============================================ */
-/* QB NUCLEAR — paksa smooth, no compromise */
+/* QB — SUPER SMOOTH, terkontrol */
 /* ============================================ */
 
-/* HAPUS backdrop-filter + filter DI SEMUA ELEMEN */
-#custApp,
-#custApp *,
-#custApp *::before,
-#custApp *::after,
-body,
-body * {
+/* HAPUS semua blur/filter */
+#custApp, #custApp *, body, body * {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  filter: none !important;
-  mix-blend-mode: normal !important;
 }
 
-/* Card QB — animasi transform only */
+/* Card QB — animasi lambat + subtle */
 #custApp section:first-child .card,
 #custApp .card:has(.dot-live),
 #custApp .card:has(input[type="date"]) {
-  /* Cuma transform */
-  transition: transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1) !important;
-  transition-property: transform !important;
-  transition-duration: 500ms !important;
-  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  /* Animasi LAMBAT + terkontrol */
+  transition: 
+    transform 450ms cubic-bezier(0.4, 0, 0.6, 1),
+    box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1) !important;
+  transition-property: transform, box-shadow !important;
+  transition-duration: 450ms, 450ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.6, 1), cubic-bezier(0.4, 0, 0.6, 1) !important;
   transition-delay: 0ms !important;
   
   /* GPU */
   will-change: transform !important;
-  transform: translateZ(0) !important;
-  -webkit-transform: translateZ(0) !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
   backface-visibility: hidden !important;
   -webkit-backface-visibility: hidden !important;
-  perspective: 1000px !important;
-  transform-style: preserve-3d !important;
+  transform-origin: center center !important;
   
-  /* Background solid */
+  /* Background */
   background: #18181b !important;
 }
 
-/* Hover — up 8px, no scale */
+/* Hover — naik HANYA 4px, subtle + smooth */
 #custApp section:first-child .card:hover,
 #custApp .card:has(.dot-live):hover,
 #custApp .card:has(input[type="date"]):hover {
-  transform: translate3d(0, -8px, 0) !important;
-  -webkit-transform: translate3d(0, -8px, 0) !important;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35) !important;
+  transform: translate3d(0, -4px, 0) !important;
+  -webkit-transform: translate3d(0, -4px, 0) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* MATIKAN transition di child QB */
+/* PENTING: Saat hover child, card tetap hover (tidak hilang hover) */
+#custApp section:first-child .card:hover *,
+#custApp section:first-child .card * {
+  pointer-events: auto !important;
+}
+
+/* Child QB — no transition */
 #custApp section:first-child .card > *,
 #custApp section:first-child .card > * > *,
 #custApp section:first-child .card div:not(.dot-live),
@@ -1586,63 +1586,62 @@ body * {
 #custApp section:first-child .card p,
 #custApp section:first-child .card span:not(.dot-live),
 #custApp section:first-child .card svg,
-#custApp section:first-child .card img {
+#custApp section:first-child .card img,
+#custApp section:first-child .card input,
+#custApp section:first-child .card select {
   transition: none !important;
   transition-property: none !important;
-  transform: none !important;
   will-change: auto !important;
+  transform: none !important;
 }
 
-/* Input/select/tombol — smooth sendiri, TRANSFORM ONLY */
+/* Input/select — smooth sendiri */
 #custApp section:first-child .card input,
 #custApp section:first-child .card select {
   transition: border-color 300ms ease !important;
 }
 
-#custApp section:first-child .card input:focus,
-#custApp section:first-child .card select:focus {
-  border-color: rgba(220, 38, 38, 0.6) !important;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
-}
-
+/* Tombol Booking — smooth sendiri */
 #custApp section:first-child .card button,
 #custApp section:first-child .card a.btn {
-  transition: transform 300ms cubic-bezier(0.25, 0.1, 0.25, 1),
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.6, 1),
               box-shadow 300ms ease !important;
   will-change: transform !important;
 }
 
 #custApp section:first-child .card button:hover,
 #custApp section:first-child .card a.btn:hover {
-  transform: translateY(-2px) !important;
+  transform: translate3d(0, -2px, 0) !important;
   box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35) !important;
 }
 
-/* Dot live — tetap pulse */
-@keyframes pulseDotQB {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
-  50% { opacity: 0.85; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-}
-
-#custApp .dot-live {
-  animation: pulseDotQB 2.5s ease-in-out infinite !important;
-}
-
-/* Card Lain — samakan */
+/* Card lain — SAMA persis */
 .veh-card,
 .card:has(h3),
 .card:has(.flex.gap-1) {
-  transition: transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+  transition: 
+    transform 450ms cubic-bezier(0.4, 0, 0.6, 1),
+    box-shadow 450ms cubic-bezier(0.4, 0, 0.6, 1) !important;
   will-change: transform !important;
-  transform: translateZ(0) !important;
+  transform: translate3d(0, 0, 0) !important;
   backface-visibility: hidden !important;
+  transform-origin: center center !important;
 }
 
 .veh-card:hover,
 .card:has(h3):hover,
 .card:has(.flex.gap-1):hover {
-  transform: translate3d(0, -8px, 0) !important;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35) !important;
+  transform: translate3d(0, -4px, 0) !important;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Dot live */
+@keyframes pulseDotQB {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  50% { opacity: 0.85; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+}
+#custApp .dot-live {
+  animation: pulseDotQB 2.5s ease-in-out infinite !important;
 }
 </style></body>
 </html>
