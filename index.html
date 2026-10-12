@@ -2427,15 +2427,16 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="BELL_RING_DEKAT">
+</style><style id="HIDUPKAN_DOT">
 /* ============================================ */
-/* NUCLEAR — paksa visible di SEMUA parent bell */
+/* OVERFLOW VISIBLE — paksa di semua parent */
 /* ============================================ */
 html, body,
 #custApp,
-#custApp *,
 #custApp header,
 #custApp header *,
+#custApp .badge,
+#custApp .badge *,
 #custApp #userNotifBtn,
 #custApp #userNotifBtn * {
   overflow: visible !important;
@@ -2444,37 +2445,43 @@ html, body,
 }
 
 /* ============================================ */
-/* KEYFRAMES — RING DEKAT (spread kecil) */
+/* KEYFRAMES */
 /* ============================================ */
+
+/* Dot hijau — spread dekat */
 @keyframes ringDekatGreen {
   0% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.9);
   }
   100% {
     box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
   }
 }
 
+/* Dot merah — spread dekat */
 @keyframes ringDekatRed {
   0% {
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9);
   }
   100% {
     box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
   }
 }
 
-@keyframes ringDekatWA {
+/* WA — ring menyebar buyar soft */
+@keyframes waRingBuyar {
   0% {
     box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    opacity: 1;
   }
   100% {
-    box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+    box-shadow: 0 0 0 20px rgba(37, 211, 102, 0);
+    opacity: 1;
   }
 }
 
 /* ============================================ */
-/* 1. REAL-TIME — Dot hijau ring dekat */
+/* 1. REAL-TIME — Dot hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2535,19 +2542,18 @@ html, body,
 }
 
 /* ============================================ */
-/* 2. LONCENG — Dot merah ring dekat */
+/* 2. LONCENG — Dot merah */
 /* ============================================ */
 #custApp #userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   overflow: visible !important;
   clip-path: none !important;
-  isolation: auto !important;
   contain: none !important;
   transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah ring dekat */
+/* Dot merah */
 #custApp #userNotifBtn::before {
   content: '' !important;
   display: block !important;
@@ -2606,7 +2612,7 @@ html, body,
 }
 
 /* ============================================ */
-/* 3. WA — Ring dekat */
+/* 3. WA — Ring menyebar buyar soft */
 /* ============================================ */
 #waFloat,
 a#waFloat,
@@ -2616,7 +2622,7 @@ a#waFloat,
   filter: none !important;
   overflow: visible !important;
   z-index: 50 !important;
-  animation: ringDekatWA 1.8s ease-out infinite !important;
+  animation: waRingBuyar 2s ease-out infinite !important;
   will-change: box-shadow !important;
   transition: transform 0.3s ease !important;
 }
