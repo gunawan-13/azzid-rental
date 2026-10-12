@@ -4554,3 +4554,90 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   console.log('🔥 AKSI_KILAT_FINAL aktif');
 })();
+
+
+// ============================================
+// === CARD_4LANGKAH_JS — bungkus 4 langkah dengan card
+// ============================================
+(function() {
+  function bungkus() {
+    // Cari h2 "4 Langkah"
+    var h2 = null;
+    document.querySelectorAll('h2').forEach(function(el) {
+      if (el.textContent.indexOf('4 Langkah') > -1) h2 = el;
+    });
+    if (!h2) return;
+    
+    var section = h2.closest('section');
+    if (!section) return;
+    
+    // Kalau sudah diproses, skip
+    if (section.dataset.carded4 === '1') return;
+    section.dataset.carded4 = '1';
+    
+    // Cari grid
+    var grid = section.querySelector('.grid');
+    if (!grid) return;
+    
+    console.log('🔥 CARD_4LANGKAH_JS: bungkus 4 langkah');
+    
+    // Set grid
+    grid.style.setProperty('display', 'grid', 'important');
+    grid.style.setProperty('grid-template-columns', 'repeat(4, 1fr)', 'important');
+    grid.style.setProperty('gap', '20px', 'important');
+    
+    // Set tiap child jadi card
+    Array.from(grid.children).forEach(function(child) {
+      child.style.setProperty('padding', '28px 24px', 'important');
+      child.style.setProperty('background', 'rgba(26, 26, 29, 0.6)', 'important');
+      child.style.setProperty('border', '1px solid rgba(255, 255, 255, 0.06)', 'important');
+      child.style.setProperty('border-radius', '16px', 'important');
+      child.style.setProperty('transition', 'transform 0.4s ease, border-color 0.3s ease, box-shadow 0.4s ease', 'important');
+      child.style.setProperty('height', '100%', 'important');
+      child.style.setProperty('display', 'flex', 'important');
+      child.style.setProperty('flex-direction', 'column', 'important');
+      child.style.setProperty('gap', '12px', 'important');
+      child.style.setProperty('text-align', 'left', 'important');
+      
+      // Hover
+      child.addEventListener('mouseenter', function() {
+        child.style.setProperty('transform', 'translateY(-8px)', 'important');
+        child.style.setProperty('border-color', 'rgba(220, 38, 38, 0.4)', 'important');
+        child.style.setProperty('box-shadow', '0 12px 30px rgba(220, 38, 38, 0.15)', 'important');
+      });
+      child.addEventListener('mouseleave', function() {
+        child.style.setProperty('transform', 'translateY(0)', 'important');
+        child.style.setProperty('border-color', 'rgba(255, 255, 255, 0.06)', 'important');
+        child.style.setProperty('box-shadow', 'none', 'important');
+      });
+    });
+    
+    // Responsive
+    function handleResize() {
+      var w = window.innerWidth;
+      if (w <= 640) {
+        grid.style.setProperty('grid-template-columns', '1fr', 'important');
+      } else if (w <= 1024) {
+        grid.style.setProperty('grid-template-columns', 'repeat(2, 1fr)', 'important');
+      } else {
+        grid.style.setProperty('grid-template-columns', 'repeat(4, 1fr)', 'important');
+      }
+    }
+    handleResize();
+    window.addEventListener('resize', handleResize);
+  }
+  
+  function run() {
+    bungkus();
+    setTimeout(bungkus, 300);
+    setTimeout(bungkus, 1000);
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+  
+  console.log('🔥 CARD_4LANGKAH_JS aktif');
+})();
