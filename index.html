@@ -1500,5 +1500,98 @@ img {
   justify-content: space-between !important;
   align-items: center !important;
 }
+</style><style id="CARD_4LANGKAH">
+/* ============================================ */
+/* CARD 4 LANGKAH — "Cara Booking" */
+/* ============================================ */
+
+/* Grid 4 langkah */
+#custApp section:has(h2):has(.font-display):has(> div > div) {
+  /* tidak spesifik */
+}
+
+/* Target section "4 Langkah, Mobil Siap Jalan" */
+#custApp section:has(h2:is(:has-text("4 Langkah"), :has-text("Cara Booking"))) > div:has(> div > .font-display),
+#custApp section:has(h2:is(:has-text("4 Langkah"))) .grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+}
+
+/* Card tiap langkah */
+#custApp section:has(h2) .grid > div,
+#custApp section:has(h2) div:has(> .font-display):has(> div) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 24px 20px !important;
+  background: rgba(26, 26, 29, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 16px !important;
+  transition: transform 0.4s ease, border-color 0.3s ease, box-shadow 0.4s ease !important;
+  height: 100% !important;
+  text-align: left !important;
+}
+
+/* Hover — sama dengan card lain */
+#custApp section:has(h2) .grid > div:hover,
+#custApp section:has(h2) div:has(> .font-display):has(> div):hover {
+  transform: translateY(-8px) !important;
+  border-color: rgba(220, 38, 38, 0.4) !important;
+  box-shadow: 0 12px 30px rgba(220, 38, 38, 0.15) !important;
+}
+
+/* Kotak nomor 01-04 */
+#custApp section:has(h2) .grid > div > div:first-child,
+#custApp section:has(h2) div:has(> .font-display) > div:first-child {
+  width: 56px !important;
+  height: 56px !important;
+  min-width: 56px !important;
+  min-height: 56px !important;
+  border-radius: 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%) !important;
+  margin-bottom: 8px !important;
+  box-shadow: 0 6px 16px rgba(153, 27, 27, 0.4) !important;
+}
+
+/* Judul langkah */
+#custApp section:has(h2) .grid > div h3,
+#custApp section:has(h2) div:has(> .font-display) h3,
+#custApp section:has(h2) div:has(> .font-display) .font-display {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.3 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+/* Deskripsi langkah */
+#custApp section:has(h2) .grid > div p,
+#custApp section:has(h2) div:has(> .font-display) p {
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+  color: #a1a1aa !important;
+  margin: 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  #custApp section:has(h2) .grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  #custApp section:has(h2) .grid {
+    grid-template-columns: 1fr !important;
+  }
+}
 </style></body>
 </html>
