@@ -2427,27 +2427,11 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="RING_POJOK">
+</style><style id="DOT_POJOK_LUAR">
 /* ============================================ */
-/* NUCLEAR OVERFLOW — paksa semua visible */
+/* NUCLEAR OVERFLOW */
 /* ============================================ */
-*,
-*::before,
-*::after {
-  overflow: visible !important;
-  clip-path: none !important;
-  contain: none !important;
-}
-
-/* Header + Bell parent */
-#custApp header,
-#custApp header > div,
-#custApp header > div > div,
-#custApp header > div > div > div,
-#custApp header .flex,
-#custApp header .relative,
-#custApp #userNotifBtn,
-#custApp #userNotifBtn > div {
+*, *::before, *::after {
   overflow: visible !important;
   clip-path: none !important;
 }
@@ -2456,29 +2440,17 @@ a#waFloat:hover,
 /* KEYFRAMES */
 /* ============================================ */
 @keyframes ringScale {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(3);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
 }
 
 @keyframes ringScaleWA {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.8);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
 }
 
 /* ============================================ */
-/* REAL-TIME — Dot hijau */
+/* REAL-TIME — Dot hijau (tetap) */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2555,24 +2527,23 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* LONCENG — Dot di POJOK KANAN ATAS */
+/* LONCENG — Dot di POJOK LUAR (kanan atas button) */
 /* ============================================ */
 #userNotifBtn,
 #custApp #userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   overflow: visible !important;
-  transition: transform 0.3s ease, background 0.3s ease !important;
 }
 
-/* Dot merah — POJOK KANAN ATAS */
+/* Dot merah — POJOK KANAN ATAS BUTTON */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: -2px !important;
-  right: -2px !important;
+  top: 2px !important;
+  right: 2px !important;
   width: 10px !important;
   height: 10px !important;
   min-width: 10px !important;
@@ -2580,7 +2551,7 @@ a#waFloat:hover,
   max-width: 10px !important;
   max-height: 10px !important;
   background: #ef4444 !important;
-  border: none !important;
+  border: 2px solid #18181b !important;
   border-radius: 50% !important;
   filter: none !important;
   box-shadow: none !important;
@@ -2588,17 +2559,16 @@ a#waFloat:hover,
   z-index: 1000 !important;
   box-sizing: border-box !important;
   animation: none !important;
-  transform: none !important;
 }
 
-/* Ring merah — POJOK KANAN ATAS, scale dari center dot */
+/* Ring merah — POJOK KANAN ATAS BUTTON */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
   display: block !important;
   position: absolute !important;
-  top: -2px !important;
-  right: -2px !important;
+  top: 2px !important;
+  right: 2px !important;
   width: 10px !important;
   height: 10px !important;
   min-width: 10px !important;
@@ -2610,7 +2580,6 @@ a#waFloat:hover,
   animation: ringScale 1.5s ease-out infinite !important;
   pointer-events: none !important;
   box-sizing: border-box !important;
-  background: transparent !important;
   transform-origin: center center !important;
   z-index: 999 !important;
 }
@@ -2622,7 +2591,6 @@ a#waFloat:hover,
 
 #custApp #userNotifBtn:hover {
   background: rgba(255, 255, 255, 0.05) !important;
-  transform: scale(1.05) !important;
 }
 
 #custApp #userNotifBadge:not(.hidden) {
@@ -2655,7 +2623,6 @@ a#waFloat,
   overflow: visible !important;
   z-index: 50 !important;
   animation: none !important;
-  transition: transform 0.3s ease !important;
   transform-origin: center center !important;
 }
 
@@ -2688,7 +2655,6 @@ a#waFloat::after,
 a#waFloat:hover,
 .wa-float:hover {
   transform: scale(1.15) !important;
-  box-shadow: 0 0 30px rgba(37, 211, 102, 0.6) !important;
 }
 
 #waFloat svg,
