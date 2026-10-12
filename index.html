@@ -2427,7 +2427,7 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="DOT_POJOK_LUAR">
+</style><style id="LONCENG_NO_CARD">
 /* ============================================ */
 /* NUCLEAR OVERFLOW */
 /* ============================================ */
@@ -2450,7 +2450,7 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* REAL-TIME — Dot hijau (tetap) */
+/* REAL-TIME — Dot hijau */
 /* ============================================ */
 #custApp .badge:has(.dot-live),
 #custApp .badge:has([class*="emerald"]),
@@ -2527,16 +2527,38 @@ a#waFloat:hover,
 }
 
 /* ============================================ */
-/* LONCENG — Dot di POJOK LUAR (kanan atas button) */
+/* LONCENG — HAPUS card background */
 /* ============================================ */
 #userNotifBtn,
-#custApp #userNotifBtn {
+#custApp #userNotifBtn,
+#custApp button#userNotifBtn,
+#custApp header #userNotifBtn {
   position: relative !important;
   padding: 8px !important;
   overflow: visible !important;
+  
+  /* HAPUS CARD BACKGROUND */
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0 !important;
 }
 
-/* Dot merah — POJOK KANAN ATAS BUTTON */
+/* Hover — tanpa card */
+#userNotifBtn:hover,
+#custApp #userNotifBtn:hover {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Dot merah — POJOK KANAN ATAS */
 #userNotifBtn::before,
 #custApp #userNotifBtn::before {
   content: '' !important;
@@ -2561,7 +2583,7 @@ a#waFloat:hover,
   animation: none !important;
 }
 
-/* Ring merah — POJOK KANAN ATAS BUTTON */
+/* Ring merah */
 #userNotifBtn::after,
 #custApp #userNotifBtn::after {
   content: '' !important;
@@ -2587,10 +2609,6 @@ a#waFloat:hover,
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::before,
 #custApp #userNotifBtn:has(#userNotifBadge:not(.hidden))::after {
   display: none !important;
-}
-
-#custApp #userNotifBtn:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
 }
 
 #custApp #userNotifBadge:not(.hidden) {
