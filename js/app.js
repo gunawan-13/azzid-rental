@@ -325,7 +325,7 @@ function vehCard(v, i) {
     <div class="relative h-52 overflow-hidden">
       <img src="${v.img}" alt="${esc(v.name)}" class="veh-img w-full h-full object-cover" loading="lazy">
       <div class="absolute inset-0 bg-gradient-to-t from-ink-900/90 via-transparent to-transparent"></div>
-      <span class="absolute top-3 left-3"><span class="text-emerald-300 font-bold text-[11px] tracking-wider uppercase">${v.status === "available" ? "AVAILABLE" : v.status.toUpperCase()}</span></span>
+      <span class="absolute top-3 left-3 text-emerald-300 font-bold text-[11px] tracking-wider uppercase" style="background:transparent!important;background-color:transparent!important;padding:0!important;">${v.status === "available" ? "AVAILABLE" : v.status.toUpperCase()}</span>
       <span class="absolute top-3 right-3 badge bg-black/50 border-white/15 text-zinc-200 backdrop-blur">${v.cat}</span>
       <span class="absolute bottom-3 left-4 font-display font-semibold text-[15px]">${esc(v.name)}</span>
     </div>
