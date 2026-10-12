@@ -1284,5 +1284,53 @@ img {
 #custApp .acc.open .acc-ic {
   transform: rotate(45deg) !important;
 }
+</style><style id="BINTANG_RAPAT">
+/* ============================================ */
+/* BINTANG REVIEW — rapat kiri di SEMUA halaman */
+/* ============================================ */
+
+/* Container bintang — flex rapat */
+#custApp .flex.gap-1,
+#custApp .card > .flex.gap-1,
+#custApp .card .flex.gap-1,
+#custApp .card > div.flex.gap-1 {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  margin-bottom: 12px !important;
+  margin-right: auto !important;
+}
+
+/* Bintang (SVG) — ukuran kecil */
+#custApp .flex.gap-1 > svg,
+#custApp .flex.gap-1 > *,
+#custApp .flex.gap-1 svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+  flex-grow: 0 !important;
+  display: inline-block !important;
+}
+
+/* Card testimonial — paksa flex column */
+#custApp .card:has(.flex.gap-1):has(.rounded-full) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+#custApp .card:has(.flex.gap-1):has(.rounded-full) > p {
+  flex: 1 1 auto !important;
+}
+
+#custApp .card:has(.flex.gap-1):has(.rounded-full) > .flex.items-center.gap-3 {
+  margin-top: auto !important;
+  padding-top: 16px !important;
+}
 </style></body>
 </html>
