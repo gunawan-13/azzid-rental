@@ -2427,13 +2427,63 @@ a#waFloat:hover,
   transform: none !important;
   filter: none !important;
 }
-</style><style id="QB_NO_UP_ANIM">
+</style><style id="QB_DIAM_TOTAL">
 /* ============================================ */
 /* NUCLEAR OVERFLOW */
 /* ============================================ */
 *, *::before, *::after {
   overflow: visible !important;
   clip-path: none !important;
+}
+
+/* ============================================ */
+/* QB CARD — DIAM TOTAL (override ALL) */
+/* ============================================ */
+#custApp section:first-child .card,
+#custApp section:first-child .card *,
+#custApp section:first-child .card:hover,
+#custApp section:first-child .card:hover *,
+#custApp .card:has(.badge:has(.dot-live)),
+#custApp .card:has(.badge:has(.dot-live)):hover,
+#custApp .card:has(input[type="date"]),
+#custApp .card:has(input[type="date"]):hover,
+#custApp .card:has(input[type="date"]):hover * {
+  /* Paksa tidak ada transform */
+  transform: none !important;
+  -webkit-transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+  animation: none !important;
+}
+
+/* KECUALI: dot REAL-TIME + ring-nya (harus tetap animasi) */
+#custApp section:first-child .card .dot-live,
+#custApp section:first-child .card .dot-live::after,
+#custApp section:first-child .card .badge i,
+#custApp section:first-child .card .badge i::after {
+  transform: revert !important;
+  animation: revert !important;
+  transition: revert !important;
+}
+
+/* Tombol Booking — tetap punya hover (up) */
+#custApp section:first-child .card button:hover,
+#custApp section:first-child .card a.btn:hover,
+#custApp section:first-child .card .btn-m:hover {
+  transform: translate3d(0, -2px, 0) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Input / select — transition border saja */
+#custApp section:first-child .card input,
+#custApp section:first-child .card select {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+#custApp section:first-child .card input:focus,
+#custApp section:first-child .card select:focus {
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
 }
 
 /* ============================================ */
@@ -2447,30 +2497,6 @@ a#waFloat:hover,
 @keyframes ringScaleWA {
   0% { transform: scale(1); opacity: 1; }
   100% { transform: scale(1.8); opacity: 0; }
-}
-
-/* ============================================ */
-/* QB — JANGAN NAIK SAAT HOVER */
-/* ============================================ */
-#custApp section:first-child .card,
-#custApp section:first-child .card:hover,
-#custApp .card:has(.badge:has(.dot-live)),
-#custApp .card:has(.badge:has(.dot-live)):hover,
-#custApp .card:has(input[type="date"]),
-#custApp .card:has(input[type="date"]):hover {
-  /* Paksa tidak ada transform */
-  transform: none !important;
-  transition: box-shadow 0.4s ease, border-color 0.3s ease !important;
-  will-change: auto !important;
-}
-
-/* Hover QB — cuma shadow/border, tidak naik */
-#custApp section:first-child .card:hover,
-#custApp .card:has(.badge:has(.dot-live)):hover,
-#custApp .card:has(input[type="date"]):hover {
-  transform: none !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35) !important;
-  border-color: rgba(220, 38, 38, 0.25) !important;
 }
 
 /* ============================================ */
@@ -2508,7 +2534,6 @@ a#waFloat:hover,
   box-shadow: none !important;
   flex-shrink: 0 !important;
   overflow: visible !important;
-  animation: none !important;
   position: relative !important;
   align-self: center !important;
 }
@@ -2591,7 +2616,6 @@ a#waFloat:hover,
   pointer-events: none !important;
   z-index: 1000 !important;
   box-sizing: border-box !important;
-  animation: none !important;
 }
 
 #userNotifBtn::after,
@@ -2643,7 +2667,6 @@ a#waFloat,
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4) !important;
   overflow: visible !important;
   z-index: 50 !important;
-  animation: none !important;
   transform-origin: center center !important;
 }
 
