@@ -2794,49 +2794,29 @@ body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
 
 
 
-<style id="RAPAT_KONTAK_NUCLEAR">
+
+<style id="RAPAT_KONTAK_FINAL">
 /* ============================================ */
-/* HALAMAN KONTAK — nuclear rapat */
-/* Target: section manapun yg berisi h1 + span "Kontak" */
+/* HALAMAN KONTAK — FINAL. Paksa rapat total. */
+/* Pakai selector yg sama dgn HAPUS_BORDER_ABU + override */
 /* ============================================ */
 
-/* 1. Section dengan heading — paksa rapat */
-#custApp main > section:has(> div > h1) {
-  padding-top: 24px !important;
+/* Override HAPUS_BORDER_ABU — naikkan padding-bottom section heading */
+html body #custApp section:has(> div > h1) {
+  padding-top: 40px !important;
   padding-bottom: 4px !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
+  margin: 0 !important;
 }
 
-/* 2. Section kedua (grid 2 kolom) — paksa rapat ke atas */
-#custApp main > section:has(> div > h1) + section {
+/* Section card berikutnya — rapatkan ke atas */
+html body #custApp section:has(> div > h1) + section {
   padding-top: 4px !important;
   margin-top: 0 !important;
 }
 
-/* 3. Wrapper heading — pastikan max-width & center */
-#custApp main > section:has(> div > h1) > div {
-  max-width: 80rem !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-
-/* 4. h1 & span di dalam section heading — nol jarak */
-#custApp main > section:has(> div > h1) > div > h1 {
-  margin: 0 0 0 0 !important;
-  padding: 0 !important;
-  line-height: 1.1 !important;
-}
-#custApp main > section:has(> div > h1) > div > span {
-  margin: 0 0 8px 0 !important;
-  padding: 0 !important;
-}
-
-/* 5. Card pertama — pastikan nempel ke atas grid */
-#custApp main > section:has(> div > h1) + section > .card:first-child,
-#custApp main > section:has(> div > h1) + section > div:first-child > .card:first-child {
+/* Card pertama di section grid — hapus margin atas */
+html body #custApp section:has(> div > h1) + section > .card,
+html body #custApp section:has(> div > h1) + section > div > .card {
   margin-top: 0 !important;
 }
 </style>
