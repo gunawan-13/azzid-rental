@@ -2880,5 +2880,81 @@ html body .veh-card .veh-img {
   object-position: center center !important;
 }
 </style>
+
+<style id="FIX_TOTAL_ARMADA">
+/* ============================================ */
+/* FIX TOTAL — chip rapat + gambar mentok tepi */
+/* Pakai !important di SEMUA properti + selector super spesifik */
+/* ============================================ */
+
+/* CHIP — paksa rapat kiri, no wrap masalah */
+html body #custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap,
+html body #custApp main > section:has(#vehListGrid) .card > .flex,
+html body #custApp main > section:has(#vehListGrid) .chip-wrapper {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 !important;
+}
+
+html body #custApp main > section:has(#vehListGrid) .chip,
+html body #custApp main > section:has(#vehListGrid) button.chip,
+html body #custApp main > section:has(#vehListGrid) .card .chip {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+}
+
+/* GAMBAR — paksa mentok tepi, cover */
+html body #custApp .veh-card > div:first-child,
+html body #vehListGrid .veh-card > div:first-child,
+html body .veh-card > div:first-child {
+  height: 200px !important;
+  min-height: 200px !important;
+  max-height: 200px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 12px 12px 0 0 !important;
+  background: transparent !important;
+}
+@media (max-width: 640px) {
+  html body #custApp .veh-card > div:first-child,
+  html body #vehListGrid .veh-card > div:first-child {
+    height: 180px !important;
+    min-height: 180px !important;
+    max-height: 180px !important;
+  }
+}
+
+html body #custApp .veh-card > div:first-child img,
+html body #vehListGrid .veh-card > div:first-child img,
+html body #custApp .veh-card img,
+html body .veh-card img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  position: static !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  transform: none !important;
+}
+</style>
 </body>
 </html>
