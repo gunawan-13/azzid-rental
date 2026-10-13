@@ -2814,63 +2814,70 @@ a#waFloat:hover,
 
 
 
-<style id="FIX_GAMBAR_V2">
+
+<style id="FIX_GAMBAR_V3">
 /* ============================================ */
-/* GAMBAR MOBIL — fix, jangan pakai position absolute */
+/* GAMBAR MOBIL — fix TOTAL, semua halaman */
+/* Selector lebih spesifik + ID untuk menang */
 /* ============================================ */
 
-/* Container gambar — fixed height + overflow hidden */
-.veh-card > div:first-child {
+/* Container gambar — paksa tinggi fixed + overflow */
+html body #custApp .veh-card > div:first-child,
+html body #vehListGrid .veh-card > div:first-child,
+html body .veh-card > div:first-child {
   height: 200px !important;
   min-height: 200px !important;
   max-height: 200px !important;
   overflow: hidden !important;
+  position: relative !important;
+  display: block !important;
   border-radius: 12px 12px 0 0 !important;
 }
 @media (max-width: 640px) {
-  .veh-card > div:first-child {
+  html body #custApp .veh-card > div:first-child,
+  html body #vehListGrid .veh-card > div:first-child,
+  html body .veh-card > div:first-child {
     height: 180px !important;
     min-height: 180px !important;
     max-height: 180px !important;
   }
 }
 
-/* Gambar — paksa cover, isi penuh */
-.veh-card > div:first-child img,
-.veh-card > div:first-child > img,
-.veh-card > div:first-child > div > img,
-.veh-card img {
+/* Gambar — paksa isi penuh, no gap */
+html body #custApp .veh-card > div:first-child img,
+html body #vehListGrid .veh-card > div:first-child img,
+html body .veh-card > div:first-child img,
+html body .veh-card > div:first-child > img,
+html body .veh-card img {
   display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  position: static !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Khusus container gambar yg punya <div> wrapper */
+html body .veh-card > div:first-child > div {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Override CSS AVAILABLE_SAMA_REALTIME dkk kalau ada yg bikin gap */
+html body .veh-card img.veh-img,
+html body .veh-card .veh-img {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
   object-position: center center !important;
-}
-
-/* Chip filter — rapat kiri */
-#custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: flex-start !important;
-  gap: 8px !important;
-  margin-bottom: 16px !important;
-}
-
-/* Grid filter — proporsional */
-#custApp main > section:has(#vehListGrid) .card > .grid {
-  display: grid !important;
-  grid-template-columns: minmax(180px, 1.4fr) repeat(4, minmax(0, 1fr)) !important;
-  gap: 8px !important;
-}
-@media (max-width: 1024px) {
-  #custApp main > section:has(#vehListGrid) .card > .grid {
-    grid-template-columns: 1fr 1fr !important;
-  }
-}
-@media (max-width: 640px) {
-  #custApp main > section:has(#vehListGrid) .card > .grid {
-    grid-template-columns: 1fr !important;
-  }
 }
 </style>
 </body>
