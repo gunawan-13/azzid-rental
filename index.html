@@ -3258,5 +3258,65 @@ html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
   white-space: nowrap !important;
 }
 </style>
+
+<style id="CARD_PAKSA">
+/* ============================================ */
+/* CARD — paksa padding 18px di semua sisi */
+/* Pakai selector max specificity */
+/* ============================================ */
+
+html body #custApp main #vehListGrid .veh-card > div.p-4,
+html body #custApp main #vehListGrid .veh-card > div:not(:first-child),
+html body #vehListGrid .veh-card > div.p-4,
+html body .veh-card > div.p-4.flex.flex-col.gap-3.grow {
+  padding: 18px 18px 20px 18px !important;
+  gap: 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-sizing: border-box !important;
+}
+
+/* Fitur — kasih margin */
+html body #vehListGrid .veh-card > div.p-4 > .flex.flex-wrap,
+html body .veh-card > div.p-4 > .flex.flex-wrap {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px 14px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 12px !important;
+}
+
+/* Harga + tombol */
+html body #vehListGrid .veh-card > div.p-4 > .mt-auto,
+html body .veh-card > div.p-4 > .mt-auto {
+  padding-top: 12px !important;
+  margin-top: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Tombol wrapper — jangan mentok kanan */
+html body #vehListGrid .veh-card > div.p-4 > .mt-auto > .flex.gap-2,
+html body .veh-card > div.p-4 > .mt-auto > .flex.gap-2 {
+  display: flex !important;
+  gap: 8px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Tombol individu */
+html body #vehListGrid .veh-card .btn.btn-sm,
+html body .veh-card .btn.btn-sm {
+  padding: 7px 13px !important;
+  font-size: 12px !important;
+  border-radius: 8px !important;
+}
+</style>
 </body>
 </html>
