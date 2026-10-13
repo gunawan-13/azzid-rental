@@ -3301,5 +3301,52 @@ body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid
   window.addEventListener('load', setRouteClass);
 })();
 </script>
+
+<style id="FAQ_FINAL">
+/* ============================================ */
+/* HALAMAN FAQ — header tidak ketutup + rapat ke card */
+/* ============================================ */
+
+body.route-faq #custApp {
+  padding-top: 140px !important;
+}
+@media (min-width: 1024px) {
+  body.route-faq #custApp {
+    padding-top: 160px !important;
+  }
+}
+
+/* Section heading FAQ — kurangi padding */
+body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
+  padding-top: 20px !important;
+  padding-bottom: 12px !important;
+}
+
+/* Section card FAQ — rapatkan ke atas */
+body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
+  padding-top: 12px !important;
+  margin-top: 0 !important;
+}
+
+/* Wrapper heading */
+body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
+  max-width: 80rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+@media (min-width: 640px) {
+  body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Spacing antar accordion FAQ */
+body.route-faq #custApp .card + .card {
+  margin-top: 12px !important;
+}
+</style>
 </body>
 </html>
