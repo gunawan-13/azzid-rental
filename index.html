@@ -2764,17 +2764,6 @@ a#waFloat:hover,
 }
 </style>
 
-<style id="GESER_GAMBAR_CARD">
-/* Geser gambar mobil di card ke kanan */
-.veh-card > div:first-child img,
-.veh-card img.veh-img,
-.veh-card > div:first-child > img {
-  object-position: right center !important;
-}
-</style>
-
-
-
 <style id="KONTAK_ONLY_FIX">
 /* ============================================ */
 /* HALAMAN KONTAK SAJA — rapatkan heading ke card */
@@ -2822,42 +2811,32 @@ a#waFloat:hover,
 }
 </style>
 
-<style id="FIX_ARMADA_FINAL">
+
+<style id="FIX_ARMADA_V2">
 /* ============================================ */
-/* HALAMAN ARMADA — rapikan filter + geser gambar */
+/* HALAMAN ARMADA — fix chip rapat + gambar konsisten */
 /* ============================================ */
 
-/* Section card grid armada — biar filter & grid rapi */
-#custApp main > section:has(#vehListGrid) {
-  max-width: 80rem !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-@media (min-width: 640px) {
-  #custApp main > section:has(#vehListGrid) {
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
-  }
-}
-
-/* Filter card — max-width penuh */
-#custApp main > section:has(#vehListGrid) > .card {
-  max-width: 100% !important;
-  width: 100% !important;
-}
-
-/* Chip wrapper — rata kiri, gap rapat */
+/* 1. Chip filter — paksa rapat ke KIRI, JANGAN justify-between */
 #custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-start !important;
   gap: 8px !important;
   margin-bottom: 16px !important;
 }
 
-/* Grid filter — 5 kolom proporsional */
+/* 2. Chip individu — jangan melebar */
+#custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap > .chip {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+/* 3. Grid filter — proporsional, rapat */
 #custApp main > section:has(#vehListGrid) .card > .grid {
   display: grid !important;
-  grid-template-columns: minmax(180px, 1.5fr) repeat(4, minmax(140px, 1fr)) !important;
+  grid-template-columns: minmax(180px, 1.4fr) repeat(4, minmax(0, 1fr)) !important;
   gap: 8px !important;
 }
 @media (max-width: 1024px) {
@@ -2871,39 +2850,45 @@ a#waFloat:hover,
   }
 }
 
-/* Search box — jangan terlalu panjang */
-#custApp main > section:has(#vehListGrid) .card .inp.pl-9 {
+/* 4. GAMBAR MOBIL — paksa KONSISTEN TENGAH, bukan kanan */
+.veh-card > div:first-child,
+.veh-card > div:first-child > div {
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.veh-card > div:first-child img,
+.veh-card > div:first-child > img,
+.veh-card > div:first-child > div > img,
+.veh-card img {
+  object-fit: contain !important;
+  object-position: center center !important;
   width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
 }
 
-/* "X kendaraan ditemukan" — rata kiri sejajar */
+/* 5. Card mobil — tinggi gambar seragam */
+.veh-card > div:first-child {
+  height: 200px !important;
+  min-height: 200px !important;
+  max-height: 200px !important;
+}
+@media (max-width: 640px) {
+  .veh-card > div:first-child {
+    height: 180px !important;
+    min-height: 180px !important;
+    max-height: 180px !important;
+  }
+}
+
+/* 6. "X kendaraan ditemukan" — rata kiri */
 #custApp main > section:has(#vehListGrid) > .flex {
   padding-left: 4px !important;
   margin-bottom: 16px !important;
-}
-
-/* vehListGrid — grid 4 kolom, gap konsisten */
-#vehListGrid {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 20px !important;
-}
-@media (max-width: 1024px) {
-  #vehListGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  }
-}
-@media (max-width: 640px) {
-  #vehListGrid {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* GAMBAR MOBIL — geser ke kanan */
-.veh-card > div:first-child img,
-.veh-card > div:first-child > img,
-.veh-card img {
-  object-position: right center !important;
+  justify-content: flex-start !important;
 }
 </style>
 </body>
