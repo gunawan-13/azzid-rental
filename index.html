@@ -3094,91 +3094,6 @@ html body #vehListGrid .veh-card .badge.badge-status-rented {
 </script>
 
 
-<style id="RAPIKAN_CARD_V3">
-/* ============================================ */
-/* CARD MOBIL — rapikan body (target class asli vehCard) */
-/* Struktur: .veh-card > div.p-4.flex.flex-col.gap-3.grow */
-/* ============================================ */
-
-/* Body card — paksa padding & gap konsisten */
-html body #custApp .veh-card > .p-4.flex.flex-col.gap-3 {
-  padding: 18px 18px 20px 18px !important;
-  gap: 14px !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-
-/* Baris fitur (Automatic / 7 Seats / AC / Bagasi) */
-html body #custApp .veh-card > .p-4 > .flex.flex-wrap {
-  gap: 8px 16px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  font-size: 12px !important;
-  line-height: 1.4 !important;
-  align-items: center !important;
-}
-
-/* Item fitur — jarak ikon ke teks */
-html body #custApp .veh-card > .p-4 > .flex.flex-wrap > span {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 6px !important;
-  font-size: 12px !important;
-  white-space: nowrap !important;
-}
-
-/* Baris harga + tombol (yang ada border-t) */
-html body #custApp .veh-card > .p-4 > .mt-auto {
-  padding-top: 14px !important;
-  margin-top: auto !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-}
-
-/* Harga — ukuran & line-height */
-html body #custApp .veh-card .font-display.font-bold.text-maroon-400 {
-  font-size: 19px !important;
-  line-height: 1.2 !important;
-  margin: 0 !important;
-}
-
-/* Tombol wrapper */
-html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 {
-  display: flex !important;
-  gap: 8px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex-shrink: 0 !important;
-}
-
-/* Tombol Detail & Booking — rapikan */
-html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
-  padding: 7px 14px !important;
-  font-size: 12.5px !important;
-  border-radius: 8px !important;
-  white-space: nowrap !important;
-}
-
-/* Card keseluruhan — tinggi konsisten */
-html body #custApp .veh-card {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-}
-
-/* Body — grow biar tinggi konsisten */
-html body #custApp .veh-card > .p-4 {
-  flex-grow: 1 !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-</style>
-
-
 <style id="ARMADA_GRID_4_RAPI">
 /* ============================================ */
 /* ARMADA — grid 4 kolom (kecil) + isi card rapi */
@@ -3259,16 +3174,17 @@ html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
 }
 </style>
 
-<style id="CARD_PAKSA">
+
+<style id="CARD_FINAL_RAPI">
 /* ============================================ */
-/* CARD — paksa padding 18px di semua sisi */
-/* Pakai selector max specificity */
+/* CARD — body lega + hilangkan garis, semua halaman */
 /* ============================================ */
 
-html body #custApp main #vehListGrid .veh-card > div.p-4,
-html body #custApp main #vehListGrid .veh-card > div:not(:first-child),
-html body #vehListGrid .veh-card > div.p-4,
-html body .veh-card > div.p-4.flex.flex-col.gap-3.grow {
+/* Body card — paksa padding & gap */
+html body #custApp .veh-card > div:not(:first-child),
+html body .veh-card > div:not(:first-child),
+html body .veh-card > .p-4,
+html body .veh-card > div.p-4.flex.flex-col {
   padding: 18px 18px 20px 18px !important;
   gap: 12px !important;
   display: flex !important;
@@ -3276,20 +3192,28 @@ html body .veh-card > div.p-4.flex.flex-col.gap-3.grow {
   box-sizing: border-box !important;
 }
 
-/* Fitur — kasih margin */
-html body #vehListGrid .veh-card > div.p-4 > .flex.flex-wrap,
-html body .veh-card > div.p-4 > .flex.flex-wrap {
+/* Baris fitur — jarak antar item */
+html body .veh-card > div:not(:first-child) > .flex.flex-wrap,
+html body .veh-card > .p-4 > .flex.flex-wrap {
   display: flex !important;
   flex-wrap: wrap !important;
   gap: 8px 14px !important;
   margin: 0 !important;
   padding: 0 !important;
   font-size: 12px !important;
+  line-height: 1.4 !important;
 }
 
-/* Harga + tombol */
-html body #vehListGrid .veh-card > div.p-4 > .mt-auto,
-html body .veh-card > div.p-4 > .mt-auto {
+html body .veh-card > div:not(:first-child) > .flex.flex-wrap > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  font-size: 12px !important;
+}
+
+/* Baris harga + tombol — HILANGKAN GARIS */
+html body .veh-card > div:not(:first-child) > .mt-auto,
+html body .veh-card > .p-4 > .mt-auto {
   padding-top: 12px !important;
   margin-top: auto !important;
   display: flex !important;
@@ -3297,25 +3221,42 @@ html body .veh-card > div.p-4 > .mt-auto {
   justify-content: space-between !important;
   gap: 10px !important;
   flex-wrap: wrap !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-top: none !important;      /* ← HILANGKAN GARIS */
+  border-bottom: none !important;
+  border: none !important;
 }
 
-/* Tombol wrapper — jangan mentok kanan */
-html body #vehListGrid .veh-card > div.p-4 > .mt-auto > .flex.gap-2,
-html body .veh-card > div.p-4 > .mt-auto > .flex.gap-2 {
+/* Khusus hilangkan garis putih di atas harga */
+html body .veh-card .border-t,
+html body .veh-card .border-white/5,
+html body .veh-card [class*="border-t"] {
+  border-top: none !important;
+  border-color: transparent !important;
+}
+
+/* Harga — ukuran pas */
+html body .veh-card .font-display.font-bold.text-maroon-400,
+html body .veh-card > div:not(:first-child) > .mt-auto .font-display {
+  font-size: 17px !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+}
+
+/* Tombol wrapper — jangan mentok */
+html body .veh-card > div:not(:first-child) > .mt-auto > .flex.gap-2 {
   display: flex !important;
   gap: 8px !important;
-  padding: 0 !important;
   margin: 0 !important;
+  padding: 0 !important;
   flex-shrink: 0 !important;
 }
 
-/* Tombol individu */
-html body #vehListGrid .veh-card .btn.btn-sm,
+/* Tombol — kecil rapi */
 html body .veh-card .btn.btn-sm {
   padding: 7px 13px !important;
   font-size: 12px !important;
   border-radius: 8px !important;
+  white-space: nowrap !important;
 }
 </style>
 </body>
