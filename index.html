@@ -3175,75 +3175,80 @@ html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
 </style>
 
 
-<style id="CARD_FINAL_RAPI">
+
+<style id="CARD_PRESISI">
 /* ============================================ */
-/* CARD — body lega + hilangkan garis, semua halaman */
+/* CARD — lega + hilangkan garis. Specificity max. */
 /* ============================================ */
 
-/* Body card — paksa padding & gap */
-html body #custApp .veh-card > div:not(:first-child),
-html body .veh-card > div:not(:first-child),
-html body .veh-card > .p-4,
-html body .veh-card > div.p-4.flex.flex-col {
-  padding: 18px 18px 20px 18px !important;
-  gap: 12px !important;
+/* Body card — paksa padding & gap besar */
+html body #custApp .veh-card > div.p-4,
+html body #custApp .veh-card > div.flex.flex-col.gap-3,
+html body #custApp .veh-card > div:not(:first-child) {
+  padding: 20px 20px 22px 20px !important;
+  gap: 14px !important;
   display: flex !important;
   flex-direction: column !important;
   box-sizing: border-box !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
 }
 
 /* Baris fitur — jarak antar item */
-html body .veh-card > div:not(:first-child) > .flex.flex-wrap,
-html body .veh-card > .p-4 > .flex.flex-wrap {
+html body #custApp .veh-card > div.p-4 > div.flex.flex-wrap,
+html body #custApp .veh-card > div.p-4 > div:first-child {
   display: flex !important;
   flex-wrap: wrap !important;
-  gap: 8px 14px !important;
+  gap: 10px 16px !important;
   margin: 0 !important;
   padding: 0 !important;
-  font-size: 12px !important;
+  font-size: 12.5px !important;
   line-height: 1.4 !important;
+  border: none !important;
 }
 
-html body .veh-card > div:not(:first-child) > .flex.flex-wrap > span {
+html body #custApp .veh-card > div.p-4 > div:first-child > span {
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px !important;
-  font-size: 12px !important;
+  font-size: 12.5px !important;
 }
 
 /* Baris harga + tombol — HILANGKAN GARIS */
-html body .veh-card > div:not(:first-child) > .mt-auto,
-html body .veh-card > .p-4 > .mt-auto {
-  padding-top: 12px !important;
+html body #custApp .veh-card > div.p-4 > div.mt-auto,
+html body #custApp .veh-card > div.p-4 > div[class*="mt-auto"] {
+  padding-top: 14px !important;
   margin-top: auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  gap: 10px !important;
+  gap: 12px !important;
   flex-wrap: wrap !important;
-  border-top: none !important;      /* ← HILANGKAN GARIS */
+  border-top: none !important;
   border-bottom: none !important;
-  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
 }
 
-/* Khusus hilangkan garis putih di atas harga */
-html body .veh-card .border-t,
-html body .veh-card .border-white/5,
-html body .veh-card [class*="border-t"] {
+/* Paksa Tailwind border-t hilang */
+html body #custApp .veh-card .border-t,
+html body #custApp .veh-card [class*="border-t"],
+html body #custApp .veh-card [class*="border-white"] {
   border-top: none !important;
   border-color: transparent !important;
 }
 
-/* Harga — ukuran pas */
-html body .veh-card .font-display.font-bold.text-maroon-400,
-html body .veh-card > div:not(:first-child) > .mt-auto .font-display {
-  font-size: 17px !important;
+/* Harga */
+html body #custApp .veh-card .font-display.font-bold.text-maroon-400 {
+  font-size: 18px !important;
   line-height: 1.2 !important;
   margin: 0 !important;
 }
 
-/* Tombol wrapper — jangan mentok */
-html body .veh-card > div:not(:first-child) > .mt-auto > .flex.gap-2 {
+/* Tombol wrapper */
+html body #custApp .veh-card > div.p-4 > div.mt-auto > div.flex.gap-2 {
   display: flex !important;
   gap: 8px !important;
   margin: 0 !important;
@@ -3252,9 +3257,9 @@ html body .veh-card > div:not(:first-child) > .mt-auto > .flex.gap-2 {
 }
 
 /* Tombol — kecil rapi */
-html body .veh-card .btn.btn-sm {
-  padding: 7px 13px !important;
-  font-size: 12px !important;
+html body #custApp .veh-card .btn.btn-sm {
+  padding: 7px 14px !important;
+  font-size: 12.5px !important;
   border-radius: 8px !important;
   white-space: nowrap !important;
 }
