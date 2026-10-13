@@ -2793,47 +2793,51 @@ body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
 
 
 
-<style id="RAPAT_KONTAK_V4">
+
+<style id="RAPAT_KONTAK_NUCLEAR">
 /* ============================================ */
-/* HALAMAN KONTAK — paksa rapat total */
+/* HALAMAN KONTAK — nuclear rapat */
+/* Target: section manapun yg berisi h1 + span "Kontak" */
 /* ============================================ */
 
-/* Section 1: pembungkus heading — paksa rapat bawah */
-#custApp main > section:has(> div > span + h1) {
-  padding-top: 32px !important;
-  padding-bottom: 8px !important;
+/* 1. Section dengan heading — paksa rapat */
+#custApp main > section:has(> div > h1) {
+  padding-top: 24px !important;
+  padding-bottom: 4px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
-/* Section 2: grid card — paksa rapat atas */
-#custApp main > section:has(> div > span + h1) + section {
-  padding-top: 8px !important;
+/* 2. Section kedua (grid 2 kolom) — paksa rapat ke atas */
+#custApp main > section:has(> div > h1) + section {
+  padding-top: 4px !important;
   margin-top: 0 !important;
 }
 
-/* Semua child di dalam section heading — rapatkan */
-#custApp main > section:has(> div > span + h1) > div {
+/* 3. Wrapper heading — pastikan max-width & center */
+#custApp main > section:has(> div > h1) > div {
   max-width: 80rem !important;
   margin-left: auto !important;
   margin-right: auto !important;
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
-@media (min-width: 640px) {
-  #custApp main > section:has(> div > span + h1) > div {
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
-  }
+
+/* 4. h1 & span di dalam section heading — nol jarak */
+#custApp main > section:has(> div > h1) > div > h1 {
+  margin: 0 0 0 0 !important;
+  padding: 0 !important;
+  line-height: 1.1 !important;
+}
+#custApp main > section:has(> div > h1) > div > span {
+  margin: 0 0 8px 0 !important;
+  padding: 0 !important;
 }
 
-/* h1 & span — jangan bikin jarak */
-#custApp main > section:has(> div > span + h1) > div > h1 {
-  margin-top: 4px !important;
-  margin-bottom: 0 !important;
-  padding: 0 !important;
-}
-#custApp main > section:has(> div > span + h1) > div > span {
-  margin: 0 !important;
-  padding: 0 !important;
+/* 5. Card pertama — pastikan nempel ke atas grid */
+#custApp main > section:has(> div > h1) + section > .card:first-child,
+#custApp main > section:has(> div > h1) + section > div:first-child > .card:first-child {
+  margin-top: 0 !important;
 }
 </style>
 </body>
