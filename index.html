@@ -2958,104 +2958,81 @@ html body .veh-card img {
 </style>
 
 
-<style id="BADGE_WARNA_STATUS">
-/* ============================================ */
-/* BADGE STATUS — pakai class Tailwind spesifik */
-/* (browser-valid, bukan :has-text) */
-/* ============================================ */
 
-/* MAINTENANCE — kuning transparan */
-.veh-card .badge[class*="amber"],
-.veh-card .badge[class*="yellow"],
-.veh-card .badge[class*="orange"],
-.veh-card span[class*="amber"][class*="badge"] {
+<style id="BADGE_JS_COLOR">
+/* Badge status — warna berdasarkan class yg ditambah JS */
+.veh-card .badge.badge-status-available,
+.veh-card .badge.badge-available {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+}
+.veh-card .badge.badge-status-maintenance,
+.veh-card .badge.badge-maintenance {
   background: rgba(245, 158, 11, 0.15) !important;
-  background-color: rgba(245, 158, 11, 0.15) !important;
   border: 1px solid rgba(245, 158, 11, 0.5) !important;
   color: #fbbf24 !important;
 }
-
-/* DISEWA / BOOKED — merah transparan */
-.veh-card .badge[class*="red"],
-.veh-card .badge[class*="rose"],
-.veh-card .badge[class*="maroon"],
-.veh-card span[class*="red"][class*="badge"] {
+.veh-card .badge.badge-status-rented,
+.veh-card .badge.badge-rented {
   background: rgba(220, 38, 38, 0.15) !important;
-  background-color: rgba(220, 38, 38, 0.15) !important;
   border: 1px solid rgba(220, 38, 38, 0.5) !important;
   color: #f87171 !important;
 }
 
-/* AVAILABLE — hijau transparan (biar konsisten) */
-.veh-card .badge[class*="emerald"],
-.veh-card .badge[class*="green"],
-.veh-card span[class*="emerald"][class*="badge"] {
-  background: rgba(16, 185, 129, 0.15) !important;
-  background-color: rgba(16, 185, 129, 0.15) !important;
-  border: 1px solid rgba(16, 185, 129, 0.4) !important;
-  color: #34d399 !important;
+/* Pastikan kotak & rapi */
+.veh-card .badge.badge-status-available,
+.veh-card .badge.badge-status-maintenance,
+.veh-card .badge.badge-status-rented {
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-weight: 800 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  backdrop-filter: blur(8px) !important;
 }
 </style>
 
-<style id="BADGE_TUNTAS">
-/* ============================================ */
-/* BADGE — hijau (available), kuning (maintenance), merah (rented) */
-/* Pakai class Tailwind yg ada */
-/* ============================================ */
+<script id="BADGE_JS_COLOR">
+(function() {
+  function applyBadgeColors() {
+    document.querySelectorAll('.veh-card .badge').forEach(function(b) {
+      var text = (b.textContent || '').trim().toUpperCase();
+      b.classList.remove('badge-status-available', 'badge-status-maintenance', 'badge-status-rented');
+      if (text === 'AVAILABLE') {
+        b.classList.add('badge-status-available');
+      } else if (text.indexOf('MAINTENANCE') !== -1 || text === 'SERVICE') {
+        b.classList.add('badge-status-maintenance');
+      } else if (text === 'RENTED' || text.indexOf('DISEWA') !== -1 || text === 'BOOKED') {
+        b.classList.add('badge-status-rented');
+      }
+    });
+  }
 
-/* HIJAU — AVAILABLE (sudah, biarkan) */
-.veh-card .badge[class*="emerald"],
-.veh-card .badge[class*="green"],
-.veh-card .badge[class*="green-4"],
-.veh-card .badge[class*="emerald-4"] {
-  background: rgba(16, 185, 129, 0.15) !important;
-  background-color: rgba(16, 185, 129, 0.15) !important;
-  border: 1px solid rgba(16, 185, 129, 0.4) !important;
-  color: #34d399 !important;
-  border-radius: 6px !important;
-  padding: 4px 10px !important;
-  font-weight: 800 !important;
-  font-size: 10px !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
+  // Jalan saat load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyBadgeColors);
+  } else {
+    applyBadgeColors();
+  }
 
-/* KUNING — MAINTENANCE */
-.veh-card .badge[class*="amber"],
-.veh-card .badge[class*="yellow"],
-.veh-card .badge[class*="orange"] {
-  background: rgba(245, 158, 11, 0.15) !important;
-  background-color: rgba(245, 158, 11, 0.15) !important;
-  border: 1px solid rgba(245, 158, 11, 0.5) !important;
-  color: #fbbf24 !important;
-  border-radius: 6px !important;
-  padding: 4px 10px !important;
-  font-weight: 800 !important;
-  font-size: 10px !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
+  // Jalan tiap kali hash berubah (navigasi SPA)
+  window.addEventListener('hashchange', function() {
+    setTimeout(applyBadgeColors, 50);
+  });
 
-/* MERAH — RENTED / DISEWA */
-.veh-card .badge[class*="red"],
-.veh-card .badge[class*="rose"] {
-  background: rgba(220, 38, 38, 0.15) !important;
-  background-color: rgba(220, 38, 38, 0.15) !important;
-  border: 1px solid rgba(220, 38, 38, 0.5) !important;
-  color: #f87171 !important;
-  border-radius: 6px !important;
-  padding: 4px 10px !important;
-  font-weight: 800 !important;
-  font-size: 10px !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  display: inline-flex !important;
-  align-items: center !important;
-}
-</style>
+  // Observer buat kalau card di-render ulang
+  var observer = new MutationObserver(function() {
+    applyBadgeColors();
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    var grid = document.getElementById('vehListGrid') || document.body;
+    observer.observe(grid, { childList: true, subtree: true });
+  });
+})();
+</script>
 </body>
 </html>
