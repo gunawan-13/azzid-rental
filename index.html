@@ -3176,171 +3176,68 @@ html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
 
 
 
-<style id="CARD_PRESISI">
-/* ============================================ */
-/* CARD — lega + hilangkan garis. Specificity max. */
-/* ============================================ */
 
-/* Body card — paksa padding & gap besar */
-html body #custApp .veh-card > div.p-4,
-html body #custApp .veh-card > div.flex.flex-col.gap-3,
-html body #custApp .veh-card > div:not(:first-child) {
-  padding: 20px 20px 22px 20px !important;
-  gap: 14px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  box-sizing: border-box !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  border-left: none !important;
-  border-right: none !important;
-}
-
-/* Baris fitur — jarak antar item */
-html body #custApp .veh-card > div.p-4 > div.flex.flex-wrap,
-html body #custApp .veh-card > div.p-4 > div:first-child {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 10px 16px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  font-size: 12.5px !important;
-  line-height: 1.4 !important;
-  border: none !important;
-}
-
-html body #custApp .veh-card > div.p-4 > div:first-child > span {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  font-size: 12.5px !important;
-}
-
-/* Baris harga + tombol — HILANGKAN GARIS */
-html body #custApp .veh-card > div.p-4 > div.mt-auto,
-html body #custApp .veh-card > div.p-4 > div[class*="mt-auto"] {
-  padding-top: 14px !important;
-  margin-top: auto !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  border-left: none !important;
-  border-right: none !important;
-}
-
-/* Paksa Tailwind border-t hilang */
-html body #custApp .veh-card .border-t,
-html body #custApp .veh-card [class*="border-t"],
-html body #custApp .veh-card [class*="border-white"] {
-  border-top: none !important;
-  border-color: transparent !important;
-}
-
-/* Harga */
-html body #custApp .veh-card .font-display.font-bold.text-maroon-400 {
-  font-size: 18px !important;
-  line-height: 1.2 !important;
-  margin: 0 !important;
-}
-
-/* Tombol wrapper */
-html body #custApp .veh-card > div.p-4 > div.mt-auto > div.flex.gap-2 {
-  display: flex !important;
-  gap: 8px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex-shrink: 0 !important;
-}
-
-/* Tombol — kecil rapi */
-html body #custApp .veh-card .btn.btn-sm {
-  padding: 7px 14px !important;
-  font-size: 12.5px !important;
-  border-radius: 8px !important;
-  white-space: nowrap !important;
-}
-</style>
-
-<style id="CARD_ARMADA_FIX">
-/* ============================================ */
-/* CARD ARMADA — khusus #vehListGrid */
-/* ============================================ */
-
-html body #vehListGrid .veh-card > div.p-4,
-html body #vehListGrid .veh-card > div:not(:first-child) {
-  padding: 20px 20px 22px 20px !important;
-  gap: 14px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  box-sizing: border-box !important;
-  border: none !important;
-}
-
-/* Baris fitur */
-html body #vehListGrid .veh-card > div.p-4 > div.flex.flex-wrap,
-html body #vehListGrid .veh-card > div.p-4 > div:first-child {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 10px 16px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  font-size: 12.5px !important;
-  border: none !important;
-}
-
-html body #vehListGrid .veh-card > div.p-4 > div:first-child > span {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 5px !important;
-  font-size: 12.5px !important;
-}
-
-/* Baris harga + tombol — HILANGKAN GARIS */
-html body #vehListGrid .veh-card > div.p-4 > div.mt-auto,
-html body #vehListGrid .veh-card > div.p-4 > div[class*="mt-auto"] {
-  padding-top: 14px !important;
-  margin-top: auto !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 12px !important;
-  flex-wrap: wrap !important;
-  border: none !important;
-}
-
-/* Tailwind border-t hilang */
-html body #vehListGrid .veh-card .border-t,
-html body #vehListGrid .veh-card [class*="border-t"],
-html body #vehListGrid .veh-card [class*="border-white"] {
-  border-top: none !important;
-  border-color: transparent !important;
-}
-
-/* Harga */
-html body #vehListGrid .veh-card .font-display.font-bold.text-maroon-400 {
-  font-size: 18px !important;
-  line-height: 1.2 !important;
-  margin: 0 !important;
-}
-
-/* Tombol */
-html body #vehListGrid .veh-card > div.p-4 > div.mt-auto > div.flex.gap-2 {
-  display: flex !important;
-  gap: 8px !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  flex-shrink: 0 !important;
-}
-html body #vehListGrid .veh-card .btn.btn-sm {
-  padding: 7px 14px !important;
-  font-size: 12.5px !important;
-  border-radius: 8px !important;
-  white-space: nowrap !important;
-}
-</style>
+<script id="CARD_JS_INJECT">
+(function() {
+  function styleCards() {
+    document.querySelectorAll('.veh-card').forEach(function(card) {
+      var body = card.children[1];
+      if (!body) return;
+      
+      // Body card — padding & gap
+      body.style.setProperty('padding', '20px 20px 22px 20px', 'important');
+      body.style.setProperty('gap', '14px', 'important');
+      body.style.setProperty('display', 'flex', 'important');
+      body.style.setProperty('flex-direction', 'column', 'important');
+      body.style.setProperty('border', 'none', 'important');
+      
+      // Baris fitur
+      var featRow = body.querySelector('.flex.flex-wrap');
+      if (featRow) {
+        featRow.style.setProperty('gap', '10px 16px', 'important');
+        featRow.style.setProperty('margin', '0', 'important');
+        featRow.style.setProperty('padding', '0', 'important');
+      }
+      
+      // Baris harga + tombol
+      var priceRow = body.querySelector('.mt-auto');
+      if (priceRow) {
+        priceRow.style.setProperty('border-top', 'none', 'important');
+        priceRow.style.setProperty('border', 'none', 'important');
+        priceRow.style.setProperty('padding-top', '14px', 'important');
+        priceRow.style.setProperty('gap', '12px', 'important');
+      }
+      
+      // Hilangkan semua border di card
+      card.querySelectorAll('[class*="border-t"], [class*="border-white"]').forEach(function(el) {
+        el.style.setProperty('border-top', 'none', 'important');
+        el.style.setProperty('border', 'none', 'important');
+      });
+    });
+  }
+  
+  // Jalan saat load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', styleCards);
+  } else {
+    styleCards();
+  }
+  
+  // Jalan tiap navigasi SPA
+  window.addEventListener('hashchange', function() {
+    setTimeout(styleCards, 50);
+    setTimeout(styleCards, 200);
+  });
+  
+  // Observer kalau card di-render ulang
+  var observer = new MutationObserver(function() {
+    styleCards();
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    var grid = document.getElementById('vehListGrid') || document.body;
+    observer.observe(grid, { childList: true, subtree: true });
+  });
+})();
+</script>
 </body>
 </html>
