@@ -2794,29 +2794,22 @@ a#waFloat:hover,
 
 
 
-<style id="FIX_HEADER_PAD_HALAMAN">
-/* Semua halaman — padding-top cukup biar header turun lebih ke bawah */
-#custApp {
-  padding-top: 140px !important;
+
+
+<style id="TURUNIN_HEADER_NON_BERANDA">
+/* Header turun lebih ke bawah — HANYA halaman selain beranda */
+#custApp:not(:has(main > section#beranda)):not(:has(main > section.hero)) {
+  padding-top: 180px !important;
 }
 @media (min-width: 1024px) {
-  #custApp {
-    padding-top: 160px !important;
+  #custApp:not(:has(main > section#beranda)):not(:has(main > section.hero)) {
+    padding-top: 200px !important;
   }
 }
 
-/* Beranda — biar hero tetap nempel navbar */
-#custApp > main > section:first-child.hero,
-#custApp > main > section:first-child[id*="hero"] {
-  margin-top: -140px !important;
-  padding-top: 140px !important;
-}
-@media (min-width: 1024px) {
-  #custApp > main > section:first-child.hero,
-  #custApp > main > section:first-child[id*="hero"] {
-    margin-top: -160px !important;
-    padding-top: 160px !important;
-  }
+/* Fallback: kalau beranda punya ID/class lain, exclude by route */
+body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
+  /* no-op, hanya untuk safety */
 }
 </style>
 </body>
