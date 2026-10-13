@@ -3439,40 +3439,60 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
 }
 </style>
 
-<style id="LAYANAN_RAPAT_CARD">
+
+<style id="LAYANAN_MEPET">
 /* ============================================ */
-/* HALAMAN LAYANAN — rapatkan heading + deskripsi ke card */
+/* HALAMAN LAYANAN — paksa MEPET heading ke card */
+/* Selector paling spesifik + !important semua */
 /* ============================================ */
 
 /* #custApp — jarak navbar */
-body.route-layanan #custApp {
+html body.route-layanan #custApp {
   padding-top: 140px !important;
 }
 @media (min-width: 1024px) {
-  body.route-layanan #custApp {
+  html body.route-layanan #custApp {
     padding-top: 155px !important;
   }
 }
 
-/* Section heading Layanan — kurangi padding bawah */
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
+/* Section heading Layanan — paksa padding-top & bottom 0 */
+html body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
   padding-top: 20px !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Wrapper heading — paksa jangan ada padding-bottom */
+html body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
   padding-bottom: 0 !important;
   margin-bottom: 0 !important;
 }
 
-/* Section card Layanan — rapatkan ke atas */
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
-  padding-top: 12px !important;
+/* h1 — jangan ada margin */
+html body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* p (deskripsi) — jangan ada margin */
+html body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > p {
+  margin-top: 8px !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Section card Layanan — paksa padding-top 0 */
+html body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
+  padding-top: 0 !important;
   margin-top: 0 !important;
 }
 
-/* h1 & p — hapus margin */
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
-  margin-bottom: 0 !important;
-}
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > p {
-  margin-bottom: 0 !important;
+/* Card grid Layanan — jangan ada margin/padding atas */
+html body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section > div:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
 }
 </style>
 </body>
