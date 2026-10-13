@@ -2812,12 +2812,51 @@ a#waFloat:hover,
 </style>
 
 
-<style id="FIX_ARMADA_V2">
+
+<style id="FIX_GAMBAR_COVER">
 /* ============================================ */
-/* HALAMAN ARMADA — fix chip rapat + gambar konsisten */
+/* GAMBAR MOBIL — paksa cover, mentok tepi, konsisten */
 /* ============================================ */
 
-/* 1. Chip filter — paksa rapat ke KIRI, JANGAN justify-between */
+/* Container gambar — pastikan ukuran fixed & overflow hidden */
+.veh-card > div:first-child {
+  position: relative !important;
+  height: 200px !important;
+  min-height: 200px !important;
+  max-height: 200px !important;
+  overflow: hidden !important;
+  display: block !important;
+}
+@media (max-width: 640px) {
+  .veh-card > div:first-child {
+    height: 180px !important;
+    min-height: 180px !important;
+    max-height: 180px !important;
+  }
+}
+
+/* Gambar di dalam — paksa cover + center, TANPA gap */
+.veh-card > div:first-child img,
+.veh-card > div:first-child > img,
+.veh-card > div:first-child > div > img,
+.veh-card img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+/* Chip filter — tetap rapat kiri */
 #custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -2825,15 +2864,12 @@ a#waFloat:hover,
   gap: 8px !important;
   margin-bottom: 16px !important;
 }
-
-/* 2. Chip individu — jangan melebar */
 #custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap > .chip {
   flex: 0 0 auto !important;
   width: auto !important;
-  min-width: 0 !important;
 }
 
-/* 3. Grid filter — proporsional, rapat */
+/* Grid filter — proporsional */
 #custApp main > section:has(#vehListGrid) .card > .grid {
   display: grid !important;
   grid-template-columns: minmax(180px, 1.4fr) repeat(4, minmax(0, 1fr)) !important;
@@ -2850,41 +2886,7 @@ a#waFloat:hover,
   }
 }
 
-/* 4. GAMBAR MOBIL — paksa KONSISTEN TENGAH, bukan kanan */
-.veh-card > div:first-child,
-.veh-card > div:first-child > div {
-  overflow: hidden !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-.veh-card > div:first-child img,
-.veh-card > div:first-child > img,
-.veh-card > div:first-child > div > img,
-.veh-card img {
-  object-fit: contain !important;
-  object-position: center center !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-}
-
-/* 5. Card mobil — tinggi gambar seragam */
-.veh-card > div:first-child {
-  height: 200px !important;
-  min-height: 200px !important;
-  max-height: 200px !important;
-}
-@media (max-width: 640px) {
-  .veh-card > div:first-child {
-    height: 180px !important;
-    min-height: 180px !important;
-    max-height: 180px !important;
-  }
-}
-
-/* 6. "X kendaraan ditemukan" — rata kiri */
+/* "X kendaraan ditemukan" — rata kiri */
 #custApp main > section:has(#vehListGrid) > .flex {
   padding-left: 4px !important;
   margin-bottom: 16px !important;
