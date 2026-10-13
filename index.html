@@ -3399,5 +3399,33 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
   margin-bottom: 0 !important;
 }
 </style>
+
+<style id="KONTAK_NAIK">
+/* ============================================ */
+/* HALAMAN KONTAK — naikkan card + form */
+/* ============================================ */
+
+/* Kurangi padding-top #custApp khusus kontak */
+body.route-kontak #custApp {
+  padding-top: 120px !important;
+}
+@media (min-width: 1024px) {
+  body.route-kontak #custApp {
+    padding-top: 130px !important;
+  }
+}
+
+/* Section heading — rapatkan */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
+  padding-top: 8px !important;
+  padding-bottom: 4px !important;
+}
+
+/* Section card + form — rapatkan ke atas */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
+  padding-top: 4px !important;
+  margin-top: 0 !important;
+}
+</style>
 </body>
 </html>
