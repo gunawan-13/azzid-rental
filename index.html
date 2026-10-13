@@ -3515,5 +3515,94 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
   }
 })();
 </script>
+
+<script id="KONTAK_JS_INJECT">
+(function() {
+  function rapatkanKontak() {
+    var hash = location.hash || '#/';
+    var isKontak = hash.indexOf('#/kontak') === 0;
+    
+    var app = document.getElementById('custApp');
+    
+    // Reset kalau bukan kontak
+    if (!isKontak) {
+      if (app) app.style.removeProperty('padding-top');
+      return;
+    }
+    
+    // #custApp — jarak dari navbar
+    if (app) {
+      app.style.setProperty('padding-top', '160px', 'important');
+    }
+    
+    // Cari h1 Hubungi Kami
+    var h1 = [...document.querySelectorAll('h1')].find(function(el) {
+      return el.textContent.indexOf('Hubungi Kami') !== -1;
+    });
+    if (!h1) return;
+    
+    var sec1 = h1.closest('section');
+    var sec2 = sec1 ? sec1.nextElementSibling : null;
+    
+    // Section heading
+    if (sec1) {
+      sec1.style.setProperty('padding-top', '8px', 'important');
+      sec1.style.setProperty('padding-bottom', '0', 'important');
+      sec1.style.setProperty('margin-bottom', '0', 'important');
+      sec1.style.setProperty('margin-top', '0', 'important');
+      
+      var innerDiv = sec1.querySelector('div');
+      if (innerDiv) {
+        innerDiv.style.setProperty('padding-bottom', '0', 'important');
+        innerDiv.style.setProperty('margin-bottom', '0', 'important');
+      }
+      
+      // Semua child
+      sec1.querySelectorAll('h1, p, span').forEach(function(el) {
+        el.style.setProperty('margin-bottom', '0', 'important');
+      });
+      
+      h1.style.setProperty('margin', '4px 0 0 0', 'important');
+      h1.style.setProperty('padding', '0', 'important');
+    }
+    
+    // Section card — tarik naik
+    if (sec2) {
+      sec2.style.setProperty('padding-top', '0', 'important');
+      sec2.style.setProperty('margin-top', '-60px', 'important');
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', rapatkanKontak);
+  } else {
+    rapatkanKontak();
+  }
+  
+  window.addEventListener('hashchange', function() {
+    setTimeout(rapatkanKontak, 50);
+    setTimeout(rapatkanKontak, 150);
+    setTimeout(rapatkanKontak, 300);
+  });
+  
+  var observer = new MutationObserver(function() {
+    if ((location.hash || '').indexOf('#/kontak') === 0) {
+      rapatkanKontak();
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  
+  // Jalan berkala selama 2 detik
+  if ((location.hash || '').indexOf('#/kontak') === 0) {
+    var i = 0;
+    var interval = setInterval(function() {
+      rapatkanKontak();
+      if (++i > 20) clearInterval(interval);
+    }, 100);
+  }
+})();
+</script>
 </body>
 </html>
