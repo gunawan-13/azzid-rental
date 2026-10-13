@@ -2813,19 +2813,19 @@ a#waFloat:hover,
 
 
 
-<style id="FIX_GAMBAR_COVER">
+
+<style id="FIX_GAMBAR_V2">
 /* ============================================ */
-/* GAMBAR MOBIL — paksa cover, mentok tepi, konsisten */
+/* GAMBAR MOBIL — fix, jangan pakai position absolute */
 /* ============================================ */
 
-/* Container gambar — pastikan ukuran fixed & overflow hidden */
+/* Container gambar — fixed height + overflow hidden */
 .veh-card > div:first-child {
-  position: relative !important;
   height: 200px !important;
   min-height: 200px !important;
   max-height: 200px !important;
   overflow: hidden !important;
-  display: block !important;
+  border-radius: 12px 12px 0 0 !important;
 }
 @media (max-width: 640px) {
   .veh-card > div:first-child {
@@ -2835,7 +2835,7 @@ a#waFloat:hover,
   }
 }
 
-/* Gambar di dalam — paksa cover + center, TANPA gap */
+/* Gambar — paksa cover, isi penuh */
 .veh-card > div:first-child img,
 .veh-card > div:first-child > img,
 .veh-card > div:first-child > div > img,
@@ -2843,30 +2843,17 @@ a#waFloat:hover,
   display: block !important;
   width: 100% !important;
   height: 100% !important;
-  min-width: 100% !important;
-  min-height: 100% !important;
-  max-width: none !important;
-  max-height: none !important;
   object-fit: cover !important;
   object-position: center center !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
 }
 
-/* Chip filter — tetap rapat kiri */
+/* Chip filter — rapat kiri */
 #custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap {
   display: flex !important;
   flex-wrap: wrap !important;
   justify-content: flex-start !important;
   gap: 8px !important;
   margin-bottom: 16px !important;
-}
-#custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap > .chip {
-  flex: 0 0 auto !important;
-  width: auto !important;
 }
 
 /* Grid filter — proporsional */
@@ -2884,13 +2871,6 @@ a#waFloat:hover,
   #custApp main > section:has(#vehListGrid) .card > .grid {
     grid-template-columns: 1fr !important;
   }
-}
-
-/* "X kendaraan ditemukan" — rata kiri */
-#custApp main > section:has(#vehListGrid) > .flex {
-  padding-left: 4px !important;
-  margin-bottom: 16px !important;
-  justify-content: flex-start !important;
 }
 </style>
 </body>
