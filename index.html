@@ -2959,43 +2959,6 @@ html body .veh-card img {
 
 
 
-<style id="BADGE_JS_COLOR">
-/* Badge status — warna berdasarkan class yg ditambah JS */
-.veh-card .badge.badge-status-available,
-.veh-card .badge.badge-available {
-  background: rgba(16, 185, 129, 0.15) !important;
-  border: 1px solid rgba(16, 185, 129, 0.4) !important;
-  color: #34d399 !important;
-}
-.veh-card .badge.badge-status-maintenance,
-.veh-card .badge.badge-maintenance {
-  background: rgba(245, 158, 11, 0.15) !important;
-  border: 1px solid rgba(245, 158, 11, 0.5) !important;
-  color: #fbbf24 !important;
-}
-.veh-card .badge.badge-status-rented,
-.veh-card .badge.badge-rented {
-  background: rgba(220, 38, 38, 0.15) !important;
-  border: 1px solid rgba(220, 38, 38, 0.5) !important;
-  color: #f87171 !important;
-}
-
-/* Pastikan kotak & rapi */
-.veh-card .badge.badge-status-available,
-.veh-card .badge.badge-status-maintenance,
-.veh-card .badge.badge-status-rented {
-  border-radius: 6px !important;
-  padding: 4px 10px !important;
-  font-weight: 800 !important;
-  font-size: 10px !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  backdrop-filter: blur(8px) !important;
-}
-</style>
-
 <script id="BADGE_JS_COLOR">
 (function() {
   function applyBadgeColors() {
@@ -3028,6 +2991,101 @@ html body .veh-card img {
   var observer = new MutationObserver(function() {
     applyBadgeColors();
   });
+  document.addEventListener('DOMContentLoaded', function() {
+    var grid = document.getElementById('vehListGrid') || document.body;
+    observer.observe(grid, { childList: true, subtree: true });
+  });
+})();
+</script>
+
+<style id="BADGE_NUCLEAR">
+/* ============================================ */
+/* BADGE — paksa warna, specificity max */
+/* Pakai html body #custApp .veh-card .badge */
+/* ============================================ */
+
+html body #custApp .veh-card .badge.badge-status-available,
+html body #custApp .veh-card .badge.badge-available,
+html body #vehListGrid .veh-card .badge.badge-status-available {
+  background: rgba(16, 185, 129, 0.15) !important;
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  background-image: none !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-weight: 800 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+html body #custApp .veh-card .badge.badge-status-maintenance,
+html body #custApp .veh-card .badge.badge-maintenance,
+html body #vehListGrid .veh-card .badge.badge-status-maintenance {
+  background: rgba(245, 158, 11, 0.15) !important;
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  background-image: none !important;
+  border: 1px solid rgba(245, 158, 11, 0.5) !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  color: #fbbf24 !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-weight: 800 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+html body #custApp .veh-card .badge.badge-status-rented,
+html body #custApp .veh-card .badge.badge-rented,
+html body #vehListGrid .veh-card .badge.badge-status-rented {
+  background: rgba(220, 38, 38, 0.15) !important;
+  background-color: rgba(220, 38, 38, 0.15) !important;
+  background-image: none !important;
+  border: 1px solid rgba(220, 38, 38, 0.5) !important;
+  border-color: rgba(220, 38, 38, 0.5) !important;
+  color: #f87171 !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-weight: 800 !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+</style>
+
+<script id="BADGE_JS_COLOR">
+(function() {
+  function applyBadgeColors() {
+    document.querySelectorAll('.veh-card .badge').forEach(function(b) {
+      var text = (b.textContent || '').trim().toUpperCase();
+      b.classList.remove('badge-status-available', 'badge-status-maintenance', 'badge-status-rented');
+      if (text === 'AVAILABLE') {
+        b.classList.add('badge-status-available');
+      } else if (text.indexOf('MAINTENANCE') !== -1 || text === 'SERVICE') {
+        b.classList.add('badge-status-maintenance');
+      } else if (text === 'RENTED' || text.indexOf('DISEWA') !== -1 || text === 'BOOKED') {
+        b.classList.add('badge-status-rented');
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyBadgeColors);
+  } else {
+    applyBadgeColors();
+  }
+  window.addEventListener('hashchange', function() {
+    setTimeout(applyBadgeColors, 50);
+  });
+  var observer = new MutationObserver(applyBadgeColors);
   document.addEventListener('DOMContentLoaded', function() {
     var grid = document.getElementById('vehListGrid') || document.body;
     observer.observe(grid, { childList: true, subtree: true });
