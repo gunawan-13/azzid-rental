@@ -3401,30 +3401,31 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
 </style>
 
 
-<style id="KONTAK_HEADING_TURUN">
+
+<style id="KONTAK_HEADING_DEKAT">
 /* ============================================ */
-/* HALAMAN KONTAK — turunkan heading, card tetap */
+/* HALAMAN KONTAK — heading turun + dekat card */
 /* ============================================ */
 
-/* #custApp padding-top cukup biar navbar nggak nutup */
+/* #custApp — jarak cukup dari navbar */
 body.route-kontak #custApp {
-  padding-top: 130px !important;
+  padding-top: 140px !important;
 }
 @media (min-width: 1024px) {
   body.route-kontak #custApp {
-    padding-top: 145px !important;
+    padding-top: 155px !important;
   }
 }
 
-/* Section heading — beri jarak dari navbar */
+/* Section heading — turunkan (tambah padding-top) dan rapatkan ke card (kurangi padding-bottom) */
 body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
-  padding-top: 24px !important;
-  padding-bottom: 12px !important;
+  padding-top: 40px !important;
+  padding-bottom: 4px !important;
 }
 
-/* Section card + form — tetap seperti sekarang */
+/* Section card + form — rapatkan ke atas */
 body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
-  padding-top: 12px !important;
+  padding-top: 4px !important;
   margin-top: 0 !important;
 }
 </style>
