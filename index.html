@@ -2792,25 +2792,26 @@ body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
 
 
 
-<style id="RAPAT_KONTAK_V3">
+
+<style id="RAPAT_KONTAK_V4">
 /* ============================================ */
-/* HALAMAN KONTAK — fix gap heading ke card */
+/* HALAMAN KONTAK — paksa rapat total */
 /* ============================================ */
 
-/* 1. Section pertama (pembungkus heading "Hubungi Kami") */
-#custApp main > section:has(h1) {
-  padding-top: 40px !important;
-  padding-bottom: 0 !important;
+/* Section 1: pembungkus heading — paksa rapat bawah */
+#custApp main > section:has(> div > span + h1) {
+  padding-top: 32px !important;
+  padding-bottom: 8px !important;
 }
 
-/* 2. Section kedua (grid card) — rapatkan ke atas */
-#custApp main > section:has(h1) + section {
-  padding-top: 24px !important;
+/* Section 2: grid card — paksa rapat atas */
+#custApp main > section:has(> div > span + h1) + section {
+  padding-top: 8px !important;
   margin-top: 0 !important;
 }
 
-/* 3. Heading jangan mentok kiri — paksa max-width 7xl & mx-auto */
-#custApp main > section:has(h1) > div {
+/* Semua child di dalam section heading — rapatkan */
+#custApp main > section:has(> div > span + h1) > div {
   max-width: 80rem !important;
   margin-left: auto !important;
   margin-right: auto !important;
@@ -2818,17 +2819,21 @@ body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
   padding-right: 1rem !important;
 }
 @media (min-width: 640px) {
-  #custApp main > section:has(h1) > div {
+  #custApp main > section:has(> div > span + h1) > div {
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
   }
 }
 
-/* 4. Jangan bikin h1/section apapun margin-left 0 */
-#custApp main > section:has(h1) > div > h1,
-#custApp main > section:has(h1) > div > span {
-  margin-left: 0 !important;
-  padding-left: 0 !important;
+/* h1 & span — jangan bikin jarak */
+#custApp main > section:has(> div > span + h1) > div > h1 {
+  margin-top: 4px !important;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+}
+#custApp main > section:has(> div > span + h1) > div > span {
+  margin: 0 !important;
+  padding: 0 !important;
 }
 </style>
 </body>
