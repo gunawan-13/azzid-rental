@@ -2812,5 +2812,36 @@ body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
   /* no-op, hanya untuk safety */
 }
 </style>
+
+<style id="RAPATKAN_KONTAK">
+/* Halaman Kontak — rapatkan card dengan heading */
+#custApp main > section:has(h1:has-text("Hubungi Kami")) > div,
+#custApp main > section:has(h1) > div:has(h1) {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Heading "Hubungi Kami" — kurangi margin bawah */
+#custApp main h1:has-text("Hubungi Kami") {
+  margin-bottom: 16px !important;
+}
+
+/* Grid card di bawah heading — naikkan */
+#custApp main > section:has(h1) > div > div:has(.card) {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Section kontak — kurangi padding-top sectionnya */
+#custApp main > section {
+  padding-top: 24px !important;
+}
+
+/* Heading — jangan terlalu banyak jarak */
+#custApp main > section > div {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+</style>
 </body>
 </html>
