@@ -2773,51 +2773,38 @@ a#waFloat:hover,
 }
 </style>
 
-<style id="TURUNIN_HEADER_NON_BERANDA">
-/* Header turun lebih ke bawah — HANYA halaman selain beranda */
-#custApp:not(:has(main > section#beranda)):not(:has(main > section.hero)) {
-  padding-top: 180px !important;
-}
-@media (min-width: 1024px) {
-  #custApp:not(:has(main > section#beranda)):not(:has(main > section.hero)) {
-    padding-top: 200px !important;
-  }
-}
 
-/* Fallback: kalau beranda punya ID/class lain, exclude by route */
-body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
-  /* no-op, hanya untuk safety */
-}
-</style>
-
-
-
-
-
-
-<style id="RAPAT_KONTAK_FINAL">
+<style id="KONTAK_RAPAT_FINAL">
 /* ============================================ */
-/* HALAMAN KONTAK — FINAL. Paksa rapat total. */
-/* Pakai selector yg sama dgn HAPUS_BORDER_ABU + override */
+/* HALAMAN KONTAK — rapatkan heading ke card */
+/* Target by struktur Tailwind: py-16 + py-14 */
 /* ============================================ */
 
-/* Override HAPUS_BORDER_ABU — naikkan padding-bottom section heading */
-html body #custApp section:has(> div > h1) {
+/* Section heading (py-16) — kurangi padding bawah */
+#custApp main > section.py-16:has(> div > h1) {
+  padding-bottom: 8px !important;
   padding-top: 40px !important;
-  padding-bottom: 4px !important;
-  margin: 0 !important;
 }
 
-/* Section card berikutnya — rapatkan ke atas */
-html body #custApp section:has(> div > h1) + section {
-  padding-top: 4px !important;
-  margin-top: 0 !important;
+/* Section card (py-14) — kurangi padding atas */
+#custApp main > section.py-14:has(> .card),
+#custApp main > section.py-14.grid {
+  padding-top: 8px !important;
 }
 
-/* Card pertama di section grid — hapus margin atas */
-html body #custApp section:has(> div > h1) + section > .card,
-html body #custApp section:has(> div > h1) + section > div > .card {
-  margin-top: 0 !important;
+/* Wrapper heading — paksa tetap max-width & center */
+#custApp main > section.py-16:has(> div > h1) > div {
+  max-width: 80rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+
+/* h1 & span heading */
+#custApp main > section.py-16:has(> div > h1) > div > h1 {
+  margin-top: 4px !important;
+  margin-bottom: 0 !important;
 }
 </style>
 </body>
