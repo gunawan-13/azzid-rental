@@ -2791,27 +2791,44 @@ body:not(:has(#custApp > main > section:first-child.hero)) #custApp {
 </style>
 
 
-<style id="RAPAT_KONTAK_V2">
-/* ============ HALAMAN KONTAK ============ */
-/* Section pembungkus heading — kurangi padding bawah */
-#custApp main > section:has(> div > h1) {
-  padding-bottom: 16px !important;
+
+<style id="RAPAT_KONTAK_V3">
+/* ============================================ */
+/* HALAMAN KONTAK — fix gap heading ke card */
+/* ============================================ */
+
+/* 1. Section pertama (pembungkus heading "Hubungi Kami") */
+#custApp main > section:has(h1) {
+  padding-top: 40px !important;
+  padding-bottom: 0 !important;
 }
 
-/* Section card (setelah section heading) — kurangi padding atas */
-#custApp main > section:has(> div > h1) + section {
-  padding-top: 16px !important;
+/* 2. Section kedua (grid card) — rapatkan ke atas */
+#custApp main > section:has(h1) + section {
+  padding-top: 24px !important;
+  margin-top: 0 !important;
 }
 
-/* Heading "Hubungi Kami" — rapatkan */
-#custApp main > section:has(> div > h1) > div > h1 {
-  margin-bottom: 0 !important;
-  margin-top: 4px !important;
+/* 3. Heading jangan mentok kiri — paksa max-width 7xl & mx-auto */
+#custApp main > section:has(h1) > div {
+  max-width: 80rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+@media (min-width: 640px) {
+  #custApp main > section:has(h1) > div {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
 }
 
-/* Span "KONTAK" — rapatkan */
-#custApp main > section:has(> div > h1) > div > span:first-child {
-  margin-bottom: 0 !important;
+/* 4. Jangan bikin h1/section apapun margin-left 0 */
+#custApp main > section:has(h1) > div > h1,
+#custApp main > section:has(h1) > div > span {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
 </style>
 </body>
