@@ -3438,5 +3438,42 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
   padding-bottom: 0 !important;
 }
 </style>
+
+<style id="LAYANAN_RAPAT_CARD">
+/* ============================================ */
+/* HALAMAN LAYANAN — rapatkan heading + deskripsi ke card */
+/* ============================================ */
+
+/* #custApp — jarak navbar */
+body.route-layanan #custApp {
+  padding-top: 140px !important;
+}
+@media (min-width: 1024px) {
+  body.route-layanan #custApp {
+    padding-top: 155px !important;
+  }
+}
+
+/* Section heading Layanan — kurangi padding bawah */
+body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
+  padding-top: 20px !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Section card Layanan — rapatkan ke atas */
+body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
+  padding-top: 12px !important;
+  margin-top: 0 !important;
+}
+
+/* h1 & p — hapus margin */
+body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
+  margin-bottom: 0 !important;
+}
+body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > p {
+  margin-bottom: 0 !important;
+}
+</style>
 </body>
 </html>
