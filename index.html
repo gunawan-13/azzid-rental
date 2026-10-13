@@ -2791,5 +2791,24 @@ a#waFloat:hover,
   }
 }
 </style>
+
+<style id="FIX_HEADER_PAD_HALAMAN">
+/* Pastikan semua halaman kecuali beranda punya padding-top cukup */
+#custApp {
+  padding-top: 110px !important;
+}
+@media (min-width: 1024px) {
+  #custApp {
+    padding-top: 130px !important;
+  }
+}
+
+/* Kalau halaman beranda punya hero, biarkan hero tetap nempel navbar */
+#custApp > main > section:first-child.hero,
+#custApp > main > section:first-child[id*="hero"] {
+  margin-top: -110px !important;
+  padding-top: 110px !important;
+}
+</style>
 </body>
 </html>
