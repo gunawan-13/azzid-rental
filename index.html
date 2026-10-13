@@ -3177,5 +3177,23 @@ html body #custApp .veh-card > .p-4 {
   flex-direction: column !important;
 }
 </style>
+
+<style id="ARMADA_GRID_2KOLOM">
+/* ============================================ */
+/* ARMADA — grid 2 kolom, card besar seperti beranda */
+/* ============================================ */
+
+html body #vehListGrid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 20px !important;
+}
+
+@media (max-width: 768px) {
+  html body #vehListGrid {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
 </body>
 </html>
