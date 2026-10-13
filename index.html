@@ -3178,21 +3178,84 @@ html body #custApp .veh-card > .p-4 {
 }
 </style>
 
-<style id="ARMADA_GRID_2KOLOM">
+
+<style id="ARMADA_GRID_4_RAPI">
 /* ============================================ */
-/* ARMADA — grid 2 kolom, card besar seperti beranda */
+/* ARMADA — grid 4 kolom (kecil) + isi card rapi */
 /* ============================================ */
 
+/* 1. Grid 4 kolom — paksa */
 html body #vehListGrid {
   display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   gap: 20px !important;
 }
-
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  html body #vehListGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width: 640px) {
   html body #vehListGrid {
     grid-template-columns: 1fr !important;
   }
+}
+
+/* 2. Body card — padding & gap pas untuk card kecil */
+html body #custApp .veh-card > .p-4 {
+  padding: 14px 14px 16px 14px !important;
+  gap: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 3. Baris fitur — rapat tapi tidak dempet */
+html body #custApp .veh-card > .p-4 > .flex.flex-wrap {
+  gap: 6px 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 11.5px !important;
+  line-height: 1.4 !important;
+}
+html body #custApp .veh-card > .p-4 > .flex.flex-wrap > span {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  font-size: 11.5px !important;
+  white-space: nowrap !important;
+}
+
+/* 4. Baris harga + tombol */
+html body #custApp .veh-card > .p-4 > .mt-auto {
+  padding-top: 10px !important;
+  margin-top: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* 5. Harga */
+html body #custApp .veh-card .font-display.font-bold.text-maroon-400 {
+  font-size: 16px !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+}
+
+/* 6. Tombol — kecil & rapi */
+html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 {
+  display: flex !important;
+  gap: 6px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
+  padding: 6px 11px !important;
+  font-size: 11.5px !important;
+  border-radius: 7px !important;
+  white-space: nowrap !important;
 }
 </style>
 </body>
