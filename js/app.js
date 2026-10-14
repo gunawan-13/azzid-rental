@@ -4941,7 +4941,8 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       if (el.textContent.indexOf('4 Langkah') > -1) h2 = el;
     });
     
-    if (!h2) return;  // FIX: guard null h2    var section = h2.closest('section');
+    if (!h2) return;  // FIX: guard null h2
+    var section = h2.closest('section');
     
     // Kalau sudah diproses, skip
     if (section.dataset.carded4 === '1') return;
