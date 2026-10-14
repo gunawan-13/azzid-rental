@@ -3648,5 +3648,51 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
   }
 })();
 </script>
+
+<style id="FAQ_2KOLOM">
+/* ============================================ */
+/* HALAMAN FAQ — 2 kolom (kiri & kanan) */
+/* ============================================ */
+
+/* Container FAQ — jadi grid 2 kolom */
+body.route-faq #custApp .space-y-3,
+body.route-faq #custApp section:has(.acc) > div,
+body.route-faq #custApp section:has(.acc) .flex.flex-col {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  align-items: start !important;
+}
+
+/* Card accordion FAQ — lebar penuh di kolomnya */
+body.route-faq #custApp .acc {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Max-width container biar nggak terlalu lebar */
+body.route-faq #custApp section:has(.acc) {
+  max-width: 80rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+@media (min-width: 640px) {
+  body.route-faq #custApp section:has(.acc) {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Mobile — 1 kolom */
+@media (max-width: 768px) {
+  body.route-faq #custApp .space-y-3,
+  body.route-faq #custApp section:has(.acc) > div,
+  body.route-faq #custApp section:has(.acc) .flex.flex-col {
+    grid-template-columns: 1fr !important;
+  }
+}
+</style>
 </body>
 </html>
