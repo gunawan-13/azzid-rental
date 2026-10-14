@@ -3773,5 +3773,55 @@ body {
   transform: none !important;
 }
 </style>
+
+<script id="WA_PINDAH_BODY">
+(function() {
+  function pindahkanWa() {
+    var wa = document.getElementById('waFloat');
+    if (!wa) return;
+    
+    // Kalau parent-nya bukan body, pindahkan ke body
+    if (wa.parentElement !== document.body) {
+      document.body.appendChild(wa);
+      console.log('✅ #waFloat dipindah ke body');
+    }
+    
+    // Paksa inline style
+    wa.style.setProperty('position', 'fixed', 'important');
+    wa.style.setProperty('bottom', '24px', 'important');
+    wa.style.setProperty('right', '24px', 'important');
+    wa.style.setProperty('top', 'auto', 'important');
+    wa.style.setProperty('left', 'auto', 'important');
+    wa.style.setProperty('z-index', '99999', 'important');
+    wa.style.setProperty('transform', 'none', 'important');
+  }
+  
+  // Jalan saat load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', pindahkanWa);
+  } else {
+    pindahkanWa();
+  }
+  
+  // Jalan tiap navigasi SPA
+  window.addEventListener('hashchange', function() {
+    setTimeout(pindahkanWa, 50);
+    setTimeout(pindahkanWa, 200);
+  });
+  
+  // Observer — kalau wa di-rerender
+  var observer = new MutationObserver(pindahkanWa);
+  document.addEventListener('DOMContentLoaded', function() {
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  
+  // Jalan berkala 3 detik pertama
+  var i = 0;
+  var interval = setInterval(function() {
+    pindahkanWa();
+    if (++i > 30) clearInterval(interval);
+  }, 100);
+})();
+</script>
 </body>
 </html>
