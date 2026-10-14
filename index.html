@@ -3649,25 +3649,70 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
 })();
 </script>
 
-<style id="FAQ_2KOLOM">
+
+<style id="FAQ_2KOLOM_RAPI">
 /* ============================================ */
-/* HALAMAN FAQ — 2 kolom (kiri & kanan) */
+/* HALAMAN FAQ — 2 kolom rapi */
 /* ============================================ */
 
-/* Container FAQ — jadi grid 2 kolom */
+/* Container FAQ — grid 2 kolom */
 body.route-faq #custApp .space-y-3,
 body.route-faq #custApp section:has(.acc) > div,
 body.route-faq #custApp section:has(.acc) .flex.flex-col {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 12px !important;
-  align-items: start !important;
+  align-items: stretch !important;
 }
 
-/* Card accordion FAQ — lebar penuh di kolomnya */
+/* Setiap card accordion FAQ — tinggi konsisten */
 body.route-faq #custApp .acc {
   width: 100% !important;
   margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  min-height: 72px !important;
+}
+
+/* Button accordion — flex biar vertikal center */
+body.route-faq #custApp .acc button {
+  height: auto !important;
+  min-height: 72px !important;
+  max-height: none !important;
+  padding: 20px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+/* Span pertanyaan — text rapi */
+body.route-faq #custApp .acc button > span:first-child {
+  flex: 1 1 auto !important;
+  text-align: left !important;
+  line-height: 1.4 !important;
+  padding-right: 8px !important;
+}
+
+/* Icon + — rata kanan, jangan geser */
+body.route-faq #custApp .acc button > .acc-ic,
+body.route-faq #custApp .acc button > span:last-child {
+  flex-shrink: 0 !important;
+  align-self: center !important;
+  margin-left: auto !important;
+}
+
+/* Card "Masih ada pertanyaan?" — FULL WIDTH (keluar dari grid) */
+body.route-faq #custApp section:has(.acc) > div > .card:not(.acc),
+body.route-faq #custApp section:has(.acc) > .card:not(.acc),
+body.route-faq #custApp .card:has(h3:contains("Masih ada")),
+body.route-faq #custApp .card:has(a[href*="wa.me"]),
+body.route-faq #custApp .card:has(button:contains("Chat WhatsApp")) {
+  grid-column: 1 / -1 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-top: 12px !important;
 }
 
 /* Max-width container biar nggak terlalu lebar */
