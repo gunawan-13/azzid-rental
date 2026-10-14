@@ -3869,64 +3869,79 @@ body.route-faq #custApp .acc.rv {
 
 
 
-<style id="FIX_SB_SCROLL">
+
+<style id="FIX_SB_FLEX">
 /* ============================================ */
-/* ADMIN SIDEBAR — semua menu muncul + scroll */
+/* ADMIN SIDEBAR — FLEX LAYOUT (sesuai struktur asli) */
 /* ============================================ */
 
-/* Layout utama admin — grid 2 kolom */
-#adminApp > div.h-screen,
-#custApp > div.h-screen {
-  display: grid !important;
-  grid-template-columns: 260px 1fr !important;
+/* Wrapper admin — flex row, sidebar 260px */
+#adminApp > div.h-screen.bg-ink-950,
+#custApp > div.h-screen.bg-ink-950 {
+  display: flex !important;
+  flex-direction: row !important;
   height: 100vh !important;
   overflow: hidden !important;
+  background: #0a0a0a !important;
 }
 
-/* Sidebar — kolom kiri */
+/* SIDEBAR — aside #aSb */
 #aSb {
-  grid-column: 1 !important;
-  position: relative !important;
+  position: relative !important;   /* WAJIB relative biar nggak fixed */
   top: auto !important;
   left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
   width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
   height: 100vh !important;
-  max-height: 100vh !important;
-  background: #0a0a0a !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  flex: 0 0 260px !important;
   display: flex !important;
   flex-direction: column !important;
+  background: #0a0a0a !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
   z-index: 10 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
-/* Nav menu — scrollable, semua item muncul */
+/* Logo header sidebar */
+#aSb > div:first-child {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 16px 20px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  height: 64px !important;
+  min-height: 64px !important;
+}
+
+/* NAV menu — flex column, scrollable */
 #aSb > nav {
   flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   min-height: 0 !important;
-  max-height: 100% !important;
-  padding: 12px 12px 20px 12px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 2px !important;
+  max-height: none !important;
+  padding: 16px 12px !important;
   scrollbar-width: thin !important;
 }
 
-/* Scrollbar */
 #aSb > nav::-webkit-scrollbar {
   width: 6px !important;
-}
-#aSb > nav::-webkit-scrollbar-track {
-  background: transparent !important;
 }
 #aSb > nav::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15) !important;
   border-radius: 3px !important;
 }
 
-/* Menu button — full width, jangan numpuk */
+/* Menu button — full width, rata kiri */
 #aSb nav > button {
   display: flex !important;
   align-items: center !important;
@@ -3936,34 +3951,26 @@ body.route-faq #custApp .acc.rv {
   height: auto !important;
   padding: 10px 14px !important;
   margin: 0 !important;
-  flex: 0 0 auto !important;
-  position: relative !important;
+  flex-shrink: 0 !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   font-size: 13px !important;
   border-radius: 8px !important;
+  text-align: left !important;
 }
 
-/* Icon */
-#aSb nav > button > svg,
-#aSb nav > button > i,
-#aSb nav > button > span:first-child {
-  flex: 0 0 18px !important;
-  width: 18px !important;
-  height: 18px !important;
-  min-width: 18px !important;
-}
-
-/* Text */
+/* Text di menu — rata kiri */
+#aSb nav > button > span.grow,
 #aSb nav > button > span:not(.badge) {
   flex: 1 1 auto !important;
   min-width: 0 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
+  white-space: nowrap !important;
   text-align: left !important;
 }
 
-/* Badge */
+/* Badge di menu */
 #aSb nav > button .badge {
   margin-left: auto !important;
   flex-shrink: 0 !important;
@@ -3972,9 +3979,12 @@ body.route-faq #custApp .acc.rv {
 /* Footer sidebar — di bawah */
 #aSb > div:last-child {
   flex-shrink: 0 !important;
-  padding: 12px !important;
+  padding: 16px 12px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
   background: #0a0a0a !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
 }
 
 #aSb > div:last-child a,
@@ -3986,17 +3996,19 @@ body.route-faq #custApp .acc.rv {
   min-height: 40px !important;
   padding: 10px 14px !important;
   white-space: nowrap !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
 }
 
-/* Konten utama — kolom kanan */
-#adminApp > div.h-screen > div.flex-1,
-#custApp > div.h-screen > div.flex-1 {
-  grid-column: 2 !important;
+/* KONTEN UTAMA — flex-1 */
+#adminApp > div.h-screen.bg-ink-950 > div.flex-1,
+#custApp > div.h-screen.bg-ink-950 > div.flex-1 {
+  flex: 1 1 auto !important;
   display: flex !important;
   flex-direction: column !important;
   min-width: 0 !important;
-  overflow: hidden !important;
   height: 100vh !important;
+  overflow: hidden !important;
 }
 
 /* Main body — scrollable */
@@ -4004,34 +4016,26 @@ body.route-faq #custApp .acc.rv {
 #custApp main#aBody {
   flex: 1 1 auto !important;
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   min-height: 0 !important;
 }
 
 /* Mobile — sidebar jadi drawer */
 @media (max-width: 1024px) {
-  #adminApp > div.h-screen,
-  #custApp > div.h-screen {
-    grid-template-columns: 1fr !important;
-  }
-  
   #aSb {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    transform: translateX(-100%) !important;
+    bottom: 0 !important;
     width: 280px !important;
     max-width: 80vw !important;
+    min-width: 280px !important;
     z-index: 9999 !important;
+    transform: translateX(-100%) !important;
     transition: transform 0.3s ease !important;
   }
-  
   #aSb.sb-open {
     transform: translateX(0) !important;
-  }
-  
-  #adminApp > div.h-screen > div.flex-1,
-  #custApp > div.h-screen > div.flex-1 {
-    grid-column: 1 !important;
   }
 }
 </style>
