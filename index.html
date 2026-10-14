@@ -3623,5 +3623,169 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
 </style>
 
 
+
+<style id="FIX_NAV_SCROLL">
+/* ============================================ */
+/* FIX NAV SIDEBAR — menu numpuk jadi scroll */
+/* ============================================ */
+
+/* Layout utama admin — flex row */
+#adminApp > div[class*="h-screen"] {
+  display: flex !important;
+  flex-direction: row !important;
+  height: 100vh !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Sidebar — kolom kiri */
+#aSb {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  background: #0a0a0a !important;
+  border-right: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+/* NAV — WAJIB scrollable, jangan overlap */
+#aSb > nav {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  display: block !important;
+  position: relative !important;
+  padding: 16px 12px !important;
+  scrollbar-width: thin !important;
+}
+
+#aSb > nav::-webkit-scrollbar {
+  width: 6px !important;
+}
+#aSb > nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15) !important;
+  border-radius: 3px !important;
+}
+
+/* Menu button — SATU PER BARIS, jangan numpuk */
+#aSb > nav > button {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 42px !important;
+  max-height: none !important;
+  padding: 10px 14px !important;
+  margin: 0 0 4px 0 !important;
+  position: static !important;
+  float: none !important;
+  clear: both !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+  border-radius: 8px !important;
+  font-size: 13px !important;
+}
+
+/* Icon */
+#aSb > nav > button > svg,
+#aSb > nav > button > span:first-child {
+  flex: 0 0 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+}
+
+/* Text */
+#aSb > nav > button > span {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+/* Badge */
+#aSb > nav > button .badge {
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  position: static !important;
+}
+
+/* Header sidebar (logo) */
+#aSb > div:first-child {
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 16px 20px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+  height: 64px !important;
+}
+
+/* Footer sidebar (Lihat Website + Logout) */
+#aSb > div:last-child {
+  flex-shrink: 0 !important;
+  padding: 12px 16px !important;
+  border-top: 1px solid rgba(255,255,255,0.05) !important;
+  background: #0a0a0a !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+#aSb > div:last-child a,
+#aSb > div:last-child button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  padding: 10px 14px !important;
+  white-space: nowrap !important;
+  font-size: 13px !important;
+  border-radius: 8px !important;
+}
+
+/* Konten utama */
+#adminApp > div[class*="h-screen"] > div.flex-1 {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  height: 100vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Mobile */
+@media (max-width: 1024px) {
+  #aSb {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    z-index: 9999 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+  }
+  #aSb.sb-open {
+    transform: translateX(0) !important;
+  }
+}
+</style>
 </body>
 </html>
