@@ -1568,21 +1568,6 @@ function setAdminView(v){ if(typeof closeSb==="function") closeSb();
 }
 
 /* Struktur sidebar sesuai PRD + Kelola Sewa */
-
-/* ============ ROLE MENU — daftar akses per role ============ */
-const FULL_MENU = ['overview','rental','booking','calendar','armada','customers','drivers','payments','promo','reports','cms','users','settings'];
-
-const ROLE_MENU = {
-  'admin':      FULL_MENU,
-  'owner':      FULL_MENU,
-  'superadmin': FULL_MENU,
-  'super admin':FULL_MENU,
-  'manager':    ['overview','rental','booking','calendar','armada','customers','drivers','payments','promo','reports'],
-  'staff':      ['overview','rental','booking','calendar','armada','customers','drivers','payments'],
-  'operator':   ['overview','rental','booking','calendar','armada','customers','drivers','payments'],
-  'driver':     ['overview','rental','booking','calendar']
-};
-
 const AMENU = [
   ['overview', 'Overview', 'grid'],
   ['rental', 'Kelola Sewa', 'key'],

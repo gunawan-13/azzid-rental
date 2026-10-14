@@ -3812,5 +3812,59 @@ body.route-faq #custApp .acc.rv {
 })();
 </script>
 
+<style id="HP_BADGE_ALIGN">
+/* ============================================ */
+/* HP ONLY — sejajarkan icon + teks di badge PREMIUM */
+/* LAPTOP JANGAN DIUBAH */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  /* Badge PREMIUM — paksa flex center */
+  #custApp section:first-child .badge,
+  #custApp section:first-child span[class*="badge"],
+  #custApp section:first-child > .relative > div > span:first-child {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    line-height: 1 !important;
+    padding: 6px 14px !important;
+    vertical-align: middle !important;
+  }
+  
+  /* SVG icon di dalam badge — center vertikal */
+  #custApp section:first-child .badge svg,
+  #custApp section:first-child span[class*="badge"] svg,
+  #custApp section:first-child > .relative > div > span:first-child svg {
+    display: inline-block !important;
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    min-height: 14px !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-self: center !important;
+    vertical-align: middle !important;
+    position: relative !important;
+    top: 0 !important;
+    transform: translateY(0) !important;
+  }
+  
+  /* Teks di dalam badge — center vertikal */
+  #custApp section:first-child .badge span,
+  #custApp section:first-child span[class*="badge"] span,
+  #custApp section:first-child > .relative > div > span:first-child > *:not(svg) {
+    display: inline-block !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    align-self: center !important;
+    vertical-align: middle !important;
+    transform: translateY(0) !important;
+  }
+}
+</style>
 </body>
 </html>
