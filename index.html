@@ -3442,6 +3442,100 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
 </script>
 
 
+<script id="FAQ_JS_INJECT">
+(function() {
+  function rapatkanFaq() {
+    var hash = location.hash || '#/';
+    var isFaq = hash.indexOf('#/faq') === 0;
+    
+    var app = document.getElementById('custApp');
+    
+    // Reset kalau bukan FAQ
+    if (!isFaq) {
+      if (app) app.style.removeProperty('padding-top');
+      return;
+    }
+    
+    // #custApp — jarak dari navbar (cukup)
+    if (app) app.style.setProperty('padding-top', '140px', 'important');
+    
+    // Cari h1 "Butuh Jawaban Cepat"
+    var h1 = [...document.querySelectorAll('h1')].find(function(el) {
+      return el.textContent.indexOf('Butuh Jawaban') !== -1;
+    });
+    if (!h1) return;
+    
+    var sec1 = h1.closest('section');
+    var sec2 = sec1 ? sec1.nextElementSibling : null;
+    
+    // Section heading — paksa rapat
+    if (sec1) {
+      sec1.style.setProperty('padding-top', '20px', 'important');
+      sec1.style.setProperty('padding-bottom', '0', 'important');
+      sec1.style.setProperty('margin-bottom', '0', 'important');
+      sec1.style.setProperty('margin-top', '0', 'important');
+      sec1.style.setProperty('min-height', '0', 'important');
+      sec1.style.setProperty('height', 'auto', 'important');
+      
+      var innerDiv = sec1.querySelector('div');
+      if (innerDiv) {
+        innerDiv.style.setProperty('padding-bottom', '0', 'important');
+        innerDiv.style.setProperty('margin-bottom', '0', 'important');
+        innerDiv.style.setProperty('padding-top', '0', 'important');
+      }
+      
+      // Semua child — hilangkan margin
+      sec1.querySelectorAll('h1, p, span, div').forEach(function(el) {
+        el.style.setProperty('margin-bottom', '0', 'important');
+        el.style.setProperty('padding-bottom', '0', 'important');
+      });
+      
+      h1.style.setProperty('margin', '4px 0 0 0', 'important');
+      h1.style.setProperty('padding', '0', 'important');
+    }
+    
+    // Section card — TARIK NAIK keras
+    if (sec2) {
+      sec2.style.setProperty('padding-top', '0', 'important');
+      sec2.style.setProperty('margin-top', '-80px', 'important');  // ← tarik naik 80px
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', rapatkanFaq);
+  } else {
+    rapatkanFaq();
+  }
+  
+  window.addEventListener('hashchange', function() {
+    setTimeout(rapatkanFaq, 50);
+    setTimeout(rapatkanFaq, 150);
+    setTimeout(rapatkanFaq, 300);
+  });
+  
+  // Observer — kalau DOM berubah
+  var observer = new MutationObserver(function() {
+    if ((location.hash || '').indexOf('#/faq') === 0) {
+      rapatkanFaq();
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  
+  // Jalan berkala 2 detik pertama
+  if ((location.hash || '').indexOf('#/faq') === 0) {
+    var i = 0;
+    var interval = setInterval(function() {
+      rapatkanFaq();
+      if (++i > 20) clearInterval(interval);
+    }, 100);
+  }
+})();
+</script>
+
+
+
 <style id="FAQ_2KOLOM_FIX">
 /* ============================================ */
 /* FAQ — 2 kolom, accordion rapi */
@@ -3612,9 +3706,6 @@ body.route-faq #custApp .acc.rv {
 
 
 
-
-
-
 <script id="LAYANAN_JS_INJECT">
 (function() {
   function rapatkanLayanan() {
@@ -3624,6 +3715,7 @@ body.route-faq #custApp .acc.rv {
     var app = document.getElementById('custApp');
     var main = app ? app.querySelector('main') : null;
     
+    // Reset kalau bukan layanan
     if (!isLayanan) {
       if (app) app.style.removeProperty('padding-top');
       if (main) {
@@ -3633,8 +3725,8 @@ body.route-faq #custApp .acc.rv {
       return;
     }
     
-    // #custApp — jarak navbar LEBIH BESAR (paksa turun)
-    if (app) app.style.setProperty('padding-top', '230px', 'important');
+    // #custApp — jarak navbar LEBIH BESAR biar span "LAYANAN" kelihatan
+    if (app) app.style.setProperty('padding-top', '185px', 'important');
     if (main) {
       main.style.setProperty('padding-top', '0', 'important');
       main.style.setProperty('margin-top', '0', 'important');
@@ -3649,7 +3741,7 @@ body.route-faq #custApp .acc.rv {
     var sec1 = h1.closest('section');
     var sec2 = sec1 ? sec1.nextElementSibling : null;
     
-    // Section heading
+    // Section heading — rapatkan
     if (sec1) {
       sec1.style.setProperty('padding-top', '8px', 'important');
       sec1.style.setProperty('padding-bottom', '0', 'important');
@@ -3674,18 +3766,18 @@ body.route-faq #custApp .acc.rv {
       h1.style.setProperty('margin', '4px 0 0 0', 'important');
       h1.style.setProperty('padding', '0', 'important');
       
-      // Deskripsi — jarak 20px dari heading
+      // Deskripsi — jarak 16px dari heading
       var desc = sec1.querySelector('p');
       if (desc) {
-        desc.style.setProperty('margin', '20px 0 0 0', 'important');
+        desc.style.setProperty('margin', '16px 0 0 0', 'important');
         desc.style.setProperty('padding', '0', 'important');
       }
     }
     
-    // Section card — rapatkan + jarak dikit
+    // Section card — TARIK NAIK lebih keras
     if (sec2) {
       sec2.style.setProperty('padding-top', '0', 'important');
-      sec2.style.setProperty('margin-top', '-80px', 'important');
+      sec2.style.setProperty('margin-top', '-130px', 'important');
     }
   }
   
@@ -3714,105 +3806,6 @@ body.route-faq #custApp .acc.rv {
     var i = 0;
     var interval = setInterval(function() {
       rapatkanLayanan();
-      if (++i > 20) clearInterval(interval);
-    }, 100);
-  }
-})();
-</script>
-
-<script id="FAQ_JS_INJECT">
-(function() {
-  function rapatkanFaq() {
-    var hash = location.hash || '#/';
-    var isFaq = hash.indexOf('#/faq') === 0;
-    
-    var app = document.getElementById('custApp');
-    var main = app ? app.querySelector('main') : null;
-    
-    // Reset kalau bukan FAQ
-    if (!isFaq) {
-      if (app) app.style.removeProperty('padding-top');
-      if (main) {
-        main.style.removeProperty('padding-top');
-        main.style.removeProperty('margin-top');
-      }
-      return;
-    }
-    
-    // #custApp — jarak navbar (PAS seperti layanan)
-    if (app) app.style.setProperty('padding-top', '230px', 'important');
-    if (main) {
-      main.style.setProperty('padding-top', '0', 'important');
-      main.style.setProperty('margin-top', '0', 'important');
-    }
-    
-    // Cari h1 "Butuh Jawaban Cepat"
-    var h1 = [...document.querySelectorAll('h1')].find(function(el) {
-      return el.textContent.indexOf('Butuh Jawaban') !== -1;
-    });
-    if (!h1) return;
-    
-    var sec1 = h1.closest('section');
-    var sec2 = sec1 ? sec1.nextElementSibling : null;
-    
-    // Section heading FAQ
-    if (sec1) {
-      sec1.style.setProperty('padding-top', '8px', 'important');
-      sec1.style.setProperty('padding-bottom', '0', 'important');
-      sec1.style.setProperty('margin-bottom', '0', 'important');
-      sec1.style.setProperty('margin-top', '0', 'important');
-      sec1.style.setProperty('min-height', '0', 'important');
-      
-      var innerDiv = sec1.querySelector('div');
-      if (innerDiv) {
-        innerDiv.style.setProperty('padding-bottom', '0', 'important');
-        innerDiv.style.setProperty('margin-bottom', '0', 'important');
-        innerDiv.style.setProperty('padding-top', '0', 'important');
-      }
-      
-      // Semua child — hilangkan margin
-      sec1.querySelectorAll('h1, p, span, div').forEach(function(el) {
-        el.style.setProperty('margin-bottom', '0', 'important');
-        el.style.setProperty('padding-bottom', '0', 'important');
-      });
-      
-      // h1 — margin kecil
-      h1.style.setProperty('margin', '4px 0 0 0', 'important');
-      h1.style.setProperty('padding', '0', 'important');
-    }
-    
-    // Section card FAQ — rapatkan
-    if (sec2) {
-      sec2.style.setProperty('padding-top', '0', 'important');
-      sec2.style.setProperty('margin-top', '-80px', 'important');
-    }
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', rapatkanFaq);
-  } else {
-    rapatkanFaq();
-  }
-  
-  window.addEventListener('hashchange', function() {
-    setTimeout(rapatkanFaq, 50);
-    setTimeout(rapatkanFaq, 150);
-    setTimeout(rapatkanFaq, 300);
-  });
-  
-  var observer = new MutationObserver(function() {
-    if ((location.hash || '').indexOf('#/faq') === 0) {
-      rapatkanFaq();
-    }
-  });
-  document.addEventListener('DOMContentLoaded', function() {
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-  
-  if ((location.hash || '').indexOf('#/faq') === 0) {
-    var i = 0;
-    var interval = setInterval(function() {
-      rapatkanFaq();
       if (++i > 20) clearInterval(interval);
     }, 100);
   }
