@@ -3823,5 +3823,70 @@ body {
   }, 100);
 })();
 </script>
+
+<style id="HP_PREMIUM_NAIK">
+/* ============================================ */
+/* HP ONLY — naikkan badge PREMIUM di hero */
+/* LAPTOP JANGAN DIUBAH */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  /* Hero section pertama — kurangi jarak atas */
+  #custApp section:first-child {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    min-height: auto !important;
+  }
+  
+  /* Wrapper hero — kurangi padding atas */
+  #custApp section:first-child > .relative,
+  #custApp section:first-child > div:not(.absolute) {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
+  /* Container dalam — kurangi padding */
+  #custApp section:first-child .max-w-7xl,
+  #custApp section:first-child > .relative > div {
+    padding-top: 0 !important;
+    padding-bottom: 20px !important;
+  }
+  
+  /* Badge PREMIUM — paksa naik */
+  #custApp section:first-child .badge,
+  #custApp section:first-child span[class*="badge"],
+  #custApp section:first-child span:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    transform: translateY(-40px) !important;
+  }
+  
+  /* H1 juga naik biar seimbang */
+  #custApp section:first-child h1 {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    transform: translateY(-40px) !important;
+  }
+  
+  /* Paragraf juga naik */
+  #custApp section:first-child p {
+    margin-top: 12px !important;
+    transform: translateY(-40px) !important;
+  }
+  
+  /* Tombol juga naik */
+  #custApp section:first-child .btn,
+  #custApp section:first-child a.btn,
+  #custApp section:first-child > div > div > div.flex > a {
+    transform: translateY(-40px) !important;
+  }
+  
+  /* Stats grid juga naik */
+  #custApp section:first-child .grid {
+    transform: translateY(-40px) !important;
+    margin-top: 24px !important;
+  }
+}
+</style>
 </body>
 </html>
