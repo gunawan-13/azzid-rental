@@ -3556,58 +3556,97 @@ body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)
 })();
 </script>
 
-<style id="FAQ_RAPAT">
-/* ============================================ */
-/* HALAMAN FAQ — turunin heading + rapatkan ke card */
-/* Pakai body.route-faq (dari LAYANAN_FINAL JS) */
-/* ============================================ */
 
-/* #custApp — jarak navbar */
-body.route-faq #custApp {
-  padding-top: 140px !important;
-}
-@media (min-width: 1024px) {
-  body.route-faq #custApp {
-    padding-top: 155px !important;
+<script id="FAQ_JS_INJECT">
+(function() {
+  function rapatkanFaq() {
+    var hash = location.hash || '#/';
+    var isFaq = hash.indexOf('#/faq') === 0;
+    
+    var app = document.getElementById('custApp');
+    
+    // Reset kalau bukan FAQ
+    if (!isFaq) {
+      if (app) app.style.removeProperty('padding-top');
+      return;
+    }
+    
+    // #custApp — jarak dari navbar (cukup)
+    if (app) app.style.setProperty('padding-top', '140px', 'important');
+    
+    // Cari h1 "Butuh Jawaban Cepat"
+    var h1 = [...document.querySelectorAll('h1')].find(function(el) {
+      return el.textContent.indexOf('Butuh Jawaban') !== -1;
+    });
+    if (!h1) return;
+    
+    var sec1 = h1.closest('section');
+    var sec2 = sec1 ? sec1.nextElementSibling : null;
+    
+    // Section heading — paksa rapat
+    if (sec1) {
+      sec1.style.setProperty('padding-top', '20px', 'important');
+      sec1.style.setProperty('padding-bottom', '0', 'important');
+      sec1.style.setProperty('margin-bottom', '0', 'important');
+      sec1.style.setProperty('margin-top', '0', 'important');
+      sec1.style.setProperty('min-height', '0', 'important');
+      sec1.style.setProperty('height', 'auto', 'important');
+      
+      var innerDiv = sec1.querySelector('div');
+      if (innerDiv) {
+        innerDiv.style.setProperty('padding-bottom', '0', 'important');
+        innerDiv.style.setProperty('margin-bottom', '0', 'important');
+        innerDiv.style.setProperty('padding-top', '0', 'important');
+      }
+      
+      // Semua child — hilangkan margin
+      sec1.querySelectorAll('h1, p, span, div').forEach(function(el) {
+        el.style.setProperty('margin-bottom', '0', 'important');
+        el.style.setProperty('padding-bottom', '0', 'important');
+      });
+      
+      h1.style.setProperty('margin', '4px 0 0 0', 'important');
+      h1.style.setProperty('padding', '0', 'important');
+    }
+    
+    // Section card — TARIK NAIK keras
+    if (sec2) {
+      sec2.style.setProperty('padding-top', '0', 'important');
+      sec2.style.setProperty('margin-top', '-80px', 'important');  // ← tarik naik 80px
+    }
   }
-}
-
-/* Section heading FAQ — turunkan + rapatkan bawah */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
-  padding-top: 40px !important;
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Section card FAQ — rapatkan ke atas */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
-  padding-top: 8px !important;
-  margin-top: 0 !important;
-}
-
-/* Wrapper heading — max-width center */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
-  max-width: 80rem !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 1rem !important;
-  padding-right: 1rem !important;
-}
-@media (min-width: 640px) {
-  body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
-    padding-left: 1.5rem !important;
-    padding-right: 1.5rem !important;
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', rapatkanFaq);
+  } else {
+    rapatkanFaq();
   }
-}
-
-/* h1 & span — rapatkan */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
-  margin-top: 4px !important;
-  margin-bottom: 0 !important;
-}
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > span {
-  margin-bottom: 0 !important;
-}
-</style>
+  
+  window.addEventListener('hashchange', function() {
+    setTimeout(rapatkanFaq, 50);
+    setTimeout(rapatkanFaq, 150);
+    setTimeout(rapatkanFaq, 300);
+  });
+  
+  // Observer — kalau DOM berubah
+  var observer = new MutationObserver(function() {
+    if ((location.hash || '').indexOf('#/faq') === 0) {
+      rapatkanFaq();
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  
+  // Jalan berkala 2 detik pertama
+  if ((location.hash || '').indexOf('#/faq') === 0) {
+    var i = 0;
+    var interval = setInterval(function() {
+      rapatkanFaq();
+      if (++i > 20) clearInterval(interval);
+    }, 100);
+  }
+})();
+</script>
 </body>
 </html>
