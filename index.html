@@ -3870,28 +3870,32 @@ body.route-faq #custApp .acc.rv {
 
 
 
-<style id="FIX_SB_FLEX">
+
+<style id="FIX_SB_PAKSA">
 /* ============================================ */
-/* ADMIN SIDEBAR — FLEX LAYOUT (sesuai struktur asli) */
+/* ADMIN SIDEBAR — PAKSA KIRI, JANGAN NUMPUK */
 /* ============================================ */
 
-/* Wrapper admin — flex row, sidebar 260px */
-#adminApp > div.h-screen.bg-ink-950,
-#custApp > div.h-screen.bg-ink-950 {
-  display: flex !important;
-  flex-direction: row !important;
-  height: 100vh !important;
-  overflow: hidden !important;
-  background: #0a0a0a !important;
+/* Sembunyikan semua elemen yg numpuk di kanan */
+#aSb ~ div > a[href="#/"],
+#adminApp > div > a[href="#/"],
+#adminApp a.btn,
+body > a[href="#/"]:not(#waFloat):not(.wa-float) {
+  display: none !important;
 }
 
-/* SIDEBAR — aside #aSb */
+/* Layout admin — flex row */
+#adminApp > div[class*="h-screen"] {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+/* SIDEBAR — aside#aSb */
 #aSb {
-  position: relative !important;   /* WAJIB relative biar nggak fixed */
-  top: auto !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
+  position: relative !important;
   width: 260px !important;
   min-width: 260px !important;
   max-width: 260px !important;
@@ -3900,26 +3904,15 @@ body.route-faq #custApp .acc.rv {
   display: flex !important;
   flex-direction: column !important;
   background: #0a0a0a !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-right: 1px solid rgba(255,255,255,0.05) !important;
   overflow: hidden !important;
   z-index: 10 !important;
   transform: none !important;
-  transition: none !important;
+  top: auto !important;
+  left: auto !important;
 }
 
-/* Logo header sidebar */
-#aSb > div:first-child {
-  flex-shrink: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  padding: 16px 20px !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  height: 64px !important;
-  min-height: 64px !important;
-}
-
-/* NAV menu — flex column, scrollable */
+/* Nav — scrollable */
 #aSb > nav {
   flex: 1 1 auto !important;
   display: flex !important;
@@ -3928,81 +3921,27 @@ body.route-faq #custApp .acc.rv {
   overflow-y: auto !important;
   overflow-x: hidden !important;
   min-height: 0 !important;
-  max-height: none !important;
   padding: 16px 12px !important;
-  scrollbar-width: thin !important;
 }
 
-#aSb > nav::-webkit-scrollbar {
-  width: 6px !important;
-}
-#aSb > nav::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border-radius: 3px !important;
-}
-
-/* Menu button — full width, rata kiri */
+/* Button menu — jangan numpuk, rata kiri */
 #aSb nav > button {
   display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  width: 100% !important;
-  min-height: 42px !important;
-  height: auto !important;
-  padding: 10px 14px !important;
-  margin: 0 !important;
-  flex-shrink: 0 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  font-size: 13px !important;
-  border-radius: 8px !important;
-  text-align: left !important;
-}
-
-/* Text di menu — rata kiri */
-#aSb nav > button > span.grow,
-#aSb nav > button > span:not(.badge) {
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  text-align: left !important;
-}
-
-/* Badge di menu */
-#aSb nav > button .badge {
-  margin-left: auto !important;
-  flex-shrink: 0 !important;
-}
-
-/* Footer sidebar — di bawah */
-#aSb > div:last-child {
-  flex-shrink: 0 !important;
-  padding: 16px 12px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
-  background: #0a0a0a !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 4px !important;
-}
-
-#aSb > div:last-child a,
-#aSb > div:last-child button {
-  display: flex !important;
+  flex-direction: row !important;
   align-items: center !important;
   gap: 12px !important;
   width: 100% !important;
   min-height: 40px !important;
   padding: 10px 14px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
   white-space: nowrap !important;
-  font-size: 13px !important;
+  text-align: left !important;
   border-radius: 8px !important;
 }
 
-/* KONTEN UTAMA — flex-1 */
-#adminApp > div.h-screen.bg-ink-950 > div.flex-1,
-#custApp > div.h-screen.bg-ink-950 > div.flex-1 {
+/* Konten utama — flex 1 */
+#adminApp > div[class*="h-screen"] > div.flex-1 {
   flex: 1 1 auto !important;
   display: flex !important;
   flex-direction: column !important;
@@ -4011,16 +3950,13 @@ body.route-faq #custApp .acc.rv {
   overflow: hidden !important;
 }
 
-/* Main body — scrollable */
-#adminApp main#aBody,
-#custApp main#aBody {
-  flex: 1 1 auto !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  min-height: 0 !important;
+/* Sembunyikan "Logout" & "Buat Booking" kalau numpuk di luar sidebar */
+#adminApp > div > div:not(.flex-1):not(#aSb) > button,
+#adminApp > div > div:not(.flex-1):not(#aSb) > a {
+  display: none !important;
 }
 
-/* Mobile — sidebar jadi drawer */
+/* Mobile — drawer */
 @media (max-width: 1024px) {
   #aSb {
     position: fixed !important;
@@ -4039,5 +3975,99 @@ body.route-faq #custApp .acc.rv {
   }
 }
 </style>
+
+<script id="PAKSA_13_MENU">
+(function() {
+  // Daftar 13 menu lengkap
+  var MENU_LENGKAP = [
+    ['overview', 'Overview', 'grid'],
+    ['rental', 'Kelola Sewa', 'key'],
+    ['booking', 'Booking', 'file'],
+    ['calendar', 'Calendar', 'cal'],
+    ['armada', 'Armada', 'car'],
+    ['customers', 'Customer', 'users'],
+    ['drivers', 'Driver', 'wheel'],
+    ['payments', 'Payment', 'card'],
+    ['promo', 'Promo', 'tag'],
+    ['reports', 'Reports', 'chart'],
+    ['cms', 'CMS Website', 'globe'],
+    ['users', 'Users & Roles', 'shield'],
+    ['settings', 'Settings', 'gear']
+  ];
+
+  function paksaMenu() {
+    var sb = document.getElementById('aSb');
+    if (!sb) return;
+    
+    var nav = sb.querySelector('nav');
+    if (!nav) return;
+    
+    // Cek berapa menu sekarang
+    var currentBtns = nav.querySelectorAll('button');
+    if (currentBtns.length >= 13) {
+      return; // udah 13, skip
+    }
+    
+    // Ambil icon function — pakai existing dari menu pertama
+    var firstBtn = currentBtns[0];
+    var iconHTML = firstBtn ? firstBtn.querySelector('svg') : null;
+    var iconOuter = iconHTML ? iconHTML.outerHTML : '';
+    
+    // Bangun ulang 13 menu
+    var htmlMenus = MENU_LENGKAP.map(function(m, i) {
+      var isActive = (m[0] === 'overview') ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white';
+      
+      // Coba pakai icon dari current button kalau ada, atau icon generic
+      var icon = '';
+      if (i < currentBtns.length) {
+        var curIcon = currentBtns[i].querySelector('svg');
+        if (curIcon) {
+          icon = curIcon.outerHTML;
+        } else {
+          icon = '<span style="width:18px;height:18px;display:inline-block;border:1px solid currentColor;border-radius:4px;"></span>';
+        }
+      } else if (iconOuter) {
+        icon = iconOuter;
+      } else {
+        icon = '<span style="width:18px;height:18px;display:inline-block;border:1px solid currentColor;border-radius:4px;"></span>';
+      }
+      
+      var badge = '';
+      if (m[0] === 'rental') badge = '<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300" style="margin-left:auto;padding:2px 8px;border-radius:999px;font-size:10px;">1</span>';
+      
+      return '<button onclick="setAdminView(\'' + m[0] + '\');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ' + isActive + '" style="display:flex!important;align-items:center!important;width:100%!important;min-height:40px!important;margin-bottom:4px!important;">' +
+        icon +
+        '<span class="grow text-left" style="flex:1 1 auto;min-width:0;text-align:left!important;">' + m[1] + '</span>' +
+        badge +
+        '</button>';
+    }).join('');
+    
+    nav.innerHTML = htmlMenus;
+    console.log('✅ PAKSA_13_MENU: 13 menu di-inject!');
+  }
+
+  // Jalan saat load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(paksaMenu, 500);
+    });
+  } else {
+    setTimeout(paksaMenu, 500);
+  }
+
+  // Jalan tiap navigasi SPA
+  window.addEventListener('hashchange', function() {
+    setTimeout(paksaMenu, 300);
+    setTimeout(paksaMenu, 800);
+  });
+
+  // Jalan berkala 5 detik pertama
+  var i = 0;
+  var interval = setInterval(function() {
+    paksaMenu();
+    if (++i > 50) clearInterval(interval);
+  }, 100);
+})();
+</script>
 </body>
 </html>
