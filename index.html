@@ -3781,5 +3781,42 @@ body.route-faq #custApp section:has(.acc) {
   }
 }
 </style>
+
+<style id="FAQ_CLICK_FIX">
+/* Paksa semua card FAQ bisa diklik */
+body.route-faq #custApp .acc {
+  position: relative !important;
+  z-index: 1 !important;
+  pointer-events: auto !important;
+}
+
+body.route-faq #custApp .acc > button {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Hilangkan pseudo-element yang mungkin nutupin */
+body.route-faq #custApp .acc::before,
+body.route-faq #custApp .acc::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Grid parent — pastikan nggak ada overlay */
+body.route-faq #custApp section:has(.acc) > div {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Hilangkan overlap dari .rv animation */
+body.route-faq #custApp .acc.rv {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+</style>
 </body>
 </html>
