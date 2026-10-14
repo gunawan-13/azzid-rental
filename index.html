@@ -3976,24 +3976,63 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
 }
 </style>
 
-<script id="PAKSA_13_MENU">
+
+<script id="FIX_KILAT_MENU">
 (function() {
-  // Daftar 13 menu lengkap
-  var MENU_LENGKAP = [
-    ['overview', 'Overview', 'grid'],
-    ['rental', 'Kelola Sewa', 'key'],
-    ['booking', 'Booking', 'file'],
-    ['calendar', 'Calendar', 'cal'],
-    ['armada', 'Armada', 'car'],
-    ['customers', 'Customer', 'users'],
-    ['drivers', 'Driver', 'wheel'],
-    ['payments', 'Payment', 'card'],
-    ['promo', 'Promo', 'tag'],
-    ['reports', 'Reports', 'chart'],
-    ['cms', 'CMS Website', 'globe'],
-    ['users', 'Users & Roles', 'shield'],
-    ['settings', 'Settings', 'gear']
+  console.log('🚀 FIX_KILAT_MENU: start');
+  
+  var MENU = [
+    ['overview', 'Overview'],
+    ['rental', 'Kelola Sewa'],
+    ['booking', 'Booking'],
+    ['calendar', 'Calendar'],
+    ['armada', 'Armada'],
+    ['customers', 'Customer'],
+    ['drivers', 'Driver'],
+    ['payments', 'Payment'],
+    ['promo', 'Promo'],
+    ['reports', 'Reports'],
+    ['cms', 'CMS Website'],
+    ['users', 'Users & Roles'],
+    ['settings', 'Settings']
   ];
+
+  var ICONS = {
+    overview: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    rental: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="15" r="4"/><path d="M12 15h9v-3l-2-3h-5"/></svg>',
+    booking: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    armada: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 17h14l-2-9H7z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>',
+    customers: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>',
+    drivers: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>',
+    payments: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+    promo: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1"/></svg>',
+    reports: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
+    cms: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    users: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+    settings: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
+  };
+
+  function buildMenu() {
+    var currentView = (window.S && S.adminView) || 'overview';
+    
+    return MENU.map(function(m) {
+      var isActive = (m[0] === currentView);
+      var cls = isActive 
+        ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' 
+        : 'text-zinc-400 hover:bg-white/5 hover:text-white';
+      
+      var badge = (m[0] === 'rental') 
+        ? '<span style="margin-left:auto;padding:2px 8px;border-radius:999px;font-size:10px;background:rgba(251,146,60,0.2);color:#fdba74;">1</span>' 
+        : '';
+      
+      return '<button onclick="setAdminView(\'' + m[0] + '\');closeSb()" class="' + cls + '" style="display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;min-height:42px!important;padding:10px 14px!important;margin:0 0 4px 0!important;border-radius:8px!important;white-space:nowrap!important;text-align:left!important;font-size:13px!important;font-weight:500!important;">' 
+        + (ICONS[m[0]] || '') 
+        + '<span style="flex:1 1 auto!important;min-width:0!important;text-align:left!important;">' + m[1] + '</span>' 
+        + badge 
+        + '</button>';
+    }).join('');
+  }
 
   function paksaMenu() {
     var sb = document.getElementById('aSb');
@@ -4002,71 +4041,49 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
     var nav = sb.querySelector('nav');
     if (!nav) return;
     
-    // Cek berapa menu sekarang
-    var currentBtns = nav.querySelectorAll('button');
-    if (currentBtns.length >= 13) {
-      return; // udah 13, skip
-    }
+    var currentCount = nav.querySelectorAll('button').length;
+    if (currentCount >= 13) return;
     
-    // Ambil icon function — pakai existing dari menu pertama
-    var firstBtn = currentBtns[0];
-    var iconHTML = firstBtn ? firstBtn.querySelector('svg') : null;
-    var iconOuter = iconHTML ? iconHTML.outerHTML : '';
-    
-    // Bangun ulang 13 menu
-    var htmlMenus = MENU_LENGKAP.map(function(m, i) {
-      var isActive = (m[0] === 'overview') ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white';
-      
-      // Coba pakai icon dari current button kalau ada, atau icon generic
-      var icon = '';
-      if (i < currentBtns.length) {
-        var curIcon = currentBtns[i].querySelector('svg');
-        if (curIcon) {
-          icon = curIcon.outerHTML;
-        } else {
-          icon = '<span style="width:18px;height:18px;display:inline-block;border:1px solid currentColor;border-radius:4px;"></span>';
-        }
-      } else if (iconOuter) {
-        icon = iconOuter;
-      } else {
-        icon = '<span style="width:18px;height:18px;display:inline-block;border:1px solid currentColor;border-radius:4px;"></span>';
-      }
-      
-      var badge = '';
-      if (m[0] === 'rental') badge = '<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300" style="margin-left:auto;padding:2px 8px;border-radius:999px;font-size:10px;">1</span>';
-      
-      return '<button onclick="setAdminView(\'' + m[0] + '\');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ' + isActive + '" style="display:flex!important;align-items:center!important;width:100%!important;min-height:40px!important;margin-bottom:4px!important;">' +
-        icon +
-        '<span class="grow text-left" style="flex:1 1 auto;min-width:0;text-align:left!important;">' + m[1] + '</span>' +
-        badge +
-        '</button>';
-    }).join('');
-    
-    nav.innerHTML = htmlMenus;
-    console.log('✅ PAKSA_13_MENU: 13 menu di-inject!');
+    nav.innerHTML = buildMenu();
+    console.log('✅ FIX_KILAT_MENU: 13 menu di-inject! (sebelumnya ' + currentCount + ')');
   }
 
-  // Jalan saat load
+  // Jalan agresif di awal
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(paksaMenu, 100);
       setTimeout(paksaMenu, 500);
+      setTimeout(paksaMenu, 1000);
     });
   } else {
+    setTimeout(paksaMenu, 100);
     setTimeout(paksaMenu, 500);
+    setTimeout(paksaMenu, 1000);
   }
 
-  // Jalan tiap navigasi SPA
+  // Tiap navigasi SPA
   window.addEventListener('hashchange', function() {
+    setTimeout(paksaMenu, 100);
     setTimeout(paksaMenu, 300);
-    setTimeout(paksaMenu, 800);
+    setTimeout(paksaMenu, 700);
   });
 
-  // Jalan berkala 5 detik pertama
+  // MutationObserver — kalau nav berubah
+  setTimeout(function() {
+    var target = document.getElementById('adminApp') || document.body;
+    var obs = new MutationObserver(function() {
+      paksaMenu();
+    });
+    obs.observe(target, { childList: true, subtree: true });
+  }, 1000);
+
+  // Timer agresif 10 detik pertama
   var i = 0;
-  var interval = setInterval(function() {
+  var timer = setInterval(function() {
     paksaMenu();
-    if (++i > 50) clearInterval(interval);
+    if (++i > 100) clearInterval(timer);
   }, 100);
+
 })();
 </script>
 </body>
