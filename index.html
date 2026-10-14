@@ -3692,5 +3692,86 @@ body.page-anim #custApp .acc {
   window.addEventListener('hashchange', triggerAnim);
 })();
 </script>
+
+<style id="WA_FIXED_FORCE">
+/* ============================================ */
+/* TOMBOL WHATSAPP — FIXED POJOK KANAN BAWAH */
+/* Diam saat scroll, nggak ikut footer */
+/* ============================================ */
+
+#waFloat,
+a#waFloat,
+.wa-float {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 9999 !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: #25D366 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+  text-decoration: none !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  /* Pastikan nggak ikut scroll */
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+  pointer-events: auto !important;
+}
+
+/* Icon WA di dalam — center */
+#waFloat svg,
+.wa-float svg {
+  width: 28px !important;
+  height: 28px !important;
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  fill: #ffffff !important;
+}
+
+/* Hover — scale dikit */
+#waFloat:hover,
+.wa-float:hover {
+  transform: scale(1.1) translateZ(0) !important;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
+}
+
+/* Mobile — lebih kecil + jarak aman */
+@media (max-width: 768px) {
+  #waFloat,
+  a#waFloat,
+  .wa-float {
+    bottom: 20px !important;
+    right: 16px !important;
+    width: 52px !important;
+    height: 52px !important;
+  }
+  #waFloat svg,
+  .wa-float svg {
+    width: 26px !important;
+    height: 26px !important;
+  }
+}
+
+/* JANGAN biarkan WA ikut footer */
+footer #waFloat,
+footer .wa-float {
+  display: none !important;
+  position: static !important;
+}
+
+/* Pastikan body nggak punya transform yang bikin fixed rusak */
+body {
+  transform: none !important;
+}
+#custApp {
+  transform: none !important;
+}
+</style>
 </body>
 </html>
