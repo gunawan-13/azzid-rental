@@ -3824,67 +3824,60 @@ body {
 })();
 </script>
 
-<style id="HP_PREMIUM_NAIK">
+
+<style id="HP_PREMIUM_AMAN">
 /* ============================================ */
-/* HP ONLY — naikkan badge PREMIUM di hero */
+/* HP ONLY — rapatkan hero, badge TETAP KELIHATAN */
 /* LAPTOP JANGAN DIUBAH */
 /* ============================================ */
 
 @media (max-width: 768px) {
-  /* Hero section pertama — kurangi jarak atas */
+  /* Section hero — kurangi padding atas biar badge naik */
   #custApp section:first-child {
     padding-top: 0 !important;
+    padding-bottom: 20px !important;
     margin-top: 0 !important;
     min-height: auto !important;
   }
   
-  /* Wrapper hero — kurangi padding atas */
+  /* Wrapper hero — kurangi padding atas (badge jadi lebih naik) */
   #custApp section:first-child > .relative,
   #custApp section:first-child > div:not(.absolute) {
     padding-top: 0 !important;
     margin-top: 0 !important;
+    padding-bottom: 0 !important;
   }
   
-  /* Container dalam — kurangi padding */
-  #custApp section:first-child .max-w-7xl,
-  #custApp section:first-child > .relative > div {
-    padding-top: 0 !important;
-    padding-bottom: 20px !important;
-  }
-  
-  /* Badge PREMIUM — paksa naik */
+  /* Badge PREMIUM — jangan transform, cuma pastikan kelihatan */
   #custApp section:first-child .badge,
-  #custApp section:first-child span[class*="badge"],
-  #custApp section:first-child span:first-child {
+  #custApp section:first-child span[class*="badge"] {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     margin-top: 0 !important;
-    padding-top: 0 !important;
-    transform: translateY(-40px) !important;
+    margin-bottom: 16px !important;
   }
   
-  /* H1 juga naik biar seimbang */
+  /* H1 — margin kecil aja */
   #custApp section:first-child h1 {
     margin-top: 0 !important;
-    padding-top: 0 !important;
-    transform: translateY(-40px) !important;
+    margin-bottom: 12px !important;
   }
   
-  /* Paragraf juga naik */
+  /* Paragraf — rapat */
   #custApp section:first-child p {
-    margin-top: 12px !important;
-    transform: translateY(-40px) !important;
+    margin-top: 0 !important;
+    margin-bottom: 16px !important;
   }
   
-  /* Tombol juga naik */
-  #custApp section:first-child .btn,
-  #custApp section:first-child a.btn,
-  #custApp section:first-child > div > div > div.flex > a {
-    transform: translateY(-40px) !important;
-  }
-  
-  /* Stats grid juga naik */
+  /* Stats grid — jarak dari tombol */
   #custApp section:first-child .grid {
-    transform: translateY(-40px) !important;
     margin-top: 24px !important;
+  }
+  
+  /* JANGAN pakai transform apapun */
+  #custApp section:first-child * {
+    transform: none !important;
   }
 }
 </style>
