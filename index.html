@@ -3583,5 +3583,114 @@ body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):n
   margin-bottom: 0 !important;
 }
 </style>
+
+<style id="ANIMASI_HALAMAN">
+/* ============================================ */
+/* ANIMASI UP SMOOTH — semua halaman */
+/* ============================================ */
+
+/* Keyframes slide up halus */
+@keyframes pageUpSmooth {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Animasi applied via class .page-anim */
+body.page-anim #custApp main > section:first-child {
+  animation: pageUpSmooth 0.6s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  will-change: transform, opacity;
+}
+
+/* Delay bertingkat untuk elemen di dalam section pertama */
+body.page-anim #custApp main > section:first-child > div > div > * {
+  animation: pageUpSmooth 0.6s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+body.page-anim #custApp main > section:first-child > div > div > *:nth-child(1) { animation-delay: 0.05s !important; }
+body.page-anim #custApp main > section:first-child > div > div > *:nth-child(2) { animation-delay: 0.12s !important; }
+body.page-anim #custApp main > section:first-child > div > div > *:nth-child(3) { animation-delay: 0.19s !important; }
+body.page-anim #custApp main > section:first-child > div > div > *:nth-child(4) { animation-delay: 0.26s !important; }
+
+/* Section kedua & setelahnya — slide up dengan delay lebih */
+body.page-anim #custApp main > section:nth-child(2) {
+  animation: pageUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both !important;
+  will-change: transform, opacity;
+}
+body.page-anim #custApp main > section:nth-child(3) {
+  animation: pageUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both !important;
+  will-change: transform, opacity;
+}
+body.page-anim #custApp main > section:nth-child(n+4) {
+  animation: pageUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both !important;
+  will-change: transform, opacity;
+}
+
+/* Jangan animasi saat di beranda (biar hero nggak bentrok) */
+body.route-beranda.page-anim #custApp main > section {
+  animation: none !important;
+}
+
+/* Jangan animasi elemen di dalam card FAQ (biar card-nya aja yang naik) */
+body.page-anim #custApp .acc {
+  animation: none !important;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body.page-anim #custApp main > section,
+  body.page-anim #custApp main > section * {
+    animation: none !important;
+  }
+}
+</style>
+
+<script id="ANIMASI_HALAMAN_JS">
+(function() {
+  var lastRoute = '';
+  
+  function triggerAnim() {
+    var hash = location.hash || '#/';
+    
+    // Skip beranda
+    if (hash === '#/' || hash === '' || hash === '#') {
+      document.body.classList.remove('page-anim');
+      return;
+    }
+    
+    // Skip kalau route sama (nggak perlu animasi ulang)
+    if (hash === lastRoute) return;
+    lastRoute = hash;
+    
+    // Hapus class dulu
+    document.body.classList.remove('page-anim');
+    
+    // Force reflow — biar animasi restart
+    void document.body.offsetWidth;
+    
+    // Tambah class animasi
+    document.body.classList.add('page-anim');
+    
+    // Auto-remove setelah animasi selesai (biar nggak stuck)
+    setTimeout(function() {
+      document.body.classList.remove('page-anim');
+    }, 1500);
+  }
+  
+  // Jalan saat pertama kali load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', triggerAnim);
+  } else {
+    triggerAnim();
+  }
+  
+  // Jalan tiap hash berubah
+  window.addEventListener('hashchange', triggerAnim);
+})();
+</script>
 </body>
 </html>
