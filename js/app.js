@@ -4573,6 +4573,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     if (!h2) return;
     
     if (!h2) return;  // FIX: guard kalau h2 null
+    if (!h2) return;  // FIX: guard null h2
     var section = h2.closest('section');
     if (!section) return;
     
