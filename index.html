@@ -3707,6 +3707,7 @@ body.route-faq #custApp .acc.rv {
 
 
 
+
 <script id="LAYANAN_JS_INJECT">
 (function() {
   function rapatkanLayanan() {
@@ -3725,8 +3726,8 @@ body.route-faq #custApp .acc.rv {
       return;
     }
     
-    // #custApp — jarak navbar
-    if (app) app.style.setProperty('padding-top', '160px', 'important');
+    // #custApp — jarak navbar LEBIH BESAR biar span "LAYANAN" kelihatan
+    if (app) app.style.setProperty('padding-top', '200px', 'important');
     if (main) {
       main.style.setProperty('padding-top', '0', 'important');
       main.style.setProperty('margin-top', '0', 'important');
@@ -3741,7 +3742,7 @@ body.route-faq #custApp .acc.rv {
     var sec1 = h1.closest('section');
     var sec2 = sec1 ? sec1.nextElementSibling : null;
     
-    // Section heading — RAPATKAN
+    // Section heading
     if (sec1) {
       sec1.style.setProperty('padding-top', '8px', 'important');
       sec1.style.setProperty('padding-bottom', '0', 'important');
@@ -3762,22 +3763,22 @@ body.route-faq #custApp .acc.rv {
         el.style.setProperty('padding-bottom', '0', 'important');
       });
       
-      // h1 — rapatkan ke bawah
-      h1.style.setProperty('margin', '2px 0 0 0', 'important');
+      // h1 — margin kecil
+      h1.style.setProperty('margin', '4px 0 0 0', 'important');
       h1.style.setProperty('padding', '0', 'important');
       
-      // Deskripsi — RAPATKAN ke h1 (jarak kecil 8px)
+      // Deskripsi — jarak 20px dari heading
       var desc = sec1.querySelector('p');
       if (desc) {
-        desc.style.setProperty('margin', '8px 0 0 0', 'important');  // ← dari 16px jadi 8px
+        desc.style.setProperty('margin', '20px 0 0 0', 'important');
         desc.style.setProperty('padding', '0', 'important');
       }
     }
     
-    // Section card — TARIK NAIK
+    // Section card — TARIK NAIK biar rapat + kasih jarak dikit (bukan nempel)
     if (sec2) {
       sec2.style.setProperty('padding-top', '0', 'important');
-      sec2.style.setProperty('margin-top', '-100px', 'important');
+      sec2.style.setProperty('margin-top', '-80px', 'important');  // ← -80 (bukan -130) biar ada jarak dikit
     }
   }
   
