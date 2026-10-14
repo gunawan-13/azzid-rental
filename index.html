@@ -3256,6 +3256,102 @@ html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
 })();
 </script>
 
+<style id="KONTAK_FINAL">
+/* ============================================ */
+/* HALAMAN KONTAK — header tidak ketutup + rapat ke card */
+/* ============================================ */
+
+body.route-kontak #custApp {
+  padding-top: 140px !important;
+}
+@media (min-width: 1024px) {
+  body.route-kontak #custApp {
+    padding-top: 160px !important;
+  }
+}
+
+/* Section heading Kontak — kurangi padding */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
+  padding-top: 20px !important;
+  padding-bottom: 12px !important;
+}
+
+/* Section card Kontak — rapatkan ke atas */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
+  padding-top: 12px !important;
+  margin-top: 0 !important;
+}
+
+/* Wrapper heading */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
+  max-width: 80rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+@media (min-width: 640px) {
+  body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* h1 &amp; span heading kontak — rapatkan */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
+  margin-top: 4px !important;
+  margin-bottom: 0 !important;
+}
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > span {
+  margin-bottom: 0 !important;
+}
+</style>
+
+
+
+
+
+<style id="KONTAK_RAPAT">
+/* ============================================ */
+/* HALAMAN KONTAK — rapatkan heading ke card */
+/* ============================================ */
+
+/* #custApp — jarak navbar */
+body.route-kontak #custApp {
+  padding-top: 140px !important;
+}
+@media (min-width: 1024px) {
+  body.route-kontak #custApp {
+    padding-top: 155px !important;
+  }
+}
+
+/* Section heading — turunkan + rapatkan bawah */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
+  padding-top: 40px !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Section card + form — paksa rapat ke atas */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
+  padding-top: 8px !important;
+  margin-top: 0 !important;
+}
+
+/* h1 — hapus margin bawah */
+body.route-kontak #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+</style>
+
+
+
+
+
+
+
 <script id="KONTAK_JS_INJECT">
 (function() {
   function rapatkanKontak() {
@@ -3344,6 +3440,100 @@ html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
   }
 })();
 </script>
+
+
+<script id="FAQ_JS_INJECT">
+(function() {
+  function rapatkanFaq() {
+    var hash = location.hash || '#/';
+    var isFaq = hash.indexOf('#/faq') === 0;
+    
+    var app = document.getElementById('custApp');
+    
+    // Reset kalau bukan FAQ
+    if (!isFaq) {
+      if (app) app.style.removeProperty('padding-top');
+      return;
+    }
+    
+    // #custApp — jarak dari navbar (cukup)
+    if (app) app.style.setProperty('padding-top', '140px', 'important');
+    
+    // Cari h1 "Butuh Jawaban Cepat"
+    var h1 = [...document.querySelectorAll('h1')].find(function(el) {
+      return el.textContent.indexOf('Butuh Jawaban') !== -1;
+    });
+    if (!h1) return;
+    
+    var sec1 = h1.closest('section');
+    var sec2 = sec1 ? sec1.nextElementSibling : null;
+    
+    // Section heading — paksa rapat
+    if (sec1) {
+      sec1.style.setProperty('padding-top', '20px', 'important');
+      sec1.style.setProperty('padding-bottom', '0', 'important');
+      sec1.style.setProperty('margin-bottom', '0', 'important');
+      sec1.style.setProperty('margin-top', '0', 'important');
+      sec1.style.setProperty('min-height', '0', 'important');
+      sec1.style.setProperty('height', 'auto', 'important');
+      
+      var innerDiv = sec1.querySelector('div');
+      if (innerDiv) {
+        innerDiv.style.setProperty('padding-bottom', '0', 'important');
+        innerDiv.style.setProperty('margin-bottom', '0', 'important');
+        innerDiv.style.setProperty('padding-top', '0', 'important');
+      }
+      
+      // Semua child — hilangkan margin
+      sec1.querySelectorAll('h1, p, span, div').forEach(function(el) {
+        el.style.setProperty('margin-bottom', '0', 'important');
+        el.style.setProperty('padding-bottom', '0', 'important');
+      });
+      
+      h1.style.setProperty('margin', '4px 0 0 0', 'important');
+      h1.style.setProperty('padding', '0', 'important');
+    }
+    
+    // Section card — TARIK NAIK keras
+    if (sec2) {
+      sec2.style.setProperty('padding-top', '0', 'important');
+      sec2.style.setProperty('margin-top', '-80px', 'important');  // ← tarik naik 80px
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', rapatkanFaq);
+  } else {
+    rapatkanFaq();
+  }
+  
+  window.addEventListener('hashchange', function() {
+    setTimeout(rapatkanFaq, 50);
+    setTimeout(rapatkanFaq, 150);
+    setTimeout(rapatkanFaq, 300);
+  });
+  
+  // Observer — kalau DOM berubah
+  var observer = new MutationObserver(function() {
+    if ((location.hash || '').indexOf('#/faq') === 0) {
+      rapatkanFaq();
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+  
+  // Jalan berkala 2 detik pertama
+  if ((location.hash || '').indexOf('#/faq') === 0) {
+    var i = 0;
+    var interval = setInterval(function() {
+      rapatkanFaq();
+      if (++i > 20) clearInterval(interval);
+    }, 100);
+  }
+})();
+</script>
+
 
 
 <style id="FAQ_2KOLOM_FIX">
@@ -3516,425 +3706,110 @@ body.route-faq #custApp .acc.rv {
 
 
 
-
-<style id="FIX_LAYANAN_FAQ_HEADING">
-/* ============================================ */
-/* FIX HANYA 2 HALAMAN: LAYANAN & FAQ */
-/* JANGAN sentuh yang lain */
-/* ============================================ */
-
-/* ============ LAYANAN ============ */
-body.route-layanan #custApp {
-  padding-top: 160px !important;
-}
-@media (min-width: 1024px) {
-  body.route-layanan #custApp {
-    padding-top: 175px !important;
-  }
-}
-
-/* Section heading Layanan — kasih jarak dari navbar */
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
-  padding-top: 20px !important;
-  padding-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Section card Layanan — rapatkan ke deskripsi */
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
-  padding-top: 0 !important;
-  margin-top: -60px !important;
-}
-
-/* h1 Layanan — rapatkan */
-body.route-layanan #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
-  margin-top: 4px !important;
-  margin-bottom: 0 !important;
-}
-
-/* ============ FAQ ============ */
-body.route-faq #custApp {
-  padding-top: 160px !important;
-}
-@media (min-width: 1024px) {
-  body.route-faq #custApp {
-    padding-top: 175px !important;
-  }
-}
-
-/* Section heading FAQ — kasih jarak dari navbar */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) {
-  padding-top: 20px !important;
-  padding-bottom: 0 !important;
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-/* Section card FAQ — rapatkan ke heading */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) + section {
-  padding-top: 0 !important;
-  margin-top: -40px !important;
-}
-
-/* h1 FAQ — rapatkan */
-body.route-faq #custApp main > section:has(> div > h1):not(:has(#vehListGrid)):not(:has(form)) > div > h1 {
-  margin-top: 4px !important;
-  margin-bottom: 0 !important;
-}
-</style>
-
-<style id="ANIMASI_HALAMAN">
-/* ============================================ */
-/* ANIMASI UP SMOOTH — semua halaman */
-/* ============================================ */
-
-/* Keyframes slide up halus */
-@keyframes pageUpSmooth {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 30px, 0);
-  }
-  100% {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-/* Animasi applied via class .page-anim */
-body.page-anim #custApp main > section:first-child {
-  animation: pageUpSmooth 0.6s cubic-bezier(0.16, 1, 0.3, 1) both !important;
-  will-change: transform, opacity;
-}
-
-/* Delay bertingkat untuk elemen di dalam section pertama */
-body.page-anim #custApp main > section:first-child > div > div > * {
-  animation: pageUpSmooth 0.6s cubic-bezier(0.16, 1, 0.3, 1) both !important;
-}
-body.page-anim #custApp main > section:first-child > div > div > *:nth-child(1) { animation-delay: 0.05s !important; }
-body.page-anim #custApp main > section:first-child > div > div > *:nth-child(2) { animation-delay: 0.12s !important; }
-body.page-anim #custApp main > section:first-child > div > div > *:nth-child(3) { animation-delay: 0.19s !important; }
-body.page-anim #custApp main > section:first-child > div > div > *:nth-child(4) { animation-delay: 0.26s !important; }
-
-/* Section kedua & setelahnya — slide up dengan delay lebih */
-body.page-anim #custApp main > section:nth-child(2) {
-  animation: pageUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both !important;
-  will-change: transform, opacity;
-}
-body.page-anim #custApp main > section:nth-child(3) {
-  animation: pageUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both !important;
-  will-change: transform, opacity;
-}
-body.page-anim #custApp main > section:nth-child(n+4) {
-  animation: pageUpSmooth 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both !important;
-  will-change: transform, opacity;
-}
-
-/* Jangan animasi saat di beranda (biar hero nggak bentrok) */
-body.route-beranda.page-anim #custApp main > section {
-  animation: none !important;
-}
-
-/* Jangan animasi elemen di dalam card FAQ (biar card-nya aja yang naik) */
-body.page-anim #custApp .acc {
-  animation: none !important;
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  body.page-anim #custApp main > section,
-  body.page-anim #custApp main > section * {
-    animation: none !important;
-  }
-}
-</style>
-
-<script id="ANIMASI_HALAMAN_JS">
+<script id="LAYANAN_JS_INJECT">
 (function() {
-  var lastRoute = '';
-  
-  function triggerAnim() {
+  function rapatkanLayanan() {
     var hash = location.hash || '#/';
+    var isLayanan = hash.indexOf('#/layanan') === 0;
     
-    // Skip beranda
-    if (hash === '#/' || hash === '' || hash === '#') {
-      document.body.classList.remove('page-anim');
+    var app = document.getElementById('custApp');
+    var main = app ? app.querySelector('main') : null;
+    
+    // Reset kalau bukan layanan
+    if (!isLayanan) {
+      if (app) app.style.removeProperty('padding-top');
+      if (main) {
+        main.style.removeProperty('padding-top');
+        main.style.removeProperty('margin-top');
+      }
       return;
     }
     
-    // Skip kalau route sama (nggak perlu animasi ulang)
-    if (hash === lastRoute) return;
-    lastRoute = hash;
-    
-    // Hapus class dulu
-    document.body.classList.remove('page-anim');
-    
-    // Force reflow — biar animasi restart
-    void document.body.offsetWidth;
-    
-    // Tambah class animasi
-    document.body.classList.add('page-anim');
-    
-    // Auto-remove setelah animasi selesai (biar nggak stuck)
-    setTimeout(function() {
-      document.body.classList.remove('page-anim');
-    }, 1500);
-  }
-  
-  // Jalan saat pertama kali load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', triggerAnim);
-  } else {
-    triggerAnim();
-  }
-  
-  // Jalan tiap hash berubah
-  window.addEventListener('hashchange', triggerAnim);
-})();
-</script>
-
-<style id="WA_FIXED_FORCE">
-/* ============================================ */
-/* TOMBOL WHATSAPP — FIXED POJOK KANAN BAWAH */
-/* Diam saat scroll, nggak ikut footer */
-/* ============================================ */
-
-#waFloat,
-a#waFloat,
-.wa-float {
-  position: fixed !important;
-  bottom: 24px !important;
-  right: 24px !important;
-  top: auto !important;
-  left: auto !important;
-  z-index: 9999 !important;
-  display: grid !important;
-  place-items: center !important;
-  width: 56px !important;
-  height: 56px !important;
-  border-radius: 50% !important;
-  background: #25D366 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
-  text-decoration: none !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-  /* Pastikan nggak ikut scroll */
-  transform: translateZ(0) !important;
-  will-change: transform !important;
-  pointer-events: auto !important;
-}
-
-/* Icon WA di dalam — center */
-#waFloat svg,
-.wa-float svg {
-  width: 28px !important;
-  height: 28px !important;
-  display: block !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  fill: #ffffff !important;
-}
-
-/* Hover — scale dikit */
-#waFloat:hover,
-.wa-float:hover {
-  transform: scale(1.1) translateZ(0) !important;
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5) !important;
-}
-
-/* Mobile — lebih kecil + jarak aman */
-@media (max-width: 768px) {
-  #waFloat,
-  a#waFloat,
-  .wa-float {
-    bottom: 20px !important;
-    right: 16px !important;
-    width: 52px !important;
-    height: 52px !important;
-  }
-  #waFloat svg,
-  .wa-float svg {
-    width: 26px !important;
-    height: 26px !important;
-  }
-}
-
-/* JANGAN biarkan WA ikut footer */
-footer #waFloat,
-footer .wa-float {
-  display: none !important;
-  position: static !important;
-}
-
-/* Pastikan body nggak punya transform yang bikin fixed rusak */
-body {
-  transform: none !important;
-}
-#custApp {
-  transform: none !important;
-}
-</style>
-
-<script id="WA_PINDAH_BODY">
-(function() {
-  function pindahkanWa() {
-    var wa = document.getElementById('waFloat');
-    if (!wa) return;
-    
-    // Kalau parent-nya bukan body, pindahkan ke body
-    if (wa.parentElement !== document.body) {
-      document.body.appendChild(wa);
-      console.log('✅ #waFloat dipindah ke body');
+    // #custApp — jarak navbar LEBIH BESAR biar span "LAYANAN" kelihatan
+    if (app) app.style.setProperty('padding-top', '185px', 'important');
+    if (main) {
+      main.style.setProperty('padding-top', '0', 'important');
+      main.style.setProperty('margin-top', '0', 'important');
     }
     
-    // Paksa inline style
-    wa.style.setProperty('position', 'fixed', 'important');
-    wa.style.setProperty('bottom', '24px', 'important');
-    wa.style.setProperty('right', '24px', 'important');
-    wa.style.setProperty('top', 'auto', 'important');
-    wa.style.setProperty('left', 'auto', 'important');
-    wa.style.setProperty('z-index', '99999', 'important');
-    wa.style.setProperty('transform', 'none', 'important');
+    // Cari h1 "Layanan Rental Kami"
+    var h1 = [...document.querySelectorAll('h1')].find(function(el) {
+      return el.textContent.indexOf('Layanan Rental') !== -1;
+    });
+    if (!h1) return;
+    
+    var sec1 = h1.closest('section');
+    var sec2 = sec1 ? sec1.nextElementSibling : null;
+    
+    // Section heading — rapatkan
+    if (sec1) {
+      sec1.style.setProperty('padding-top', '8px', 'important');
+      sec1.style.setProperty('padding-bottom', '0', 'important');
+      sec1.style.setProperty('margin-bottom', '0', 'important');
+      sec1.style.setProperty('margin-top', '0', 'important');
+      sec1.style.setProperty('min-height', '0', 'important');
+      
+      var innerDiv = sec1.querySelector('div');
+      if (innerDiv) {
+        innerDiv.style.setProperty('padding-bottom', '0', 'important');
+        innerDiv.style.setProperty('margin-bottom', '0', 'important');
+        innerDiv.style.setProperty('padding-top', '0', 'important');
+      }
+      
+      // Semua child — hilangkan margin
+      sec1.querySelectorAll('h1, p, span, div').forEach(function(el) {
+        el.style.setProperty('margin-bottom', '0', 'important');
+        el.style.setProperty('padding-bottom', '0', 'important');
+      });
+      
+      // h1 — margin kecil
+      h1.style.setProperty('margin', '4px 0 0 0', 'important');
+      h1.style.setProperty('padding', '0', 'important');
+      
+      // Deskripsi — jarak 16px dari heading
+      var desc = sec1.querySelector('p');
+      if (desc) {
+        desc.style.setProperty('margin', '16px 0 0 0', 'important');
+        desc.style.setProperty('padding', '0', 'important');
+      }
+    }
+    
+    // Section card — TARIK NAIK lebih keras
+    if (sec2) {
+      sec2.style.setProperty('padding-top', '0', 'important');
+      sec2.style.setProperty('margin-top', '-130px', 'important');
+    }
   }
   
-  // Jalan saat load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', pindahkanWa);
+    document.addEventListener('DOMContentLoaded', rapatkanLayanan);
   } else {
-    pindahkanWa();
+    rapatkanLayanan();
   }
   
-  // Jalan tiap navigasi SPA
   window.addEventListener('hashchange', function() {
-    setTimeout(pindahkanWa, 50);
-    setTimeout(pindahkanWa, 200);
+    setTimeout(rapatkanLayanan, 50);
+    setTimeout(rapatkanLayanan, 150);
+    setTimeout(rapatkanLayanan, 300);
   });
   
-  // Observer — kalau wa di-rerender
-  var observer = new MutationObserver(pindahkanWa);
+  var observer = new MutationObserver(function() {
+    if ((location.hash || '').indexOf('#/layanan') === 0) {
+      rapatkanLayanan();
+    }
+  });
   document.addEventListener('DOMContentLoaded', function() {
     observer.observe(document.body, { childList: true, subtree: true });
   });
   
-  // Jalan berkala 3 detik pertama
-  var i = 0;
-  var interval = setInterval(function() {
-    pindahkanWa();
-    if (++i > 30) clearInterval(interval);
-  }, 100);
+  if ((location.hash || '').indexOf('#/layanan') === 0) {
+    var i = 0;
+    var interval = setInterval(function() {
+      rapatkanLayanan();
+      if (++i > 20) clearInterval(interval);
+    }, 100);
+  }
 })();
 </script>
-
-
-<style id="HP_PREMIUM_AMAN">
-/* ============================================ */
-/* HP ONLY — rapatkan hero, badge TETAP KELIHATAN */
-/* LAPTOP JANGAN DIUBAH */
-/* ============================================ */
-
-@media (max-width: 768px) {
-  /* Section hero — kurangi padding atas biar badge naik */
-  #custApp section:first-child {
-    padding-top: 0 !important;
-    padding-bottom: 20px !important;
-    margin-top: 0 !important;
-    min-height: auto !important;
-  }
-  
-  /* Wrapper hero — kurangi padding atas (badge jadi lebih naik) */
-  #custApp section:first-child > .relative,
-  #custApp section:first-child > div:not(.absolute) {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    padding-bottom: 0 !important;
-  }
-  
-  /* Badge PREMIUM — jangan transform, cuma pastikan kelihatan */
-  #custApp section:first-child .badge,
-  #custApp section:first-child span[class*="badge"] {
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    margin-top: 0 !important;
-    margin-bottom: 16px !important;
-  }
-  
-  /* H1 — margin kecil aja */
-  #custApp section:first-child h1 {
-    margin-top: 0 !important;
-    margin-bottom: 12px !important;
-  }
-  
-  /* Paragraf — rapat */
-  #custApp section:first-child p {
-    margin-top: 0 !important;
-    margin-bottom: 16px !important;
-  }
-  
-  /* Stats grid — jarak dari tombol */
-  #custApp section:first-child .grid {
-    margin-top: 24px !important;
-  }
-  
-  /* JANGAN pakai transform apapun */
-  #custApp section:first-child * {
-    transform: none !important;
-  }
-}
-</style>
-
-<style id="HP_BADGE_ALIGN">
-/* ============================================ */
-/* HP ONLY — sejajarkan icon + teks di badge PREMIUM */
-/* LAPTOP JANGAN DIUBAH */
-/* ============================================ */
-
-@media (max-width: 768px) {
-  /* Badge PREMIUM — paksa flex center */
-  #custApp section:first-child .badge,
-  #custApp section:first-child span[class*="badge"],
-  #custApp section:first-child > .relative > div > span:first-child {
-    display: inline-flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 8px !important;
-    line-height: 1 !important;
-    padding: 6px 14px !important;
-    vertical-align: middle !important;
-  }
-  
-  /* SVG icon di dalam badge — center vertikal */
-  #custApp section:first-child .badge svg,
-  #custApp section:first-child span[class*="badge"] svg,
-  #custApp section:first-child > .relative > div > span:first-child svg {
-    display: inline-block !important;
-    width: 14px !important;
-    height: 14px !important;
-    min-width: 14px !important;
-    min-height: 14px !important;
-    flex-shrink: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    align-self: center !important;
-    vertical-align: middle !important;
-    position: relative !important;
-    top: 0 !important;
-    transform: translateY(0) !important;
-  }
-  
-  /* Teks di dalam badge — center vertikal */
-  #custApp section:first-child .badge span,
-  #custApp section:first-child span[class*="badge"] span,
-  #custApp section:first-child > .relative > div > span:first-child > *:not(svg) {
-    display: inline-block !important;
-    line-height: 1 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    align-self: center !important;
-    vertical-align: middle !important;
-    transform: translateY(0) !important;
-  }
-}
-</style>
 </body>
 </html>
