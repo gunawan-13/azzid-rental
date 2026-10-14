@@ -1631,7 +1631,7 @@ function renderA() {
     return;
   }
   window.scrollTo(0, 0);
-  const menu = AMENU.filter(m => (ROLE_MENU[S.session.role] || FULL_MENU).includes(m[0]));
+  const menu = AMENU;  // FIX: tampilkan SEMUA menu tanpa filter role
   if (!menu.find(m => m[0] === S.adminView)) S.adminView = menu[0][0];
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
