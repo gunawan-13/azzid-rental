@@ -1570,7 +1570,7 @@ function setAdminView(v){ if(typeof closeSb==="function") closeSb();
 /* Struktur sidebar sesuai PRD + Kelola Sewa */
 
 /* ROLE_MENU & FULL_MENU didefinisikan di data.js */
-const AMENU = [
+window.AMENU = window.AMENU || [
   ['overview', 'Overview', 'grid'],
   ['rental', 'Kelola Sewa', 'key'],
   ['booking', 'Booking', 'file'],
@@ -1631,7 +1631,7 @@ function renderA() {
     return;
   }
   window.scrollTo(0, 0);
-  const menu = AMENU;  // FIX: tampilkan SEMUA menu tanpa filter role
+  const menu = window.AMENU || [];  // FIX: tampilkan SEMUA menu tanpa filter role
   if (!menu.find(m => m[0] === S.adminView)) S.adminView = menu[0][0];
   const pend = BOOKINGS.filter(b => b.status === 'Pending').length;
   const ong = ongoingCount();
