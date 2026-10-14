@@ -3867,12 +3867,13 @@ body.route-faq #custApp .acc.rv {
 }
 </style>
 
-<style id="FIX_SB_KIRI">
+
+<style id="FIX_SB_LEBAR">
 /* ============================================ */
-/* ADMIN SIDEBAR — FIXED KIRI */
+/* ADMIN SIDEBAR — LEBAR + semua menu muncul */
 /* ============================================ */
 
-/* Sidebar desktop — fixed di kiri */
+/* Sidebar desktop — fixed kiri, lebar 260px */
 #aSb {
   position: fixed !important;
   top: 0 !important;
@@ -3880,6 +3881,7 @@ body.route-faq #custApp .acc.rv {
   bottom: 0 !important;
   right: auto !important;
   width: 260px !important;
+  min-width: 260px !important;
   max-width: 260px !important;
   height: 100vh !important;
   z-index: 40 !important;
@@ -3888,32 +3890,20 @@ body.route-faq #custApp .acc.rv {
   display: flex !important;
   flex-direction: column !important;
   overflow: hidden !important;
-  transform: translateX(0) !important;
-  transition: transform 0.3s ease !important;
+  transform: none !important;
 }
 
-/* Main content — geser ke kanan biar nggak ketutup */
-#custApp main#aBody,
-#adminApp main#aBody {
-  margin-left: 260px !important;
-  width: calc(100% - 260px) !important;
-  min-height: 100vh !important;
-}
-
-/* Header admin — geser juga */
-#adminApp header,
-#custApp header.h-16 {
-  margin-left: 260px !important;
-  width: calc(100% - 260px) !important;
-}
-
-/* Nav menu — scrollable */
+/* Nav menu — flex column, scrollable */
 #aSb > nav {
   flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   min-height: 0 !important;
-  padding: 16px 12px !important;
+  max-height: none !important;
+  padding: 12px !important;
 }
 
 /* Nav scrollbar tipis */
@@ -3921,30 +3911,96 @@ body.route-faq #custApp .acc.rv {
   width: 4px !important;
 }
 #aSb > nav::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
   border-radius: 2px !important;
 }
 
-/* Menu button — jangan numpuk */
+/* Menu button — full width, jangan numpuk */
 #aSb nav > button {
   display: flex !important;
   align-items: center !important;
   width: 100% !important;
-  min-height: 42px !important;
+  min-height: 40px !important;
   height: auto !important;
-  margin-bottom: 4px !important;
   padding: 10px 14px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
   position: relative !important;
   white-space: nowrap !important;
   overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Icon — jangan ketutup */
+#aSb nav > button > svg,
+#aSb nav > button > i,
+#aSb nav > button > span:first-child {
+  flex-shrink: 0 !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Text menu — jangan wrap */
+#aSb nav > button > span {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+}
+
+/* Badge di menu — kanan */
+#aSb nav > button .badge {
+  margin-left: auto !important;
+  flex-shrink: 0 !important;
+  position: static !important;
 }
 
 /* Footer sidebar — di bawah */
 #aSb > .p-4.border-t,
 #aSb > div:last-child {
   flex-shrink: 0 !important;
-  padding: 16px 12px !important;
+  padding: 12px !important;
   border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background: #0a0a0a !important;
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Footer button — full width */
+#aSb > div:last-child a,
+#aSb > div:last-child button {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 40px !important;
+  padding: 10px 14px !important;
+  white-space: nowrap !important;
+}
+
+/* Main content — geser kanan */
+#adminApp main#aBody,
+#custApp main#aBody {
+  margin-left: 260px !important;
+  width: calc(100% - 260px) !important;
+  min-height: 100vh !important;
+  box-sizing: border-box !important;
+}
+
+/* Header admin — geser kanan */
+#adminApp > div > header,
+#adminApp header.h-16,
+#custApp #adminApp header {
+  margin-left: 260px !important;
+  width: calc(100% - 260px) !important;
+  box-sizing: border-box !important;
+}
+
+/* Wrapper admin — jangan ada padding aneh */
+#adminApp > div {
+  min-height: 100vh !important;
   background: #0a0a0a !important;
 }
 
@@ -3955,14 +4011,15 @@ body.route-faq #custApp .acc.rv {
     width: 280px !important;
     max-width: 80vw !important;
     z-index: 9999 !important;
+    min-width: 280px !important;
   }
   #aSb.sb-open {
     transform: translateX(0) !important;
   }
-  #custApp main#aBody,
   #adminApp main#aBody,
-  #adminApp header,
-  #custApp header.h-16 {
+  #custApp main#aBody,
+  #adminApp > div > header,
+  #adminApp header.h-16 {
     margin-left: 0 !important;
     width: 100% !important;
   }
