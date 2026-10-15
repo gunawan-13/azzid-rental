@@ -3973,27 +3973,6 @@ a#waFloat,
 
 
 
-<style id="FIX_LOGIN_BERSIH">
-#adminApp #lgE,
-#adminApp #lgP {
-  display: block !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-}
-#adminApp button[onclick*="doLogin"] {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  margin-top: 16px !important;
-  clear: both !important;
-  float: none !important;
-  position: static !important;
-  flex-basis: 100% !important;
-  order: 999 !important;
-}
-</style>
-
 <script id="FIX_LOGIN_JS">
 (function() {
   function fixLogin() {
@@ -4053,182 +4032,6 @@ a#waFloat,
 })();
 </script>
 
-
-<style id="FIX_LOGIN_MERAH">
-/* ============================================ */
-/* TOMBOL LOGIN ADMIN — MERAH, DIAM, NO GLOW */
-/* ============================================ */
-
-/* Tombol "Masuk Dashboard" — MERAH TETAP */
-#adminApp button[onclick*="doLogin"],
-#adminApp .btn-g[onclick*="doLogin"],
-#adminApp .btn-m[onclick*="doLogin"] {
-  /* WARNA MERAH — tetap */
-  background: #b91c1c !important;
-  background-color: #b91c1c !important;
-  background-image: none !important;
-  color: #ffffff !important;
-  border: none !important;
-  border-color: transparent !important;
-  
-  /* Layout */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  min-height: 44px !important;
-  padding: 12px 20px !important;
-  margin: 16px 0 8px 0 !important;
-  border-radius: 10px !important;
-  box-sizing: border-box !important;
-  
-  /* DIAM — no animasi, no glow */
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-  text-shadow: none !important;
-  filter: none !important;
-  -webkit-filter: none !important;
-  transform: none !important;
-  -webkit-transform: none !important;
-  will-change: auto !important;
-  opacity: 1 !important;
-  
-  /* Jangan geser */
-  clear: both !important;
-  float: none !important;
-  position: static !important;
-  flex-basis: 100% !important;
-  order: 999 !important;
-  align-self: stretch !important;
-}
-
-/* Hover — tetap merah, no animasi */
-#adminApp button[onclick*="doLogin"]:hover,
-#adminApp .btn-g[onclick*="doLogin"]:hover,
-#adminApp .btn-m[onclick*="doLogin"]:hover {
-  background: #991b1b !important;
-  background-color: #991b1b !important;
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-  transform: none !important;
-  opacity: 1 !important;
-}
-
-/* Focus */
-#adminApp button[onclick*="doLogin"]:focus,
-#adminApp button[onclick*="doLogin"]:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Icon + teks di dalam tombol */
-#adminApp button[onclick*="doLogin"] svg {
-  width: 16px !important;
-  height: 16px !important;
-  display: inline-block !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Pseudo-element — matikan kalau ada */
-#adminApp button[onclick*="doLogin"]::before,
-#adminApp button[onclick*="doLogin"]::after {
-  display: none !important;
-  content: none !important;
-}
-</style>
-
-<style id="FIX_LOGIN_DIAM">
-/* ============================================ */
-/* LOGIN ADMIN — MATIKAN SEMUA ANIMASI */
-/* Form diam total, no pulse, no glow, no bounce */
-/* ============================================ */
-
-/* Semua elemen di halaman login admin — matikan animasi */
-#adminApp * {
-  animation: none !important;
-  animation-duration: 0s !important;
-  animation-delay: 0s !important;
-  animation-iteration-count: 1 !important;
-  transition: none !important;
-  transition-duration: 0s !important;
-}
-
-/* Card login — diam total */
-#adminApp .card,
-#adminApp > div,
-#adminApp > div > div,
-#adminApp > div > div > div {
-  animation: none !important;
-  transition: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  box-shadow: none !important;
-  -webkit-box-shadow: none !important;
-  filter: none !important;
-  will-change: auto !important;
-}
-
-/* Pseudo-element — matikan */
-#adminApp *::before,
-#adminApp *::after {
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-}
-
-/* Khusus card login — pastikan diam */
-#adminApp .card:has(#lgE),
-#adminApp .card:has(#lgP),
-#adminApp div:has(> #lgE),
-#adminApp div:has(> #lgP),
-#adminApp div:has(> button[onclick*="doLogin"]) {
-  animation: none !important;
-  transition: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-  box-shadow: none !important;
-  filter: none !important;
-}
-
-/* Input — jangan ada animasi */
-#adminApp #lgE,
-#adminApp #lgP,
-#adminApp input.inp {
-  animation: none !important;
-  transition: none !important;
-}
-
-/* Label */
-#adminApp label.lbl {
-  animation: none !important;
-  transition: none !important;
-}
-
-/* Teks — jangan ada animasi */
-#adminApp h1,
-#adminApp h2,
-#adminApp h3,
-#adminApp p,
-#adminApp span {
-  animation: none !important;
-  transition: none !important;
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-/* Error box — jangan berdenyut */
-#adminApp #lgErr {
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
-}
-</style>
 
 <script id="PAKSA_DIAM_ADMIN">
 (function() {
@@ -4320,5 +4123,108 @@ a#waFloat,
   });
 })();
 </script>
+
+<style id="FIX_BTN_MERAH_DIAM">
+/* ============================================ */
+/* TOMBOL LOGIN ADMIN — MERAH + DIAM TOTAL */
+/* ============================================ */
+
+/* Tombol login — paksa MERAH */
+#adminApp button[onclick*="doLogin"],
+#adminApp .btn-g[onclick*="doLogin"],
+#adminApp .btn-m[onclick*="doLogin"],
+#adminApp button.btn-g,
+#adminApp button.btn-m {
+  background: #b91c1c !important;
+  background-color: #b91c1c !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid #991b1b !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 44px !important;
+  padding: 12px 20px !important;
+  margin: 16px 0 8px 0 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  cursor: pointer !important;
+  box-sizing: border-box !important;
+  
+  /* DIAM — no animasi, no glow, no geser */
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  will-change: auto !important;
+  opacity: 1 !important;
+}
+
+/* Hover */
+#adminApp button[onclick*="doLogin"]:hover,
+#adminApp button.btn-g:hover,
+#adminApp button.btn-m:hover {
+  background: #991b1b !important;
+  background-color: #991b1b !important;
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Focus */
+#adminApp button[onclick*="doLogin"]:focus {
+  outline: 2px solid #dc2626 !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+
+/* Icon dalam tombol */
+#adminApp button[onclick*="doLogin"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ============================================ */
+/* DIAM TOTAL — semua animasi di form login mati */
+/* ============================================ */
+
+/* Semua elemen di #adminApp — nggak ada animasi */
+#adminApp,
+#adminApp * {
+  animation: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition: none !important;
+  transition-duration: 0s !important;
+}
+
+/* Card login — diam total */
+#adminApp .card,
+#adminApp > div,
+#adminApp > div > div {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+  filter: none !important;
+}
+
+/* Pseudo-element */
+#adminApp *::before,
+#adminApp *::after {
+  animation: none !important;
+  transition: none !important;
+}
+</style>
 </body>
 </html>
