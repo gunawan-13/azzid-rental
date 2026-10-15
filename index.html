@@ -4229,5 +4229,96 @@ a#waFloat,
   box-shadow: none !important;
 }
 </style>
+
+<script id="PAKSA_DIAM_ADMIN">
+(function() {
+  function matikanAnimasi() {
+    // Cek apakah lagi di halaman admin login
+    var adminApp = document.getElementById('adminApp');
+    if (!adminApp) return;
+    
+    // Ambil semua elemen di dalam admin
+    var all = adminApp.querySelectorAll('*');
+    
+    all.forEach(function(el) {
+      // Matikan semua animasi & transisi
+      el.style.setProperty('animation', 'none', 'important');
+      el.style.setProperty('animation-duration', '0s', 'important');
+      el.style.setProperty('animation-delay', '0s', 'important');
+      el.style.setProperty('animation-iteration-count', '1', 'important');
+      el.style.setProperty('transition', 'none', 'important');
+      el.style.setProperty('transition-duration', '0s', 'important');
+      
+      // Matikan opacity/transform animasi
+      el.style.setProperty('opacity', '1', 'important');
+      el.style.setProperty('transform', 'none', 'important');
+      el.style.setProperty('will-change', 'auto', 'important');
+      
+      // Matikan box-shadow pulse (kecuali tombol merah yang butuh)
+      var computed = getComputedStyle(el);
+      if (computed.animationName !== 'none') {
+        el.style.setProperty('animation-name', 'none', 'important');
+      }
+      
+      // Matikan filter & backdrop
+      el.style.setProperty('filter', 'none', 'important');
+      el.style.setProperty('backdrop-filter', 'none', 'important');
+      el.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
+    });
+    
+    // Khusus card login — matikan total
+    var cards = adminApp.querySelectorAll('.card, [class*="card"]');
+    cards.forEach(function(c) {
+      c.style.setProperty('animation', 'none', 'important');
+      c.style.setProperty('transition', 'none', 'important');
+      c.style.setProperty('box-shadow', 'none', 'important');
+      c.style.setProperty('transform', 'none', 'important');
+      c.style.setProperty('filter', 'none', 'important');
+    });
+    
+    // Khusus form login
+    var form = adminApp.querySelector('#lgE')?.closest('div, .card');
+    if (form) {
+      form.style.setProperty('animation', 'none', 'important');
+      form.style.setProperty('transition', 'none', 'important');
+    }
+  }
+  
+  // Jalan saat load — agresif 3 detik pertama
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      matikanAnimasi();
+      var i = 0;
+      var t = setInterval(function() {
+        matikanAnimasi();
+        if (++i > 30) clearInterval(t);
+      }, 100);
+    });
+  } else {
+    matikanAnimasi();
+    var i2 = 0;
+    var t2 = setInterval(function() {
+      matikanAnimasi();
+      if (++i2 > 30) clearInterval(t2);
+    }, 100);
+  }
+  
+  // Jalan tiap navigasi SPA
+  window.addEventListener('hashchange', function() {
+    setTimeout(matikanAnimasi, 100);
+    setTimeout(matikanAnimasi, 300);
+    setTimeout(matikanAnimasi, 700);
+  });
+  
+  // MutationObserver — kalau DOM berubah
+  var obs = new MutationObserver(function() {
+    matikanAnimasi();
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    var target = document.getElementById('adminApp') || document.body;
+    obs.observe(target, { childList: true, subtree: true });
+  });
+})();
+</script>
 </body>
 </html>
