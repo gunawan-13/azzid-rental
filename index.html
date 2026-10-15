@@ -3971,101 +3971,57 @@ a#waFloat,
 </style>
 
 
-<style id="FIX_LOGIN_NUCLEAR">
+
+<style id="FIX_LOGIN_BERSIH">
 /* ============================================ */
-/* LOGIN ADMIN — NUCLEAR FIX */
-/* Tombol "Masuk Dashboard" WAJIB di baris baru */
+/* LOGIN ADMIN — FIX BERSIH, MINIMAL */
+/* Form tetap lebar & center, tombol di bawah */
 /* ============================================ */
 
-/* Container form login — paksa flex column */
-#adminApp div:has(> #lgE),
-#adminApp div:has(> #lgP),
-#adminApp div:has(> button[onclick*="doLogin"]),
+/* Card login admin — lebar normal */
 #adminApp .card:has(#lgE),
-#adminApp .card:has(#lgP) {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: stretch !important;
-  flex-wrap: wrap !important;
-  gap: 4px !important;
+#adminApp div:has(> #lgE):not(:has(#lgP)) {
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
-/* SEMUA child langsung — full width */
-#adminApp div:has(> #lgE) > *,
-#adminApp div:has(> #lgP) > *,
-#adminApp div:has(> button[onclick*="doLogin"]) > * {
-  width: 100% !important;
-  max-width: 100% !important;
-  flex: 0 0 100% !important;
-  flex-basis: 100% !important;
-  box-sizing: border-box !important;
-}
-
-/* Label — jangan flex */
-#adminApp label.lbl,
-#adminApp label {
+/* Wrapper form login — biar tombol nggak nyempil */
+#adminApp div:has(> input#lgP) {
   display: block !important;
   width: 100% !important;
-  flex-basis: 100% !important;
 }
 
-/* Input — full width */
+/* Tombol "Masuk Dashboard" — block, full width, di bawah */
+#adminApp button[onclick*="doLogin"],
+#adminApp .btn-g[onclick*="doLogin"] {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 16px !important;
+  margin-bottom: 8px !important;
+  clear: both !important;
+  float: none !important;
+  position: static !important;
+}
+
+/* Input — block, full width */
 #adminApp #lgE,
 #adminApp #lgP {
   display: block !important;
   width: 100% !important;
-  flex-basis: 100% !important;
-  margin-bottom: 12px !important;
   box-sizing: border-box !important;
 }
 
-/* Tombol "Masuk Dashboard" — PAKSA baris baru */
-#adminApp button[onclick*="doLogin"],
-#adminApp .btn-g:has(svg),
-#adminApp button.btn-g {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+/* Label */
+#adminApp label.lbl {
+  display: block !important;
   width: 100% !important;
-  max-width: 100% !important;
-  flex: 0 0 100% !important;
-  flex-basis: 100% !important;
-  margin: 16px 0 8px 0 !important;
-  min-height: 44px !important;
-  box-sizing: border-box !important;
-  clear: both !important;
-  float: none !important;
-  position: static !important;
-  order: 99 !important;  /* Taruh di paling bawah */
 }
 
-/* Pesan error — di atas */
+/* Error box — full width */
 #adminApp #lgErr {
   display: block !important;
   width: 100% !important;
-  flex-basis: 100% !important;
-  margin-bottom: 12px !important;
-  order: -1 !important;
-}
-
-/* Teks "Gunakan akun admin" */
-#adminApp p.text-\[11px\],
-#adminApp p:has-text("Gunakan akun") {
-  display: block !important;
-  width: 100% !important;
-  flex-basis: 100% !important;
-  margin-top: 8px !important;
-  order: 100 !important;
-}
-
-/* Link "Kembali ke Website" */
-#adminApp .flex.mt-6,
-#adminApp div.mt-6 {
-  display: block !important;
-  width: 100% !important;
-  flex-basis: 100% !important;
-  margin-top: 16px !important;
-  order: 101 !important;
 }
 </style>
 </body>
