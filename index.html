@@ -3972,57 +3972,85 @@ a#waFloat,
 
 
 
+
 <style id="FIX_LOGIN_BERSIH">
-/* ============================================ */
-/* LOGIN ADMIN — FIX BERSIH, MINIMAL */
-/* Form tetap lebar & center, tombol di bawah */
-/* ============================================ */
-
-/* Card login admin — lebar normal */
-#adminApp .card:has(#lgE),
-#adminApp div:has(> #lgE):not(:has(#lgP)) {
-  max-width: 560px !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-}
-
-/* Wrapper form login — biar tombol nggak nyempil */
-#adminApp div:has(> input#lgP) {
-  display: block !important;
-  width: 100% !important;
-}
-
-/* Tombol "Masuk Dashboard" — block, full width, di bawah */
-#adminApp button[onclick*="doLogin"],
-#adminApp .btn-g[onclick*="doLogin"] {
-  display: block !important;
-  width: 100% !important;
-  margin-top: 16px !important;
-  margin-bottom: 8px !important;
-  clear: both !important;
-  float: none !important;
-  position: static !important;
-}
-
-/* Input — block, full width */
 #adminApp #lgE,
 #adminApp #lgP {
   display: block !important;
   width: 100% !important;
   box-sizing: border-box !important;
 }
-
-/* Label */
-#adminApp label.lbl {
-  display: block !important;
+#adminApp button[onclick*="doLogin"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   width: 100% !important;
-}
-
-/* Error box — full width */
-#adminApp #lgErr {
-  display: block !important;
-  width: 100% !important;
+  margin-top: 16px !important;
+  clear: both !important;
+  float: none !important;
+  position: static !important;
+  flex-basis: 100% !important;
+  order: 999 !important;
 }
 </style>
+
+<script id="FIX_LOGIN_JS">
+(function() {
+  function fixLogin() {
+    var btn = document.querySelector('button[onclick*="doLogin"]');
+    if (!btn) return;
+    
+    // Paksa inline style ke tombol
+    btn.style.setProperty('display', 'flex', 'important');
+    btn.style.setProperty('width', '100%', 'important');
+    btn.style.setProperty('max-width', '100%', 'important');
+    btn.style.setProperty('flex-basis', '100%', 'important');
+    btn.style.setProperty('margin-top', '16px', 'important');
+    btn.style.setProperty('clear', 'both', 'important');
+    btn.style.setProperty('float', 'none', 'important');
+    btn.style.setProperty('position', 'static', 'important');
+    btn.style.setProperty('order', '999', 'important');
+    btn.style.setProperty('align-self', 'stretch', 'important');
+    
+    // Cek parent — paksa kalau flex row
+    var p = btn.parentElement;
+    if (p) {
+      var ps = getComputedStyle(p);
+      if (ps.display === 'flex' && ps.flexDirection === 'row') {
+        p.style.setProperty('flex-wrap', 'wrap', 'important');
+      }
+      // Kalau parent grid, paksa tombol span 1 kolom penuh
+      if (ps.display === 'grid') {
+        btn.style.setProperty('grid-column', '1 / -1', 'important');
+      }
+    }
+  }
+  
+  // Jalan saat load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fixLogin);
+  } else {
+    fixLogin();
+  }
+  
+  // Agresif 3 detik pertama
+  var i = 0;
+  var timer = setInterval(function() {
+    fixLogin();
+    if (++i > 30) clearInterval(timer);
+  }, 100);
+  
+  // Jalan tiap navigasi
+  window.addEventListener('hashchange', function() {
+    setTimeout(fixLogin, 100);
+    setTimeout(fixLogin, 300);
+    setTimeout(fixLogin, 700);
+  });
+  
+  // MutationObserver — kalau form di-rerender
+  var obs = new MutationObserver(fixLogin);
+  obs.observe(document.body, { childList: true, subtree: true });
+})();
+</script>
 </body>
 </html>
