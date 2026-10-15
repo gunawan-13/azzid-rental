@@ -3772,9 +3772,9 @@ if (window.supabaseClient) {
 window.addEventListener("resize", function() {
   if (window.innerWidth >= 1024) {
     var sb = document.getElementById("aSb");
-    if (sb) sb.classList.remove("adm-sidebar-open");
+    if (sb) sb.classList.remove("sb-open");
     var ov = document.getElementById("sbOverlay");
-    if (ov) ov.style.display = "none";
+    if (ov) ov.classList.remove("sb-show");
     document.body.style.overflow = "";
   }
 });
