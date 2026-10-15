@@ -4068,5 +4068,98 @@ a#waFloat,
   }
 }
 </style>
+
+<style id="FIX_KONSISTEN">
+/* ============================================ */
+/* LOGIN ADMIN — KONSISTEN SAAT REFRESH */
+/* Anti goyang, anti berubah posisi */
+/* ============================================ */
+
+/* Semua elemen admin — matikan animasi & transisi */
+#adminApp,
+#adminApp * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+
+/* Container — stabil center */
+#adminApp {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  width: 100% !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+  background: #0a0a0c !important;
+  contain: layout style !important;
+}
+
+/* Card login — paksa ukuran & posisi stabil */
+#adminApp .card:has(#lgE),
+#adminApp .card:has(#lgP) {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  min-height: 500px !important;
+  overflow: hidden !important;
+  border-radius: 16px !important;
+  box-sizing: border-box !important;
+  contain: layout style !important;
+}
+
+/* Tombol login — merah, di bawah, stabil */
+#adminApp button[onclick*="doLogin"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  min-height: 48px !important;
+  padding: 14px 24px !important;
+  margin: 16px 0 8px 0 !important;
+  background: #b91c1c !important;
+  background-color: #b91c1c !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Input — stabil */
+#adminApp #lgE,
+#adminApp #lgP {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 14px !important;
+}
+
+/* Responsif — HP 1 kolom */
+@media (max-width: 768px) {
+  #adminApp {
+    padding: 12px !important;
+    align-items: flex-start !important;
+    padding-top: 20px !important;
+  }
+  #adminApp .card:has(#lgE),
+  #adminApp .card:has(#lgP) {
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+    min-height: auto !important;
+    border-radius: 12px !important;
+  }
+}
+</style>
 </body>
 </html>
