@@ -3973,241 +3973,199 @@ a#waFloat,
 
 
 
-<script id="FIX_LOGIN_JS">
-(function() {
-  function fixLogin() {
-    var btn = document.querySelector('button[onclick*="doLogin"]');
-    if (!btn) return;
-    
-    // Paksa inline style ke tombol
-    btn.style.setProperty('display', 'flex', 'important');
-    btn.style.setProperty('width', '100%', 'important');
-    btn.style.setProperty('max-width', '100%', 'important');
-    btn.style.setProperty('flex-basis', '100%', 'important');
-    btn.style.setProperty('margin-top', '16px', 'important');
-    btn.style.setProperty('clear', 'both', 'important');
-    btn.style.setProperty('float', 'none', 'important');
-    btn.style.setProperty('position', 'static', 'important');
-    btn.style.setProperty('order', '999', 'important');
-    btn.style.setProperty('align-self', 'stretch', 'important');
-    
-    // Cek parent — paksa kalau flex row
-    var p = btn.parentElement;
-    if (p) {
-      var ps = getComputedStyle(p);
-      if (ps.display === 'flex' && ps.flexDirection === 'row') {
-        p.style.setProperty('flex-wrap', 'wrap', 'important');
-      }
-      // Kalau parent grid, paksa tombol span 1 kolom penuh
-      if (ps.display === 'grid') {
-        btn.style.setProperty('grid-column', '1 / -1', 'important');
-      }
-    }
-  }
-  
-  // Jalan saat load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fixLogin);
-  } else {
-    fixLogin();
-  }
-  
-  // Agresif 3 detik pertama
-  var i = 0;
-  var timer = setInterval(function() {
-    fixLogin();
-    if (++i > 30) clearInterval(timer);
-  }, 100);
-  
-  // Jalan tiap navigasi
-  window.addEventListener('hashchange', function() {
-    setTimeout(fixLogin, 100);
-    setTimeout(fixLogin, 300);
-    setTimeout(fixLogin, 700);
-  });
-  
-  // MutationObserver — kalau form di-rerender
-  var obs = new MutationObserver(fixLogin);
-  obs.observe(document.body, { childList: true, subtree: true });
-})();
-</script>
 
-
-<script id="PAKSA_DIAM_ADMIN">
-(function() {
-  function matikanAnimasi() {
-    // Cek apakah lagi di halaman admin login
-    var adminApp = document.getElementById('adminApp');
-    if (!adminApp) return;
-    
-    // Ambil semua elemen di dalam admin
-    var all = adminApp.querySelectorAll('*');
-    
-    all.forEach(function(el) {
-      // Matikan semua animasi & transisi
-      el.style.setProperty('animation', 'none', 'important');
-      el.style.setProperty('animation-duration', '0s', 'important');
-      el.style.setProperty('animation-delay', '0s', 'important');
-      el.style.setProperty('animation-iteration-count', '1', 'important');
-      el.style.setProperty('transition', 'none', 'important');
-      el.style.setProperty('transition-duration', '0s', 'important');
-      
-      // Matikan opacity/transform animasi
-      el.style.setProperty('opacity', '1', 'important');
-      el.style.setProperty('transform', 'none', 'important');
-      el.style.setProperty('will-change', 'auto', 'important');
-      
-      // Matikan box-shadow pulse (kecuali tombol merah yang butuh)
-      var computed = getComputedStyle(el);
-      if (computed.animationName !== 'none') {
-        el.style.setProperty('animation-name', 'none', 'important');
-      }
-      
-      // Matikan filter & backdrop
-      el.style.setProperty('filter', 'none', 'important');
-      el.style.setProperty('backdrop-filter', 'none', 'important');
-      el.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
-    });
-    
-    // Khusus card login — matikan total
-    var cards = adminApp.querySelectorAll('.card, [class*="card"]');
-    cards.forEach(function(c) {
-      c.style.setProperty('animation', 'none', 'important');
-      c.style.setProperty('transition', 'none', 'important');
-      c.style.setProperty('box-shadow', 'none', 'important');
-      c.style.setProperty('transform', 'none', 'important');
-      c.style.setProperty('filter', 'none', 'important');
-    });
-    
-    // Khusus form login
-    var form = adminApp.querySelector('#lgE')?.closest('div, .card');
-    if (form) {
-      form.style.setProperty('animation', 'none', 'important');
-      form.style.setProperty('transition', 'none', 'important');
-    }
-  }
-  
-  // Jalan saat load — agresif 3 detik pertama
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      matikanAnimasi();
-      var i = 0;
-      var t = setInterval(function() {
-        matikanAnimasi();
-        if (++i > 30) clearInterval(t);
-      }, 100);
-    });
-  } else {
-    matikanAnimasi();
-    var i2 = 0;
-    var t2 = setInterval(function() {
-      matikanAnimasi();
-      if (++i2 > 30) clearInterval(t2);
-    }, 100);
-  }
-  
-  // Jalan tiap navigasi SPA
-  window.addEventListener('hashchange', function() {
-    setTimeout(matikanAnimasi, 100);
-    setTimeout(matikanAnimasi, 300);
-    setTimeout(matikanAnimasi, 700);
-  });
-  
-  // MutationObserver — kalau DOM berubah
-  var obs = new MutationObserver(function() {
-    matikanAnimasi();
-  });
-  document.addEventListener('DOMContentLoaded', function() {
-    var target = document.getElementById('adminApp') || document.body;
-    obs.observe(target, { childList: true, subtree: true });
-  });
-})();
-</script>
-
-<style id="FIX_BTN_MERAH_DIAM">
+<style id="FIX_LOGIN_CLEAN">
 /* ============================================ */
-/* TOMBOL LOGIN ADMIN — MERAH + DIAM TOTAL */
+/* LOGIN ADMIN — FIX BERSIH */
 /* ============================================ */
 
-/* Tombol login — paksa MERAH */
+/* Layout: form di kanan, card di tengah */
+#adminApp > div:has(#lgE),
+#adminApp > div > div:has(#lgE) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  padding: 20px !important;
+}
+
+/* Card login — lebar normal */
+#adminApp .card:has(#lgE),
+#adminApp .card:has(#lgP) {
+  max-width: 920px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 768px) {
+  #adminApp .card:has(#lgE),
+  #adminApp .card:has(#lgP) {
+    grid-template-columns: 1fr !important;
+    max-width: 480px !important;
+  }
+}
+
+/* Panel kiri (gambar) */
+#adminApp .card:has(#lgE) > div:first-child {
+  padding: 32px !important;
+  background: linear-gradient(135deg, #7f1d1d, #991b1b) !important;
+}
+
+/* Panel kanan (form) */
+#adminApp .card:has(#lgE) > div:last-child {
+  padding: 40px !important;
+  background: #0f0f10 !important;
+}
+
+/* Label */
+#adminApp label.lbl {
+  display: block !important;
+  width: 100% !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #a1a1aa !important;
+  margin-bottom: 8px !important;
+}
+
+/* Input — full width */
+#adminApp #lgE,
+#adminApp #lgP {
+  display: block !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 16px !important;
+  padding: 14px 16px !important;
+  font-size: 14px !important;
+  background: #f4f4f5 !important;
+  color: #0f0f10 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  outline: none !important;
+}
+
+/* ============================================ */
+/* TOMBOL "Masuk Dashboard" — MERAH TOTAL */
+/* ============================================ */
+
 #adminApp button[onclick*="doLogin"],
-#adminApp .btn-g[onclick*="doLogin"],
-#adminApp .btn-m[onclick*="doLogin"],
-#adminApp button.btn-g,
-#adminApp button.btn-m {
+#adminApp button.btn-g[onclick*="doLogin"],
+#adminApp button.btn-m[onclick*="doLogin"] {
+  /* MERAH */
   background: #b91c1c !important;
   background-color: #b91c1c !important;
   background-image: none !important;
+  
+  /* Teks */
   color: #ffffff !important;
-  border: 1px solid #991b1b !important;
-  border-radius: 10px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  
+  /* Layout */
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
   width: 100% !important;
-  max-width: 100% !important;
-  min-height: 44px !important;
-  padding: 12px 20px !important;
-  margin: 16px 0 8px 0 !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
-  cursor: pointer !important;
+  min-height: 48px !important;
+  padding: 14px 24px !important;
+  margin: 8px 0 16px 0 !important;
+  border: none !important;
+  border-radius: 10px !important;
   box-sizing: border-box !important;
+  cursor: pointer !important;
   
-  /* DIAM — no animasi, no glow, no geser */
+  /* DIAM — no animasi, no glow, no shadow */
   animation: none !important;
   transition: none !important;
-  box-shadow: none !important;
-  -webkit-box-shadow: none !important;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3) !important;
   text-shadow: none !important;
   filter: none !important;
   transform: none !important;
-  will-change: auto !important;
   opacity: 1 !important;
 }
 
-/* Hover */
-#adminApp button[onclick*="doLogin"]:hover,
-#adminApp button.btn-g:hover,
-#adminApp button.btn-m:hover {
+/* Hover — merah lebih gelap, no animasi */
+#adminApp button[onclick*="doLogin"]:hover {
   background: #991b1b !important;
-  background-color: #991b1b !important;
-  animation: none !important;
-  transition: none !important;
-  box-shadow: none !important;
+  box-shadow: 0 4px 16px rgba(185, 28, 28, 0.5) !important;
   transform: none !important;
+  animation: none !important;
 }
 
 /* Focus */
 #adminApp button[onclick*="doLogin"]:focus {
-  outline: 2px solid #dc2626 !important;
+  outline: 2px solid #ef4444 !important;
   outline-offset: 2px !important;
-  box-shadow: none !important;
 }
 
-/* Icon dalam tombol */
+/* Icon + teks dalam tombol */
 #adminApp button[onclick*="doLogin"] svg {
   width: 16px !important;
   height: 16px !important;
+  display: inline-block !important;
   flex-shrink: 0 !important;
+  stroke: #ffffff !important;
+}
+
+/* Pseudo-element — matikan */
+#adminApp button[onclick*="doLogin"]::before,
+#adminApp button[onclick*="doLogin"]::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Error box — rapikan */
+#adminApp #lgErr {
+  display: block !important;
+  width: 100% !important;
+  margin-bottom: 16px !important;
+  padding: 12px 16px !important;
+  background: rgba(220, 38, 38, 0.1) !important;
+  border: 1px solid rgba(220, 38, 38, 0.4) !important;
+  border-radius: 8px !important;
+  color: #fca5a5 !important;
+  font-size: 13px !important;
+}
+
+/* Teks "Gunakan akun admin" */
+#adminApp p:has(+ a[href="#/"]),
+#adminApp .flex.mt-6 {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+}
+
+/* Link kembali */
+#adminApp a[href="#/"] {
+  display: inline-block !important;
+  margin-top: 8px !important;
+  font-size: 13px !important;
+  color: #a1a1aa !important;
+  text-decoration: none !important;
+}
+
+#adminApp a[href="#/"]:hover {
+  color: #ffffff !important;
 }
 
 /* ============================================ */
-/* DIAM TOTAL — semua animasi di form login mati */
+/* MATIKAN SEMUA ANIMASI DI LOGIN */
 /* ============================================ */
 
-/* Semua elemen di #adminApp — nggak ada animasi */
 #adminApp,
 #adminApp * {
   animation: none !important;
-  animation-duration: 0s !important;
-  animation-delay: 0s !important;
   transition: none !important;
-  transition-duration: 0s !important;
 }
 
-/* Card login — diam total */
 #adminApp .card,
 #adminApp > div,
 #adminApp > div > div {
@@ -4215,11 +4173,9 @@ a#waFloat,
   transition: none !important;
   transform: none !important;
   opacity: 1 !important;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
   filter: none !important;
 }
 
-/* Pseudo-element */
 #adminApp *::before,
 #adminApp *::after {
   animation: none !important;
