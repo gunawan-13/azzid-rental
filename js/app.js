@@ -182,7 +182,7 @@ function normalizeBookingFromAPI(b) {
 
 function addUserNotif(email, type, message){
   const icons = { confirm: 'check', cancel: 'x', payment: 'card', info: 'bell' };
-  const colors = { confirm: 'text-emerald-300', cancel: 'text-red-300', payment: 'text-sky-300', info: 'text-amber-300' };
+  const colors = { confirm: 'text-emerald-300', cancel: 'text-red-300', payment: 'text-sky-300', info: 'text-sky-300' };
   USER_NOTIFS.unshift({
     id: 'UN-' + Date.now() + '-' + Math.random().toString(36).slice(2,6),
     email: email,
@@ -199,7 +199,7 @@ function addUserNotif(email, type, message){
 
 function addAdminNotif(type, message){
   const icons = { booking: 'file', payment: 'card', cancel: 'x', info: 'bell' };
-  const colors = { booking: 'text-sky-300', payment: 'text-emerald-300', cancel: 'text-red-300', info: 'text-amber-300' };
+  const colors = { booking: 'text-sky-300', payment: 'text-emerald-300', cancel: 'text-red-300', info: 'text-sky-300' };
   ADMIN_NOTIFS.unshift({
     id: 'AN-' + Date.now() + '-' + Math.random().toString(36).slice(2,6),
     type: type,
@@ -256,7 +256,7 @@ function renderUserNotifList(){
     return;
   }
   const icons = { confirm: 'check', cancel: 'x', payment: 'card', info: 'bell' };
-  const colors = { confirm: 'text-emerald-300', cancel: 'text-red-300', payment: 'text-sky-300', info: 'text-amber-300' };
+  const colors = { confirm: 'text-emerald-300', cancel: 'text-red-300', payment: 'text-sky-300', info: 'text-sky-300' };
   el.innerHTML = list.map(n => '<div class="flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5"><span class="' + (colors[n.type] || 'text-zinc-400') + ' mt-0.5 shrink-0">' + ic(icons[n.type] || 'bell', 'w-4 h-4') + '</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">' + esc(n.message) + '</p><p class="text-[10.5px] text-muted mt-0.5">' + new Date(n.at).toLocaleString('id-ID', {day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) + '</p></div></div>').join('');
 }
 
@@ -264,7 +264,7 @@ function buildNotifs() {
   const list = [];
   BOOKINGS.slice(0, 5).forEach(b => {
     const v = (typeof veh === "function" ? veh(b.veh) : null) || { name: b.veh };
-    const icons = { Pending: { ic: "clock", cl: "text-amber-300" }, Confirmed: { ic: "check", cl: "text-sky-300" }, Ongoing: { ic: "car", cl: "text-orange-300" }, Completed: { ic: "check", cl: "text-emerald-300" }, Cancelled: { ic: "x", cl: "text-red-300" } };
+    const icons = { Pending: { ic: "clock", cl: "text-sky-300" }, Confirmed: { ic: "check", cl: "text-sky-300" }, Ongoing: { ic: "car", cl: "text-sky-300" }, Completed: { ic: "check", cl: "text-emerald-300" }, Cancelled: { ic: "x", cl: "text-red-300" } };
     const meta = icons[b.status] || icons.Pending;
     list.push({ ic: meta.ic, t: "Booking " + b.id + " — " + b.cust + " · " + v.name + " (" + b.status + ")", w: b.start ? dShort(b.start) : "Baru", cl: meta.cl });
   });
@@ -458,9 +458,9 @@ function vHome() {
     <div class="text-center mb-12 rv"><span class="text-[11px] font-bold tracking-[.3em] text-maroon-400 uppercase">Testimonial</span> <h2 class="font-display font-bold text-3xl mt-2">Kata Mereka yang Sudah Berkendara</h2></div>
     <div class="mb-10 rv">
       <a href="https://www.google.com/maps/place/Azzid+Rent+Car+(+Garasi+)/@-6.3225178,106.9022553,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69ed00686f257f:0x816dc002336941d!8m2!3d-6.3225178!4d106.9048302!16s%2Fg%2F11zbpryvqq" target="_blank" rel="noopener" class="inline-flex items-center gap-3 btn btn-g hover:border-maroon-500/40 transition">
-        <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+        <svg class="w-5 h-5 text-sky-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
         <span class="font-semibold">Review Kami di Google</span>
-        <span class="badge bg-amber-400/10 border-amber-400/30 text-amber-300">5.0 ★</span>
+        <span class="badge bg-sky-400/10 border-sky-400/30 text-sky-300">5.0 ★</span>
       </a>
       <p class="text-[11.5px] text-muted mt-3">Bantu kami berkembang — tulis pengalaman Anda di Google Maps</p>
     </div>
@@ -746,13 +746,25 @@ function setFilter(k, v) {
   }
 }
 
+// Render ulang yang dipaksa — untuk aksi pengguna di halaman yang sama (ganti langkah, pilih mobil, login, dst).
+// renderC() biasa melewatkan render bila hash tidak berubah (SKIP_RERENDER), sehingga langkah booking tidak berganti.
+function renderCNow() {
+  window.__lastRenderedHash = null;
+  window.__lastRenderCTime = 0;
+  renderC();
+}
+
 function bkGo(n) {
   S.step = n;
-  renderC();
+  renderCNow();
   window.scrollTo({ top: 0 });
 }
 
 function bkBack() {
+  // Mundur satu langkah di dalam alur booking (tidak keluar dari form)
+  if (S.step === 5) { bkGo(4); return; }
+  if (S.step === 4) { bkGo(2); return; }
+  if (S.step === 3) { bkGo(4); return; }
   if (S.draft?.veh) {
     location.hash = '#/armada/' + S.draft.veh;
   } else {
@@ -762,7 +774,7 @@ function bkBack() {
 
 function pickVeh(id) {
   S.draft.veh = id;
-  renderC();
+  renderCNow();
 }
 
 function isClash(vid, s, e) {
@@ -794,7 +806,22 @@ function applyPromo() {
   if (dur < p.minDays) { toast(`Promo butuh minimal ${p.minDays} hari rental`, 'err'); return; }
   S.draft.promo = c;
   toast('Promo ' + c + ' diterapkan!');
-  renderC();
+  renderCNow();
+}
+
+function bkEstimate() {
+  const v = veh(S.draft.veh);
+  const sEl = $("bkStart"), eEl = $("bkEnd"), tEl = $("bkType");
+  if (!v || !sEl || !eEl) return;
+  if (sEl.value) {
+    eEl.min = sEl.value;
+    if (!eEl.value || eEl.value < sEl.value) eEl.value = sEl.value;
+  }
+  const dur = daysDiff(sEl.value, eEl.value);
+  const drv = tEl && tEl.value === "Dengan Driver" ? dur * 150000 : 0;
+  const sub = $("bkEstSub"), tot = $("bkEstTotal");
+  if (sub) sub.textContent = dur + " hari" + (drv ? " · termasuk driver" : "");
+  if (tot) tot.textContent = fmtIDR(dur * v.priceLK + drv);
 }
 
 function bkAuthTab(t) {
@@ -860,12 +887,11 @@ function bkNext() {
     if (!d.start || !d.end || d.end < d.start) { toast("Tanggal tidak valid", "err"); return; }
     const t = $("bkType")?.value; if (t) d.type = t;
     const p = $("bkPickup")?.value; if (p) d.pickup = p;
-  }
-  // Step 3 (Akun): WAJIB login
-  if (S.step === 3 && !S.custSession) {
-    toast("Silakan masuk atau login dengan Google terlebih dahulu", "err");
+    // Login bersifat opsional: langsung ke data penyewa
+    bkGo(4);
     return;
   }
+  // Step 3 (Akun) opsional: boleh lanjut sebagai tamu
   // Validasi step 4 (Ringkasan): Data Penyewa wajib
   if (S.step === 4) {
     // Simpan KTP ke d.cust SEBELUM validasi
@@ -873,7 +899,7 @@ function bkNext() {
       if (!d.cust) d.cust = {};
       d.cust.ktp_file = window._ktpBase64;
     }
-    const req = ["nama", "wa", "email", "alamat", "tujuan"];
+    const req = ["nama", "wa", "email", "alamat"];
     const ok = req.every(k => $("cf_" + k) && $("cf_" + k).value.trim());
     if (!ok) { toast("Lengkapi semua data wajib", "err"); return; }
     if (!window._ktpBase64) { toast("Upload foto identitas wajib", "err"); return; }
@@ -884,7 +910,7 @@ function bkNext() {
       wa: $("cf_wa").value,
       email: $("cf_email").value,
       alamat: $("cf_alamat").value,
-      tujuan: $("cf_tujuan").value,
+      tujuan: $("cf_tujuan") ? $("cf_tujuan").value : "",
       ktp_file: (window._ktpBase64 || ""),
       catatan: $("cf_catatan") ? $("cf_catatan").value : ""
     };
@@ -902,7 +928,7 @@ function bkNext() {
   }
   // Step 5 (Pembayaran)
   if (S.step === 5) {
-    if (!d.method) { toast("Pilih metode pembayaran", "err"); return; }
+    if (!d.method) d.method = "Transfer Bank";
   }
   bkGo(S.step + 1);
 }
@@ -910,7 +936,7 @@ function bkNext() {
 function chooseMethod(m) {
   S.draft.method = m;
   S.step = 5; // pastikan tetap di step pembayaran
-  renderC();
+  renderCNow();
   setTimeout(() => {
     const el = document.getElementById("payDetail");
     if (el && m === "Transfer Bank") {
@@ -1028,7 +1054,7 @@ function doPay() {
 
   // Langsung ke step selesai
   S.step = 6;
-  renderC();
+  renderCNow();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1072,12 +1098,12 @@ function vBooking() {
         <h3 class="font-display font-semibold text-lg mb-1">Jadwal & Jenis Rental</h3>
         <p class="text-[12.5px] text-muted mb-6">Tentukan tanggal, jenis rental, dan lokasi pengambilan.</p>
         <div class="grid sm:grid-cols-2 gap-4 mb-5">
-          <div><label class="lbl">Tanggal Mulai *</label><input type="date" id="bkStart" class="inp" value="${d.start}" min="${TODAY}" required></div>
-          <div><label class="lbl">Tanggal Selesai *</label><input type="date" id="bkEnd" class="inp" value="${d.end}" min="${d.start}" required></div>
+          <div><label class="lbl">Tanggal Mulai *</label><input type="date" id="bkStart" class="inp" value="${d.start}" min="${TODAY}" required onchange="bkEstimate()"></div>
+          <div><label class="lbl">Tanggal Selesai *</label><input type="date" id="bkEnd" class="inp" value="${d.end}" min="${d.start}" required onchange="bkEstimate()"></div>
         </div>
         <div class="mb-5">
           <label class="lbl">Jenis Rental</label>
-          <select id="bkType" class="inp">
+          <select id="bkType" class="inp" onchange="bkEstimate()">
             ${["Lepas Kunci", "Dengan Driver"].map(t => `<option ${d.type === t ? "selected" : ""}>${t}</option>`).join("")}
           </select>
         </div>
@@ -1096,7 +1122,11 @@ function vBooking() {
             <a href="#/armada" class="ml-auto text-[11.5px] text-maroon-400 font-semibold shrink-0">Ganti →</a>
           </div>
         </div>
-        <div class="flex justify-between items-center gap-3 mt-8 pt-6 border-t border-white/5">
+        <div class="rounded-xl border border-maroon-500/30 bg-maroon-500/5 p-4 mt-5 flex items-center justify-between gap-3">
+          <div><div class="text-[11px] uppercase tracking-widest text-muted">Estimasi Biaya</div><div id="bkEstSub" class="text-[12px] text-muted mt-0.5">${c.dur} hari${c.drv ? " · termasuk driver" : ""}</div></div>
+          <div id="bkEstTotal" class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.rental + c.drv)}</div>
+        </div>
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3 mt-8 pt-6 border-t border-white/5">
           <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
           <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button>
         </div>
@@ -1113,9 +1143,9 @@ function vBooking() {
           <div class="min-w-0 grow"><div class="text-[14px] font-semibold">Masuk sebagai ${esc(acc.nama)}</div><div class="text-[12px] text-muted truncate">${acc.email}</div></div>
         </div>
         <p class="text-[12px] text-muted mb-3">Data penyewa akan terisi otomatis dari akun Anda.</p>
-        <button onclick="custLogout();renderC()" class="btn btn-g btn-sm">Ganti Akun</button>
+        <button onclick="custLogout();renderCNow()" class="btn btn-g btn-sm">Ganti Akun</button>
       </div>` : `<div class="card p-6 mb-5">
-        <div class="flex items-center gap-2.5 mb-1">${ic("lock", "w-5 h-5 text-maroon-400")}<h3 class="font-display font-semibold text-lg">Login Penyewa</h3></div>
+        <div class="flex items-center gap-2.5 mb-1">${ic("lock", "w-5 h-5 text-maroon-400")}<h3 class="font-display font-semibold text-lg">Masuk ke Akun <span class="text-muted text-[13px] font-normal">(opsional)</span></h3></div>
         <p class="text-[12.5px] text-muted mb-4">Masuk agar data terisi otomatis & riwayat booking tersimpan. Bisa juga lanjut sebagai tamu.</p>
         <div class="grid grid-cols-2 gap-2 mb-4 max-w-xs">
           <button type="button" id="btIn" onclick="bkAuthTab(&quot;in&quot;)" class="chip on justify-center cursor-pointer">Masuk</button>
@@ -1144,7 +1174,7 @@ function vBooking() {
       </div>
       <div class="flex justify-between items-center gap-3 max-w-xl mx-auto mt-6 pt-6 border-t border-white/5">
         <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
-        <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic("arrR", "w-4 h-4")}</button>
+        <button onclick="bkNext()" class="btn btn-m">Lanjut sebagai Tamu ${ic("arrR", "w-4 h-4")}</button>
       </div>
       `}
     </div>`;
@@ -1155,14 +1185,15 @@ function vBooking() {
     body = `<div class="grid lg:grid-cols-[1fr_380px] gap-6 max-w-5xl mx-auto">
       <div class="space-y-5 min-w-0">
         <div class="card p-6">
-          <h3 class="font-display font-semibold text-lg mb-5">Data Penyewa</h3>
+          <h3 class="font-display font-semibold text-lg mb-4">Data Penyewa</h3>
+          ${S.custSession ? "" : `<div class="flex items-center justify-between gap-3 rounded-xl bg-ink-900 border border-white/5 px-4 py-3 mb-5"><span class="text-[12.5px] text-muted">Sudah punya akun? Data terisi otomatis.</span><button type="button" onclick="bkGo(3)" class="btn btn-g btn-sm shrink-0">Masuk</button></div>`}
           <div class="grid sm:grid-cols-2 gap-4">
-            <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" class="inp" value="${esc(cu.nama || "")}" placeholder="Sesuai KTP"></div>
+            <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" autocomplete="name" class="inp" value="${esc(cu.nama || "")}" placeholder="Sesuai KTP"></div>
             <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || "")}" placeholder="08xx-xxxx-xxxx" maxlength="15" oninput="validateWa(this)" type="tel"></div>
-            <div class="sm:col-span-2"><label class="lbl">Email *</label><input id="cf_email" type="email" class="inp" value="${esc(cu.email || "")}" placeholder="email@anda.com"></div>
+            <div class="sm:col-span-2"><label class="lbl">Email *</label><input id="cf_email" type="email" autocomplete="email" inputmode="email" class="inp" value="${esc(cu.email || "")}" placeholder="email@anda.com"></div>
             <div class="sm:col-span-2"><label class="lbl">Upload Foto Identitas (KTP/SIM) *</label><input id="cf_ktp_file" type="file" accept="image/jpeg,image/png,image/jpg" class="inp" required onchange="previewKtp(this)"><p class="text-[11px] text-muted mt-1">Format: JPG, PNG · Maks 5 MB</p><div id="ktpPreview" class="mt-2 hidden"><p class="text-[11.5px] text-emerald-300">✓ <span id="ktpFileName"></span></p></div></div>
             <div class="sm:col-span-2"><label class="lbl">Alamat *</label><input id="cf_alamat" class="inp" value="${esc(cu.alamat || "")}" placeholder="Alamat domisili"></div>
-            <div><label class="lbl">Alamat Tujuan *</label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || "")}" placeholder="Contoh: Bandung"></div>
+            <div class="sm:col-span-2"><label class="lbl">Tujuan Perjalanan <span class="normal-case tracking-normal font-normal text-muted">(opsional)</span></label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || "")}" placeholder="Contoh: Bandung"></div>
             <div class="sm:col-span-2"><label class="lbl">Catatan Tambahan</label><textarea id="cf_catatan" class="inp" rows="2" placeholder="Opsional: permintaan khusus…">${esc(cu.catatan || "")}</textarea></div>
           </div>
         </div>
@@ -1188,13 +1219,11 @@ function vBooking() {
     </div>`;
   } else if (S.step === 5) {
     // ============ STEP 5: PEMBAYARAN ============
+    if (!d.method) d.method = "Transfer Bank";
     const m = d.method;
     body = `<div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
       <div class="card p-6"><h3 class="font-display font-semibold text-lg mb-5">Pilih Metode Pembayaran</h3>
-        <div class="grid grid-cols-2 gap-3">${[
-          ["QRIS", "Dalam Pengembangan", false],
-          ["GoPay", "Dalam Pengembangan", false],
-          ["OVO", "Dalam Pengembangan", false],
+        <div class="grid grid-cols-1 gap-3">${[
           ["Transfer Bank", `Transfer manual ${S.cms.payments?.bank?.nama || "Bank"}`, true]
         ].map(x => {
           const aktif = x[2] !== false;
@@ -1202,9 +1231,10 @@ function vBooking() {
           const cls = aktif ? (m === x[0] ? "border-maroon-500 bg-maroon-500/10" : "border-white/10 hover:border-white/25") : "border-white/5 opacity-50 cursor-not-allowed";
           return `<button onclick="${onclick}" class="rounded-xl border p-4 text-left transition ${cls}">
             <div class="flex items-center gap-2 font-semibold text-[13px]">${ic("card", "w-4 h-4 " + (aktif ? "text-maroon-400" : "text-muted"))}${x[0]}</div>
-            <div class="text-[11px] ${aktif ? "text-muted" : "text-amber-300/70"} mt-1">${x[1]}</div>
+            <div class="text-[11px] ${aktif ? "text-muted" : "text-sky-300/70"} mt-1">${x[1]}</div>
           </button>`;
         }).join("")}</div>
+        <p class="text-[11.5px] text-muted mt-3">QRIS & e-wallet segera hadir.</p>
         <div class="mt-5 rounded-xl bg-ink-900 border border-white/5 p-4 flex justify-between items-center gap-3 flex-wrap"><span class="text-sm text-muted">Total tagihan</span><span class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
       <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
@@ -1238,12 +1268,14 @@ function vBooking() {
       <a href="#/" class="inline-block text-sm text-muted hover:text-white mt-6">← Kembali ke Beranda</a>
     </div>`;
   }
-  return `<section class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-    <div class="flex items-center justify-start sm:justify-center gap-0 mb-10 overflow-x-auto pb-2">${steps.map((s, i) => `<div class="flex items-center shrink-0">
-      <button onclick="${i < S.step - 2 && S.step < 7 ? `bkGo(${i + 2})` : ''}" class="flex items-center gap-2 ${i <= S.step - 2 ? '' : 'opacity-40'}">
-        <span class="w-8 h-8 rounded-full grid place-items-center text-[12px] font-bold shrink-0 ${i < S.step ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : i === S.step ? 'bg-gradient-to-br from-maroon-500 to-maroon-800 text-white shadow-glow' : 'bg-ink-700 border border-white/10 text-muted'}">${i < S.step - 2 ? '✓' : i + 1}</span>
-        <span class="text-[12px] font-semibold hidden md:block ${i === S.step - 2 ? 'text-white' : 'text-muted'}">${s}</span>
-      </button> ${i < steps.length - 1 ? '<div class="w-5 sm:w-10 h-px bg-white/10 mx-2 shrink-0"></div>' : ''}
+  const _vis = [['Jadwal', 2], ['Data Diri', 4], ['Pembayaran', 5], ['Selesai', 6]];
+  const _cur = S.step >= 6 ? 3 : S.step >= 5 ? 2 : S.step >= 3 ? 1 : 0;
+  return `<section data-page="booking" class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div class="flex items-center justify-center gap-0 mb-8 sm:mb-10">${_vis.map((st, i) => `<div class="flex items-center">
+      <button type="button" ${i < _cur && S.step < 6 ? `onclick="bkGo(${st[1]})"` : 'disabled'} class="flex items-center gap-2 ${i <= _cur ? '' : 'opacity-40'}">
+        <span class="w-8 h-8 rounded-full grid place-items-center text-[12px] font-bold shrink-0 ${i < _cur ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : i === _cur ? 'bg-gradient-to-br from-maroon-500 to-maroon-800 text-white shadow-glow' : 'bg-ink-700 border border-white/10 text-muted'}">${i < _cur ? '✓' : i + 1}</span>
+        <span class="text-[12px] font-semibold ${i === _cur ? 'text-white' : 'text-muted hidden sm:block'}">${st[0]}</span>
+      </button>${i < _vis.length - 1 ? '<div class="w-4 sm:w-10 h-px bg-white/10 mx-2 shrink-0"></div>' : ''}
     </div>`).join('')}</div>
     ${body}
 
@@ -1273,7 +1305,7 @@ async function bkLogin() {
       S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || e.split("@")[0], phone: u.user_metadata?.phone || "" };
       closeModal();
       toast("Selamat datang, " + S.custSession.nama.split(" ")[0] + "!");
-      renderC();
+      renderCNow();
       return;
     } catch (sbErr) {
       console.warn("Supabase auth gagal, fallback lokal:", sbErr.message);
@@ -1296,7 +1328,7 @@ async function bkLogin() {
   S.custSession = { id: user.id, email: user.email, nama: user.nama, phone: user.phone || "" };
   closeModal();
   toast("Selamat datang kembali, " + user.nama.split(" ")[0] + "!");
-  renderC();
+  renderCNow();
 }
 
 async function bkReg() {
@@ -1334,7 +1366,7 @@ async function bkReg() {
       S.custSession = { id: res.data.user?.id || "u-" + Date.now(), email: e, nama: n, phone: w };
       closeModal();
       toast("Akun berhasil dibuat. Selamat datang, " + n.split(" ")[0] + "!");
-      renderC();
+      renderCNow();
       return;
     } catch (sbErr) {
       console.warn("Supabase register gagal, fallback lokal:", sbErr.message);
@@ -1356,15 +1388,15 @@ async function bkReg() {
   S.custSession = { id: newUser.id, email: newUser.email, nama: newUser.nama, phone: newUser.phone };
   closeModal();
   toast("Akun berhasil dibuat. Selamat datang, " + n.split(" ")[0] + "!");
-  renderC();
+  renderCNow();
 }
 
 /* ================= CUSTOMER AUTH ================= */
 function openAuth(tab='in'){modal(`<div class="p-7"><div class="flex justify-between items-center mb-5"><div><h3 class="font-display font-bold text-lg">Akun Penyewa</h3><p class="text-[12px] text-muted mt-0.5">Selamat datang di AZZID RENTCAR.</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-2 mb-5"><button id="atIn" onclick="showTabAuth('in')" class="chip justify-center">Masuk</button><button id="atReg" onclick="showTabAuth('reg')" class="chip justify-center">Daftar Baru</button></div><div id="mAuthIn"><div id="mErrIn" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Email</label><input id="cAuthE" class="inp mb-3" autocomplete="username" placeholder="email@anda.com"><label class="lbl">Password</label><input id="cAuthP" type="password" class="inp mb-4" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doCustLogin()"><button onclick="doCustLogin()" class="btn btn-m w-full">${ic('lock','w-4 h-4')} Masuk</button><button onclick="openForgotPassword()" class="w-full text-center text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button></div><div id="mAuthReg" class="hidden"><div id="mErrReg" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Nama Lengkap</label><input id="rNama" class="inp mb-3" placeholder="Nama lengkap"><div class="grid grid-cols-2 gap-3 mb-3"><div><label class="lbl">Email</label><input id="rEmail" class="inp" placeholder="email@anda.com"></div><div><label class="lbl">No. WhatsApp</label><input id="rWa" class="inp" placeholder="08xx…"></div></div><label class="lbl">Password (min. 6 karakter)</label><input id="rPass" type="password" class="inp mb-4" placeholder="••••••••"><button onclick="doCustReg()" class="btn btn-m w-full">${ic('plus','w-4 h-4')} Buat Akun & Masuk</button></div><p class="text-[10.5px] text-zinc-500 text-center mt-5">Tidak ada akun demo. Gunakan akun Anda sendiri.</p></div>`);showTabAuth(tab); }
 function showTabAuth(t){const i=$('mAuthIn'),r=$('mAuthReg'),a=$('atIn'),b=$('atReg');if(!i)return;i.classList.toggle('hidden',t!=='in');r.classList.toggle('hidden',t!=='reg');a.classList.toggle('on',t==='in');b.classList.toggle('on',t==='reg')}
-async function doCustLogin(){const e=($('cAuthE').value||'').trim().toLowerCase(),p=$('cAuthP').value;try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''};closeModal();toast('Selamat datang kembali, '+user.name.split(' ')[0]+'!');renderC()}catch(err){$('mErrIn').textContent=err.message||'Email atau password salah.';$('mErrIn').classList.remove('hidden')}}
-async function doCustReg(){const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');err.classList.add('hidden');if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}try{const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});const user=apiData(result)?.user||result?.user;if(!user)throw new Error('Registrasi gagal.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w};closeModal();toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!');renderC()}catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}}
-async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;sessionStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderC()}
+async function doCustLogin(){const e=($('cAuthE').value||'').trim().toLowerCase(),p=$('cAuthP').value;try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''};closeModal();toast('Selamat datang kembali, '+user.name.split(' ')[0]+'!');renderCNow()}catch(err){$('mErrIn').textContent=err.message||'Email atau password salah.';$('mErrIn').classList.remove('hidden')}}
+async function doCustReg(){const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');err.classList.add('hidden');if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}try{const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});const user=apiData(result)?.user||result?.user;if(!user)throw new Error('Registrasi gagal.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w};closeModal();toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!');renderCNow()}catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}}
+async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;sessionStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderCNow()}
 function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.custSession;const hist=BOOKINGS.filter(b=>b.user===acc.email || b.email===acc.email || b.cust===acc.nama);const spend=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);modal(`<div class="p-7"><div class="flex justify-between items-start gap-4 mb-6"><div><h3 class="font-display font-bold text-xl">${esc(acc.nama)}</h3><p class="text-[12px] text-muted mt-1">${esc(acc.email)} · ${esc(acc.phone||'-')}</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-3 mb-5"><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${hist.length}</b><div class="text-[10px] text-muted uppercase">Total Booking</div></div><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${fmtK(spend)}</b><div class="text-[10px] text-muted uppercase">Pengeluaran</div></div></div><div class="space-y-2 max-h-52 overflow-y-auto">${hist.length?hist.map(b=>`<div class="bg-ink-900 rounded-lg p-3 text-[12px] flex justify-between gap-2"><span>${esc(b.id)}</span>${badge(b.status)}</div>`).join(''):'<p class="text-sm text-muted">Belum ada booking.</p>'}</div><button onclick="custLogout()" class="btn btn-d btn-sm w-full mt-5">${ic('logout','w-4 h-4')} Logout</button></div>`,1)}
 
 /* ================= TRACK ================= */
@@ -1474,7 +1506,7 @@ async function doGoogleLogin(credential){
     const result=await authApi('/google',{method:'POST',body:JSON.stringify({credential})});
     const user=apiData(result)?.user||result?.user;
     if(!user||user.role!=='user') throw new Error('Login Google hanya tersedia untuk akun penyewa.');
-    S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}; closeModal(); toast('Login Google berhasil. Selamat datang, '+user.name.split(' ')[0]+'!'); renderC();
+    S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}; closeModal(); toast('Login Google berhasil. Selamat datang, '+user.name.split(' ')[0]+'!'); renderCNow();
   }catch(err){ const box=$('mErrIn')||$('bkAuthErr'); if(box){box.textContent=err.message||'Login Google gagal.';box.classList.remove('hidden');} else toast(err.message||'Login Google gagal.','err'); }
 }
 function openForgotPassword(){
@@ -1624,7 +1656,7 @@ function renderA() {
           <div id="lgErr" class="hidden mb-4 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12.5px] px-4 py-2.5">Email atau password salah. Coba lagi.</div>
           <label class="lbl">Email Admin</label><input id="lgE" class="inp mb-4" autocomplete="username" placeholder="admin@perusahaan.com" onkeydown="if(event.key==='Enter')doLogin()">
           <label class="lbl">Password</label><input id="lgP" type="password" class="inp mb-5" autocomplete="current-password" placeholder="Masukkan password admin" onkeydown="if(event.key==='Enter')doLogin()">
-          <button onclick="doLogin()" class="btn btn-m w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button><p class="text-[11px] text-zinc-500 text-center mt-4">Gunakan akun admin.</p><div class="flex mt-6 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
+          <button onclick="doLogin()" class="btn btn-m w-full">${ic('lock', 'w-4 h-4')} Masuk Dashboard</button><p class="text-[11px] text-zinc-500 text-center mt-4">Gunakan akun admin.</p><div class="flex justify-center mt-5 text-[12px]"><a href="#/" class="text-muted hover:text-white">← Kembali ke Website</a></div>
         </div>
       </div>
     </div>`;
@@ -1640,7 +1672,7 @@ function renderA() {
       <div class="flex items-center gap-2.5 px-5 h-16 border-b border-white/5 shrink-0"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shrink-0 object-contain">
         <div class="min-w-0"><div class="font-display font-bold text-sm leading-none truncate">AZZID RENTCAR</div><div class="text-[9px] tracking-[.28em] text-muted mt-1">ADMIN PANEL</div></div>
       </div>
-      <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m => `<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView === m[0] ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2], 'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0] === 'rental' && ong ? `<span class="badge bg-orange-400/20 border-orange-400/40 text-orange-300">${ong}</span>` : ''}${m[0] === 'booking' && pend ? `<span class="badge bg-amber-400/20 border-amber-400/40 text-amber-300">${pend}</span>` : ''}</button>`).join('')}</nav>
+      <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m => `<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView === m[0] ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2], 'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0] === 'rental' && ong ? `<span class="badge bg-sky-400/20 border-sky-400/40 text-sky-300">${ong}</span>` : ''}${m[0] === 'booking' && pend ? `<span class="badge bg-sky-400/20 border-sky-400/40 text-sky-300">${pend}</span>` : ''}</button>`).join('')}</nav>
       <div class="p-4 border-t border-white/5 space-y-1">
         <a href="#/" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-zinc-400 hover:bg-white/5 hover:text-white">${ic('globe', 'w-[18px]')} Lihat Website</a>
         <button onclick="adminLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-red-300 hover:bg-red-500/10">${ic('logout', 'w-[18px]')} Logout</button>
@@ -1792,9 +1824,9 @@ function aOverview() {
     </div>
     <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
       ${[
-        ['PENDING PAYMENT', fmtK(pendAmt), 'bg-amber-400'],
+        ['PENDING PAYMENT', fmtK(pendAmt), 'bg-sky-400'],
         ['BOOKING HARI INI', String(BOOKINGS.filter(b => b.start === TODAY).length), 'bg-sky-400'],
-        ['MOBIL DISEWA', String(VEHICLES.filter(v => v.status === 'rented').length), 'bg-orange-400'],
+        ['MOBIL DISEWA', String(VEHICLES.filter(v => v.status === 'rented').length), 'bg-sky-400'],
         ['MOBIL MAINTENANCE', String(VEHICLES.filter(v => v.status === 'maintenance').length), 'bg-red-400']
       ].map((x, i) => `<div class="card !bg-ink-800 px-5 py-4 flex items-center justify-between" style="transition-delay:${i * 70}ms"><div class="min-w-0"><div class="text-[10px] tracking-widest text-muted uppercase truncate">${x[0]}</div><div class="font-display font-bold text-lg mt-1 truncate">${x[1]}</div></div><span class="w-2 h-2 rounded-full ${x[2]} dot-live shrink-0"></span></div>`).join('')}
     </div>
@@ -1839,21 +1871,21 @@ function aRental() {
     </div>
     <div class="grid grid-cols-2 xl:grid-cols-4 gap-4">
       ${[
-        ['wheel', 'SEWA BERJALAN', ongoing.length, 'text-orange-300'],
+        ['wheel', 'SEWA BERJALAN', ongoing.length, 'text-sky-300'],
         ['cal', 'AKAN DATANG', upcoming.length, 'text-sky-300'],
-        ['clock', 'JATUH TEMPO ≤24 JAM', dueSoon.length, 'text-amber-300'],
+        ['clock', 'JATUH TEMPO ≤24 JAM', dueSoon.length, 'text-sky-300'],
         ['alert', 'OVERDUE', overdue.length, 'text-red-300']
       ].map((x, i) => `<div class="card p-4 flex items-center gap-3" style="transition-delay:${i * 60}ms"><span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span><div class="min-w-0"><div class="font-display font-extrabold text-xl ${x[3]}">${x[2]}</div><div class="text-[10px] uppercase tracking-widest text-muted truncate">${x[1]}</div></div></div>`).join('')}
     </div>
     <div class="card p-4 flex flex-wrap items-center gap-3 !bg-ink-800"><span class="text-[12px] text-muted">Nilai sewa berjalan:</span><b class="font-display text-maroon-400">${fmtIDR(revActive)}</b><span class="ml-auto text-[11.5px] text-muted">Semua aksi tercatat di log perubahan.</span></div>
     ${overdue.length ? `<div class="rv rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-[13px] text-red-300 flex gap-2.5">${ic('alert', 'w-5 h-5 shrink-0')}<div><b>${overdue.length} sewa melewati tanggal pengembalian.</b> Segera hubungi customer atau proses perpanjangan.</div></div>` : ''}
     <div class="card overflow-x-auto">
-      <div class="p-5 pb-0 flex items-center justify-between gap-3"><h3 class="font-display font-semibold">Sedang Berjalan (Ongoing)</h3><span class="badge bg-orange-400/10 border-orange-400/30 text-orange-300">${ongoing.length}</span></div>
+      <div class="p-5 pb-0 flex items-center justify-between gap-3"><h3 class="font-display font-semibold">Sedang Berjalan (Ongoing)</h3><span class="badge bg-sky-400/10 border-sky-400/30 text-sky-300">${ongoing.length}</span></div>
       <div class="overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking</th><th>Customer</th><th>Unit</th><th>Periode</th><th>Driver</th><th>Total</th><th>Aksi</th></tr></thead><tbody>
         ${ongoing.length ? ongoing.map(b => { const v = veh(b.veh) || { name: '—' }; return `<tr>
           <td class="font-mono text-maroon-400 whitespace-nowrap">${b.id.slice(-9)}</td><td class="whitespace-nowrap">${esc(b.cust)}</td>
           <td class="whitespace-nowrap"><div class="flex items-center gap-2"><img src="${v.img || IMG.fleet}" class="w-9 h-7 rounded object-cover">${esc(v.name)}</div></td>
-          <td class="whitespace-nowrap">${dShort(b.start)} → <b class="${b.end < TODAY ? 'text-red-300' : b.end <= addDays(TODAY, 1) ? 'text-amber-300' : ''}">${dShort(b.end)}</b></td>
+          <td class="whitespace-nowrap">${dShort(b.start)} → <b class="${b.end < TODAY ? 'text-red-300' : b.end <= addDays(TODAY, 1) ? 'text-sky-300' : ''}">${dShort(b.end)}</b></td>
           <td class="whitespace-nowrap text-muted">${b.driver && drv(b.driver) ? drv(b.driver).name : '—'}</td>
           <td class="font-semibold whitespace-nowrap">${fmtK(b.total)}</td>
           <td><div class="flex gap-1.5 whitespace-nowrap">
@@ -1880,7 +1912,7 @@ function aRental() {
       </tbody></table></div>
     </div>
     <div class="card p-5"><h3 class="font-display font-semibold mb-3">Jadwal Pengembalian Terdekat</h3>
-      <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">${ongoing.slice().sort((a, b) => a.end.localeCompare(b.end)).slice(0, 6).map(b => { const v = veh(b.veh) || { name: '—' }; return `<div class="bg-ink-900 rounded-xl px-4 py-3 border border-white/5 flex items-center gap-3 min-w-0"><span class="w-9 h-9 rounded-lg bg-orange-400/10 text-orange-300 grid place-items-center shrink-0">${ic('back', 'w-4 h-4')}</span><div class="min-w-0"><div class="text-[12.5px] font-semibold truncate">${esc(v.name)} · ${esc(b.cust)}</div><div class="text-[11px] text-muted">Kembali ${dLong(b.end)}</div></div></div>`; }).join('') || '<p class="text-[12.5px] text-muted">Tidak ada jadwal pengembalian.</p>'}</div>
+      <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">${ongoing.slice().sort((a, b) => a.end.localeCompare(b.end)).slice(0, 6).map(b => { const v = veh(b.veh) || { name: '—' }; return `<div class="bg-ink-900 rounded-xl px-4 py-3 border border-white/5 flex items-center gap-3 min-w-0"><span class="w-9 h-9 rounded-lg bg-sky-400/10 text-sky-300 grid place-items-center shrink-0">${ic('back', 'w-4 h-4')}</span><div class="min-w-0"><div class="text-[12.5px] font-semibold truncate">${esc(v.name)} · ${esc(b.cust)}</div><div class="text-[11px] text-muted">Kembali ${dLong(b.end)}</div></div></div>`; }).join('') || '<p class="text-[12.5px] text-muted">Tidak ada jadwal pengembalian.</p>'}</div>
     </div>
   </div>`;
 }
@@ -2182,7 +2214,7 @@ function aCalendar() {
       const eD = e.getFullYear() === y && e.getMonth() === m ? e.getDate() : dim;
       return `<button onclick="openBookingDetail('${b.id}')" class="gantt-bar absolute top-1/2 -translate-y-1/2 h-7 rounded-md bg-gradient-to-r from-maroon-600 to-maroon-500 border border-maroon-400/40 flex items-center px-1.5 text-[9px] font-bold truncate" style="left:${(sD - 1) * 36 + 2}px;width:${Math.max(1, eD - sD + 1) * 36 - 4}px" title="${b.id} · ${b.cust} · ${dShort(b.start)}–${dShort(b.end)}">${b.cust.split(' ')[0].toUpperCase()}</button>`;
     }).join('');
-    const maint = v.status === 'maintenance' ? `<div class="absolute top-1/2 -translate-y-1/2 h-7 rounded-md bg-amber-400/20 border border-amber-400/40 text-[9px] font-bold text-amber-300 flex items-center px-2" style="left:${9 * 36}px;width:${9 * 36}px" title="Maintenance s/d 18 Agu">SERVICE</div>` : '';
+    const maint = v.status === 'maintenance' ? `<div class="absolute top-1/2 -translate-y-1/2 h-7 rounded-md bg-sky-400/20 border border-sky-400/40 text-[9px] font-bold text-sky-300 flex items-center px-2" style="left:${9 * 36}px;width:${9 * 36}px" title="Maintenance s/d 18 Agu">SERVICE</div>` : '';
     return `<div class="flex items-center border-t border-white/5"><div class="w-40 sm:w-44 shrink-0 sticky left-0 bg-ink-800 z-10 px-3 sm:px-4 py-3 flex items-center gap-2.5 border-r border-white/5"><img src="${v.img}" class="w-9 h-7 rounded object-cover shrink-0"><div class="min-w-0"><div class="text-[12px] font-semibold leading-none truncate">${esc(v.name)}</div><div class="text-[9.5px] text-muted mt-0.5 truncate">${v.plate}</div></div></div>
       <div class="relative h-12 shrink-0" style="width:${dim * 36}px">${Array.from({ length: dim }, (_, i) => `<div class="absolute top-0 bottom-0 w-9 ${(first + i) % 7 > 4 ? 'bg-white/[.025]' : ''} ${y === 2026 && m === 7 && i + 1 === 13 ? 'bg-maroon-500/10' : ''}" style="left:${i * 36}px"></div>`).join('')}${bars}${maint}</div>
     </div>`;
@@ -2192,7 +2224,7 @@ function aCalendar() {
       <button onclick="S.calM--;if(S.calM<0){S.calM=11;S.calY--}renderAdminBody()" class="btn btn-g btn-sm">←</button>
       <h3 class="font-display font-bold text-lg w-40 text-center">${names[m]} ${y}</h3>
       <button onclick="S.calM++;if(S.calM>11){S.calM=0;S.calY++}renderAdminBody()" class="btn btn-g btn-sm">→</button>
-      <div class="ml-auto flex flex-wrap gap-4 text-[11px] text-muted"><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-maroon-600 inline-block"></i>Disewa</span><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-amber-400/40 inline-block"></i>Maintenance</span><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-maroon-500/20 inline-block"></i>Hari ini</span></div>
+      <div class="ml-auto flex flex-wrap gap-4 text-[11px] text-muted"><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-maroon-600 inline-block"></i>Disewa</span><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-sky-400/40 inline-block"></i>Maintenance</span><span class="flex items-center gap-1.5"><i class="w-3 h-3 rounded bg-maroon-500/20 inline-block"></i>Hari ini</span></div>
     </div>
     <div class="card overflow-auto max-h-[62vh]"><div class="flex border-b border-white/10 sticky top-0 bg-ink-800 z-20"><div class="w-40 sm:w-44 shrink-0 px-3 sm:px-4 py-2 text-[10px] font-bold text-muted uppercase tracking-wider border-r border-white/5 bg-ink-800">Kendaraan</div><div class="flex">${head}</div></div>${rows}</div>
     <p class="rv text-[12px] text-muted">Klik bar untuk detail booking · Jadwal pickup & pengembalian tampil sebagai rentang tanggal.</p>
@@ -2230,7 +2262,7 @@ function aArmada() {
         ['car', 'TOTAL ASET', st.total, ''],
         ['check', 'AVAILABLE', st.av, 'text-emerald-300'],
         ['clock', 'RENTED', st.rt, 'text-red-300'],
-        ['alert', 'MAINTENANCE', st.mt, 'text-amber-300']
+        ['alert', 'MAINTENANCE', st.mt, 'text-sky-300']
       ].map((x, i) => `<div class="card p-4 flex items-center gap-3" style="transition-delay:${i * 60}ms">
         <span class="w-10 h-10 rounded-xl bg-maroon-500/15 text-maroon-400 grid place-items-center shrink-0">${ic(x[0])}</span>
         <div class="min-w-0">
@@ -2613,7 +2645,7 @@ function delVeh(id) {
     <span class="w-14 h-14 mx-auto rounded-full bg-red-500/15 border border-red-500/40 text-red-300 grid place-items-center mb-4">${ic('alert')}</span>
     <h3 class="font-display font-bold text-lg">Hapus Aset?</h3>
     <p class="text-[13.5px] text-muted mt-2">${esc(v.name)} · ${v.plate}</p>
-    ${act ? `<div class="mt-4 rounded-lg border border-amber-400/40 bg-amber-400/10 text-amber-300 text-[12.5px] px-4 py-3">⚠ Unit memiliki <b>${act} booking aktif</b>. Hapus permanen diblokir — gunakan Nonaktifkan.</div>` : `<p class="text-[12.5px] text-muted mt-3">Tindakan ini permanen dan tercatat di log perubahan.</p>`}
+    ${act ? `<div class="mt-4 rounded-lg border border-sky-400/40 bg-sky-400/10 text-sky-300 text-[12.5px] px-4 py-3">⚠ Unit memiliki <b>${act} booking aktif</b>. Hapus permanen diblokir — gunakan Nonaktifkan.</div>` : `<p class="text-[12.5px] text-muted mt-3">Tindakan ini permanen dan tercatat di log perubahan.</p>`}
     <div class="grid grid-cols-2 gap-2.5 mt-6">
       <button onclick="closeModal()" class="btn btn-g btn-sm">Batal</button>
       <button onclick="softDel('${v.id}')" class="btn btn-g btn-sm">Nonaktifkan</button>
@@ -2715,7 +2747,7 @@ function aDrivers() {
   if (DRIVERS.length === 0) return header + '<div class="card p-8 text-center"><p class="text-muted text-sm">Belum ada driver terdaftar. Klik "Tambah Driver" untuk memulai.</p></div>';
   return header + `<div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-5">${DRIVERS.map((d, i) => `<div class="card p-6" style="transition-delay:${i * 70}ms">
     <div class="flex items-center gap-4 mb-4"><span class="w-14 h-14 rounded-2xl bg-gradient-to-br from-maroon-500 to-maroon-800 grid place-items-center font-display font-extrabold text-xl shrink-0">${(d.name || "D")[0]}</span>
-      <div class="min-w-0"><h3 class="font-display font-semibold truncate">${d.name}</h3><div class="flex items-center gap-1 text-[12px] text-amber-300">${starIc(1)} ${d.rating} · ${d.trips} perjalanan</div></div>
+      <div class="min-w-0"><h3 class="font-display font-semibold truncate">${d.name}</h3><div class="flex items-center gap-1 text-[12px] text-sky-300">${starIc(1)} ${d.rating} · ${d.trips} perjalanan</div></div>
     </div>
     <div class="text-[12px] text-muted space-y-1 mb-4"><p>${ic('phone', 'w-3.5 h-3.5 inline mr-1')}${d.wa || "-"}</p><p>${ic('card', 'w-3.5 h-3.5 inline mr-1')}${d.sim || "-"}</p></div>
     <div class="flex gap-2 items-center flex-wrap"><button onclick="driverForm('${d.id}')" class="btn btn-g btn-sm !py-1">Edit</button><button onclick="delDriver('${d.id}')" class="btn btn-d btn-sm !py-1">Hapus</button><select class="inp !py-1.5 text-[12px]" onchange="setDrvStatus('${d.id}',this.value)">${['Available', 'Assigned', 'On Trip', 'Off Duty'].map(s => `<option ${d.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>${badge(d.status)}</div>
@@ -2814,7 +2846,7 @@ function aPayments() {
       ${[
         ['card', 'TOTAL PAYMENT', fmtIDR(tot), ''],
         ['check', 'PAID', fmtIDR(paid), 'text-emerald-300'],
-        ['clock', 'PENDING', fmtIDR(pend), 'text-amber-300'],
+        ['clock', 'PENDING', fmtIDR(pend), 'text-sky-300'],
         ['logout', 'REFUND', fmtIDR(ref), 'text-violet-300']
       ].map((x, i) => `<div class="card p-5" style="transition-delay:${i * 70}ms"><div class="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted mb-2">${ic(x[0], 'w-4 h-4 text-maroon-400')}${x[1]}</div><div class="font-display font-extrabold text-lg sm:text-xl ${x[3]} break-all">${x[2]}</div></div>`).join('')}
     </div>
@@ -3023,7 +3055,7 @@ function aReports() {
       ref = Array.isArray(BOOKINGS) ? BOOKINGS.filter(b => b.pay && b.pay.s === 'REFUNDED').reduce((a,b) => a + (Number(b.total)||0), 0) : 0;
     body = `<div class="grid grid-cols-2 xl:grid-cols-4 gap-4">${[
       ['Revenue', fmtIDR(rev), 'text-emerald-300'],
-      ['Discount', fmtIDR(disc), 'text-amber-300'],
+      ['Discount', fmtIDR(disc), 'text-sky-300'],
       ['Refund', fmtIDR(ref), 'text-red-300'],
       ['Net Revenue', fmtIDR(rev - disc - ref), 'text-maroon-400']
     ].map(x => `<div class="card p-5 min-w-0"><div class="text-[10px] uppercase tracking-widest text-muted mb-2">${x[0]}</div><div class="font-display font-extrabold text-base sm:text-xl ${x[2]} break-all">${x[1]}</div></div>`).join('')}</div>
@@ -3234,7 +3266,7 @@ function aUsers() {
           ['Payment & Revenue', '✓', '✓', '—', '✓', '—'],
           ['Reports', '✓', '—', '—', '✓', '—'],
           ['CMS & Settings', '✓', '—', '—', '—', '—']
-        ].map(r => `<tr><td class="font-semibold whitespace-nowrap">${r[0]}</td>${r.slice(1).map(c => `<td class="${c === '✓' ? 'text-emerald-300' : c === '◐' ? 'text-amber-300' : 'text-zinc-600'} text-lg">${c}</td>`).join('')}</tr>`).join('')}
+        ].map(r => `<tr><td class="font-semibold whitespace-nowrap">${r[0]}</td>${r.slice(1).map(c => `<td class="${c === '✓' ? 'text-emerald-300' : c === '◐' ? 'text-sky-300' : 'text-zinc-600'} text-lg">${c}</td>`).join('')}</tr>`).join('')}
       </tbody></table>
     </div>
   </div>`;
@@ -4217,9 +4249,13 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       const imgBox = card.querySelector('div:first-child');
       if (imgBox) {
         imgBox.style.setProperty('width', '100%', 'important');
-        imgBox.style.setProperty('height', '220px', 'important');
-        imgBox.style.setProperty('min-height', '220px', 'important');
-        imgBox.style.setProperty('max-height', '220px', 'important');
+        /* Halaman Armada: area gambar lebih tinggi (diperpanjang ke bawah) */
+        var boxH = document.body.classList.contains('route-armada')
+          ? (window.innerWidth <= 640 ? '250px' : '280px')
+          : '220px';
+        imgBox.style.setProperty('height', boxH, 'important');
+        imgBox.style.setProperty('min-height', boxH, 'important');
+        imgBox.style.setProperty('max-height', boxH, 'important');
         imgBox.style.setProperty('overflow', 'hidden', 'important');
         imgBox.style.setProperty('position', 'relative', 'important');
       }
@@ -4259,7 +4295,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
 // ============================================
 (function() {
   function fixLogin() {
-    const pwdInput = document.querySelector('input[type="password"]');
+    const pwdInput = document.querySelector('#adminApp input[type="password"]');
     if (!pwdInput) return;
     
     // Naik ke card login
@@ -4276,14 +4312,15 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
     }
     
     // Input password wrapper + icon mata
-    document.querySelectorAll('input[type="password"], input[type="text"]').forEach(function(inp) {
+    // HANYA input password di area admin; tombol yang diambil hanya ikon mata (bukan .btn seperti "Masuk Dashboard")
+    document.querySelectorAll('#adminApp input[type="password"]').forEach(function(inp) {
       inp.style.setProperty('padding-right', '48px', 'important');
       
       const wrapper = inp.parentElement;
       if (wrapper) {
         wrapper.style.setProperty('position', 'relative', 'important');
         
-        const btn = wrapper.querySelector('button');
+        const btn = wrapper.querySelector('button:not(.btn)');
         if (btn && btn.querySelector('svg')) {
           btn.style.setProperty('position', 'absolute', 'important');
           btn.style.setProperty('right', '16px', 'important');
@@ -5017,4 +5054,23 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   setInterval(bungkus, 3000);
   console.log('🔥 CARD_4LANGKAH_JS aktif');
+})();
+
+
+// ============================================
+// === ADMIN_LOGIN_FIRST — klik "Admin" di website selalu membuka form login dulu
+// ============================================
+(function () {
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest ? ev.target.closest('a[href="#/admin"]') : null;
+    if (!a) return;
+    if (location.hash.indexOf('#/admin') === 0) return; // sudah di area admin
+    try {
+      S.session = null;
+      window.__authReady = true;
+      localStorage.removeItem('azzid_session');
+      sessionStorage.removeItem('azzid_has_session');
+      if (typeof authApi === 'function') authApi('/logout', { method: 'POST' }).catch(function () {});
+    } catch (_) {}
+  }, true);
 })();

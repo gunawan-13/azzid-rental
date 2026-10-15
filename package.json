@@ -1,0 +1,9 @@
+{
+  "name": "azzid-rental",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static Azzid Rental application",
+  "scripts": {
+    "check": "node --check js/app.js && node --check js/data.js && node --check js/utils.js"
+  }
+}

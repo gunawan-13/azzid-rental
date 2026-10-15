@@ -3025,12 +3025,12 @@ html body #vehListGrid .veh-card .badge.badge-status-available {
 html body #custApp .veh-card .badge.badge-status-maintenance,
 html body #custApp .veh-card .badge.badge-maintenance,
 html body #vehListGrid .veh-card .badge.badge-status-maintenance {
-  background: rgba(245, 158, 11, 0.15) !important;
-  background-color: rgba(245, 158, 11, 0.15) !important;
+  background: rgba(14, 165, 233, 0.15) !important;
+  background-color: rgba(14, 165, 233, 0.15) !important;
   background-image: none !important;
-  border: 1px solid rgba(245, 158, 11, 0.5) !important;
-  border-color: rgba(245, 158, 11, 0.5) !important;
-  color: #fbbf24 !important;
+  border: 1px solid rgba(14, 165, 233, 0.5) !important;
+  border-color: rgba(14, 165, 233, 0.5) !important;
+  color: #38bdf8 !important;
   border-radius: 6px !important;
   padding: 4px 10px !important;
   font-weight: 800 !important;
@@ -3791,45 +3791,23 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
 
 <style id="FIX_PAGE_HEADER">
 /* ============================================================
-   HEADER HALAMAN: Armada, Layanan, Tentang Kami, FAQ, Kontak
+   HALAMAN SELAIN BERANDA
    Penyebab: aturan hero Beranda (section:first-child -> margin-top:-100px,
-   top:-100px, padding-top:60px) ikut berlaku ke SEMUA halaman, sehingga
-   judul halaman tertarik naik & tertutup navbar. Blok ini hanya berlaku
-   di luar Beranda, jadi tampilan Beranda tidak berubah.
-   Tinggi navbar: banner 34px + header 68px = 102px (mobile 32 + 64 = 96px).
+   top:-100px, min-height:90vh, padding-top:60px) ikut berlaku ke SEMUA halaman,
+   sehingga judul/isi halaman tertarik naik & tertutup navbar.
+   Blok ini hanya berlaku di luar Beranda. Tinggi navbar: banner 34px + header 68px
+   = 102px (mobile 32 + 64 = 96px).
    ============================================================ */
 
-/* Ruang di bawah navbar fixed: dihitung sekali, tanpa tumpukan padding */
+/* (1) Umum: batalkan offset hero untuk semua halaman non-beranda */
 html body:not(.route-beranda) #custApp { padding-top: 102px !important; }
 html body:not(.route-beranda) #custApp main#cMain { padding-top: 0 !important; margin-top: 0 !important; }
-
-/* Section judul halaman */
 html body:not(.route-beranda) #custApp main#cMain > section:first-child {
   position: relative !important;
   margin-top: 0 !important;
-  padding-top: 44px !important;
-  padding-bottom: 40px !important;
   min-height: 0 !important;
   height: auto !important;
-  overflow: hidden !important;
-  border-top: 0 !important;
-  border-left: 0 !important;
-  border-right: 0 !important;
 }
-
-/* Gambar latar (Armada, Tentang) tetap menutup section, tidak ditarik keluar */
-html body:not(.route-beranda) #custApp main#cMain > section:first-child > .absolute,
-html body:not(.route-beranda) #custApp main#cMain > section:first-child > img {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Isi judul: alur normal, tanpa offset dan tanpa padding tambahan */
 html body:not(.route-beranda) #custApp main#cMain > section:first-child > div:not(.absolute),
 html body:not(.route-beranda) #custApp main#cMain > section:first-child > .relative {
   position: relative !important;
@@ -3839,26 +3817,49 @@ html body:not(.route-beranda) #custApp main#cMain > section:first-child > .relat
   padding-top: 0 !important;
   padding-bottom: 0 !important;
   overflow: visible !important;
+}
+html body:not(.route-beranda) #custApp main#cMain > section:first-child + section { margin-top: 0 !important; }
+
+/* (2) Khusus section JUDUL halaman (Armada, Layanan, Tentang, FAQ, Kontak):
+       section yang hanya berisi judul, tanpa kartu/form di dalamnya */
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) {
+  padding-top: 44px !important;
+  padding-bottom: 40px !important;
+  overflow: hidden !important;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) > .absolute,
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) > img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) > div:not(.absolute),
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) > .relative {
   z-index: 1 !important;
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
 @media (min-width: 640px) {
-  html body:not(.route-beranda) #custApp main#cMain > section:first-child > div:not(.absolute),
-  html body:not(.route-beranda) #custApp main#cMain > section:first-child > .relative {
+  html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) > div:not(.absolute),
+  html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) > .relative {
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
   }
 }
-
-/* Eyebrow + judul + deskripsi: rapat dan sejajar kiri dengan konten */
-html body:not(.route-beranda) #custApp main#cMain > section:first-child h1 {
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) h1 {
   margin: 6px 0 0 0 !important;
   padding: 0 !important;
   min-height: 0 !important;
   line-height: 1.15 !important;
 }
-html body:not(.route-beranda) #custApp main#cMain > section:first-child p {
+html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) p {
   margin-top: 10px !important;
   margin-bottom: 0 !important;
 }
@@ -3866,14 +3867,9 @@ html body:not(.route-beranda) #custApp main#cMain > section:first-child p {
 /* FAQ: lebar daftar pertanyaan disamakan dengan judul (max-w-7xl) */
 body.route-faq #custApp main#cMain section:has(.acc) { max-width: 80rem !important; }
 
-/* Section isi setelah judul */
-html body:not(.route-beranda) #custApp main#cMain > section:first-child + section {
-  margin-top: 0 !important;
-}
-
 @media (max-width: 768px) {
   html body:not(.route-beranda) #custApp { padding-top: 96px !important; }
-  html body:not(.route-beranda) #custApp main#cMain > section:first-child {
+  html body:not(.route-beranda) #custApp main#cMain > section:first-child:not(:has(.card, input, select, textarea, form)) {
     padding-top: 28px !important;
     padding-bottom: 26px !important;
   }
@@ -4160,6 +4156,139 @@ a#waFloat,
     border-radius: 12px !important;
   }
 }
+<style id="PAGE_ENTER_ANIM">
+/* ============================================================
+   ANIMASI SAAT HALAMAN DIBUKA: Armada, Layanan, Tentang, FAQ, Kontak
+   Class body.pg-anim dipasang sebentar oleh script di bawah setiap kali
+   halaman dibuka, lalu dilepas. Jadi mengetik di pencarian / ganti filter
+   tidak memutar animasi lagi. Memakai fill-mode "backwards" supaya efek
+   hover kartu tidak terkunci setelah animasi selesai.
+   ============================================================ */
+@keyframes pgUp {
+  0%   { opacity: 0; transform: translate3d(0, 28px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes pgFade {
+  0%   { opacity: 0; transform: translate3d(0, 14px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+/* Header halaman: eyebrow -> judul -> deskripsi */
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:first-child span:first-child {
+  animation: pgUp .6s cubic-bezier(.16,1,.3,1) .05s backwards !important;
+}
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:first-child h1 {
+  animation: pgUp .75s cubic-bezier(.16,1,.3,1) .15s backwards !important;
+}
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:first-child p {
+  animation: pgUp .75s cubic-bezier(.16,1,.3,1) .28s backwards !important;
+}
+
+/* Section isi (filter, grid, form) muncul setelah header */
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:not(:first-child) {
+  animation: pgFade .7s cubic-bezier(.16,1,.3,1) .32s backwards !important;
+}
+
+/* Kartu: muncul berurutan (stagger) */
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:not(:first-child) .veh-card,
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:not(:first-child) .card,
+html body.pg-anim:not(.route-beranda) #custApp main#cMain > section:not(:first-child) .acc {
+  animation: pgUp .7s cubic-bezier(.16,1,.3,1) backwards !important;
+  animation-delay: .5s !important;
+}
+/* FAQ: aturan lama mematikan animasi .acc, dinyalakan lagi hanya saat halaman dibuka */
+html body.pg-anim.route-faq #custApp .acc.rv {
+  animation: pgUp .7s cubic-bezier(.16,1,.3,1) backwards !important;
+  animation-delay: .5s !important;
+}
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(2) { animation-delay: .57s !important; }
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(3) { animation-delay: .64s !important; }
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(4) { animation-delay: .71s !important; }
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(5) { animation-delay: .78s !important; }
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(6) { animation-delay: .85s !important; }
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(7) { animation-delay: .92s !important; }
+html body.pg-anim #cMain section:not(:first-child) :is(.veh-card,.card,.acc):nth-child(n+8) { animation-delay: .99s !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  html body.pg-anim #cMain * { animation: none !important; }
+}
+</style>
+
+<style id="CARD_MOBIL_LEGA">
+/* ============================================================
+   KARTU MOBIL (halaman Armada): area gambar diperpanjang ke bawah
+   dan ruang spesifikasi + harga dilonggarkan supaya tidak sempit.
+   ============================================================ */
+html body.route-armada #custApp .veh-card > div:first-child {
+  height: 280px !important;
+}
+html body.route-armada #custApp .veh-card > div:first-child > span.absolute.bottom-3,
+html body.route-armada #custApp .veh-card > div:first-child > span[class*="bottom-3"] {
+  bottom: 20px !important;
+  left: 20px !important;
+}
+html body.route-armada #custApp .veh-card > div:not(:first-child) {
+  padding: 20px 20px 22px !important;
+  gap: 18px !important;
+}
+html body.route-armada #custApp .veh-card > div:not(:first-child) > div:last-child {
+  padding-top: 18px !important;
+  margin-top: auto !important;
+}
+@media (max-width: 640px) {
+  html body.route-armada #custApp .veh-card > div:first-child { height: 250px !important; }
+}
+</style>
+
+<script id="PAGE_ENTER_ANIM_JS">
+(function () {
+  var PAGES = ['armada', 'layanan', 'tentang', 'faq', 'kontak'];
+  var timer = null;
+  function currentPage() {
+    var h = (location.hash || '').replace(/^#\/?/, '').split('?')[0].replace(/\/+$/, '');
+    return PAGES.indexOf(h) > -1 ? h : null;
+  }
+  function play() {
+    var b = document.body;
+    if (!b) return;
+    clearTimeout(timer);
+    b.classList.remove('pg-anim');
+    if (!currentPage()) return;
+    void b.offsetWidth; /* paksa reflow supaya animasi mulai dari awal */
+    b.classList.add('pg-anim');
+    timer = setTimeout(function () { b.classList.remove('pg-anim'); }, 1700);
+  }
+  window.addEventListener('hashchange', play);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', play);
+  else play();
+  window.addEventListener('load', function () { setTimeout(play, 50); });
+})();
+</script>
+
+<style id="FIX_WA_STATIC">
+/* ============================================================
+   TOMBOL WHATSAPP: tetap di tempatnya di body, TIDAK ikut saat di-scroll.
+   Posisi: pojok kanan bawah layar pertama, lalu ikut bergulir bersama halaman.
+   ============================================================ */
+html body a#waFloat.wa-float {
+  position: absolute !important;
+  top: calc(100vh - 92px) !important;
+  top: calc(100svh - 92px) !important;
+  bottom: auto !important;
+  right: 24px !important;
+  left: auto !important;
+}
+@media (max-width: 640px) {
+  html body a#waFloat.wa-float { right: 16px !important; }
+}
+/* Halaman booking: tombol di bagian bawah halaman, tidak menutupi form */
+html body:has([data-page="booking"]) { position: relative; }
+html body:has([data-page="booking"]) a#waFloat.wa-float {
+  top: auto !important;
+  bottom: 112px !important;
+}
+/* tidak tampil di dashboard admin */
+html body:has(#adminApp:not(.hidden)) a#waFloat { display: none !important; }
 </style>
 </body>
 </html>
