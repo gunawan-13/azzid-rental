@@ -3974,212 +3974,98 @@ a#waFloat,
 
 
 
-<style id="FIX_LOGIN_CLEAN">
+
+<style id="FIX_CENTER_FINAL">
 /* ============================================ */
-/* LOGIN ADMIN — FIX BERSIH */
+/* LOGIN ADMIN — CENTER + RESPONSIF */
 /* ============================================ */
 
-/* Layout: form di kanan, card di tengah */
-#adminApp > div:has(#lgE),
-#adminApp > div > div:has(#lgE) {
+/* Container — flex center */
+#adminApp {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   min-height: 100vh !important;
+  width: 100% !important;
   padding: 20px !important;
+  box-sizing: border-box !important;
+  background: #0a0a0c !important;
 }
 
-/* Card login — lebar normal */
+/* Card login — center, max lebar */
+#adminApp > div,
+#adminApp > div > div {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  box-sizing: border-box !important;
+}
+
+/* Card login — grid 2 kolom (kiri gambar, kanan form) */
 #adminApp .card:has(#lgE),
 #adminApp .card:has(#lgP) {
-  max-width: 920px !important;
-  width: 100% !important;
-  margin: 0 auto !important;
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  align-items: stretch !important;
-  gap: 0 !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+  max-width: 900px !important;
   overflow: hidden !important;
-  padding: 0 !important;
+  border-radius: 16px !important;
+  box-sizing: border-box !important;
 }
 
-@media (max-width: 768px) {
+/* Panel kiri & kanan — full height */
+#adminApp .card:has(#lgE) > div,
+#adminApp .card:has(#lgP) > div {
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* ============ RESPONSIF ============ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  #adminApp {
+    padding: 16px !important;
+  }
   #adminApp .card:has(#lgE),
   #adminApp .card:has(#lgP) {
-    grid-template-columns: 1fr !important;
-    max-width: 480px !important;
+    max-width: 100% !important;
   }
 }
 
-/* Panel kiri (gambar) */
-#adminApp .card:has(#lgE) > div:first-child {
-  padding: 32px !important;
-  background: linear-gradient(135deg, #7f1d1d, #991b1b) !important;
-}
-
-/* Panel kanan (form) */
-#adminApp .card:has(#lgE) > div:last-child {
-  padding: 40px !important;
-  background: #0f0f10 !important;
-}
-
-/* Label */
-#adminApp label.lbl {
-  display: block !important;
-  width: 100% !important;
-  font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.1em !important;
-  text-transform: uppercase !important;
-  color: #a1a1aa !important;
-  margin-bottom: 8px !important;
-}
-
-/* Input — full width */
-#adminApp #lgE,
-#adminApp #lgP {
-  display: block !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
-  margin-bottom: 16px !important;
-  padding: 14px 16px !important;
-  font-size: 14px !important;
-  background: #f4f4f5 !important;
-  color: #0f0f10 !important;
-  border: none !important;
-  border-radius: 8px !important;
-  outline: none !important;
-}
-
-/* ============================================ */
-/* TOMBOL "Masuk Dashboard" — MERAH TOTAL */
-/* ============================================ */
-
-#adminApp button[onclick*="doLogin"],
-#adminApp button.btn-g[onclick*="doLogin"],
-#adminApp button.btn-m[onclick*="doLogin"] {
-  /* MERAH */
-  background: #b91c1c !important;
-  background-color: #b91c1c !important;
-  background-image: none !important;
+/* HP — 1 kolom */
+@media (max-width: 768px) {
+  #adminApp {
+    padding: 12px !important;
+    align-items: flex-start !important;
+    padding-top: 20px !important;
+  }
   
-  /* Teks */
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  font-size: 14px !important;
+  #adminApp > div,
+  #adminApp > div > div {
+    max-width: 100% !important;
+  }
   
-  /* Layout */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 8px !important;
-  width: 100% !important;
-  min-height: 48px !important;
-  padding: 14px 24px !important;
-  margin: 8px 0 16px 0 !important;
-  border: none !important;
-  border-radius: 10px !important;
-  box-sizing: border-box !important;
-  cursor: pointer !important;
+  #adminApp .card:has(#lgE),
+  #adminApp .card:has(#lgP) {
+    grid-template-columns: 1fr !important;
+    max-width: 100% !important;
+    border-radius: 12px !important;
+  }
   
-  /* DIAM — no animasi, no glow, no shadow */
-  animation: none !important;
-  transition: none !important;
-  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3) !important;
-  text-shadow: none !important;
-  filter: none !important;
-  transform: none !important;
-  opacity: 1 !important;
+  /* Sembunyikan panel gambar di HP (opsional) — atau biarkan stacked */
+  #adminApp .card:has(#lgE) > div:first-child {
+    min-height: 180px !important;
+  }
 }
 
-/* Hover — merah lebih gelap, no animasi */
-#adminApp button[onclick*="doLogin"]:hover {
-  background: #991b1b !important;
-  box-shadow: 0 4px 16px rgba(185, 28, 28, 0.5) !important;
-  transform: none !important;
-  animation: none !important;
-}
-
-/* Focus */
-#adminApp button[onclick*="doLogin"]:focus {
-  outline: 2px solid #ef4444 !important;
-  outline-offset: 2px !important;
-}
-
-/* Icon + teks dalam tombol */
-#adminApp button[onclick*="doLogin"] svg {
-  width: 16px !important;
-  height: 16px !important;
-  display: inline-block !important;
-  flex-shrink: 0 !important;
-  stroke: #ffffff !important;
-}
-
-/* Pseudo-element — matikan */
-#adminApp button[onclick*="doLogin"]::before,
-#adminApp button[onclick*="doLogin"]::after {
-  display: none !important;
-  content: none !important;
-}
-
-/* Error box — rapikan */
-#adminApp #lgErr {
-  display: block !important;
-  width: 100% !important;
-  margin-bottom: 16px !important;
-  padding: 12px 16px !important;
-  background: rgba(220, 38, 38, 0.1) !important;
-  border: 1px solid rgba(220, 38, 38, 0.4) !important;
-  border-radius: 8px !important;
-  color: #fca5a5 !important;
-  font-size: 13px !important;
-}
-
-/* Teks "Gunakan akun admin" */
-#adminApp p:has(+ a[href="#/"]),
-#adminApp .flex.mt-6 {
-  display: block !important;
-  width: 100% !important;
-  margin-top: 8px !important;
-}
-
-/* Link kembali */
-#adminApp a[href="#/"] {
-  display: inline-block !important;
-  margin-top: 8px !important;
-  font-size: 13px !important;
-  color: #a1a1aa !important;
-  text-decoration: none !important;
-}
-
-#adminApp a[href="#/"]:hover {
-  color: #ffffff !important;
-}
-
-/* ============================================ */
-/* MATIKAN SEMUA ANIMASI DI LOGIN */
-/* ============================================ */
-
-#adminApp,
-#adminApp * {
-  animation: none !important;
-  transition: none !important;
-}
-
-#adminApp .card,
-#adminApp > div,
-#adminApp > div > div {
-  animation: none !important;
-  transition: none !important;
-  transform: none !important;
-  opacity: 1 !important;
-  filter: none !important;
-}
-
-#adminApp *::before,
-#adminApp *::after {
-  animation: none !important;
-  transition: none !important;
+/* HP kecil */
+@media (max-width: 380px) {
+  #adminApp {
+    padding: 8px !important;
+  }
 }
 </style>
 </body>
