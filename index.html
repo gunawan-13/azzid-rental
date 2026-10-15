@@ -4142,5 +4142,92 @@ a#waFloat,
   content: none !important;
 }
 </style>
+
+<style id="FIX_LOGIN_DIAM">
+/* ============================================ */
+/* LOGIN ADMIN — MATIKAN SEMUA ANIMASI */
+/* Form diam total, no pulse, no glow, no bounce */
+/* ============================================ */
+
+/* Semua elemen di halaman login admin — matikan animasi */
+#adminApp * {
+  animation: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  animation-iteration-count: 1 !important;
+  transition: none !important;
+  transition-duration: 0s !important;
+}
+
+/* Card login — diam total */
+#adminApp .card,
+#adminApp > div,
+#adminApp > div > div,
+#adminApp > div > div > div {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  filter: none !important;
+  will-change: auto !important;
+}
+
+/* Pseudo-element — matikan */
+#adminApp *::before,
+#adminApp *::after {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+}
+
+/* Khusus card login — pastikan diam */
+#adminApp .card:has(#lgE),
+#adminApp .card:has(#lgP),
+#adminApp div:has(> #lgE),
+#adminApp div:has(> #lgP),
+#adminApp div:has(> button[onclick*="doLogin"]) {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* Input — jangan ada animasi */
+#adminApp #lgE,
+#adminApp #lgP,
+#adminApp input.inp {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Label */
+#adminApp label.lbl {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Teks — jangan ada animasi */
+#adminApp h1,
+#adminApp h2,
+#adminApp h3,
+#adminApp p,
+#adminApp span {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Error box — jangan berdenyut */
+#adminApp #lgErr {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+}
+</style>
 </body>
 </html>
