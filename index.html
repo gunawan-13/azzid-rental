@@ -3930,41 +3930,34 @@ html body:not(.route-beranda) #custApp main#cMain > section:first-child + sectio
 })();
 </script>
 
-<style id="WA_NUCLEAR">
+
+<style id="WA_SAFE_FIX">
 /* ============================================ */
-/* WA NUCLEAR — paksa fixed, apapun parentnya */
+/* WA SAFE FIX — paksa fixed tanpa ngerusak layout */
 /* ============================================ */
 
-/* Hapus transform dari semua ancestor */
-html, body, #custApp, main, footer, section, div {
-  transform: none !important;
-  filter: none !important;
-  perspective: none !important;
-  will-change: auto !important;
-  contain: none !important;
-}
-
-/* Paksa #waFloat fixed */
-#waFloat {
+#waFloat,
+a#waFloat,
+.wa-float {
   position: fixed !important;
   bottom: 24px !important;
   right: 24px !important;
   top: auto !important;
   left: auto !important;
-  z-index: 999999 !important;
+  z-index: 99999 !important;
   display: grid !important;
   place-items: center !important;
   width: 56px !important;
   height: 56px !important;
   border-radius: 50% !important;
   background: #25D366 !important;
-  transform: none !important;
-  will-change: auto !important;
-  transition: none !important;
 }
 
-#waFloat:hover {
-  transform: scale(1.1) !important;
+#waFloat svg,
+.wa-float svg {
+  width: 28px !important;
+  height: 28px !important;
+  fill: #ffffff !important;
 }
 
 @media (max-width: 768px) {
@@ -3974,6 +3967,105 @@ html, body, #custApp, main, footer, section, div {
     width: 52px !important;
     height: 52px !important;
   }
+}
+</style>
+
+
+<style id="FIX_LOGIN_NUCLEAR">
+/* ============================================ */
+/* LOGIN ADMIN — NUCLEAR FIX */
+/* Tombol "Masuk Dashboard" WAJIB di baris baru */
+/* ============================================ */
+
+/* Container form login — paksa flex column */
+#adminApp div:has(> #lgE),
+#adminApp div:has(> #lgP),
+#adminApp div:has(> button[onclick*="doLogin"]),
+#adminApp .card:has(#lgE),
+#adminApp .card:has(#lgP) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+}
+
+/* SEMUA child langsung — full width */
+#adminApp div:has(> #lgE) > *,
+#adminApp div:has(> #lgP) > *,
+#adminApp div:has(> button[onclick*="doLogin"]) > * {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  flex-basis: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Label — jangan flex */
+#adminApp label.lbl,
+#adminApp label {
+  display: block !important;
+  width: 100% !important;
+  flex-basis: 100% !important;
+}
+
+/* Input — full width */
+#adminApp #lgE,
+#adminApp #lgP {
+  display: block !important;
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin-bottom: 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* Tombol "Masuk Dashboard" — PAKSA baris baru */
+#adminApp button[onclick*="doLogin"],
+#adminApp .btn-g:has(svg),
+#adminApp button.btn-g {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 100% !important;
+  flex-basis: 100% !important;
+  margin: 16px 0 8px 0 !important;
+  min-height: 44px !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  float: none !important;
+  position: static !important;
+  order: 99 !important;  /* Taruh di paling bawah */
+}
+
+/* Pesan error — di atas */
+#adminApp #lgErr {
+  display: block !important;
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin-bottom: 12px !important;
+  order: -1 !important;
+}
+
+/* Teks "Gunakan akun admin" */
+#adminApp p.text-\[11px\],
+#adminApp p:has-text("Gunakan akun") {
+  display: block !important;
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin-top: 8px !important;
+  order: 100 !important;
+}
+
+/* Link "Kembali ke Website" */
+#adminApp .flex.mt-6,
+#adminApp div.mt-6 {
+  display: block !important;
+  width: 100% !important;
+  flex-basis: 100% !important;
+  margin-top: 16px !important;
+  order: 101 !important;
 }
 </style>
 </body>
