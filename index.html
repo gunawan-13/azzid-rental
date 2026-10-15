@@ -927,14 +927,15 @@ img {
 }
 
 /* Input password — icon mata presisi */
-#adminApp input[type="password"],
-#adminApp input[type="text"] {
+#adminApp input[type="password"] {
   padding-right: 48px !important;
 }
 
 /* Icon mata — posisi center vertikal + kanan */
-#adminApp button:has(svg[viewBox*="0 0 24 24"]):has(path[d*="M1"]),
-#adminApp button:has(svg):has(path[d*="eye"]),
+/* DIPERSEMPIT: hanya tombol mata di dalam wrapper input password.
+   Sebelumnya selector terlalu luas (path[d*="M1"]) sehingga ikut mengenai
+   tombol sidebar (Booking, Calendar, Armada, dst) dan Logout. */
+#adminApp div:has(> input[type="password"]) > button:not(.btn),
 #adminApp button[onclick*="togglePassword"],
 #adminApp button[onclick*="togglePw"] {
   position: absolute !important;
@@ -3603,7 +3604,7 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
 }
 
 /* Mobile — drawer */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   #aSb {
     position: fixed !important;
     top: 0 !important;
@@ -3772,7 +3773,7 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
 }
 
 /* Mobile */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   #aSb {
     position: fixed !important;
     top: 0 !important;
@@ -3787,5 +3788,146 @@ body > a[href="#/"]:not(#waFloat):not(.wa-float) {
   }
 }
 </style>
+
+<style id="FIX_PAGE_HEADER">
+/* ============================================================
+   HEADER HALAMAN: Armada, Layanan, Tentang Kami, FAQ, Kontak
+   Penyebab: aturan hero Beranda (section:first-child -> margin-top:-100px,
+   top:-100px, padding-top:60px) ikut berlaku ke SEMUA halaman, sehingga
+   judul halaman tertarik naik & tertutup navbar. Blok ini hanya berlaku
+   di luar Beranda, jadi tampilan Beranda tidak berubah.
+   Tinggi navbar: banner 34px + header 68px = 102px (mobile 32 + 64 = 96px).
+   ============================================================ */
+
+/* Ruang di bawah navbar fixed: dihitung sekali, tanpa tumpukan padding */
+html body:not(.route-beranda) #custApp { padding-top: 102px !important; }
+html body:not(.route-beranda) #custApp main#cMain { padding-top: 0 !important; margin-top: 0 !important; }
+
+/* Section judul halaman */
+html body:not(.route-beranda) #custApp main#cMain > section:first-child {
+  position: relative !important;
+  margin-top: 0 !important;
+  padding-top: 44px !important;
+  padding-bottom: 40px !important;
+  min-height: 0 !important;
+  height: auto !important;
+  overflow: hidden !important;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+
+/* Gambar latar (Armada, Tentang) tetap menutup section, tidak ditarik keluar */
+html body:not(.route-beranda) #custApp main#cMain > section:first-child > .absolute,
+html body:not(.route-beranda) #custApp main#cMain > section:first-child > img {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Isi judul: alur normal, tanpa offset dan tanpa padding tambahan */
+html body:not(.route-beranda) #custApp main#cMain > section:first-child > div:not(.absolute),
+html body:not(.route-beranda) #custApp main#cMain > section:first-child > .relative {
+  position: relative !important;
+  top: auto !important;
+  height: auto !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+}
+@media (min-width: 640px) {
+  html body:not(.route-beranda) #custApp main#cMain > section:first-child > div:not(.absolute),
+  html body:not(.route-beranda) #custApp main#cMain > section:first-child > .relative {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* Eyebrow + judul + deskripsi: rapat dan sejajar kiri dengan konten */
+html body:not(.route-beranda) #custApp main#cMain > section:first-child h1 {
+  margin: 6px 0 0 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  line-height: 1.15 !important;
+}
+html body:not(.route-beranda) #custApp main#cMain > section:first-child p {
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+}
+
+/* FAQ: lebar daftar pertanyaan disamakan dengan judul (max-w-7xl) */
+body.route-faq #custApp main#cMain section:has(.acc) { max-width: 80rem !important; }
+
+/* Section isi setelah judul */
+html body:not(.route-beranda) #custApp main#cMain > section:first-child + section {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 768px) {
+  html body:not(.route-beranda) #custApp { padding-top: 96px !important; }
+  html body:not(.route-beranda) #custApp main#cMain > section:first-child {
+    padding-top: 28px !important;
+    padding-bottom: 26px !important;
+  }
+}
+</style>
+
+<script id="WA_BODY_FIX">
+(function() {
+  function fixWaPosition() {
+    var wa = document.getElementById('waFloat');
+    if (!wa) return;
+    
+    // Pindah ke body kalau belum
+    if (wa.parentElement !== document.body) {
+      document.body.appendChild(wa);
+    }
+    
+    // Paksa inline style
+    wa.style.setProperty('position', 'fixed', 'important');
+    wa.style.setProperty('bottom', '24px', 'important');
+    wa.style.setProperty('right', '24px', 'important');
+    wa.style.setProperty('top', 'auto', 'important');
+    wa.style.setProperty('left', 'auto', 'important');
+    wa.style.setProperty('z-index', '99999', 'important');
+    wa.style.setProperty('transform', 'none', 'important');
+    wa.style.setProperty('display', 'grid', 'important');
+    wa.style.setProperty('place-items', 'center', 'important');
+    wa.style.setProperty('width', '56px', 'important');
+    wa.style.setProperty('height', '56px', 'important');
+    wa.style.setProperty('border-radius', '50%', 'important');
+    wa.style.setProperty('background', '#25D366', 'important');
+  }
+  
+  // Jalan saat load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fixWaPosition);
+  } else {
+    fixWaPosition();
+  }
+  
+  // Jalan tiap navigasi SPA
+  window.addEventListener('hashchange', function() {
+    setTimeout(fixWaPosition, 100);
+    setTimeout(fixWaPosition, 300);
+    setTimeout(fixWaPosition, 700);
+  });
+  
+  // Timer agresif 5 detik
+  var i = 0;
+  var timer = setInterval(function() {
+    fixWaPosition();
+    if (++i > 50) clearInterval(timer);
+  }, 100);
+})();
+</script>
 </body>
 </html>
