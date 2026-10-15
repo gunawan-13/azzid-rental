@@ -4052,5 +4052,69 @@ a#waFloat,
   obs.observe(document.body, { childList: true, subtree: true });
 })();
 </script>
+
+<style id="FIX_LOGIN_BTN">
+/* ============================================ */
+/* TOMBOL LOGIN — hilangkan animasi + glow merah */
+/* Cuma untuk tombol "Masuk Dashboard" di form login */
+/* ============================================ */
+
+/* Tombol "Masuk Dashboard" — matikan animasi */
+#adminApp button[onclick*="doLogin"],
+#adminApp .btn-g[onclick*="doLogin"] {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  will-change: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Hover — tetap no shadow, no animasi */
+#adminApp button[onclick*="doLogin"]:hover,
+#adminApp .btn-g[onclick*="doLogin"]:hover {
+  animation: none !important;
+  transition: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Pseudo-element — matikan kalau ada */
+#adminApp button[onclick*="doLogin"]::before,
+#adminApp button[onclick*="doLogin"]::after,
+#adminApp .btn-g[onclick*="doLogin"]::before,
+#adminApp .btn-g[onclick*="doLogin"]::after {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+  box-shadow: none !important;
+}
+
+/* Parent dari tombol login — matikan animasi juga */
+#adminApp .card:has(> div > #lgE),
+#adminApp .card:has(#lgE) > div,
+#adminApp div:has(> button[onclick*="doLogin"]) {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Form login container — jangan ada animasi */
+#adminApp div:has(> #lgE),
+#adminApp div:has(> #lgP) {
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+</style>
 </body>
 </html>
