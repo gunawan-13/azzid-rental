@@ -3974,233 +3974,213 @@ a#waFloat,
 
 
 
+<style id="FIX_LOGIN_CLEAN">
+/* ============================================ */
+/* LOGIN ADMIN — FIX BERSIH */
+/* ============================================ */
 
+/* Layout: form di kanan, card di tengah */
+#adminApp > div:has(#lgE),
+#adminApp > div > div:has(#lgE) {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+  padding: 20px !important;
+}
 
-<style id="KILAT_LOGIN_CSS">
+/* Card login — lebar normal */
+#adminApp .card:has(#lgE),
+#adminApp .card:has(#lgP) {
+  max-width: 920px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  align-items: stretch !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 768px) {
+  #adminApp .card:has(#lgE),
+  #adminApp .card:has(#lgP) {
+    grid-template-columns: 1fr !important;
+    max-width: 480px !important;
+  }
+}
+
+/* Panel kiri (gambar) */
+#adminApp .card:has(#lgE) > div:first-child {
+  padding: 32px !important;
+  background: linear-gradient(135deg, #7f1d1d, #991b1b) !important;
+}
+
+/* Panel kanan (form) */
+#adminApp .card:has(#lgE) > div:last-child {
+  padding: 40px !important;
+  background: #0f0f10 !important;
+}
+
+/* Label */
+#adminApp label.lbl {
+  display: block !important;
+  width: 100% !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  color: #a1a1aa !important;
+  margin-bottom: 8px !important;
+}
+
+/* Input — full width */
 #adminApp #lgE,
 #adminApp #lgP {
   display: block !important;
   width: 100% !important;
   box-sizing: border-box !important;
-  margin-bottom: 14px !important;
+  margin-bottom: 16px !important;
+  padding: 14px 16px !important;
+  font-size: 14px !important;
+  background: #f4f4f5 !important;
+  color: #0f0f10 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  outline: none !important;
 }
-#adminApp label.lbl {
-  display: block !important;
+
+/* ============================================ */
+/* TOMBOL "Masuk Dashboard" — MERAH TOTAL */
+/* ============================================ */
+
+#adminApp button[onclick*="doLogin"],
+#adminApp button.btn-g[onclick*="doLogin"],
+#adminApp button.btn-m[onclick*="doLogin"] {
+  /* MERAH */
+  background: #b91c1c !important;
+  background-color: #b91c1c !important;
+  background-image: none !important;
+  
+  /* Teks */
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  
+  /* Layout */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
   width: 100% !important;
-  margin-bottom: 6px !important;
+  min-height: 48px !important;
+  padding: 14px 24px !important;
+  margin: 8px 0 16px 0 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  
+  /* DIAM — no animasi, no glow, no shadow */
+  animation: none !important;
+  transition: none !important;
+  box-shadow: 0 4px 12px rgba(185, 28, 28, 0.3) !important;
+  text-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+  opacity: 1 !important;
 }
+
+/* Hover — merah lebih gelap, no animasi */
+#adminApp button[onclick*="doLogin"]:hover {
+  background: #991b1b !important;
+  box-shadow: 0 4px 16px rgba(185, 28, 28, 0.5) !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Focus */
+#adminApp button[onclick*="doLogin"]:focus {
+  outline: 2px solid #ef4444 !important;
+  outline-offset: 2px !important;
+}
+
+/* Icon + teks dalam tombol */
+#adminApp button[onclick*="doLogin"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+  stroke: #ffffff !important;
+}
+
+/* Pseudo-element — matikan */
+#adminApp button[onclick*="doLogin"]::before,
+#adminApp button[onclick*="doLogin"]::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Error box — rapikan */
 #adminApp #lgErr {
   display: block !important;
   width: 100% !important;
-  margin-bottom: 14px !important;
+  margin-bottom: 16px !important;
+  padding: 12px 16px !important;
+  background: rgba(220, 38, 38, 0.1) !important;
+  border: 1px solid rgba(220, 38, 38, 0.4) !important;
+  border-radius: 8px !important;
+  color: #fca5a5 !important;
+  font-size: 13px !important;
+}
+
+/* Teks "Gunakan akun admin" */
+#adminApp p:has(+ a[href="#/"]),
+#adminApp .flex.mt-6 {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 8px !important;
+}
+
+/* Link kembali */
+#adminApp a[href="#/"] {
+  display: inline-block !important;
+  margin-top: 8px !important;
+  font-size: 13px !important;
+  color: #a1a1aa !important;
+  text-decoration: none !important;
+}
+
+#adminApp a[href="#/"]:hover {
+  color: #ffffff !important;
+}
+
+/* ============================================ */
+/* MATIKAN SEMUA ANIMASI DI LOGIN */
+/* ============================================ */
+
+#adminApp,
+#adminApp * {
+  animation: none !important;
+  transition: none !important;
+}
+
+#adminApp .card,
+#adminApp > div,
+#adminApp > div > div {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+#adminApp *::before,
+#adminApp *::after {
+  animation: none !important;
+  transition: none !important;
 }
 </style>
-
-<script id="KILAT_LOGIN_JS">
-(function() {
-  function fixLogin() {
-    var btn = document.querySelector('button[onclick*="doLogin"]');
-    if (!btn) return;
-    
-    // === TOMBOL: MERAH + FULL WIDTH + DI BAWAH ===
-    btn.style.setProperty('display', 'flex', 'important');
-    btn.style.setProperty('align-items', 'center', 'important');
-    btn.style.setProperty('justify-content', 'center', 'important');
-    btn.style.setProperty('gap', '8px', 'important');
-    btn.style.setProperty('width', '100%', 'important');
-    btn.style.setProperty('max-width', '100%', 'important');
-    btn.style.setProperty('min-width', '0', 'important');
-    btn.style.setProperty('flex', '0 0 100%', 'important');
-    btn.style.setProperty('flex-basis', '100%', 'important');
-    btn.style.setProperty('grid-column', '1 / -1', 'important');
-    btn.style.setProperty('order', '999', 'important');
-    btn.style.setProperty('margin', '8px 0 16px 0', 'important');
-    btn.style.setProperty('padding', '14px 24px', 'important');
-    btn.style.setProperty('min-height', '48px', 'important');
-    btn.style.setProperty('background', '#b91c1c', 'important');
-    btn.style.setProperty('background-color', '#b91c1c', 'important');
-    btn.style.setProperty('background-image', 'none', 'important');
-    btn.style.setProperty('color', '#ffffff', 'important');
-    btn.style.setProperty('border', 'none', 'important');
-    btn.style.setProperty('border-radius', '10px', 'important');
-    btn.style.setProperty('font-weight', '700', 'important');
-    btn.style.setProperty('font-size', '14px', 'important');
-    btn.style.setProperty('box-sizing', 'border-box', 'important');
-    btn.style.setProperty('cursor', 'pointer', 'important');
-    btn.style.setProperty('position', 'static', 'important');
-    btn.style.setProperty('float', 'none', 'important');
-    btn.style.setProperty('clear', 'both', 'important');
-    btn.style.setProperty('animation', 'none', 'important');
-    btn.style.setProperty('transition', 'none', 'important');
-    btn.style.setProperty('box-shadow', 'none', 'important');
-    btn.style.setProperty('text-shadow', 'none', 'important');
-    btn.style.setProperty('filter', 'none', 'important');
-    btn.style.setProperty('transform', 'none', 'important');
-    btn.style.setProperty('opacity', '1', 'important');
-    
-    // === PARENT TOMBOL: paksa flex column wrap ===
-    var p = btn.parentElement;
-    if (p) {
-      var ps = getComputedStyle(p);
-      if (ps.display === 'flex') {
-        p.style.setProperty('flex-wrap', 'wrap', 'important');
-        p.style.setProperty('flex-direction', 'column', 'important');
-        p.style.setProperty('align-items', 'stretch', 'important');
-      }
-      if (ps.display === 'grid') {
-        p.style.setProperty('grid-template-columns', '1fr', 'important');
-      }
-    }
-    
-    // === INPUT: full width ===
-    ['lgE', 'lgP'].forEach(function(id) {
-      var inp = document.getElementById(id);
-      if (inp) {
-        inp.style.setProperty('display', 'block', 'important');
-        inp.style.setProperty('width', '100%', 'important');
-        inp.style.setProperty('box-sizing', 'border-box', 'important');
-        inp.style.setProperty('margin-bottom', '14px', 'important');
-      }
-    });
-    
-    // === CARD: paksa lebar normal + center ===
-    var card = btn.closest('.card');
-    if (card) {
-      card.style.setProperty('max-width', '920px', 'important');
-      card.style.setProperty('width', '100%', 'important');
-      card.style.setProperty('margin-left', 'auto', 'important');
-      card.style.setProperty('margin-right', 'auto', 'important');
-    }
-    
-    // === Parent card: center ===
-    var cardParent = card ? card.parentElement : null;
-    if (cardParent) {
-      cardParent.style.setProperty('display', 'flex', 'important');
-      cardParent.style.setProperty('align-items', 'center', 'important');
-      cardParent.style.setProperty('justify-content', 'center', 'important');
-      cardParent.style.setProperty('min-height', '100vh', 'important');
-      cardParent.style.setProperty('padding', '20px', 'important');
-    }
-  }
-  
-  // Jalan agresif
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fixLogin);
-  } else {
-    fixLogin();
-  }
-  
-  // Timer 100ms x 50 (5 detik pertama)
-  var i = 0;
-  var timer = setInterval(function() {
-    fixLogin();
-    if (++i > 50) clearInterval(timer);
-  }, 100);
-  
-  // Tiap navigasi
-  window.addEventListener('hashchange', function() {
-    setTimeout(fixLogin, 100);
-    setTimeout(fixLogin, 300);
-    setTimeout(fixLogin, 700);
-  });
-  
-  // MutationObserver
-  var obs = new MutationObserver(fixLogin);
-  document.addEventListener('DOMContentLoaded', function() {
-    obs.observe(document.body, { childList: true, subtree: true });
-  });
-})();
-</script>
-
-<script id="FIX_BTN_PINDAH">
-(function() {
-  function pindahkanTombol() {
-    var btn = document.querySelector('button[onclick*="doLogin"]');
-    if (!btn) return;
-    
-    var parent = btn.parentElement;
-    if (!parent) return;
-    
-    // Cari teks "Gunakan akun admin" & "Kembali ke Website"
-    var akunText = null;
-    var kembaliLink = null;
-    var inputPassword = document.getElementById('lgP');
-    
-    parent.querySelectorAll('*').forEach(function(el) {
-      var t = el.textContent.trim();
-      if (t === 'Gunakan akun admin.' && el.children.length === 0) akunText = el;
-      if (el.tagName === 'A' && el.href && el.href.includes('#/')) kembaliLink = el;
-    });
-    
-    // Cari wrapper yang isi tombol + akun text
-    var btnWrapper = btn.parentElement;
-    var wrapperText = btnWrapper.textContent.trim();
-    
-    // Kalau tombol & "Gunakan akun admin" dalam 1 wrapper → pisahkan
-    if (btnWrapper !== parent && wrapperText.includes('Gunakan akun')) {
-      // Pindahkan tombol ke parent, sebelum akun text
-      btnWrapper.parentElement.insertBefore(btn, btnWrapper);
-    }
-    
-    // Paksa tombol jadi full width merah
-    btn.style.setProperty('display', 'flex', 'important');
-    btn.style.setProperty('align-items', 'center', 'important');
-    btn.style.setProperty('justify-content', 'center', 'important');
-    btn.style.setProperty('gap', '8px', 'important');
-    btn.style.setProperty('width', '100%', 'important');
-    btn.style.setProperty('max-width', '100%', 'important');
-    btn.style.setProperty('flex', '0 0 100%', 'important');
-    btn.style.setProperty('flex-basis', '100%', 'important');
-    btn.style.setProperty('order', '-1', 'important'); // Taruh di ATAS
-    btn.style.setProperty('margin', '16px 0 8px 0', 'important');
-    btn.style.setProperty('padding', '14px 24px', 'important');
-    btn.style.setProperty('min-height', '48px', 'important');
-    btn.style.setProperty('background', '#b91c1c', 'important');
-    btn.style.setProperty('background-color', '#b91c1c', 'important');
-    btn.style.setProperty('color', '#ffffff', 'important');
-    btn.style.setProperty('border', 'none', 'important');
-    btn.style.setProperty('border-radius', '10px', 'important');
-    btn.style.setProperty('font-weight', '700', 'important');
-    btn.style.setProperty('font-size', '14px', 'important');
-    btn.style.setProperty('box-sizing', 'border-box', 'important');
-    btn.style.setProperty('cursor', 'pointer', 'important');
-    btn.style.setProperty('animation', 'none', 'important');
-    btn.style.setProperty('transition', 'none', 'important');
-    btn.style.setProperty('box-shadow', 'none', 'important');
-    btn.style.setProperty('transform', 'none', 'important');
-    
-    // Parent — flex column
-    var p = btn.parentElement;
-    if (p) {
-      p.style.setProperty('display', 'flex', 'important');
-      p.style.setProperty('flex-direction', 'column', 'important');
-      p.style.setProperty('align-items', 'stretch', 'important');
-      p.style.setProperty('gap', '8px', 'important');
-    }
-  }
-  
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', pindahkanTombol);
-  } else {
-    pindahkanTombol();
-  }
-  
-  var i = 0;
-  var timer = setInterval(function() {
-    pindahkanTombol();
-    if (++i > 50) clearInterval(timer);
-  }, 100);
-  
-  window.addEventListener('hashchange', function() {
-    setTimeout(pindahkanTombol, 100);
-    setTimeout(pindahkanTombol, 300);
-  });
-  
-  var obs = new MutationObserver(pindahkanTombol);
-  document.addEventListener('DOMContentLoaded', function() {
-    obs.observe(document.body, { childList: true, subtree: true });
-  });
-})();
-</script>
 </body>
 </html>
