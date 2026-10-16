@@ -177,7 +177,7 @@ async function loadBookingsFromAPI() {
 }
 
 function normalizeBookingFromAPI(b) {
-  return { id: b.booking_code || ("AZR-" + b.id), backendId: b.id, cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: "QRIS", s: b.payment_status || "UNPAID", tx: "-", at: null }, user: null };
+  return { id: b.booking_code || ("AZR-" + b.id), backendId: b.id, cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: b.payment_method || b.method || "Transfer Bank", s: b.payment_status || b.pay_status || b.pay?.s || "UNPAID", tx: b.booking_code || "-", at: b.pay_at || null }, user: null };
 }
 
 function addUserNotif(email, type, message){
@@ -388,9 +388,9 @@ function vHome() {
           <div><label class="lbl">Tanggal Selesai</label><input type="date" id="qbEnd" class="inp" value="${addDays(TODAY,2)}" min="${addDays(TODAY,1)}" required></div>
           <div><label class="lbl">Jenis Rental</label><select id="qbType" class="inp"><option>Lepas Kunci</option><option>Dengan Driver</option></select></div>
           <div><label class="lbl">Mobil</label><select id="qbVeh" class="inp"><option value="">Semua kendaraan</option>${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<option value="${v.id}">${esc(v.name)}</option>`).join('')}</select></div>
-          <button onclick="openBooking()" class="col-span-full btn btn-m mt-1">${ic('cal', 'w-4 h-4')} Booking Sekarang</button>
+          <button type="submit" class="col-span-full btn btn-m mt-1">${ic('cal', 'w-4 h-4')} Booking Sekarang</button>
         </form>
-        <p class="text-[11px] text-muted mt-3 text-center">Konfirmasi instan via WhatsApp</p>
+        <p class="text-[11px] text-muted mt-3 text-center">Pilih mobil dan jadwal; pembayaran dikonfirmasi setelah diverifikasi admin.</p>
       </div>
     </div>
   </section>
@@ -642,6 +642,8 @@ function vKontak() {
 }
 
 /* ================= BOOKING FLOW ================= */
+let bookingAuthPending = false;
+
 function openBooking(vid) {
   const start = (S.draft && S.draft.start) || TODAY;
   const end = (S.draft && S.draft.end) || addDays(TODAY,2);
@@ -657,7 +659,8 @@ function openBooking(vid) {
     drop: drop,
     cust: {}, promo: null, method: ''
   };
-  S.step = vid ? 1 : 0;
+  window._ktpBase64 = "";
+  S.step = vid ? 2 : 0;
   location.hash = '#/booking';
 }
 
@@ -686,9 +689,14 @@ function qbSubmit(e) {
   S.draft.drop = $('qbLoc').value;
   const vv = $('qbVeh').value;
   S.draft.veh = vv || null;
+  if (!S.draft.start || !S.draft.end || S.draft.end < S.draft.start) {
+    toast('Tanggal booking tidak valid', 'err');
+    return;
+  }
   if (vv) {
-    toast('Silakan cek ketersediaan & lanjut booking', 'info');
-    location.hash = '#/armada/' + vv;
+    S.step = 2;
+    toast('Lanjutkan dengan masuk atau daftar untuk booking', 'info');
+    location.hash = '#/booking';
   } else {
     toast('Silakan pilih mobil yang tersedia', 'info');
     location.hash = '#/armada';
@@ -755,6 +763,11 @@ function renderCNow() {
 }
 
 function bkGo(n) {
+  if (n >= 4 && !S.custSession) {
+    bookingAuthPending = true;
+    openAuth('in');
+    return;
+  }
   S.step = n;
   renderCNow();
   window.scrollTo({ top: 0 });
@@ -764,7 +777,6 @@ function bkBack() {
   // Mundur satu langkah di dalam alur booking (tidak keluar dari form)
   if (S.step === 5) { bkGo(4); return; }
   if (S.step === 4) { bkGo(2); return; }
-  if (S.step === 3) { bkGo(4); return; }
   if (S.draft?.veh) {
     location.hash = '#/armada/' + S.draft.veh;
   } else {
@@ -820,33 +832,8 @@ function bkEstimate() {
   const dur = daysDiff(sEl.value, eEl.value);
   const drv = tEl && tEl.value === "Dengan Driver" ? dur * 150000 : 0;
   const sub = $("bkEstSub"), tot = $("bkEstTotal");
-  if (sub) sub.textContent = dur + " hari" + (drv ? " · termasuk driver" : "");
+  if (sub) sub.textContent = dur + " hari · " + (drv ? "Dengan Driver" : "Lepas Kunci");
   if (tot) tot.textContent = fmtIDR(dur * v.priceLK + drv);
-}
-
-function bkAuthTab(t) {
-  try {
-    const inTab = document.getElementById("bkAuthIn");
-    const regTab = document.getElementById("bkAuthReg");
-    const btIn = document.getElementById("btIn");
-    const btReg = document.getElementById("btReg");
-    if (!inTab || !regTab) { console.warn("bkAuthTab: tab tidak ketemu"); return; }
-    if (t === "reg") {
-      inTab.style.display = "none";
-      regTab.style.display = "";
-      regTab.classList.remove("hidden");
-      if (btIn) btIn.classList.remove("on");
-      if (btReg) btReg.classList.add("on");
-    } else {
-      inTab.style.display = "";
-      inTab.classList.remove("hidden");
-      regTab.style.display = "none";
-      regTab.classList.add("hidden");
-      if (btIn) btIn.classList.add("on");
-      if (btReg) btReg.classList.remove("on");
-      
-    }
-  } catch (e) { console.error("bkAuthTab error:", e); }
 }
 
 function validateWa(input){
@@ -887,13 +874,17 @@ function bkNext() {
     if (!d.start || !d.end || d.end < d.start) { toast("Tanggal tidak valid", "err"); return; }
     const t = $("bkType")?.value; if (t) d.type = t;
     const p = $("bkPickup")?.value; if (p) d.pickup = p;
-    // Login bersifat opsional: langsung ke data penyewa
+    if (!S.custSession) {
+      bookingAuthPending = true;
+      openAuth('in');
+      return;
+    }
     bkGo(4);
     return;
   }
-  // Step 3 (Akun) opsional: boleh lanjut sebagai tamu
   // Validasi step 4 (Ringkasan): Data Penyewa wajib
   if (S.step === 4) {
+    if (!S.custSession) { bkGo(2); return; }
     // Simpan KTP ke d.cust SEBELUM validasi
     if (window._ktpBase64) {
       if (!d.cust) d.cust = {};
@@ -956,6 +947,13 @@ function upsertCustomer(name, wa, email) {
 }
 
 function doPay() {
+  if (S.step !== 5) return;
+  if (!S.custSession) {
+    S.step = 3;
+    renderCNow();
+    toast("Masuk atau daftar terlebih dahulu untuk melanjutkan", "err");
+    return;
+  }
   const d = S.draft;
   const c = bkCalc();
   if (!c || !d.method) { toast("Data booking belum lengkap", "err"); return; }
@@ -984,8 +982,8 @@ function doPay() {
     promo: d.promo,
     ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
     ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
-    status: "Confirmed",
-    pay: { at: new Date().toISOString().slice(0,10), s: "PAID" }
+    status: "Pending",
+    pay: { m: d.method, tx: id, s: "PENDING", at: null, submitted_at: new Date().toISOString() }
   };
 
   try {
@@ -997,14 +995,13 @@ function doPay() {
       var existing = CUSTOMERS.find(x => x.name === cName);
       if (existing) {
         existing.total = (existing.total || 0) + 1;
-        existing.spend = (existing.spend || 0) + (booking.total || 0);
         existing.last = booking.start || "\u2014";
         existing.status = existing.total > 1 ? "Repeat" : "New";
       } else {
         CUSTOMERS.push({
           id: "CST-" + String(CUSTOMERS.length + 1).padStart(3, "0"),
           name: cName, wa: cWa, email: cEmail, addr: "",
-          total: 1, spend: booking.total || 0,
+          total: 1, spend: 0,
           last: booking.start || "\u2014", status: "New"
         });
       }
@@ -1030,9 +1027,10 @@ function doPay() {
         total: booking.total,
         method: booking.method,
         promo: booking.promo,
-        status: "Confirmed",
-        pay_status: "PAID",
-        pay_at: new Date().toISOString(),
+        status: "Pending",
+        pay_status: "PENDING",
+        pay_at: null,
+        payment_submitted_at: booking.pay.submitted_at,
         ktp_file: booking.ktp_file || ""
       }).then(function(res) {
         if (res.error) console.warn("⚠️ Supabase insert error:", res.error.message);
@@ -1073,14 +1071,11 @@ function qrSVG(seed) {
 }
 
 function vBooking() {
-  // Auto-skip step 3 kalau sudah login
-  if (S.step === 3 && S.custSession) {
-    S.step = 4;
-  }
+  if (S.step === 3) S.step = S.custSession ? 4 : 2;
+  if ([4, 5].includes(S.step) && !S.custSession) S.step = 2;
   const d = S.draft;
-  const steps = ['Jadwal & Jenis', 'Akun & Data', 'Ringkasan', 'Pembayaran', 'Selesai'];
   const c = bkCalc();
-  const acc = curAccount();
+  const acc = S.custSession;
   let body = '';
   if (S.step === 0) {
     body = `<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">${VEHICLES.filter(v => v.status !== 'inactive').map(v => `<button onclick="pickVeh('${v.id}')" class="card overflow-hidden text-left transition hover:border-maroon-500/50 ${d.veh === v.id ? '!border-maroon-500 ring-2 ring-maroon-500/40' : ''}"><div class="h-32 overflow-hidden"><img src="${v.img}" class="w-full h-full object-cover"></div><div class="p-4 flex justify-between items-center gap-2"><div class="min-w-0"><div class="font-semibold text-sm truncate">${esc(v.name)}</div><div class="text-[11px] text-muted">${v.trans} · ${v.seats} seats</div></div><div class="font-display font-bold text-maroon-400 text-sm shrink-0">${fmtK(v.priceLK)}</div></div>${d.veh === v.id ? `<div class="bg-maroon-600 text-white text-center text-[11px] font-bold py-1.5 tracking-widest">✓ TERPILIH</div>` : ''}</button>`).join('')}</div>`;
@@ -1093,90 +1088,46 @@ function vBooking() {
     </div>`;
   } else if (S.step === 2) {
     // ============ STEP 2: JADWAL & JENIS ============
-    body = `<div class="max-w-3xl mx-auto">
-      <div class="card p-6 sm:p-8">
-        <h3 class="font-display font-semibold text-lg mb-1">Jadwal & Jenis Rental</h3>
-        <p class="text-[12.5px] text-muted mb-6">Tentukan tanggal, jenis rental, dan lokasi pengambilan.</p>
-        <div class="grid sm:grid-cols-2 gap-4 mb-5">
-          <div><label class="lbl">Tanggal Mulai *</label><input type="date" id="bkStart" class="inp" value="${d.start}" min="${TODAY}" required onchange="bkEstimate()"></div>
-          <div><label class="lbl">Tanggal Selesai *</label><input type="date" id="bkEnd" class="inp" value="${d.end}" min="${d.start}" required onchange="bkEstimate()"></div>
+    body = `<div class="max-w-6xl mx-auto">
+      <div class="card p-5 sm:p-7">
+        <div class="flex flex-wrap items-start justify-between gap-3 mb-6">
+          <div><h3 class="font-display font-semibold text-lg mb-1">Jadwal & Jenis Rental</h3>
+            <p class="text-[12.5px] text-muted">Tentukan jadwal dan lokasi pengambilan mobil.</p></div>
         </div>
-        <div class="mb-5">
-          <label class="lbl">Jenis Rental</label>
-          <select id="bkType" class="inp" onchange="bkEstimate()">
-            ${["Lepas Kunci", "Dengan Driver"].map(t => `<option ${d.type === t ? "selected" : ""}>${t}</option>`).join("")}
-          </select>
-        </div>
-        <div class="mb-5">
-          <label class="lbl">Lokasi Pengambilan</label>
-          <input id="bkPickup" class="inp" value="${esc(d.pickup || "Kantor - Cipayung Jakarta Timur")}">
-        </div>
-        <div class="rounded-xl bg-ink-900 border border-white/5 p-4">
-          <div class="text-[11px] uppercase tracking-widest text-muted mb-2">Mobil Dipilih</div>
-          <div class="flex items-center gap-3">
-            <img src="${c.v?.img || ""}" class="w-16 h-12 rounded-lg object-cover shrink-0">
-            <div class="min-w-0">
-              <div class="font-semibold text-[13px] truncate">${esc(c.v?.name || "-")}</div>
-              <div class="text-[11px] text-muted">${c.v?.trans || ""} · ${c.v?.seats || ""} seats</div>
+        <div class="grid lg:grid-cols-[minmax(0,1fr)_250px] gap-5 lg:gap-7 items-start">
+          <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div><label class="lbl">Tanggal Mulai *</label><input type="date" id="bkStart" class="inp" value="${d.start}" min="${TODAY}" required onchange="bkEstimate()"></div>
+            <div><label class="lbl">Tanggal Selesai *</label><input type="date" id="bkEnd" class="inp" value="${d.end}" min="${d.start}" required onchange="bkEstimate()"></div>
+            <div><label class="lbl">Jenis Rental</label>
+              <select id="bkType" class="inp" onchange="bkEstimate()">
+                ${["Lepas Kunci", "Dengan Driver"].map(t => `<option ${d.type === t ? "selected" : ""}>${t}</option>`).join("")}
+              </select>
             </div>
-            <a href="#/armada" class="ml-auto text-[11.5px] text-maroon-400 font-semibold shrink-0">Ganti →</a>
+            <div><label class="lbl">Lokasi Pengambilan</label>
+              <input id="bkPickup" class="inp" value="${esc(d.pickup || "Kantor - Cipayung Jakarta Timur")}">
+            </div>
           </div>
+          <aside class="rounded-xl bg-ink-900 border border-white/5 p-4">
+            <div class="text-[10px] uppercase tracking-widest text-muted mb-3">Mobil Dipilih</div>
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${c.v?.img || ""}" alt="${esc(c.v?.name || "Mobil pilihan")}" class="booking-car-thumb w-20 h-14 rounded-lg object-cover shrink-0">
+              <div class="min-w-0"><div class="font-semibold text-[13px] truncate">${esc(c.v?.name || "-")}</div>
+                <div class="text-[11px] text-muted">${c.v?.trans || ""} · ${c.v?.seats || ""} seats</div>
+                <a href="#/armada" class="text-[11px] text-maroon-400 font-semibold">Ganti mobil</a>
+              </div>
+            </div>
+            <div class="border-t border-white/5 mt-4 pt-3 flex items-end justify-between gap-2">
+              <div><div class="text-[10px] uppercase tracking-widest text-muted">Estimasi</div>
+                <div id="bkEstSub" class="text-[10px] text-muted mt-0.5">${c.dur} hari · ${c.drv ? "Dengan Driver" : "Lepas Kunci"}</div></div>
+              <div id="bkEstTotal" class="font-display font-extrabold text-lg text-maroon-400 whitespace-nowrap">${fmtIDR(c.rental + c.drv)}</div>
+            </div>
+          </aside>
         </div>
-        <div class="rounded-xl border border-maroon-500/30 bg-maroon-500/5 p-4 mt-5 flex items-center justify-between gap-3">
-          <div><div class="text-[11px] uppercase tracking-widest text-muted">Estimasi Biaya</div><div id="bkEstSub" class="text-[12px] text-muted mt-0.5">${c.dur} hari${c.drv ? " · termasuk driver" : ""}</div></div>
-          <div id="bkEstTotal" class="font-display font-extrabold text-xl text-maroon-400">${fmtIDR(c.rental + c.drv)}</div>
-        </div>
-        <div class="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-3 mt-8 pt-6 border-t border-white/5">
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-center sm:items-center gap-3 mt-6 pt-5 border-t border-white/5">
           <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
           <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic('arrR', 'w-4 h-4')}</button>
         </div>
       </div>
-    </div>`;
-  } else if (S.step === 3) {
-    // ============ STEP 3: AKUN (Login only) ============
-    const src = acc ? { nama: acc.nama, wa: acc.wa, email: acc.email, alamat: acc.alamat } : (d.cust || {});
-    const cu = Object.keys(d.cust || {}).length ? d.cust : src;
-    body = `<div class="max-w-xl mx-auto">
-      ${acc ? `<div class="card p-6 mb-5 border-emerald-500/30 bg-emerald-500/5">
-        <div class="flex items-center gap-3 mb-3">
-          <span class="w-12 h-12 rounded-full bg-maroon-600 grid place-items-center font-display font-bold shrink-0 text-lg">${esc(acc.nama[0])}</span>
-          <div class="min-w-0 grow"><div class="text-[14px] font-semibold">Masuk sebagai ${esc(acc.nama)}</div><div class="text-[12px] text-muted truncate">${acc.email}</div></div>
-        </div>
-        <p class="text-[12px] text-muted mb-3">Data penyewa akan terisi otomatis dari akun Anda.</p>
-        <button onclick="custLogout();renderCNow()" class="btn btn-g btn-sm">Ganti Akun</button>
-      </div>` : `<div class="card p-6 mb-5">
-        <div class="flex items-center gap-2.5 mb-1">${ic("lock", "w-5 h-5 text-maroon-400")}<h3 class="font-display font-semibold text-lg">Masuk ke Akun <span class="text-muted text-[13px] font-normal">(opsional)</span></h3></div>
-        <p class="text-[12.5px] text-muted mb-4">Masuk agar data terisi otomatis & riwayat booking tersimpan. Bisa juga lanjut sebagai tamu.</p>
-        <div class="grid grid-cols-2 gap-2 mb-4 max-w-xs">
-          <button type="button" id="btIn" onclick="bkAuthTab(&quot;in&quot;)" class="chip on justify-center cursor-pointer">Masuk</button>
-          <button type="button" id="btReg" onclick="bkAuthTab(&quot;reg&quot;)" class="chip justify-center cursor-pointer">Daftar Baru</button>
-        </div>
-        <div id="bkAuthIn">
-          <div class="grid sm:grid-cols-2 gap-3 mb-3">
-            <div><label class="lbl">Email</label><input id="bAuthE" class="inp" placeholder="email@anda.com"></div>
-            <div><label class="lbl">Password</label><input id="bAuthP" type="password" class="inp" placeholder="••••••••"></div>
-          </div>
-          <button onclick="bkLogin()" class="btn btn-m btn-sm">${ic("lock", "w-4 h-4")} Masuk</button>
-          
-          <button onclick="openForgotPassword()" class="w-full text-left text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button>
-          <p id="bkAuthErr" class="hidden text-[12px] text-red-300 mt-2.5">Email atau password salah.</p>
-        </div>
-        <div id="bkAuthReg" class="hidden">
-          <div class="grid sm:grid-cols-2 gap-3 mb-3">
-            <div><label class="lbl">Nama Lengkap</label><input id="bRegN" class="inp" placeholder="Sesuai KTP"></div>
-            <div><label class="lbl">No. WhatsApp</label><input id="bRegW" class="inp" placeholder="08xx…"></div>
-            <div><label class="lbl">Email</label><input id="bRegE" class="inp" placeholder="email@anda.com"></div>
-            <div><label class="lbl">Password (min. 6)</label><input id="bRegP" type="password" class="inp" placeholder="••••••••"></div>
-          </div>
-          <button onclick="bkReg()" class="btn btn-m btn-sm">${ic("plus", "w-4 h-4")} Buat Akun & Masuk</button>
-          <p id="bkRegErr" class="hidden text-[12px] text-red-300 mt-2.5"></p>
-        </div>
-      </div>
-      <div class="flex justify-between items-center gap-3 max-w-xl mx-auto mt-6 pt-6 border-t border-white/5">
-        <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
-        <button onclick="bkNext()" class="btn btn-m">Lanjut sebagai Tamu ${ic("arrR", "w-4 h-4")}</button>
-      </div>
-      `}
     </div>`;
   } else if (S.step === 4) {
     // ============ STEP 4: RINGKASAN + DATA PENYEWA ============
@@ -1186,7 +1137,6 @@ function vBooking() {
       <div class="space-y-5 min-w-0">
         <div class="card p-6">
           <h3 class="font-display font-semibold text-lg mb-4">Data Penyewa</h3>
-          ${S.custSession ? "" : `<div class="flex items-center justify-between gap-3 rounded-xl bg-ink-900 border border-white/5 px-4 py-3 mb-5"><span class="text-[12.5px] text-muted">Sudah punya akun? Data terisi otomatis.</span><button type="button" onclick="bkGo(3)" class="btn btn-g btn-sm shrink-0">Masuk</button></div>`}
           <div class="grid sm:grid-cols-2 gap-4">
             <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" autocomplete="name" class="inp" value="${esc(cu.nama || "")}" placeholder="Sesuai KTP"></div>
             <div><label class="lbl">No. WhatsApp *</label><input id="cf_wa" class="inp" value="${esc(cu.wa || "")}" placeholder="08xx-xxxx-xxxx" maxlength="15" oninput="validateWa(this)" type="tel"></div>
@@ -1212,7 +1162,7 @@ function vBooking() {
         </div>
         <div class="flex justify-between items-center pt-5 flex-wrap gap-2"><span class="font-display font-semibold">TOTAL</span><span class="font-display font-extrabold text-2xl text-maroon-400">${fmtIDR(c.total)}</span></div>
       </div>
-      <div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-6 pt-6 border-t border-white/5">
+      <div class="flex justify-center items-center gap-3 max-w-5xl mx-auto mt-6 pt-6 border-t border-white/5">
         <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
         <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic("arrR", "w-4 h-4")}</button>
       </div>
@@ -1239,11 +1189,10 @@ function vBooking() {
       </div>
       <div class="card p-6 flex flex-col items-center justify-center text-center min-h-[320px]">
         ${!m ? `<div class="text-muted">${ic("card", "w-10 h-10 mx-auto mb-3 text-zinc-600")}<p class="text-sm">Pilih metode untuk melihat detail pembayaran.</p></div>` : m === "Transfer Bank" ? `<p class="text-[12px] text-muted mb-2">Rekening ${esc(S.cms.payments?.bank?.nama || "BCA")} a.n. ${esc(S.cms.payments?.bank?.pemilik || "DEDEF ROCHAYANDI")}</p><div class="font-display font-extrabold text-xl sm:text-2xl tracking-wider mb-2">${(S.cms.payments?.bank?.norek || "6825279893").replace(/(\d{4})(?=\d)/g, "$1 ")}</div><button onclick="copyTxt('${S.cms.payments?.bank?.norek || "6825279893"}')" class="btn btn-g btn-sm mb-5">${ic("copy", "w-4 h-4")} Salin Rekening</button>` : m === "QRIS" ? `<div class="mb-4">${qrSVG(d.veh + c.total)}</div><p class="text-sm font-semibold mb-1">Scan dengan aplikasi apapun</p><p class="text-[11px] text-muted mb-5">NMID: AZZID RENTCAR · QRIS GPN</p>` : `<p class="text-sm mb-5">Anda akan diarahkan ke ${m}.</p>`}
-        ${m ? `<button onclick="doPay()" class="btn btn-m w-full max-w-xs">${ic("zap", "w-4 h-4")} Bayar ${fmtIDR(c.total)}</button>` : ""}
+        ${m ? `<div class="w-full max-w-sm rounded-xl border border-sky-400/20 bg-sky-400/5 p-4 text-left mb-5"><div class="font-semibold text-[13px] mb-1">Transfer manual</div><p class="text-[12px] text-muted leading-relaxed">Setelah transfer, konfirmasi pembayaran. Status booking akan menunggu verifikasi admin; pembayaran belum dianggap lunas sampai diverifikasi.</p></div><button onclick="doPay()" class="btn btn-m w-full max-w-sm">${ic("check", "w-4 h-4")} Saya Sudah Transfer — Konfirmasi</button>` : ""}
       </div>
       <div class="flex justify-between items-center gap-3 max-w-5xl mx-auto mt-6 pt-6 border-t border-white/5">
         <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
-        <button onclick="doPay()" class="btn btn-m">${ic("zap", "w-4 h-4")} Bayar Sekarang</button>
       </div>
     </div>`;
   } else {
@@ -1251,25 +1200,26 @@ function vBooking() {
     const v = veh(b.veh);
     body = `<div class="max-w-xl mx-auto text-center card p-8 sm:p-10">
       <svg viewBox="0 0 100 100" class="w-24 h-24 mx-auto mb-6"><circle cx="50" cy="50" r="45" fill="none" stroke="#991B1B" stroke-width="4" class="check-circle"/><path d="M30 52l14 14 26-30" fill="none" stroke="#34d399" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" class="check-path"/></svg>
-      <h2 class="font-display font-extrabold text-3xl mb-2">BOOKING BERHASIL</h2>
-      <p class="text-muted text-sm mb-6">Konfirmasi & invoice telah dikirim ke WhatsApp dan email Anda.${S.custSession ? ' Booking tersimpan di akun Anda.' : ''}</p>
+      <h2 class="font-display font-extrabold text-3xl mb-2">KONFIRMASI TERKIRIM</h2>
+      <p class="text-muted text-sm mb-6">Konfirmasi transfer Anda sudah dicatat. Booking menunggu verifikasi admin; pembayaran belum berstatus lunas.${S.custSession ? ' Booking tersimpan di akun Anda.' : ''}</p>
       <div class="rounded-xl bg-ink-900 border border-maroon-500/30 p-5 text-left space-y-2 text-[13.5px] mb-3">
         <div class="flex justify-between gap-2"><span class="text-muted">Booking ID</span><b class="font-mono text-maroon-400">${b.id}</b></div>
         <div class="flex justify-between gap-2"><span class="text-muted">Mobil</span><b>${esc(v.name)}</b></div>
-        <div class="flex justify-between gap-2"><span class="text-muted">Tanggal</span><b>${dShort(b.start)} – ${dShort(b.end)} 2026</b></div>
+        <div class="flex justify-between gap-2"><span class="text-muted">Tanggal</span><b>${dShort(b.start)} – ${dShort(b.end)}</b></div>
         <div class="flex justify-between gap-2"><span class="text-muted">Total</span><b>${fmtIDR(b.total)}</b></div>
-        <div class="flex justify-between items-center gap-2"><span class="text-muted">Status</span>${badge('PAID')}</div>
+        <div class="flex justify-between items-center gap-2"><span class="text-muted">Status booking</span>${badge(b.status)}</div>
+        <div class="flex justify-between items-center gap-2"><span class="text-muted">Status pembayaran</span>${badge(b.pay.s)}</div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-        <button onclick="openInvoice('${b.id}')" class="btn btn-g">${ic('dl', 'w-4 h-4')} Download Invoice</button>
-        <a target="_blank" href="${waLink(`Halo AZZID RENTCAR,\nSaya ingin melakukan booking:\nMobil: ${v.name}\nTanggal: ${dLong(b.start)} – ${dLong(b.end)}\nBooking ID: ${b.id}`)}" class="btn btn-m">WhatsApp</a>
+        <button onclick="openInvoice('${b.id}')" class="btn btn-g">${ic('dl', 'w-4 h-4')} Ringkasan Booking</button>
+        <a target="_blank" rel="noopener" href="${waLink(`Halo AZZID RENTCAR,\nSaya sudah transfer untuk booking dan mohon verifikasi:\nMobil: ${v.name}\nTanggal: ${dLong(b.start)} – ${dLong(b.end)}\nBooking ID: ${b.id}`)}" class="btn btn-m">Hubungi Admin</a>
       </div>
       ${S.custSession ? `<button onclick="openAccount()" class="btn btn-g btn-sm w-full mt-3">${ic('user', 'w-4 h-4')} Lihat di Akun Saya</button>` : ''}
       <a href="#/" class="inline-block text-sm text-muted hover:text-white mt-6">← Kembali ke Beranda</a>
     </div>`;
   }
-  const _vis = [['Jadwal', 2], ['Data Diri', 4], ['Pembayaran', 5], ['Selesai', 6]];
-  const _cur = S.step >= 6 ? 3 : S.step >= 5 ? 2 : S.step >= 3 ? 1 : 0;
+  const _vis = [['Jadwal', 2], ['Data Diri', 4], ['Pembayaran', 5], ['Status', 6]];
+  const _cur = S.step >= 6 ? 3 : S.step >= 5 ? 2 : S.step >= 4 ? 1 : 0;
   return `<section data-page="booking" class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
     <div class="flex items-center justify-center gap-0 mb-8 sm:mb-10">${_vis.map((st, i) => `<div class="flex items-center">
       <button type="button" ${i < _cur && S.step < 6 ? `onclick="bkGo(${st[1]})"` : 'disabled'} class="flex items-center gap-2 ${i <= _cur ? '' : 'opacity-40'}">
@@ -1284,118 +1234,132 @@ function vBooking() {
   </section>`;
 }
 
-async function bkLogin() {
-  var e = ($("bAuthE").value || "").trim().toLowerCase();
-  var p = $("bAuthP").value;
-  var err = $("bkAuthErr");
-  if (err) err.classList.add("hidden");
-  
-  if (!e || !p) {
-    if (err) { err.textContent = "Email dan password wajib diisi"; err.classList.remove("hidden"); }
-    return;
-  }
-  
-  // Coba Supabase Auth dulu
-  if (window.supabaseClient) {
-    try {
-      var res = await window.supabaseClient.auth.signInWithPassword({ email: e, password: p });
-      if (res.error) throw res.error;
-      
-      var u = res.data.user;
-      S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || e.split("@")[0], phone: u.user_metadata?.phone || "" };
-      closeModal();
-      toast("Selamat datang, " + S.custSession.nama.split(" ")[0] + "!");
-      renderCNow();
-      return;
-    } catch (sbErr) {
-      console.warn("Supabase auth gagal, fallback lokal:", sbErr.message);
-    }
-  }
-  
-  // Fallback: login lokal (localStorage)
-  var users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
-  var user = users.find(function(u) { return u.email === e; });
-  
-  if (!user) {
-    if (err) { err.textContent = "Akun tidak ditemukan. Silakan daftar."; err.classList.remove("hidden"); }
-    return;
-  }
-  if (user.password !== p) {
-    if (err) { err.textContent = "Password salah"; err.classList.remove("hidden"); }
-    return;
-  }
-  
-  S.custSession = { id: user.id, email: user.email, nama: user.nama, phone: user.phone || "" };
-  closeModal();
-  toast("Selamat datang kembali, " + user.nama.split(" ")[0] + "!");
-  renderCNow();
-}
-
-async function bkReg() {
-  var n = $("bRegN").value.trim();
-  var w = $("bRegW").value.trim();
-  var e = ($("bRegE").value || "").trim().toLowerCase();
-  var p = $("bRegP").value;
-  var err = $("bkRegErr");
-  if (err) err.classList.add("hidden");
-  
-  if (!n || !w || !e || p.length < 6) {
-    if (err) { err.textContent = "Lengkapi semua field. Password minimal 6 karakter."; err.classList.remove("hidden"); }
-    return;
-  }
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) {
-    if (err) { err.textContent = "Format email tidak valid."; err.classList.remove("hidden"); }
-    return;
-  }
-  
-  // Register ke Supabase Auth
-  if (window.supabaseClient) {
-    try {
-      var res = await window.supabaseClient.auth.signUp({
-        email: e,
-        password: p,
-        options: { data: { name: n, phone: w } }
-      });
-      if (res.error) throw res.error;
-      
-      // Simpan juga ke tabel users
-      await window.supabaseClient.from("users").insert({
-        email: e, name: n, phone: w, role: "user", status: "Active"
-      });
-      
-      S.custSession = { id: res.data.user?.id || "u-" + Date.now(), email: e, nama: n, phone: w };
-      closeModal();
-      toast("Akun berhasil dibuat. Selamat datang, " + n.split(" ")[0] + "!");
-      renderCNow();
-      return;
-    } catch (sbErr) {
-      console.warn("Supabase register gagal, fallback lokal:", sbErr.message);
-      if (err) { err.textContent = sbErr.message || "Registrasi gagal."; err.classList.remove("hidden"); }
-      return;
-    }
-  }
-  
-  // Fallback lokal
-  var users = JSON.parse(localStorage.getItem("azzid_local_users") || "[]");
-  if (users.find(function(u) { return u.email === e; })) {
-    if (err) { err.textContent = "Email sudah terdaftar."; err.classList.remove("hidden"); }
-    return;
-  }
-  var newUser = { id: "USR-" + Date.now(), email: e, password: p, nama: n, phone: w };
-  users.push(newUser);
-  localStorage.setItem("azzid_local_users", JSON.stringify(users));
-  
-  S.custSession = { id: newUser.id, email: newUser.email, nama: newUser.nama, phone: newUser.phone };
-  closeModal();
-  toast("Akun berhasil dibuat. Selamat datang, " + n.split(" ")[0] + "!");
-  renderCNow();
-}
-
 /* ================= CUSTOMER AUTH ================= */
-function openAuth(tab='in'){modal(`<div class="p-7"><div class="flex justify-between items-center mb-5"><div><h3 class="font-display font-bold text-lg">Akun Penyewa</h3><p class="text-[12px] text-muted mt-0.5">Selamat datang di AZZID RENTCAR.</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-2 mb-5"><button id="atIn" onclick="showTabAuth('in')" class="chip justify-center">Masuk</button><button id="atReg" onclick="showTabAuth('reg')" class="chip justify-center">Daftar Baru</button></div><div id="mAuthIn"><div id="mErrIn" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Email</label><input id="cAuthE" class="inp mb-3" autocomplete="username" placeholder="email@anda.com"><label class="lbl">Password</label><input id="cAuthP" type="password" class="inp mb-4" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doCustLogin()"><button onclick="doCustLogin()" class="btn btn-m w-full">${ic('lock','w-4 h-4')} Masuk</button><button onclick="openForgotPassword()" class="w-full text-center text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button></div><div id="mAuthReg" class="hidden"><div id="mErrReg" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div><label class="lbl">Nama Lengkap</label><input id="rNama" class="inp mb-3" placeholder="Nama lengkap"><div class="grid grid-cols-2 gap-3 mb-3"><div><label class="lbl">Email</label><input id="rEmail" class="inp" placeholder="email@anda.com"></div><div><label class="lbl">No. WhatsApp</label><input id="rWa" class="inp" placeholder="08xx…"></div></div><label class="lbl">Password (min. 6 karakter)</label><input id="rPass" type="password" class="inp mb-4" placeholder="••••••••"><button onclick="doCustReg()" class="btn btn-m w-full">${ic('plus','w-4 h-4')} Buat Akun & Masuk</button></div><p class="text-[10.5px] text-zinc-500 text-center mt-5">Tidak ada akun demo. Gunakan akun Anda sendiri.</p></div>`);showTabAuth(tab); }
-function showTabAuth(t){const i=$('mAuthIn'),r=$('mAuthReg'),a=$('atIn'),b=$('atReg');if(!i)return;i.classList.toggle('hidden',t!=='in');r.classList.toggle('hidden',t!=='reg');a.classList.toggle('on',t==='in');b.classList.toggle('on',t==='reg')}
-async function doCustLogin(){const e=($('cAuthE').value||'').trim().toLowerCase(),p=$('cAuthP').value;try{const result=await authApi('/login',{method:'POST',body:JSON.stringify({email:e,password:p})});const user=apiData(result)?.user||result?.user;if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''};closeModal();toast('Selamat datang kembali, '+user.name.split(' ')[0]+'!');renderCNow()}catch(err){$('mErrIn').textContent=err.message||'Email atau password salah.';$('mErrIn').classList.remove('hidden')}}
-async function doCustReg(){const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');err.classList.add('hidden');if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}try{const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});const user=apiData(result)?.user||result?.user;if(!user)throw new Error('Registrasi gagal.');S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||w};closeModal();toast('Akun berhasil dibuat. Selamat datang, '+n.split(' ')[0]+'!');renderCNow()}catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}}
+function openAuth(tab = 'in') {
+  modal(`<div class="p-6">
+    <div class="flex justify-between items-center mb-5">
+      <div><h3 class="font-display font-bold text-lg">Akun Penyewa</h3><p class="text-[12px] text-muted mt-0.5">Selamat datang di AZZID RENTCAR.</p></div>
+      <button type="button" onclick="closeModal()" class="text-muted" aria-label="Tutup">${ic('x')}</button>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mb-5">
+      <button type="button" id="atIn" onclick="showTabAuth('in')" class="chip justify-center">Masuk</button>
+      <button type="button" id="atReg" onclick="showTabAuth('reg')" class="chip justify-center">Daftar Baru</button>
+    </div>
+    <div id="mAuthIn">
+      <div id="mErrIn" role="alert" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div>
+      <label class="lbl" for="cAuthE">Email</label>
+      <input id="cAuthE" type="email" class="inp mb-3" autocomplete="username" placeholder="email@anda.com">
+      <label class="lbl" for="cAuthP">Password</label>
+      <input id="cAuthP" type="password" class="inp mb-4" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doCustLogin()">
+      <button type="button" onclick="doCustLogin()" class="btn btn-m w-full">${ic('lock','w-4 h-4')} Masuk</button>
+      <button type="button" onclick="openForgotPassword()" class="w-full text-center text-[12px] text-maroon-400 hover:text-maroon-300 mt-1">Lupa password?</button>
+    </div>
+    <div id="mAuthReg" class="hidden">
+      <div id="mErrReg" role="alert" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3.5 py-2.5"></div>
+      <label class="lbl" for="rNama">Nama Lengkap</label>
+      <input id="rNama" class="inp mb-3" autocomplete="name" placeholder="Nama lengkap">
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div><label class="lbl" for="rEmail">Email</label><input id="rEmail" type="email" class="inp" autocomplete="email" placeholder="email@anda.com"></div>
+        <div><label class="lbl" for="rWa">No. WhatsApp</label><input id="rWa" type="tel" class="inp" autocomplete="tel" placeholder="08xx…"></div>
+      </div>
+      <label class="lbl" for="rPass">Password (min. 6 karakter)</label>
+      <input id="rPass" type="password" class="inp mb-4" autocomplete="new-password" placeholder="••••••••">
+      <button type="button" onclick="doCustReg()" class="btn btn-m w-full">${ic('plus','w-4 h-4')} Buat Akun & Masuk</button>
+    </div>
+    ${googleLoginMarkup()}
+    <p class="text-[10.5px] text-zinc-500 text-center mt-5">Tidak ada akun demo. Gunakan akun Anda sendiri.</p>
+  </div>`);
+  const authPanel = document.querySelector('#modalRoot .modal-in');
+  if (authPanel) {
+    authPanel.classList.remove('max-w-lg');
+    authPanel.classList.add('max-w-md');
+    const modalOverlay = authPanel.parentElement;
+    const header = document.getElementById('cHeader');
+    const headerBottom = header ? Math.max(0, header.getBoundingClientRect().bottom) : 0;
+    const topInset = Math.ceil(headerBottom + 56);
+    modalOverlay.style.setProperty('box-sizing', 'border-box', 'important');
+    modalOverlay.style.setProperty('padding', `${topInset}px 16px 16px`, 'important');
+    modalOverlay.style.setProperty('align-items', 'flex-start', 'important');
+    modalOverlay.style.overflowY = 'auto';
+    authPanel.style.setProperty('max-height', `calc(100vh - ${topInset + 16}px)`, 'important');
+  }
+  showTabAuth(tab);
+  addPasswordToggles();
+  initGoogleButton();
+}
+function showTabAuth(t) {
+  const login = $('mAuthIn'), register = $('mAuthReg'), loginButton = $('atIn'), registerButton = $('atReg');
+  if (!login || !register || !loginButton || !registerButton) return;
+  login.classList.toggle('hidden', t !== 'in');
+  register.classList.toggle('hidden', t !== 'reg');
+  loginButton.classList.toggle('on', t === 'in');
+  registerButton.classList.toggle('on', t === 'reg');
+}
+function showCustomerAuthError(message) {
+  const registerActive = $('mAuthReg') && !$('mAuthReg').classList.contains('hidden');
+  const errorBox = $(registerActive ? 'mErrReg' : 'mErrIn');
+  if (errorBox) {
+    errorBox.textContent = message;
+    errorBox.classList.remove('hidden');
+  } else {
+    toast(message, 'err');
+  }
+}
+function completeCustomerAuth(user, phoneFallback='', emailFallback='') {
+  const email = user.email || emailFallback;
+  const name = user.name || user.nama || email.split('@')[0];
+  S.custSession = { id: user.id, email, nama: name, phone: user.phone || phoneFallback };
+  closeModal();
+  if (bookingAuthPending) {
+    bookingAuthPending = false;
+    S.draft.cust = { ...(S.draft.cust || {}), nama: name, wa: S.custSession.phone, email };
+    S.step = 4;
+  }
+  toast('Selamat datang, ' + name.split(' ')[0] + '!');
+  renderCNow();
+}
+function openHeaderAuth() {
+  if (S.custSession) openAccount();
+  else openAuth('in');
+}
+function bindCustomerAuthButtons() {
+  const headerButton = $('hdrUserBtn');
+  const mobileButton = $('mobUserBtn');
+  if (headerButton && !headerButton.dataset.authBound) {
+    headerButton.dataset.authBound = '1';
+    headerButton.addEventListener('click', openHeaderAuth);
+  }
+  if (mobileButton && !mobileButton.dataset.authBound) {
+    mobileButton.dataset.authBound = '1';
+    mobileButton.addEventListener('click', () => {
+      $('mobNav')?.classList.add('hidden');
+      openHeaderAuth();
+    });
+  }
+}
+async function doCustLogin(){
+  const email=($('cAuthE').value||'').trim().toLowerCase(),password=$('cAuthP').value;
+  if(!email||!password){showCustomerAuthError('Email dan password wajib diisi.');return}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){showCustomerAuthError('Format email tidak valid.');return}
+  try{
+    const result=await authApi('/login',{method:'POST',body:JSON.stringify({email,password})});
+    const payload=apiData(result),user=payload?.user||payload?.role&&payload||result?.user;
+    if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');
+    completeCustomerAuth(user,'',email);
+  }catch(err){showCustomerAuthError(err.message||'Email atau password salah.')}
+}
+async function doCustReg(){
+  const n=$('rNama').value.trim(),e=$('rEmail').value.trim().toLowerCase(),w=$('rWa').value.trim(),p=$('rPass').value,err=$('mErrReg');
+  err.classList.add('hidden');
+  if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}
+  try{
+    const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});
+    const payload=apiData(result),user=payload?.user||(payload?.id||payload?.email?payload:null)||result?.user;
+    if(!user||(user.role&&user.role!=='user'))throw new Error('Registrasi gagal.');
+    completeCustomerAuth(user,w,e);
+  }catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}
+}
 async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;sessionStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderCNow()}
 function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.custSession;const hist=BOOKINGS.filter(b=>b.user===acc.email || b.email===acc.email || b.cust===acc.nama);const spend=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);modal(`<div class="p-7"><div class="flex justify-between items-start gap-4 mb-6"><div><h3 class="font-display font-bold text-xl">${esc(acc.nama)}</h3><p class="text-[12px] text-muted mt-1">${esc(acc.email)} · ${esc(acc.phone||'-')}</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-3 mb-5"><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${hist.length}</b><div class="text-[10px] text-muted uppercase">Total Booking</div></div><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${fmtK(spend)}</b><div class="text-[10px] text-muted uppercase">Pengeluaran</div></div></div><div class="space-y-2 max-h-52 overflow-y-auto">${hist.length?hist.map(b=>`<div class="bg-ink-900 rounded-lg p-3 text-[12px] flex justify-between gap-2"><span>${esc(b.id)}</span>${badge(b.status)}</div>`).join(''):'<p class="text-sm text-muted">Belum ada booking.</p>'}</div><button onclick="custLogout()" class="btn btn-d btn-sm w-full mt-5">${ic('logout','w-4 h-4')} Logout</button></div>`,1)}
 
@@ -1459,12 +1423,17 @@ async function authApi(path='',options={}){
 }
 
 function googleLoginMarkup(){
-  return `<div class="my-4"><div class="flex items-center gap-3 text-[10px] text-zinc-500 uppercase tracking-widest"><span class="h-px bg-white/10 flex-1"></span><span>atau</span><span class="h-px bg-white/10 flex-1"></span></div><div id="googleLoginBtn" class="mt-4 flex justify-center min-h-[44px]" data-g-rendered="0"></div></div>`;
+  return `<div class="my-4"><div class="flex items-center gap-3 text-[10px] text-zinc-500 uppercase tracking-widest"><span class="h-px bg-white/10 flex-1"></span><span>atau</span><span class="h-px bg-white/10 flex-1"></span></div><div id="googleLoginBtn" class="mt-4 flex justify-center min-h-[44px]" data-g-rendered="0"></div><p id="googleLoginError" role="status" class="hidden text-center text-[11px] text-muted mt-2"></p></div>`;
 }
 function initGoogleButton(){
   var el = document.getElementById("googleLoginBtn");
   if (!el) { console.warn("initGoogleButton: #googleLoginBtn tidak ada"); return; }
-  if (!window.GOOGLE_CLIENT_ID) { console.warn("initGoogleButton: GOOGLE_CLIENT_ID kosong"); return; }
+  if (!window.GOOGLE_CLIENT_ID) {
+    console.warn("initGoogleButton: GOOGLE_CLIENT_ID kosong");
+    var configError = document.getElementById("googleLoginError");
+    if (configError) { configError.textContent = "Login Google belum dikonfigurasi."; configError.classList.remove("hidden"); }
+    return;
+  }
   if (!window.google || !window.google.accounts || !window.google.accounts.id) {
     console.warn("initGoogleButton: Google script belum ready, retry...");
     if (!window._gWaitTimer) {
@@ -1477,6 +1446,8 @@ function initGoogleButton(){
         } else if (tries > 50) {
           clearInterval(window._gWaitTimer); window._gWaitTimer = null;
           console.warn("initGoogleButton: Google script tidak load setelah 10 detik");
+          var loadError = document.getElementById("googleLoginError");
+          if (loadError) { loadError.textContent = "Login Google tidak tersedia. Periksa koneksi internet lalu coba lagi."; loadError.classList.remove("hidden"); }
         }
       }, 200);
     }
@@ -1497,6 +1468,8 @@ function initGoogleButton(){
       theme: "outline", size: "large", shape: "rectangular",
       width: 360, text: "signin_with"
     });
+    var renderError = document.getElementById("googleLoginError");
+    if (renderError) renderError.classList.add("hidden");
     el.dataset.gRendered = "1";
     console.log("✅ Google button rendered");
   } catch (e) { console.error("initGoogleButton error:", e); }
@@ -1504,10 +1477,10 @@ function initGoogleButton(){
 async function doGoogleLogin(credential){
   try{
     const result=await authApi('/google',{method:'POST',body:JSON.stringify({credential})});
-    const user=apiData(result)?.user||result?.user;
+    const payload=apiData(result),user=payload?.user||payload?.role&&payload||result?.user;
     if(!user||user.role!=='user') throw new Error('Login Google hanya tersedia untuk akun penyewa.');
-    S.custSession={id:user.id,email:user.email,nama:user.name,phone:user.phone||''}; closeModal(); toast('Login Google berhasil. Selamat datang, '+user.name.split(' ')[0]+'!'); renderCNow();
-  }catch(err){ const box=$('mErrIn')||$('bkAuthErr'); if(box){box.textContent=err.message||'Login Google gagal.';box.classList.remove('hidden');} else toast(err.message||'Login Google gagal.','err'); }
+    completeCustomerAuth(user);
+  }catch(err){ showCustomerAuthError(err.message||'Login Google gagal.'); }
 }
 function openForgotPassword(){
   modal(`<div class="p-7"><div class="flex justify-between items-start mb-5"><div><h3 class="font-display font-bold text-xl">Lupa Password</h3><p class="text-[12px] text-muted mt-1">Masukkan email akun Anda. Kami akan mengirim link untuk membuat password baru.</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div id="forgotErr" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3 py-2"></div><label class="lbl">Email</label><input id="forgotEmail" class="inp mb-4" type="email" autocomplete="email" placeholder="email@anda.com" onkeydown="if(event.key==='Enter')doForgotPassword()"><button onclick="doForgotPassword()" class="btn btn-m w-full">Kirim Link Reset</button><button onclick="openAuth('in')" class="btn btn-g w-full mt-3">Kembali ke Login</button></div>`);
@@ -1553,7 +1526,22 @@ async function doLogin(){
     if (errBox) { errBox.textContent = "Email atau password salah."; errBox.classList.remove("hidden"); }
   }
 }
-async function adminLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.session=null;sessionStorage.removeItem('azzid_has_session');localStorage.removeItem('azzid_session');window.__authReady=true;renderA();syncAdminBtns();toast('Anda telah logout','info')}
+async function adminLogout(){
+  closeSb();
+  S.session = null;
+  sessionStorage.removeItem('azzid_has_session');
+  localStorage.removeItem('azzid_session');
+  window.__authReady = true;
+  renderA();
+  if (typeof syncAdminBtns === 'function') syncAdminBtns();
+  try {
+    await authApi('/logout', { method: 'POST' });
+    toast('Anda telah logout', 'info');
+  } catch (error) {
+    console.warn('Logout admin API gagal setelah sesi lokal ditutup:', error.message);
+    toast('Sesi lokal ditutup, tetapi server tidak dapat dikonfirmasi.', 'info');
+  }
+}
 async function restoreAuth() {
   // KEEP_ADMIN_HASH: jangan redirect kalau di #/admin
   var __wasAdmin = location.hash.startsWith("#/admin");
@@ -1660,6 +1648,7 @@ function renderA() {
         </div>
       </div>
     </div>`;
+    addPasswordToggles();
     return;
   }
   window.scrollTo(0, 0);
@@ -1675,7 +1664,7 @@ function renderA() {
       <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m => `<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView === m[0] ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2], 'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0] === 'rental' && ong ? `<span class="badge bg-sky-400/20 border-sky-400/40 text-sky-300">${ong}</span>` : ''}${m[0] === 'booking' && pend ? `<span class="badge bg-sky-400/20 border-sky-400/40 text-sky-300">${pend}</span>` : ''}</button>`).join('')}</nav>
       <div class="p-4 border-t border-white/5 space-y-1">
         <a href="#/" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-zinc-400 hover:bg-white/5 hover:text-white">${ic('globe', 'w-[18px]')} Lihat Website</a>
-        <button onclick="adminLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-red-300 hover:bg-red-500/10">${ic('logout', 'w-[18px]')} Logout</button>
+        <button type="button" onclick="adminLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-red-300 hover:bg-red-500/10" aria-label="Logout admin">${ic('logout', 'w-[18px]')} Logout</button>
       </div>
     </aside>
     <div class="flex-1 flex flex-col min-w-0 h-screen min-h-0">
@@ -1756,7 +1745,7 @@ function areaChart(data, h = 210) {
   const dots = data.map((p, i) => i % step === 0 ? `<circle cx="${px(i)}" cy="${py(p.v)}" r="3.5" fill="#0B0B0D" stroke="#c53030" stroke-width="2"><title>${p.d.getDate()} ${MON[p.d.getMonth()]} · ${fmtIDR(p.v)}</title></circle>` : '').join('');
   return `<svg viewBox="0 0 ${W} ${h}" class="w-full"><defs><linearGradient id="gv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#991B1B" stop-opacity=".45"/><stop offset="1" stop-color="#991B1B" stop-opacity="0"/></linearGradient></defs>
     ${[.25, .5, .75].map(g => `<line x1="0" x2="${W}" y1="${h - 14 - g * (h - 40)}" y2="${h - 14 - g * (h - 40)}" stroke="rgba(255,255,255,.06)"/>`).join('')}
-    <path d="${area}" fill="url(#gv)"/><path d="${line}" fill="none" stroke="#c53030" stroke-width="2.5" class="chart-line"/>${dots}
+    <path d="${area}" fill="url(#gv)"/><path d="${line}" fill="none" stroke="#c53030" stroke-width="2.5" pathLength="1" class="chart-line"/>${dots}
   </svg>`;
 }
 
@@ -2860,9 +2849,13 @@ function aPayments() {
 
 function markPaid(id) {
   const b = BOOKINGS.find(x => x.id === id);
+  if (!b || b.pay?.s === 'PAID') return;
+  b.pay = b.pay || {};
   b.pay.s = 'PAID';
   b.pay.at = TODAY;
   if (b.status === 'Pending') b.status = 'Confirmed';
+  const customer = CUSTOMERS.find(x => x.email && x.email === b.email) || CUSTOMERS.find(x => x.name === b.cust);
+  if (customer) customer.spend = (customer.spend || 0) + (Number(b.total) || 0);
   addLog(`Pembayaran ${id} diverifikasi lunas (${fmtK(b.total)})`);
   persist();
   toast('Pembayaran ' + id + ' lunas · ' + fmtIDR(b.total));
@@ -3416,6 +3409,7 @@ function route() {
     console.log("route skip — masih di", __newRoute);
     return;
   }
+  if (!__newRoute.startsWith("#/booking")) bookingAuthPending = false;
   window.__lastRoute = __newRoute;
   
   var h = location.hash || "#/";
@@ -3469,6 +3463,7 @@ applyCms();
 loadVehiclesFromAPI();
 loadDriversFromAPI();
 window.addEventListener('DOMContentLoaded', () => {
+  bindCustomerAuthButtons();
   window.__exportBtnAttached = true;
   document.addEventListener('click', (e) => {
   // Tutup dropdown bell hanya kalau klik DI LUAR
@@ -3579,10 +3574,13 @@ function addPasswordToggles() {
     
     // Buat wrapper
     var wrap = document.createElement("div");
+    var inputMarginBottom = window.getComputedStyle(inp).marginBottom;
     wrap.style.position = "relative";
     wrap.style.display = "block";
+    wrap.style.marginBottom = inputMarginBottom;
     inp.parentNode.insertBefore(wrap, inp);
     wrap.appendChild(inp);
+    inp.style.marginBottom = "0";
     
     // Style input biar ada ruang untuk icon
     inp.style.paddingRight = "44px";
@@ -3590,27 +3588,39 @@ function addPasswordToggles() {
     // Buat tombol mata
     var btn = document.createElement("button");
     btn.type = "button";
-    btn.tabIndex = -1;
+    btn.dataset.eyeButton = "1";
+    btn.setAttribute("aria-label", "Tampilkan password");
+    btn.title = "Tampilkan password";
     btn.style.position = "absolute";
-    btn.style.right = "12px";
+    btn.style.right = "8px";
     btn.style.top = "50%";
     btn.style.transform = "translateY(-50%)";
     btn.style.background = "transparent";
     btn.style.border = "none";
     btn.style.cursor = "pointer";
-    btn.style.color = "#a1a1aa";
-    btn.style.padding = "4px";
+    btn.style.color = "#4b5563";
+    btn.style.width = "32px";
+    btn.style.height = "32px";
+    btn.style.padding = "0";
+    btn.style.display = "inline-flex";
+    btn.style.alignItems = "center";
+    btn.style.justifyContent = "center";
+    btn.style.borderRadius = "6px";
     btn.style.zIndex = "5";
-    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    btn.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     
     btn.addEventListener("click", function(ev) {
       ev.preventDefault();
       if (inp.type === "password") {
         inp.type = "text";
-        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+        btn.setAttribute("aria-label", "Sembunyikan password");
+        btn.title = "Sembunyikan password";
+        btn.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
       } else {
         inp.type = "password";
-        btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+        btn.setAttribute("aria-label", "Tampilkan password");
+        btn.title = "Tampilkan password";
+        btn.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
       }
     });
     
@@ -3799,7 +3809,8 @@ function openSb() {
     ov = document.createElement("div");
     ov.id = "sbOverlay";
     ov.onclick = closeSb;
-    document.body.appendChild(ov);
+    var adminRoot = document.querySelector("#adminApp > div");
+    (adminRoot || document.body).appendChild(ov);
   }
   ov.classList.add("sb-show");
 }

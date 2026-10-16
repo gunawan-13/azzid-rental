@@ -26,3 +26,32 @@
   animation-play-state: paused;
   transform: scale(1.1);
 }
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none !important;
+}
+
+#adminApp .chart-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dash 1.6s ease infinite !important;
+}
+
+html body #custApp main#cMain section[data-page="booking"] aside img.booking-car-thumb {
+  width: 80px !important;
+  height: 56px !important;
+  flex: 0 0 80px !important;
+  object-fit: cover !important;
+}
+
+html body #custApp main#cMain section[data-page="booking"] {
+  padding-bottom: 5rem !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #adminApp .chart-line {
+    stroke-dashoffset: 0;
+    animation: none !important;
+  }
+}
