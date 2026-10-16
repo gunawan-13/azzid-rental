@@ -3918,6 +3918,7 @@ function addPasswordToggles() {
     // Buat wrapper
     var wrap = document.createElement("div");
     var inputMarginBottom = window.getComputedStyle(inp).marginBottom;
+    wrap.className = "password-input-wrap";
     wrap.style.position = "relative";
     wrap.style.display = "block";
     wrap.style.marginBottom = inputMarginBottom;
@@ -3930,6 +3931,7 @@ function addPasswordToggles() {
     
     // Buat tombol mata
     var btn = document.createElement("button");
+    btn.className = "password-toggle-button";
     btn.type = "button";
     btn.dataset.eyeButton = "1";
     btn.setAttribute("aria-label", "Tampilkan password");
@@ -4604,9 +4606,11 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
         const btn = wrapper.querySelector('button:not(.btn)');
         if (btn && btn.querySelector('svg')) {
           btn.style.setProperty('position', 'absolute', 'important');
-          btn.style.setProperty('right', '16px', 'important');
-          btn.style.setProperty('top', '50%', 'important');
-          btn.style.setProperty('transform', 'translateY(-50%)', 'important');
+          btn.style.setProperty('right', '12px', 'important');
+          btn.style.setProperty('top', '0', 'important');
+          btn.style.setProperty('bottom', '0', 'important');
+          btn.style.setProperty('margin-block', 'auto', 'important');
+          btn.style.setProperty('transform', 'none', 'important');
           btn.style.setProperty('width', '24px', 'important');
           btn.style.setProperty('height', '24px', 'important');
           btn.style.setProperty('padding', '0', 'important');
