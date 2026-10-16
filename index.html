@@ -2888,7 +2888,6 @@ html body .veh-card .veh-img {
 
 /* CHIP — paksa rapat kiri, no wrap masalah */
 html body #custApp main > section:has(#vehListGrid) .card > .flex.flex-wrap,
-html body #custApp main > section:has(#vehListGrid) .card > .flex,
 html body #custApp main > section:has(#vehListGrid) .chip-wrapper {
   display: flex !important;
   flex-wrap: wrap !important;
@@ -3115,23 +3114,24 @@ html body #vehListGrid {
   }
 }
 
-/* 2. Body card — padding &amp; gap pas untuk card kecil */
-html body #custApp .veh-card > .p-4 {
-  padding: 14px 14px 16px 14px !important;
-  gap: 10px !important;
+/* 2. Body card — jarak lega untuk spesifikasi dan harga */
+html body #custApp .veh-card > .p-5 {
+  padding: 20px !important;
+  gap: 16px !important;
   display: flex !important;
   flex-direction: column !important;
+  align-items: stretch !important;
 }
 
 /* 3. Baris fitur — rapat tapi tidak dempet */
-html body #custApp .veh-card > .p-4 > .flex.flex-wrap {
-  gap: 6px 12px !important;
+html body #custApp .veh-card > .p-5 > .flex.flex-wrap {
+  gap: 8px 16px !important;
   margin: 0 !important;
   padding: 0 !important;
   font-size: 11.5px !important;
   line-height: 1.4 !important;
 }
-html body #custApp .veh-card > .p-4 > .flex.flex-wrap > span {
+html body #custApp .veh-card > .p-5 > .flex.flex-wrap > span {
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px !important;
@@ -3139,15 +3139,17 @@ html body #custApp .veh-card > .p-4 > .flex.flex-wrap > span {
   white-space: nowrap !important;
 }
 
-/* 4. Baris harga + tombol */
-html body #custApp .veh-card > .p-4 > .mt-auto {
-  padding-top: 10px !important;
+/* 4. Harga dan tombol ditata vertikal agar tidak saling berhimpitan */
+html body #custApp .veh-card > .p-5 > .mt-auto.pt-4 {
+  padding-top: 16px !important;
   margin-top: auto !important;
   display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 8px !important;
-  flex-wrap: wrap !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
   border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
 }
 
@@ -3159,14 +3161,17 @@ html body #custApp .veh-card .font-display.font-bold.text-maroon-400 {
 }
 
 /* 6. Tombol — kecil &amp; rapi */
-html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 {
-  display: flex !important;
-  gap: 6px !important;
+html body #custApp .veh-card > .p-5 > .mt-auto.pt-4 > .grid.grid-cols-2 {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  width: 100% !important;
+  gap: 8px !important;
   margin: 0 !important;
   padding: 0 !important;
 }
-html body #custApp .veh-card > .p-4 > .mt-auto > .flex.gap-2 > .btn {
-  padding: 6px 11px !important;
+html body #custApp .veh-card > .p-5 > .mt-auto.pt-4 > .grid.grid-cols-2 > .btn {
+  width: 100% !important;
+  padding: 8px 11px !important;
   font-size: 11.5px !important;
   border-radius: 7px !important;
   white-space: nowrap !important;
