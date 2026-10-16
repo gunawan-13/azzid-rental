@@ -535,18 +535,18 @@ function vehCard(v, i) {
       <span class="absolute top-3 right-3 badge bg-black/50 border-white/15 text-zinc-200 backdrop-blur">${v.cat}</span>
       <span class="absolute bottom-3 left-4 font-display font-semibold text-[15px]">${esc(v.name)}</span>
     </div>
-    <div class="p-4 flex flex-col gap-3 grow">
-      <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-[11.5px] text-muted">
+    <div class="p-5 flex flex-col gap-4 grow">
+      <div class="flex flex-wrap gap-x-4 gap-y-2 text-[11.5px] text-muted">
         <span class="flex items-center gap-1.5">${ic('gear', 'w-3.5 h-3.5 text-maroon-400')}${v.trans}</span>
         <span class="flex items-center gap-1.5">${ic('seat', 'w-3.5 h-3.5 text-maroon-400')}${v.seats} Seats</span>
         <span class="flex items-center gap-1.5">${ic('snow', 'w-3.5 h-3.5 text-maroon-400')}AC</span>
         <span class="flex items-center gap-1.5">${ic('brief', 'w-3.5 h-3.5 text-maroon-400')}Bagasi</span>
       </div>
-      <div class="mt-auto pt-3 border-t border-white/5 flex items-center justify-between gap-2 flex-wrap">
+      <div class="mt-auto pt-4 border-t border-white/5 flex flex-col gap-3">
         <div><span class="font-display font-bold text-maroon-400 text-lg">${fmtIDR(v.priceLK)}</span><span class="text-[11px] text-muted"> / hari</span></div>
-        <div class="flex gap-2">
-          <a href="#/armada/${v.id}" class="btn btn-g btn-sm">Detail</a>
-          <button onclick="openBooking('${v.id}')" class="btn btn-m btn-sm">Booking</button>
+        <div class="grid grid-cols-2 gap-2">
+          <a href="#/armada/${v.id}" class="btn btn-g btn-sm w-full">Detail</a>
+          <button onclick="openBooking('${v.id}')" class="btn btn-m btn-sm w-full">Booking</button>
         </div>
       </div>
     </div>
