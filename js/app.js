@@ -3697,9 +3697,13 @@ async function saveSettings() {
 function openInvoice(id) {
   const b = BOOKINGS.find(x => x.id === id);
   const v = veh(b.veh) || { name: '—' };
+  const bank = S.cms.payments?.bank || {};
   $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0;padding:32px">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">AZZID RENTCAR</div><div style="font-size:11px;color:#555">Jl. Bambu Petung 66 RT. 009 RW. 05 Cipayung, Jakarta Timur · +62 838-9035-4333 · azzidrentalmobil@gmail.com</div></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="assets/img/azzid-removebg-preview.png" alt="Logo AZZID RENTCAR" style="width:64px;height:64px;object-fit:contain">
+        <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">${esc(S.cms.namaBisnis || 'AZZID RENTCAR')}</div><div style="font-size:11px;color:#555">${esc(S.cms.alamat || '')} · ${esc(S.cms.telepon || '')} · ${esc(S.cms.email || '')}</div></div>
+      </div>
       <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
     </div>
     <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
@@ -3712,7 +3716,11 @@ function openInvoice(id) {
       <tr><td style="padding:10px 8px;font-weight:800;font-size:15px">TOTAL</td><td style="text-align:right;padding:10px 8px;font-weight:800;font-size:15px;color:#7F1D1D">${fmtIDR(b.total)}</td></tr>
     </table>
     <p style="margin-top:14px;font-size:12px">Status Pembayaran: <b style="color:${b.pay.s === 'PAID' ? '#059669' : '#b45309'}">${b.pay.s}</b> · Metode: ${b.pay.m} · TX: ${b.pay.tx}</p>
-    <p style="margin-top:28px;font-size:11px;color:#555">Terima kasih telah percaya pada AZZID RENTCAR — Nyaman Berkendara, Tenang Bepergian.</p>
+    <div style="margin-top:22px;padding:14px 16px;background:#f5f5f5;border-left:4px solid #7F1D1D">
+      <div style="font-size:13px;font-weight:700;margin-bottom:6px">Informasi Transfer Bank</div>
+      <div style="font-size:12px;line-height:1.6">Bank: <b>${esc(bank.nama || 'Belum diatur')}</b><br>Nomor Rekening: <b>${esc(bank.norek || 'Belum diatur')}</b><br>Atas Nama: <b>${esc(bank.pemilik || 'Belum diatur')}</b></div>
+    </div>
+    <p style="margin-top:22px;font-size:11px;color:#555">Terima kasih telah percaya pada ${esc(S.cms.namaBisnis || 'AZZID RENTCAR')} — Nyaman Berkendara, Tenang Bepergian.</p>
   </div>`;
   window.print();
 }
