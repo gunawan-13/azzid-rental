@@ -5,13 +5,11 @@ try {
   }
 } catch(e) {}
 window.__authReady = false;
-/* ================= VEHICLE API ================= */
+/* ================= SUPABASE LIVE DATA ================= */
 
-const API_BASE_URL = window.API_BASE_URL || 'https://azzid-rental-api-production.up.railway.app/api';
-const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
-const VEHICLE_API_URL = window.VEHICLE_API_URL || `${API_BASE_URL}/vehicles`;
-const DRIVER_API_URL = `${API_BASE_URL}/drivers`;
 let ADMIN_USERS = [];
+let adminLiveLoadPromise = null;
+let adminLiveLoadedAt = 0;
 
 async function getSupabaseClient() {
   if (window.supabaseClient) return window.supabaseClient;
@@ -35,48 +33,297 @@ async function getAuthProfile(userId) {
   return data;
 }
 
-/*
- * API helper dibuat toleran terhadap beberapa bentuk response backend:
- * { success:true, data: [...] }
- * { success:true, data:{...} }
- * [...] / {...}
- * Ini mencegah tombol CRUD mati hanya karena bentuk wrapper response berbeda.
- */
-async function vehicleApi(path = '', options = {}) {
-  const url = VEHICLE_API_URL + path;
-  const response = await fetch(url, {
-    credentials: 'include',
-    ...options,
-    headers: {
-      Accept: 'application/json',
-      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
-      ...(options.headers || {})
-    }
-  });
-
-  const raw = await response.text();
-  let payload = null;
-  try { payload = raw ? JSON.parse(raw) : null; } catch (_) { payload = raw; }
-
-  if (!response.ok) {
-    const msg = payload && typeof payload === 'object'
-      ? (payload.message || payload.error || `HTTP ${response.status}`)
-      : `HTTP ${response.status}`;
-    throw new Error(msg);
-  }
-
-  if (payload && typeof payload === 'object' && payload.success === false) {
-    throw new Error(payload.message || payload.error || 'Permintaan API gagal');
-  }
-
-  return payload;
+function mapSupabaseBooking(row) {
+  return {
+    id: row.booking_code || row.id,
+    backendId: row.id,
+    user: row.user_email || null,
+    userId: null,
+    veh: row.veh_id,
+    driver: row.driver_id || null,
+    cust: row.cust || 'Customer',
+    wa: row.wa || '',
+    email: row.email || '',
+    start: row.start,
+    end: row.end,
+    dur: Number(row.dur) || 1,
+    type: row.type || 'Lepas Kunci',
+    pickup: row.pickup || '',
+    drop: '',
+    sub: Number(row.sub) || 0,
+    drv: Number(row.drv) || 0,
+    disc: Number(row.disc) || 0,
+    total: Number(row.total) || 0,
+    method: row.method || 'Transfer Bank',
+    promo: row.promo || '',
+    status: row.status || 'Pending',
+    pay: {
+      m: row.method || 'Transfer Bank',
+      tx: row.booking_code || row.id,
+      s: row.pay_status || 'UNPAID',
+      at: row.pay_at || null
+    },
+    catatan: row.catatan || ''
+  };
 }
 
-function apiData(payload) {
-  if (payload && typeof payload === 'object' && 'data' in payload) return payload.data;
-  if (payload && typeof payload === 'object' && 'vehicle' in payload) return payload.vehicle;
-  if (payload && typeof payload === 'object' && 'vehicles' in payload) return payload.vehicles;
-  return payload;
+function mapSupabasePromo(row) {
+  return {
+    id: String(row.id),
+    code: row.code || '',
+    type: row.type || 'flat',
+    value: Number(row.value) || 0,
+    cap: Number(row.cap) || 0,
+    minDays: Number(row.min_days) || 1,
+    start: row.start || '',
+    end: row.end || '',
+    status: row.status || 'Expired'
+  };
+}
+
+function mapSupabaseDriver(row) {
+  return {
+    id: String(row.id),
+    name: row.name || 'Driver',
+    wa: row.wa || '',
+    sim: row.sim || '',
+    rating: Number(row.rating) || 5,
+    trips: Number(row.trips) || 0,
+    status: row.status || 'Available'
+  };
+}
+
+function mapSupabaseCustomer(row) {
+  return {
+    id: String(row.id),
+    name: row.name || 'Customer',
+    wa: row.wa || '',
+    email: row.email || '',
+    addr: row.addr || '',
+    total: Number(row.total) || 0,
+    spend: Number(row.spend) || 0,
+    last: row.last || '—',
+    status: row.status || 'New'
+  };
+}
+
+function mapSupabaseNotif(row) {
+  return {
+    id: String(row.id),
+    bookingId: row.booking_id || '',
+    type: row.type || 'info',
+    ic: row.icon || 'bell',
+    cl: row.color || 'text-sky-300',
+    t: row.message || '',
+    at: row.created_at,
+    w: row.created_at ? new Date(row.created_at).toLocaleString('id-ID', {
+      day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    }) : 'Baru saja',
+    dibaca: Boolean(row.is_read)
+  };
+}
+
+function mapSupabaseSettings(row) {
+  if (!row || !row.data || typeof row.data !== 'object' || Array.isArray(row.data)) return null;
+  return {
+    ...JSON.parse(JSON.stringify(DEF_CMS)),
+    ...row.data,
+    payments: { ...DEF_CMS.payments, ...(row.data.payments || {}) },
+    notifications: Array.isArray(row.data.notifications)
+      ? row.data.notifications
+      : DEF_CMS.notifications
+  };
+}
+
+async function saveSiteSettingsToSupabase() {
+  const client = await getSupabaseClient();
+  const { error } = await client.from('settings').upsert({
+    id: 'site',
+    data: S.cms,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'id' });
+  if (error) throw error;
+}
+
+const BOOKING_SELECT_COLUMNS = 'id,booking_code,driver_id,user_email,veh_id,cust,wa,email,start,end,dur,type,pickup,sub,drv,disc,total,method,promo,status,pay_status,pay_at,catatan,created_at';
+
+function bookingToSupabaseRow(booking) {
+  return {
+    booking_code: booking.id,
+    user_email: booking.user || null,
+    veh_id: String(booking.veh || ''),
+    driver_id: booking.driver || null,
+    cust: booking.cust || '',
+    wa: booking.wa || '',
+    email: booking.email || null,
+    start: booking.start,
+    end: booking.end,
+    dur: Number(booking.dur) || 1,
+    type: booking.type || 'Lepas Kunci',
+    pickup: booking.pickup || null,
+    sub: Number(booking.sub) || 0,
+    drv: Number(booking.drv) || 0,
+    disc: Number(booking.disc) || 0,
+    total: Number(booking.total) || 0,
+    method: booking.method || booking.pay?.m || null,
+    promo: booking.promo || null,
+    status: booking.status || 'Pending',
+    pay_status: booking.pay?.s || 'UNPAID',
+    pay_at: booking.pay?.at || null,
+    catatan: booking.catatan || null
+  };
+}
+
+async function saveBookingToSupabase(booking, { includeKtp = false } = {}) {
+  const client = await getSupabaseClient();
+  const row = bookingToSupabaseRow(booking);
+  if (includeKtp) row.ktp_file = booking.ktp_file || null;
+  let result;
+  if (booking.backendId) {
+    result = await client.from('bookings').update(row).eq('id', booking.backendId)
+      .select(BOOKING_SELECT_COLUMNS).single();
+  } else {
+    result = await client.from('bookings').insert(row)
+      .select(BOOKING_SELECT_COLUMNS).single();
+  }
+  if (result.error) throw result.error;
+  return mapSupabaseBooking(result.data);
+}
+
+async function updateBookingInSupabase(booking, updates) {
+  const client = await getSupabaseClient();
+  const dbUpdates = {};
+  const fields = {
+    status: 'status', start: 'start', end: 'end', dur: 'dur', type: 'type',
+    pickup: 'pickup', sub: 'sub', drv: 'drv', disc: 'disc', total: 'total',
+    driver: 'driver_id', catatan: 'catatan'
+  };
+  for (const [key, value] of Object.entries(updates)) {
+    if (key === 'pay') {
+      if (value.s !== undefined) dbUpdates.pay_status = value.s;
+      if (value.at !== undefined) dbUpdates.pay_at = value.at;
+    } else if (fields[key]) {
+      dbUpdates[fields[key]] = value;
+    }
+  }
+  const query = client.from('bookings').update(dbUpdates);
+  const result = booking.backendId
+    ? await query.eq('id', booking.backendId).select(BOOKING_SELECT_COLUMNS).single()
+    : await query.eq('booking_code', booking.id).select(BOOKING_SELECT_COLUMNS).single();
+  if (result.error) throw result.error;
+  return mapSupabaseBooking(result.data);
+}
+
+async function commitBookingChanges(booking, updates) {
+  const saved = await updateBookingInSupabase(booking, updates);
+  Object.assign(booking, saved);
+  persist();
+  return booking;
+}
+
+async function updateVehicleStatusInSupabase(vehicle, status) {
+  const client = await getSupabaseClient();
+  const { error } = await client.from('vehicles').update({ status }).eq('id', vehicle.id);
+  if (error) throw error;
+  vehicle.status = status;
+  persist();
+}
+
+async function loadPublicPromosAndSettings() {
+  try {
+    const client = await getSupabaseClient();
+    const [promoResult, settingsResult] = await Promise.all([
+      client.from('promos').select('id,code,type,value,cap,min_days,start,end,status').order('created_at', { ascending: false }),
+      client.from('settings').select('id,data').eq('id', 'site').maybeSingle()
+    ]);
+    if (promoResult.error) throw promoResult.error;
+    if (settingsResult.error) throw settingsResult.error;
+
+    PROMOS = (promoResult.data || []).map(mapSupabasePromo);
+    const settings = mapSupabaseSettings(settingsResult.data);
+    if (settings) {
+      S.cms = settings;
+      applyCms();
+    }
+    if (S.session) renderAdminBody();
+  } catch (error) {
+    console.error('Gagal memuat promo/pengaturan live Supabase:', error);
+    toast('Promo atau pengaturan live gagal dimuat: ' + error.message, 'err');
+  }
+}
+
+async function loadAdminLiveData(force = false) {
+  if (!S.session) return;
+  if (adminLiveLoadPromise) return adminLiveLoadPromise;
+  if (!force && Date.now() - adminLiveLoadedAt < 15000) return;
+
+  adminLiveLoadPromise = (async () => {
+    const client = await getSupabaseClient();
+    const results = await Promise.all([
+      client.from('bookings')
+        .select('id,booking_code,driver_id,user_email,veh_id,cust,wa,email,start,end,dur,type,pickup,sub,drv,disc,total,method,promo,status,pay_status,pay_at,catatan,created_at')
+        .order('created_at', { ascending: false }),
+      client.from('customers')
+        .select('id,name,wa,email,addr,total,spend,last,status,created_at')
+        .order('created_at', { ascending: false }),
+      client.from('drivers')
+        .select('id,name,wa,sim,rating,trips,status,created_at')
+        .order('created_at', { ascending: false }),
+      client.from('promos')
+        .select('id,code,type,value,cap,min_days,start,end,status,created_at')
+        .order('created_at', { ascending: false }),
+      client.from('settings').select('id,data').eq('id', 'site').maybeSingle(),
+      client.from('admin_notifs')
+        .select('id,booking_id,type,message,icon,color,is_read,created_at')
+        .order('created_at', { ascending: false }).limit(50),
+      client.from('vehicles').select('*').order('created_at', { ascending: false }),
+      client.from('users')
+        .select('id,auth_user_id,email,name,role,status,created_at')
+        .order('created_at', { ascending: false })
+    ]);
+    const failed = results.find(result => result.error);
+    if (failed) throw failed.error;
+
+    BOOKINGS = (results[0].data || []).map(mapSupabaseBooking);
+    CUSTOMERS = (results[1].data || []).map(mapSupabaseCustomer);
+    DRIVERS = (results[2].data || []).map(mapSupabaseDriver);
+    PROMOS = (results[3].data || []).map(mapSupabasePromo);
+    const settings = mapSupabaseSettings(results[4].data);
+    if (settings) S.cms = settings;
+    ADMIN_NOTIFS = (results[5].data || []).map(mapSupabaseNotif);
+    VEHICLES = (results[6].data || []).map(normalizeVehicleFromSupabase).filter(Boolean);
+    ADMIN_USERS = results[7].data || [];
+    adminLiveLoadedAt = Date.now();
+    persist();
+    applyCms();
+    updateAdminBellBadge();
+    renderAdminBody();
+  })().catch(error => {
+    console.error('Gagal memuat data admin live Supabase:', error);
+    toast('Data dashboard gagal dimuat dari Supabase: ' + error.message, 'err');
+    throw error;
+  }).finally(() => {
+    adminLiveLoadPromise = null;
+  });
+
+  return adminLiveLoadPromise;
+}
+
+async function loadCustomerBookingsFromSupabase() {
+  if (!S.custSession?.email) return;
+  try {
+    const client = await getSupabaseClient();
+    const { data, error } = await client.from('bookings')
+      .select(BOOKING_SELECT_COLUMNS)
+      .eq('user_email', S.custSession.email)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    BOOKINGS = (data || []).map(mapSupabaseBooking);
+    persist();
+  } catch (error) {
+    console.error('Gagal memuat booking akun dari Supabase:', error);
+    toast('Riwayat booking gagal dimuat: ' + error.message, 'err');
+  }
 }
 
 function normalizeVehicleStatus(status) {
@@ -89,7 +336,7 @@ function normalizeVehicleStatus(status) {
   return map[status] || 'available';
 }
 
-function normalizeVehicleFromAPI(v) {
+function normalizeVehicleFromSupabase(v) {
   if (!v) return null;
 
   let feats = [];
@@ -116,7 +363,7 @@ function normalizeVehicleFromAPI(v) {
     doors: Number(v.doors ?? v.pintu) || 5,
     bag: v.bag || v.bagasi || '2 Koper',
     priceLK: Number(v.priceLK ?? v.price_lk ?? v.price ?? 0) || 0,
-    priceDrv: Number(v.priceDrv ?? v.price_driver ?? v.price_with_driver ?? 0) || 0,
+    priceDrv: Number(v.priceDrv ?? v.price_drv ?? v.price_driver ?? v.price_with_driver ?? 0) || 0,
     img: v.img || v.image || v.image_url || '',
     feats,
     desc: v.desc || v.description || '',
@@ -124,80 +371,19 @@ function normalizeVehicleFromAPI(v) {
   };
 }
 
-async function loadVehiclesFromAPI() {
+async function loadVehiclesFromSupabase() {
   try {
-    const payload = await vehicleApi();
-    let raw = apiData(payload);
-    if (raw && !Array.isArray(raw) && Array.isArray(raw.vehicles)) raw = raw.vehicles;
-    const list = Array.isArray(raw) ? raw : [];
-    const vehiclesFromAPI = list.map(normalizeVehicleFromAPI).filter(Boolean);
-
-    /* Jangan membuat halaman kosong bila database API masih kosong. */
-    if (vehiclesFromAPI.length) {
-      VEHICLES.length = 0;
-      VEHICLES.push(...vehiclesFromAPI);
-      persist();
-      console.log('Vehicle API berhasil:', VEHICLES.length, 'kendaraan');
-    } else {
-      console.warn('API kendaraan kosong — mempertahankan data demo/local.');
-    }
-
-    renderAdminBody();
-  } catch (error) {
-    console.warn('API kendaraan tidak dapat diakses, menggunakan data lokal:', error.message);
-    renderAdminBody();
-  }
-}
-
-const BOOKING_API_URL = `${API_BASE_URL}/bookings`;
-
-// === Helper POST & GET ===
-async function apiPost(path, data) {
-  try {
-    const url = API_BASE_URL + path;
-    const res = await fetch(url, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json", "Accept": "application/json" },
-      body: JSON.stringify(data)
-    });
-    const json = await res.json().catch(() => ({}));
-    if (!res.ok || json.success === false) throw new Error(json.message || ("HTTP " + res.status));
-    console.log("✅ API POST OK:", path, json);
-    return json;
-  } catch (e) {
-    console.warn("⚠️ API POST gagal:", path, e.message);
-    throw e;
-  }
-}
-
-async function apiGet(path) {
-  try {
-    const res = await fetch(API_BASE_URL + path, {
-      credentials: "include",
-      headers: { "Accept": "application/json" }
-    });
-    const json = await res.json().catch(() => ({}));
-    return json;
-  } catch (e) { console.warn("API GET gagal:", e.message); return null; }
-}
-
-async function loadBookingsFromAPI() {
-  try {
-    const res = await fetch(BOOKING_API_URL, { credentials: "include" });
-    const payload = await res.json();
-    const list = Array.isArray(payload && payload.data) ? payload.data : [];
-    if (list.length === 0) return;
-    BOOKINGS.length = 0;
-    BOOKINGS.push(...list.map(normalizeBookingFromAPI));
-    persist();
-    console.log("Bookings dari API:", BOOKINGS.length);
+    const client = await getSupabaseClient();
+    const { data, error } = await client.from('vehicles').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    VEHICLES = (data || []).map(normalizeVehicleFromSupabase).filter(Boolean);
     if (S.session) renderAdminBody();
-  } catch (err) { console.warn("API bookings gagal:", err.message); }
-}
-
-function normalizeBookingFromAPI(b) {
-  return { id: b.booking_code || ("AZR-" + b.id), backendId: b.id, cust: b.customer_name || "Customer", veh: b.vehicle_id, start: b.start_date, end: b.end_date, type: b.rental_type || "Lepas Kunci", pickup: b.pickup_location || "", drop: b.dropoff_location || "", driver: b.driver_id || null, total: Number(b.total_amount) || 0, status: b.status || "Pending", pay: { m: b.payment_method || b.method || "Transfer Bank", s: b.payment_status || b.pay_status || b.pay?.s || "UNPAID", tx: b.booking_code || "-", at: b.pay_at || null }, user: null };
+    else renderC();
+  } catch (error) {
+    console.error('Gagal memuat armada live Supabase:', error);
+    VEHICLES = [];
+    toast('Armada gagal dimuat dari Supabase: ' + error.message, 'err');
+  }
 }
 
 function addUserNotif(email, type, message){
@@ -966,7 +1152,7 @@ function upsertCustomer(name, wa, email) {
   return c;
 }
 
-function doPay() {
+async function doPay() {
   if (S.step !== 5) return;
   if (!S.custSession) {
     S.step = 3;
@@ -1007,68 +1193,20 @@ function doPay() {
   };
 
   try {
+    const savedBooking = await saveBookingToSupabase(booking, { includeKtp: true });
+    Object.assign(booking, savedBooking);
     BOOKINGS.unshift(booking);
-    if (typeof CUSTOMERS !== "undefined") {
-      var cName = (d.cust && d.cust.nama) || "Tamu";
-      var cWa = (d.cust && d.cust.wa) || "";
-      var cEmail = (d.cust && d.cust.email) || "";
-      var existing = CUSTOMERS.find(x => x.name === cName);
-      if (existing) {
-        existing.total = (existing.total || 0) + 1;
-        existing.last = booking.start || "\u2014";
-        existing.status = existing.total > 1 ? "Repeat" : "New";
-      } else {
-        CUSTOMERS.push({
-          id: "CST-" + String(CUSTOMERS.length + 1).padStart(3, "0"),
-          name: cName, wa: cWa, email: cEmail, addr: "",
-          total: 1, spend: 0,
-          last: booking.start || "\u2014", status: "New"
-        });
-      }
-    }
     S.lastBooking = booking;
-    
-    // === SIMPAN KE SUPABASE ===
-    if (window.supabaseClient) {
-      window.supabaseClient.from("bookings").insert({
-        user_email: (S.custSession && S.custSession.email) || "",
-        veh_id: d.veh,
-        cust: booking.cust,
-        wa: booking.wa,
-        email: booking.email,
-        start: booking.start,
-        "end": booking.end,
-        dur: booking.dur,
-        type: booking.type,
-        pickup: booking.pickup,
-        sub: booking.sub,
-        drv: booking.drv,
-        disc: booking.disc,
-        total: booking.total,
-        method: booking.method,
-        promo: booking.promo,
-        status: "Pending",
-        pay_status: "PENDING",
-        pay_at: null,
-        payment_submitted_at: booking.pay.submitted_at,
-        ktp_file: booking.ktp_file || ""
-      }).then(function(res) {
-        if (res.error) console.warn("⚠️ Supabase insert error:", res.error.message);
-        else console.log("✅ Booking tersimpan di Supabase");
-      }).catch(function(e) { console.warn("Supabase error:", e.message); });
+    addLog(`Booking baru: ${booking.id} · ${v.name} · ${booking.cust}`);
+    if (typeof addUserNotif === "function") {
+      addUserNotif(booking.user, "info", `Booking ${booking.id} berhasil dibuat — menunggu konfirmasi admin`);
     }
-    addLog(`Booking baru: ${id} · ${v.name} · ${d.cust?.nama || "Tamu"}`);
-    if (typeof addAdminNotif === "function") addAdminNotif("booking", `Booking baru ${id} dari ${d.cust?.nama || "Tamu"}`, id);
-    // Notif ke user (kalau login atau ada email)
-    const userEmail = S.custSession?.email || d.cust?.email || "";
-    if (userEmail && typeof addUserNotif === "function") {
-      addUserNotif(userEmail, "info", `Booking ${id} berhasil dibuat — menunggu konfirmasi admin`);
-    }
-    if (typeof persist === "function") persist();
-
-    // Simpan ke API (kalau ada) — tidak blocking
-    apiPost("/bookings", booking).then(() => console.log("✅ Booking terkirim ke API")).catch((e) => console.warn("⚠️ Gagal kirim booking:", e.message));
-  } catch (e) { console.warn("Simpan booking lokal gagal:", e); }
+    persist();
+  } catch (error) {
+    console.error('Booking gagal disimpan di Supabase:', error);
+    toast('Booking belum tersimpan. Silakan coba lagi: ' + error.message, 'err');
+    return;
+  }
 
   // Langsung ke step selesai
   S.step = 6;
@@ -1340,6 +1478,7 @@ function completeCustomerAuth(user, phoneFallback='', emailFallback='') {
   }
   toast('Selamat datang, ' + name.split(' ')[0] + '!');
   renderCNow();
+  loadCustomerBookingsFromSupabase();
 }
 function openHeaderAuth() {
   if (S.custSession) openAccount();
@@ -1659,6 +1798,8 @@ async function restoreAuth() {
     if(new URLSearchParams(location.search).get('auth')==='recovery'&&data.session){
       setTimeout(()=>openResetPassword(),0);
     }
+    if (S.session) await loadAdminLiveData(true);
+    else if (S.custSession) await loadCustomerBookingsFromSupabase();
     if (typeof syncAdminBtns === "function") syncAdminBtns();
     if (location.hash.startsWith("#/admin")) {
       if (typeof renderA === "function") renderA();
@@ -1705,10 +1846,9 @@ function renderA() {
       }
     }, 10000);
   }
-  if (typeof loadDriversFromAPI === "function") loadDriversFromAPI();
+  if (S.session) loadAdminLiveData().catch(() => {});
   try{const _hca=document.getElementById("custApp");if(_hca)_hca.style.display="none";const _haa=document.getElementById("adminApp");if(_haa){_haa.classList.remove("hidden");_haa.style.display="block";}}catch(_){}
   try{window.scrollTo(0, 0);}catch(_){}
-  if (typeof loadBookingsFromAPI === "function") loadBookingsFromAPI();
   // STAY_ADMIN_ON_REFRESH
   if (location.hash.startsWith("#/admin")) {
     try { window.scrollTo(0, 0); } catch(e) {}
@@ -1766,7 +1906,7 @@ function renderA() {
         </button>
         <h1 class="font-display font-bold text-lg truncate">${(AMENU.find(m => m[0] === S.adminView) || [])[1] || ''}</h1>
         <div class="relative ml-auto"><button onclick="document.getElementById('adminBellD').classList.toggle('hidden')" class="p-2 relative text-zinc-400 hover:text-white">${ic('bell')}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-maroon-500 dot-live"></span></button>
-          <div id="adminBellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="notif-item flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer" data-notif-id="${n.bookingId || ""}"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
+          <div id="adminBellD" class="hidden absolute right-0 top-12 w-[300px] max-w-[88vw] card bg-ink-800 p-2 z-50 shadow-card"><div class="px-3 py-2 text-[12px] font-bold text-muted uppercase tracking-wider">Notifikasi</div>${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS : buildNotifs()).map(n => `<div class="notif-item flex gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5 cursor-pointer" data-notif-id="${n.bookingId || ""}" data-notification-id="${n.id || ""}"><span class="${n.cl} mt-0.5 shrink-0">${ic(n.ic, 'w-4 h-4')}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${n.t}</p><p class="text-[10.5px] text-muted mt-0.5">${n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "Baru saja")}</p></div></div>`).join('')}</div></div>
         <div class="flex items-center gap-2.5 pl-3 border-l border-white/10"><img src="assets/img/azzid-removebg-preview.png" alt="AZZID" class="w-9 h-9 rounded-full shrink-0 object-contain">
           <div class="hidden sm:block min-w-0"><div class="text-[13px] font-semibold leading-none capitalize truncate">${esc(S.session.name)}</div><div class="text-[10px] text-maroon-400 font-bold tracking-wider mt-0.5 uppercase">${S.session.role}</div></div>
         </div>
@@ -1940,7 +2080,7 @@ function aOverview() {
         </div>
       </div>
       <div class="card p-6 min-w-0"><h3 class="font-display font-semibold mb-4">Aktivitas Terbaru</h3>
-        <div class="space-y-4">${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS.slice(0,5) : []).map(n => `<div class="notif-item flex gap-3 cursor-pointer hover:bg-white/5 rounded-lg p-2 -m-2 transition" data-notif-id="${n.bookingId || ""}"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl || "text-sky-300"} shrink-0">${ic(n.ic || "bell", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${esc(n.t)}</p><p class="text-[10.5px] text-muted mt-0.5">${esc(n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : n.w || "Baru saja"))}</p></div></div>`).join("")}</div><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
+        <div class="space-y-4">${(ADMIN_NOTIFS && ADMIN_NOTIFS.length ? ADMIN_NOTIFS.slice(0,5) : []).map(n => `<div class="notif-item flex gap-3 cursor-pointer hover:bg-white/5 rounded-lg p-2 -m-2 transition" data-notif-id="${n.bookingId || ""}" data-notification-id="${n.id || ""}"><span class="w-8 h-8 rounded-lg bg-ink-700 grid place-items-center ${n.cl || "text-sky-300"} shrink-0">${ic(n.ic || "bell", "w-4 h-4")}</span><div class="min-w-0"><p class="text-[12.5px] leading-snug">${esc(n.t)}</p><p class="text-[10.5px] text-muted mt-0.5">${esc(n.w && n.w !== "Baru saja" ? n.w : (n.at ? new Date(n.at).toLocaleString("id-ID", {day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}) : n.w || "Baru saja"))}</p></div></div>`).join("")}</div><h3 class="font-display font-semibold">Booking Terbaru</h3><button onclick="setAdminView('booking')" class="text-[12px] font-semibold text-maroon-400 shrink-0">Kelola Semua →</button></div>
       <table class="tbl min-w-[720px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Status</th></tr></thead><tbody>
         ${BOOKINGS.slice(-6).reverse().map(b => `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400">${b.id.slice(-9)}</td><td>${esc(b.cust)}</td><td>${esc((veh(b.veh) || { name: '—' }).name)}</td><td>${dShort(b.start)}–${dShort(b.end)}</td><td>${fmtK(b.total)}</td><td>${badge(b.status)}</td></tr>`).join('')}
       </tbody></table>
@@ -2008,44 +2148,66 @@ function aRental() {
   </div>`;
 }
 
-function startRental(id) {
+async function startRental(id) {
   const b = BOOKINGS.find(x => x.id === id);
   if (!b) return;
-  b.status = 'Ongoing';
   const v = veh(b.veh);
-  if (v) v.status = 'rented';
-  addLog(`Sewa dimulai: ${id} · ${v ? v.name : ''} (${b.cust})`);
-  persist();
-  toast('Sewa ' + id + ' dimulai — unit ditandai Rented');
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  try {
+    if (v) await updateVehicleStatusInSupabase(v, 'rented');
+    await commitBookingChanges(b, { status: 'Ongoing' });
+    addLog(`Sewa dimulai: ${id} · ${v ? v.name : ''} (${b.cust})`);
+    toast('Sewa ' + id + ' dimulai — unit ditandai Rented');
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal memulai sewa di Supabase:', error);
+    toast('Perubahan sewa tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
-function returnRental(id) {
+async function returnRental(id) {
   const b = BOOKINGS.find(x => x.id === id);
   if (!b) return;
-  b.status = 'Completed';
   const v = veh(b.veh);
   const still = BOOKINGS.some(x => x.veh === b.veh && x.id !== id && ['Ongoing', 'Confirmed'].includes(x.status));
-  if (v && !still && v.status === 'rented') v.status = 'available';
-  addLog(`Pengembalian diproses: ${id} · ${v ? v.name : ''} — unit kembali Available`);
-  persist();
-  toast('Pengembalian ' + id + ' selesai. Terima kasih!');
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  try {
+    await commitBookingChanges(b, { status: 'Completed' });
+    if (v && !still && v.status === 'rented') await updateVehicleStatusInSupabase(v, 'available');
+    addLog(`Pengembalian diproses: ${id} · ${v ? v.name : ''} — unit kembali Available`);
+    toast('Pengembalian ' + id + ' selesai. Terima kasih!');
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal mencatat pengembalian di Supabase:', error);
+    toast('Pengembalian tidak tersimpan sepenuhnya: ' + error.message, 'err');
+  }
 }
 
-function extendRental(id) {
+async function extendRental(id) {
   const b = BOOKINGS.find(x => x.id === id);
   if (!b) return;
   const v = veh(b.veh);
   const per = v ? (b.type === 'Dengan Driver' ? v.priceDrv : v.priceLK) : 500000;
-  b.end = addDays(b.end, 1);
-  b.total += per;
-  if (b.type === 'Dengan Driver') { b.sub += v ? v.priceLK : 350000;
-    b.drv += 150000; } else b.sub += per;
-  addLog(`Sewa diperpanjang: ${id} s/d ${dShort(b.end)} (+${fmtK(per)})`);
-  persist();
-  toast('Sewa diperpanjang s/d ' + dShort(b.end) + ' · +' + fmtK(per));
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  const changes = {
+    end: addDays(b.end, 1),
+    dur: Number(b.dur) + 1,
+    total: b.total + per,
+    sub: b.sub,
+    drv: b.drv
+  };
+  if (b.type === 'Dengan Driver') {
+    changes.sub += v ? v.priceLK : 350000;
+    changes.drv += 150000;
+  } else {
+    changes.sub += per;
+  }
+  try {
+    await commitBookingChanges(b, changes);
+    addLog(`Sewa diperpanjang: ${id} s/d ${dShort(b.end)} (+${fmtK(per)})`);
+    toast('Sewa diperpanjang s/d ' + dShort(b.end) + ' · +' + fmtK(per));
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal memperpanjang sewa di Supabase:', error);
+    toast('Perpanjangan tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
 /* ================= BOOKING CRUD ================= */
@@ -2080,7 +2242,7 @@ function bookingForm(id) {
   calcBf();
 }
 
-function saveBooking(id) {
+async function saveBooking(id) {
   const nama = $('bf_nama').value.trim(),
     vid = $('bf_veh').value,
     s = $('bf_start').value,
@@ -2094,21 +2256,43 @@ function saveBooking(id) {
   const total = rental + drvC;
   const st = $('bf_status').value;
   const ps = $('bf_pay').value;
-  if (id) {
-    const b = BOOKINGS.find(x => x.id === id);
-    Object.assign(b, { cust: nama, veh: vid, start: s, end: e, type, pickup: $('bf_pickup').value, status: st, sub: rental, drv: drvC, total });
-    b.pay.s = ps;
-    if (ps === 'PAID' && !b.pay.at) b.pay.at = TODAY;
-    addLog(`Booking ${id} diperbarui (${nama} · ${v.name})`);
-    toast('Booking diperbarui');
-  } else {
-    const nid = `AZR-${TODAY.replaceAll('-', '')}-${String(BOOKINGS.length + 15).padStart(3, '0')}`;
-    BOOKINGS.push({
+  try {
+    if (id) {
+      const booking = BOOKINGS.find(x => x.id === id);
+      if (!booking) return toast('Booking tidak ditemukan', 'err');
+      const pay = { ...booking.pay, s: ps, at: ps === 'PAID' ? (booking.pay.at || TODAY) : booking.pay.at };
+      const saved = await saveBookingToSupabase({
+        ...booking,
+        cust: nama,
+        wa: $('bf_wa').value.trim(),
+        veh: vid,
+        start: s,
+        end: e,
+        dur,
+        type,
+        pickup: $('bf_pickup').value,
+        status: st,
+        sub: rental,
+        drv: drvC,
+        total,
+        pay
+      });
+      Object.assign(booking, saved);
+      addLog(`Booking ${id} diperbarui (${nama} · ${v.name})`);
+      toast('Booking diperbarui');
+    } else {
+      const nid = `AZR-${TODAY.replaceAll('-', '')}-${String(BOOKINGS.length + 15).padStart(3, '0')}`;
+      const matchingCustomer = CUSTOMERS.find(customer => customer.name === nama);
+      const booking = {
       id: nid,
       cust: nama,
+      wa: $('bf_wa').value.trim(),
+      email: matchingCustomer?.email || '',
+      user: matchingCustomer?.email || null,
       veh: vid,
       start: s,
       end: e,
+      dur,
       type,
       pickup: $('bf_pickup').value,
       drop: $('bf_pickup').value,
@@ -2120,14 +2304,19 @@ function saveBooking(id) {
       status: st,
       pay: { m: 'Manual / Kantor', s: ps, tx: 'TRX-M' + Math.floor(1000 + Math.random() * 9000), at: ps === 'PAID' ? TODAY : null },
       user: null
-    });
-    upsertCustomer(nama, $('bf_wa').value, '');
-    addLog(`Booking manual dibuat: ${nid} · ${v.name} · ${nama}`);
-    toast('Booking ' + nid + ' dibuat');
+      };
+      const saved = await saveBookingToSupabase(booking);
+      BOOKINGS.push(saved);
+      addLog(`Booking manual dibuat: ${nid} · ${v.name} · ${nama}`);
+      toast('Booking ' + nid + ' dibuat');
+    }
+    persist();
+    closeModal();
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menyimpan booking ke Supabase:', error);
+    toast('Booking tidak tersimpan: ' + error.message, 'err');
   }
-  persist();
-  closeModal();
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function delBooking(id) {
@@ -2141,32 +2330,28 @@ function delBooking(id) {
   </div>`);
 }
 
-function hardDelBooking(id) {
+async function hardDelBooking(id) {
   const b = BOOKINGS.find(x => x.id === id);
-  BOOKINGS = BOOKINGS.filter(x => x.id !== id);
-  // SINKRON DELETE KE BACKEND
-  try {
-    const backendId = (b && b.backendId) ? b.backendId : null;
-    if (backendId) {
-      fetch(API_BASE_URL + '/bookings/' + backendId, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: { 'Accept': 'application/json' }
-      }).then(r => r.json()).then(res => {
-        console.log('DELETE response:', res);
-      }).catch(e => console.warn('DELETE error:', e.message));
-    } else {
-      console.warn('Booking tidak punya backendId — skip DELETE backend');
-    }
-  } catch (e) { console.warn('DELETE fail:', e.message); }
+  if (!b) return;
   const v = veh(b.veh);
-  const still = BOOKINGS.some(x => x.veh === b.veh && ['Ongoing', 'Confirmed'].includes(x.status));
-  if (v && !still && v.status === 'rented') v.status = 'available';
-  addLog(`Booking dihapus permanen: ${id} (${b.cust})`);
-  persist();
-  closeModal();
-  toast('Booking dihapus', 'err');
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  try {
+    const client = await getSupabaseClient();
+    const result = b.backendId
+      ? await client.from('bookings').delete().eq('id', b.backendId)
+      : await client.from('bookings').delete().eq('booking_code', b.id);
+    if (result.error) throw result.error;
+    BOOKINGS = BOOKINGS.filter(x => x.id !== id);
+    const still = BOOKINGS.some(x => x.veh === b.veh && ['Ongoing', 'Confirmed'].includes(x.status));
+    if (v && !still && v.status === 'rented') await updateVehicleStatusInSupabase(v, 'available');
+    addLog(`Booking dihapus permanen: ${id} (${b.cust})`);
+    persist();
+    closeModal();
+    toast('Booking dihapus', 'err');
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menghapus booking dari Supabase:', error);
+    toast('Booking tidak dihapus: ' + error.message, 'err');
+  }
 }
 
 function bkRow(b) {
@@ -2205,6 +2390,22 @@ function aBookings() {
   </div>`;
 }
 
+async function markAdminNotifRead(id) {
+  const notification = ADMIN_NOTIFS.find(item => String(item.id) === String(id));
+  if (!notification || notification.dibaca) return;
+  try {
+    const client = await getSupabaseClient();
+    const { error } = await client.from('admin_notifs').update({ is_read: true }).eq('id', id);
+    if (error) throw error;
+    notification.dibaca = true;
+    persist();
+    updateAdminBellBadge();
+  } catch (error) {
+    console.error('Gagal menandai notifikasi sebagai dibaca di Supabase:', error);
+    toast('Status notifikasi tidak tersimpan: ' + error.message, 'err');
+  }
+}
+
 function openNotifDetail(bookingId) {
   const bellD = document.getElementById("bellD");
   if (bellD) bellD.classList.add("hidden");
@@ -2218,13 +2419,31 @@ function openNotifDetail(bookingId) {
   }
 }
 
-document.addEventListener("click", function(e) {
+document.addEventListener("click", async function(e) {
   const item = e.target.closest(".notif-item");
-  if (item && item.dataset.notifId) openNotifDetail(item.dataset.notifId);
+  if (!item) return;
+  if (S.session && item.dataset.notificationId) await markAdminNotifRead(item.dataset.notificationId);
+  if (item.dataset.notifId) openNotifDetail(item.dataset.notifId);
 });
 
-function openBookingDetail(id) {
+async function openBookingDetail(id) {
   const b = BOOKINGS.find(x => x.id === id);
+  if (!b) return;
+  if (b.backendId) {
+    try {
+      const client = await getSupabaseClient();
+      const { data, error } = await client.from('bookings')
+        .select('ktp_file')
+        .eq('id', b.backendId)
+        .single();
+      if (error) throw error;
+      b.ktp_file = data.ktp_file;
+    } catch (error) {
+      console.error('Gagal memuat dokumen booking dari Supabase:', error);
+      toast('Dokumen identitas tidak dapat dimuat: ' + error.message, 'err');
+      return;
+    }
+  }
   const v = veh(b.veh) || { name: '—' };
   const cu = CUSTOMERS.find(c => c.name === b.cust) || {};
   modal(`<div class="p-7">
@@ -2248,23 +2467,47 @@ function openBookingDetail(id) {
   </div>`, 1);
 }
 
-function bAct(id, act, val) {
+async function bAct(id, act, val) {
   const b = BOOKINGS.find(x => x.id === id);
-  if (act === 'confirm') { b.status = 'Confirmed'; if (b.pay.s !== 'PAID') b.pay.s = 'PENDING';
-    if(typeof addUserNotif==='function')addUserNotif(b.user||'', 'confirm', 'Booking ' + b.id + ' telah DIKONFIRMASI admin — cek jadwal Anda');
-    toast('Booking ' + id + ' dikonfirmasi');
-    addLog('Booking ' + id + ' dikonfirmasi'); }
-  if (act === 'cancel') { b.status = 'Cancelled'; if (b.pay.s === 'PAID') b.pay.s = 'REFUNDED';
-    if(typeof addUserNotif==='function')addUserNotif(b.user||'', 'cancel', 'Booking ' + b.id + ' DIBATALKAN oleh admin' + (b.pay.s === 'REFUNDED' ? ' — refund akan diproses' : ''));
-    toast('Booking dibatalkan' + (b.pay.s === 'REFUNDED' ? ' & refund diproses' : ''), 'err');
-    addLog('Booking ' + id + ' dibatalkan'); }
-  if (act === 'status') { b.status = val;
-    if(typeof addUserNotif==='function')addUserNotif(b.user||'', 'info', 'Status booking ' + b.id + ' berubah menjadi ' + val);
-    toast('Status diperbarui → ' + val);
-    addLog('Booking ' + id + ' → ' + val); }
-  persist();
-  closeModal();
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  if (!b) return;
+  const changes = {};
+  let notifType = 'info';
+  let notifMessage = '';
+  let logMessage = '';
+  let successMessage = '';
+  if (act === 'confirm') {
+    changes.status = 'Confirmed';
+    if (b.pay.s !== 'PAID') changes.pay = { ...b.pay, s: 'PENDING' };
+    notifType = 'confirm';
+    notifMessage = `Booking ${b.id} telah DIKONFIRMASI admin — cek jadwal Anda`;
+    logMessage = `Booking ${id} dikonfirmasi`;
+    successMessage = `Booking ${id} dikonfirmasi`;
+  } else if (act === 'cancel') {
+    changes.status = 'Cancelled';
+    if (b.pay.s === 'PAID') changes.pay = { ...b.pay, s: 'REFUNDED' };
+    notifType = 'cancel';
+    notifMessage = `Booking ${b.id} DIBATALKAN oleh admin${b.pay.s === 'PAID' ? ' — refund akan diproses' : ''}`;
+    logMessage = `Booking ${id} dibatalkan`;
+    successMessage = `Booking ${id} dibatalkan`;
+  } else if (act === 'status') {
+    changes.status = val;
+    notifMessage = `Status booking ${b.id} berubah menjadi ${val}`;
+    logMessage = `Booking ${id} → ${val}`;
+    successMessage = `Status diperbarui → ${val}`;
+  } else {
+    return;
+  }
+  try {
+    await commitBookingChanges(b, changes);
+    if (typeof addUserNotif === 'function') addUserNotif(b.user || '', notifType, notifMessage);
+    addLog(logMessage);
+    toast(successMessage);
+    closeModal();
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal memperbarui booking di Supabase:', error);
+    toast('Booking tidak diperbarui: ' + error.message, 'err');
+  }
 }
 
 function openAssignDriver(id) {
@@ -2274,14 +2517,20 @@ function openAssignDriver(id) {
   </div>`);
 }
 
-function assignDrv(id, did) {
+async function assignDrv(id, did) {
   const b = BOOKINGS.find(x => x.id === id);
-  b.driver = did;
-  addLog('Driver ' + drv(did).name + ' ditugaskan ke ' + id);
-  persist();
-  toast('Driver ' + drv(did).name + ' ditugaskan');
-  closeModal();
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  const driver = drv(did);
+  if (!b || !driver) return;
+  try {
+    await commitBookingChanges(b, { driver: did });
+    addLog('Driver ' + driver.name + ' ditugaskan ke ' + id);
+    toast('Driver ' + driver.name + ' ditugaskan');
+    closeModal();
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menetapkan driver ke booking di Supabase:', error);
+    toast('Driver tidak ditetapkan: ' + error.message, 'err');
+  }
 }
 
 function aCalendar() {
@@ -2459,15 +2708,15 @@ async function setVehStatus(id, val) {
   const v = veh(id);
   if (!v) return toast('Kendaraan tidak ditemukan', 'err');
   try {
-    const payload = await vehicleApi('/' + encodeURIComponent(id), { method: 'PUT', body: JSON.stringify({ status: val }) });
-    const returned = normalizeVehicleFromAPI(apiData(payload));
-    if (returned) Object.assign(v, returned); else v.status = val;
+    const client = await getSupabaseClient();
+    const { error } = await client.from('vehicles').update({ status: val }).eq('id', id);
+    if (error) throw error;
+    v.status = val;
     addLog(`Status aset ${v.name} (${v.plate}) → ${val}`);
     persist(); toast('Status ' + v.name + ' → ' + val); renderAdminBody();
   } catch (error) {
-    console.warn('Status API gagal:', error.message);
-    v.status = val; addLog(`Status aset lokal ${v.name} → ${val}`); persist();
-    toast('Status diperbarui di browser. API belum tersambung.', 'info'); renderAdminBody();
+    console.error('Gagal memperbarui status kendaraan di Supabase:', error);
+    toast('Status kendaraan tidak tersimpan: ' + error.message, 'err');
   }
 }
 
@@ -2571,31 +2820,31 @@ async function saveVeh(id) {
     name: nama,
     brand: g('brand') || 'Toyota',
     model: g('model') || '',
-    type: g('cat') || 'City Car',
+    cat: g('cat') || 'City Car',
     year: Number(g('tahun')) || 2024,
     plate: g('plate'),
-    transmission: $('vf_trans')?.value || 'Automatic',
+    trans: $('vf_trans')?.value || 'Automatic',
     seats: Number($('vf_seats')?.value || 7),
     fuel: $('vf_fuel')?.value || 'Bensin',
     color: g('warna') || 'Black',
     doors: Number($('vf_doors')?.value || 5),
     bag: g('bag') || '2 Koper',
     price_lk: harga,
-    price_driver: Number($('vf_hargadrv')?.value || 0) || harga + 150000,
+    price_drv: Number($('vf_hargadrv')?.value || 0) || harga + 150000,
     image: uploadedImg || old?.img || IMG.avanza,
-    features: JSON.stringify(feats),
+    features: feats,
     description: g('desc'),
     status: $('vf_status')?.value || 'available'
   };
 
   try {
-    const payload = await vehicleApi(id ? '/' + encodeURIComponent(id) : '', {
-      method: id ? 'PUT' : 'POST',
-      body: JSON.stringify(data)
-    });
-    const raw = apiData(payload);
-    const returnedVehicle = raw && typeof raw === 'object' && (raw.id != null || raw.name || raw.brand) ? raw : null;
-    const vehicle = normalizeVehicleFromAPI(returnedVehicle || { ...data, id: id || `local-${Date.now()}` });
+    const client = await getSupabaseClient();
+    const query = id
+      ? client.from('vehicles').update(data).eq('id', id)
+      : client.from('vehicles').insert(data);
+    const { data: savedRow, error } = await query.select('*').single();
+    if (error) throw error;
+    const vehicle = normalizeVehicleFromSupabase(savedRow);
 
     if (id) {
       const index = VEHICLES.findIndex(v => String(v.id) === String(id));
@@ -2613,23 +2862,8 @@ async function saveVeh(id) {
     closeModal();
     renderAdminBody();
   } catch (error) {
-    /* Fallback lokal agar UI tetap bisa digunakan saat API belum hidup/CORS belum siap. */
-    console.warn('CRUD API gagal, menyimpan ke localStorage:', error.message);
-    const localVehicle = normalizeVehicleFromAPI({ ...data, id: id || `local-${Date.now()}` });
-    if (id) {
-      const index = VEHICLES.findIndex(v => String(v.id) === String(id));
-      if (index !== -1) VEHICLES[index] = localVehicle;
-      else VEHICLES.unshift(localVehicle);
-      addLog(`Aset diperbarui secara lokal: ${localVehicle.name}`);
-    } else {
-      VEHICLES.unshift(localVehicle);
-      addLog(`Aset baru disimpan secara lokal: ${localVehicle.name}`);
-    }
-    persist();
-    window._vehImgBase64 = '';
-    closeModal();
-    toast('Tersimpan di browser. Hubungkan API untuk sinkronisasi database.', 'info');
-    renderAdminBody();
+    console.error('Gagal menyimpan kendaraan ke Supabase:', error);
+    toast('Kendaraan tidak tersimpan di Supabase: ' + error.message, 'err');
   }
 }
 
@@ -2711,20 +2945,23 @@ async function dupVeh(id) {
   };
 
   try {
-    const payload = await vehicleApi('', { method: 'POST', body: JSON.stringify(data) });
-    const raw = apiData(payload);
-    const vehicle = normalizeVehicleFromAPI(raw && typeof raw === 'object' && (raw.id != null || raw.name || raw.brand) ? raw : { ...data, id: `local-${Date.now()}` });
+    const client = await getSupabaseClient();
+    const { data: savedRow, error } = await client.from('vehicles').insert({
+      name: data.name, brand: data.brand, model: data.model, cat: data.type,
+      year: data.year, plate: data.plate, trans: data.transmission, seats: data.seats,
+      fuel: data.fuel, color: data.color, doors: data.doors, bag: data.bag,
+      price_lk: data.price_lk, price_drv: data.price_driver, image: data.image,
+      features: v.feats || [], description: data.description, status: data.status
+    }).select('*').single();
+    if (error) throw error;
+    const vehicle = normalizeVehicleFromSupabase(savedRow);
     VEHICLES.unshift(vehicle);
     addLog(`Aset diduplikasi: ${v.name} → ${vehicle.name}`);
     persist();
     toast('Aset berhasil diduplikasi');
   } catch (error) {
-    console.warn('Duplikasi API gagal, menggunakan localStorage:', error.message);
-    const vehicle = normalizeVehicleFromAPI({ ...data, id: `local-${Date.now()}` });
-    VEHICLES.unshift(vehicle);
-    addLog(`Aset diduplikasi secara lokal: ${v.name} → ${vehicle.name}`);
-    persist();
-    toast('Duplikat dibuat di browser. API belum tersambung.', 'info');
+    console.error('Duplikasi kendaraan gagal di Supabase:', error);
+    toast('Duplikat kendaraan tidak tersimpan: ' + error.message, 'err');
   }
   renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
@@ -2749,17 +2986,15 @@ async function softDel(id) {
   const v = veh(id);
   if (!v) return toast('Kendaraan tidak ditemukan', 'err');
   try {
-    const payload = await vehicleApi('/' + encodeURIComponent(id), { method: 'PUT', body: JSON.stringify({ status: 'inactive' }) });
-    const returned = normalizeVehicleFromAPI(apiData(payload));
-    if (returned) Object.assign(v, returned);
-    else v.status = 'inactive';
+    const client = await getSupabaseClient();
+    const { error } = await client.from('vehicles').update({ status: 'inactive' }).eq('id', id);
+    if (error) throw error;
+    v.status = 'inactive';
     addLog(`Aset dinonaktifkan: ${v.name}`);
     persist(); closeModal(); toast('Aset dinonaktifkan', 'info'); renderAdminBody();
   } catch (error) {
-    console.warn('Nonaktifkan API gagal:', error.message);
-    v.status = 'inactive';
-    addLog(`Aset dinonaktifkan secara lokal: ${v.name}`);
-    persist(); closeModal(); toast('Aset dinonaktifkan di browser. API belum tersambung.', 'info'); renderAdminBody();
+    console.error('Gagal menonaktifkan kendaraan di Supabase:', error);
+    toast('Kendaraan tidak dinonaktifkan: ' + error.message, 'err');
   }
 }
 
@@ -2767,15 +3002,15 @@ async function hardDel(id) {
   const v = veh(id);
   if (!v) return toast('Kendaraan tidak ditemukan', 'err');
   try {
-    await vehicleApi('/' + encodeURIComponent(id), { method: 'DELETE' });
+    const client = await getSupabaseClient();
+    const { error } = await client.from('vehicles').delete().eq('id', id);
+    if (error) throw error;
     VEHICLES = VEHICLES.filter(x => String(x.id) !== String(id));
     addLog(`Aset dihapus permanen: ${v.name} (${v.plate})`);
     persist(); closeModal(); toast('Aset dihapus permanen', 'err'); renderAdminBody();
   } catch (error) {
-    console.warn('Hapus API gagal:', error.message);
-    VEHICLES = VEHICLES.filter(x => String(x.id) !== String(id));
-    addLog(`Aset dihapus secara lokal: ${v.name} (${v.plate})`);
-    persist(); closeModal(); toast('Aset dihapus dari browser. API belum tersambung.', 'info'); renderAdminBody();
+    console.error('Gagal menghapus kendaraan dari Supabase:', error);
+    toast('Kendaraan tidak dihapus: ' + error.message, 'err');
   }
 }
 
@@ -2807,31 +3042,6 @@ function custDetail(id) {
   </div>`, 1);
 }
 
-async function loadDriversFromAPI(){
-  try {
-    const res = await fetch(DRIVER_API_URL, { credentials: 'include', headers: { Accept: 'application/json' } });
-    const payload = await res.json();
-    const list = Array.isArray(payload && payload.data) ? payload.data : [];
-    if (!list.length) { console.log('Drivers API: kosong'); return; }
-    DRIVERS.length = 0;
-    list.forEach(d => {
-      DRIVERS.push({
-        id: d.id,
-        name: d.name || 'Driver',
-        wa: d.phone || '',
-        sim: d.license_number || '',
-        rating: Number(d.rating) || 5.0,
-        trips: Number(d.trips) || 0,
-        status: d.status || 'Available'
-      });
-    });
-    if (typeof persist === 'function') persist();
-    console.log('Drivers dari API:', DRIVERS.length);
-  } catch (err) {
-    console.warn('API drivers gagal:', err.message);
-  }
-}
-
 function aDrivers() {
   if (typeof DRIVERS === "undefined" || !Array.isArray(DRIVERS)) return "<div class=\"p-8 text-center text-muted\">Data driver tidak tersedia.</div>";
   const header = '<div class="flex items-center justify-between mb-5"><h2 class="font-display font-bold text-lg">Daftar Driver</h2><button onclick="driverForm()" class="btn btn-m btn-sm">+ Tambah Driver</button></div>';
@@ -2845,11 +3055,21 @@ function aDrivers() {
   </div>`).join('')}</div>`;
 }
 
-function setDrvStatus(id, val) {
-  drv(id).status = val;
-  persist();
-  toast('Status ' + drv(id).name + ' → ' + val);
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+async function setDrvStatus(id, val) {
+  const driver = drv(id);
+  if (!driver) return;
+  try {
+    const client = await getSupabaseClient();
+    const { error } = await client.from('drivers').update({ status: val }).eq('id', id);
+    if (error) throw error;
+    driver.status = val;
+    persist();
+    toast('Status ' + driver.name + ' → ' + val);
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal memperbarui status driver di Supabase:', error);
+    toast('Status driver tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
 function driverForm(id){
@@ -2872,7 +3092,7 @@ function driverForm(id){
   </div>`);
 }
 
-function saveDriver(id){
+async function saveDriver(id){
   const name = $('df_name').value.trim();
   const wa = $('df_wa').value.trim();
   if (!name) { toast('Nama wajib diisi', 'err'); return; }
@@ -2886,45 +3106,53 @@ function saveDriver(id){
     trips: parseInt($('df_trips').value) || 0,
     status: $('df_status').value
   };
-  if (id) {
-    const d = DRIVERS.find(x => x.id === id);
-    if (d) Object.assign(d, data);
-    toast('Driver diperbarui');
-  } else {
-    const newId = 'DRV-' + String(DRIVERS.length + 1).padStart(2, '0');
-    DRIVERS.push({ id: newId, ...data });
-  // Sinkron ke backend
-  fetch(DRIVER_API_URL, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ name: data.name, phone: data.wa, license_number: data.sim, status: data.status })
-  }).then(r => r.json()).then(res => {
-    console.log('Driver saved:', res);
-    if (res && res.data && res.data.id) { loadDriversFromAPI(); }
-  }).catch(e => console.warn('POST driver error:', e.message));
-    toast('Driver ditambahkan');
+  try {
+    const client = await getSupabaseClient();
+    const dbData = {
+      name: data.name, wa: data.wa, sim: data.sim,
+      rating: data.rating, trips: data.trips, status: data.status
+    };
+    const query = id
+      ? client.from('drivers').update(dbData).eq('id', id)
+      : client.from('drivers').insert(dbData);
+    const { data: saved, error } = await query.select('id,name,wa,sim,rating,trips,status').single();
+    if (error) throw error;
+    const savedDriver = mapSupabaseDriver(saved);
+    if (id) {
+      const index = DRIVERS.findIndex(driver => String(driver.id) === String(id));
+      if (index >= 0) DRIVERS[index] = savedDriver;
+      toast('Driver diperbarui');
+    } else {
+      DRIVERS.unshift(savedDriver);
+      toast('Driver ditambahkan');
+    }
+    persist();
+    addLog('Driver ' + name + ' ' + (id ? 'diperbarui' : 'ditambahkan'));
+    closeModal();
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menyimpan driver ke Supabase:', error);
+    toast('Driver tidak tersimpan: ' + error.message, 'err');
   }
-  persist();
-  addLog('Driver ' + name + ' ' + (id ? 'diperbarui' : 'ditambahkan'));
-  closeModal();
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
-function delDriver(id){
+async function delDriver(id){
   const d = DRIVERS.find(x => x.id === id);
   if (!d) return;
   if (!confirm('Hapus driver ' + d.name + '?')) return;
-  DRIVERS = DRIVERS.filter(x => x.id !== id);
-  // Sinkron DELETE ke backend
-  fetch(DRIVER_API_URL + '/' + id, {
-    method: 'DELETE',
-    credentials: 'include'
-  }).catch(e => console.warn('DELETE driver error:', e.message));
-  persist();
-  addLog('Driver ' + d.name + ' dihapus');
-  toast('Driver dihapus', 'info');
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  try {
+    const client = await getSupabaseClient();
+    const { error } = await client.from('drivers').delete().eq('id', id);
+    if (error) throw error;
+    DRIVERS = DRIVERS.filter(x => x.id !== id);
+    persist();
+    addLog('Driver ' + d.name + ' dihapus');
+    toast('Driver dihapus', 'info');
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menghapus driver dari Supabase:', error);
+    toast('Driver tidak dihapus: ' + error.message, 'err');
+  }
 }
 
 function aPayments() {
@@ -2949,19 +3177,22 @@ function aPayments() {
   </div>`;
 }
 
-function markPaid(id) {
+async function markPaid(id) {
   const b = BOOKINGS.find(x => x.id === id);
   if (!b || b.pay?.s === 'PAID') return;
-  b.pay = b.pay || {};
-  b.pay.s = 'PAID';
-  b.pay.at = TODAY;
-  if (b.status === 'Pending') b.status = 'Confirmed';
-  const customer = CUSTOMERS.find(x => x.email && x.email === b.email) || CUSTOMERS.find(x => x.name === b.cust);
-  if (customer) customer.spend = (customer.spend || 0) + (Number(b.total) || 0);
-  addLog(`Pembayaran ${id} diverifikasi lunas (${fmtK(b.total)})`);
-  persist();
-  toast('Pembayaran ' + id + ' lunas · ' + fmtIDR(b.total));
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  const changes = { pay: { ...b.pay, s: 'PAID', at: TODAY } };
+  if (b.status === 'Pending') changes.status = 'Confirmed';
+  try {
+    await commitBookingChanges(b, changes);
+    const customer = CUSTOMERS.find(x => x.email && x.email === b.email);
+    if (customer) customer.spend = (customer.spend || 0) + (Number(b.total) || 0);
+    addLog(`Pembayaran ${id} diverifikasi lunas (${fmtK(b.total)})`);
+    toast('Pembayaran ' + id + ' lunas · ' + fmtIDR(b.total));
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menyimpan status pembayaran ke Supabase:', error);
+    toast('Pembayaran tidak diperbarui: ' + error.message, 'err');
+  }
 }
 
 function aPromo() {
@@ -2975,24 +3206,42 @@ function aPromo() {
   </div>`;
 }
 
-function deletePromo(id){
+async function deletePromo(id){
   const p = PROMOS.find(x => x.id === id);
   if (!p) return;
   if (!confirm('Hapus promo ' + p.code + '?\n\nPromo akan dihapus permanen.')) return;
-  PROMOS = PROMOS.filter(x => x.id !== id);
-  persist();
-  addLog('Promo ' + p.code + ' dihapus');
-  toast('Promo ' + p.code + ' dihapus', 'info');
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  try {
+    const client = await getSupabaseClient();
+    const { error } = await client.from('promos').delete().eq('id', id);
+    if (error) throw error;
+    PROMOS = PROMOS.filter(x => x.id !== id);
+    persist();
+    addLog('Promo ' + p.code + ' dihapus');
+    toast('Promo ' + p.code + ' dihapus', 'info');
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menghapus promo dari Supabase:', error);
+    toast('Promo tidak dihapus: ' + error.message, 'err');
+  }
 }
 
-function togglePromo(id) {
+async function togglePromo(id) {
   const p = PROMOS.find(x => x.id === id);
-  p.status = p.status === 'Active' ? 'Expired' : 'Active';
-  addLog('Promo ' + p.code + ' → ' + p.status);
-  persist();
-  toast('Promo ' + p.code + ' → ' + p.status);
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  if (!p) return;
+  const status = p.status === 'Active' ? 'Expired' : 'Active';
+  try {
+    const client = await getSupabaseClient();
+    const { error } = await client.from('promos').update({ status }).eq('id', id);
+    if (error) throw error;
+    p.status = status;
+    addLog('Promo ' + p.code + ' → ' + p.status);
+    persist();
+    toast('Promo ' + p.code + ' → ' + p.status);
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal memperbarui promo di Supabase:', error);
+    toast('Status promo tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
 function promoForm(id) {
@@ -3006,36 +3255,42 @@ function promoForm(id) {
   </div>`);
 }
 
-function savePromo(id) {
+async function savePromo(id) {
   const code = $('pf0').value.trim().toUpperCase();
   if (!code) { toast('Nama promo wajib diisi', 'err'); return; }
-  if (id) {
-    const p = PROMOS.find(x => x.id === id);
-    if (!p) { toast('Promo tidak ditemukan', 'err'); return; }
-    Object.assign(p, { code, type: $('pf1').value, value: +$('pf2').value, cap: +$('pf3').value, minDays: +$('pf4').value, status: $('pf5').value, start: $('pf6').value, end: $('pf7').value });
+  const promo = {
+    code, type: $('pf1').value, value: +$('pf2').value,
+    cap: +$('pf3').value, min_days: +$('pf4').value,
+    status: $('pf5').value, start: $('pf6').value || null,
+    end: $('pf7').value || null
+  };
+  try {
+    const client = await getSupabaseClient();
+    const query = id
+      ? client.from('promos').update(promo).eq('id', id)
+      : client.from('promos').insert(promo);
+    const { data, error } = await query
+      .select('id,code,type,value,cap,min_days,start,end,status')
+      .single();
+    if (error) throw error;
+    const savedPromo = mapSupabasePromo(data);
+    if (id) {
+      const index = PROMOS.findIndex(item => String(item.id) === String(id));
+      if (index >= 0) PROMOS[index] = savedPromo;
+      addLog('Promo ' + code + ' diperbarui');
+      toast('Promo ' + code + ' diperbarui');
+    } else {
+      PROMOS.unshift(savedPromo);
+      addLog('Promo baru dibuat: ' + code);
+      toast('Promo dibuat');
+    }
     persist();
-    addLog('Promo ' + code + ' diperbarui');
-    toast('Promo ' + code + ' diperbarui');
     closeModal();
-    renderAdminBody();
-    return;
+    renderAdminBody(); /* STAY_ADMIN_CONFIRM */
+  } catch (error) {
+    console.error('Gagal menyimpan promo ke Supabase:', error);
+    toast('Promo tidak tersimpan: ' + error.message, 'err');
   }
-  PROMOS.push({
-    id: 'P-' + Date.now(),
-    code,
-    type: $('pf1').value,
-    value: +$('pf2').value,
-    cap: +$('pf3').value,
-    minDays: +$('pf4').value,
-    status: $('pf5').value,
-    start: $('pf6').value,
-    end: $('pf7').value
-  });
-  addLog('Promo baru dibuat: ' + code);
-  persist();
-  closeModal();
-  toast('Promo dibuat');
-  renderAdminBody(); /* STAY_ADMIN_CONFIRM */
 }
 
 function setRepTab(v){S.repTab=v;renderAdminBody();}
@@ -3242,7 +3497,8 @@ function openCmsEditor(type){
   modal(body);
 }
 
-function saveCmsEditor(type){
+async function saveCmsEditor(type){
+  const previous = JSON.parse(JSON.stringify(S.cms));
   S.cms=S.cms||{};
   if(type==='Banner Promo'){
     S.cms.bannerPromo={
@@ -3275,11 +3531,19 @@ function saveCmsEditor(type){
       jam:$('cms_kt_jam').value
     };
   }
-  persist();
-  applyCms();
-  addLog('Konten CMS '+type+' diperbarui');
-  toast(type+' berhasil disimpan!');
-  closeModal();
+  try {
+    await saveSiteSettingsToSupabase();
+    persist();
+    applyCms();
+    addLog('Konten CMS '+type+' diperbarui');
+    toast(type+' berhasil disimpan!');
+    closeModal();
+  } catch (error) {
+    S.cms = previous;
+    applyCms();
+    console.error('Gagal menyimpan konten CMS ke Supabase:', error);
+    toast('Konten tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
 
@@ -3300,16 +3564,25 @@ function aCms() {
   </div>`;
 }
 
-function saveCms() {
+async function saveCms() {
+  const previous = JSON.parse(JSON.stringify(S.cms));
   S.cms.head1 = $('cm0').value;
   S.cms.head2 = $('cm1').value;
   S.cms.sub = $('cm2').value;
   S.cms.ann = $('cm3').value;
   S.cms.wa = $('cm4').value;
-  persist();
-  applyCms();
-  addLog('Konten CMS diperbarui');
-  toast('Perubahan CMS diterapkan ke website!');
+  try {
+    await saveSiteSettingsToSupabase();
+    persist();
+    applyCms();
+    addLog('Konten CMS diperbarui');
+    toast('Perubahan CMS diterapkan ke website!');
+  } catch (error) {
+    S.cms = previous;
+    applyCms();
+    console.error('Gagal menyimpan CMS ke Supabase:', error);
+    toast('Perubahan CMS tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
 function applyCms() {
@@ -3387,15 +3660,12 @@ function aSettings() {
     <div class="card p-6"><h3 class="font-display font-semibold mb-4">Notifikasi</h3>
       <div class="space-y-3">${['Booking baru', 'Pembayaran berhasil / gagal', 'Booking dibatalkan','Jadwal rental akan dimulai', 'Jadwal pengembalian', 'Mobil masuk maintenance'].map((n, i) => `<label class="flex items-center justify-between gap-3 text-[13.5px] cursor-pointer"><span>${n}</span><input type="checkbox" id="notif_${i}" class="accent-[#991B1B] w-4 h-4 shrink-0" ${(S.cms.notifications?.[i] !== false) ? 'checked' : ''}></label>`).join('')}</div>
     </div>
-    <div class="card p-6 border-red-500/20"><h3 class="font-display font-semibold mb-2 text-red-300">Zona Pemeliharaan Data</h3>
-      <p class="text-[12.5px] text-muted mb-4">Kembalikan seluruh data (armada, sewa, booking, customer, akun, promo) ke kondisi demo awal. Data yang tersimpan di browser akan dihapus.</p>
-      <button onclick="resetDemo()" class="btn btn-d btn-sm">${ic('alert', 'w-4 h-4')} Reset Data Demo</button>
-    </div>
     <button onclick="saveSettings()" class="btn btn-m">${ic('check', 'w-4 h-4')} Simpan Pengaturan</button>
   </div>`;
 }
 
-function saveSettings() {
+async function saveSettings() {
+  const previous = JSON.parse(JSON.stringify(S.cms));
   const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : undefined; };
   const nama = g('bizNama'); if (nama !== undefined) S.cms.namaBisnis = nama;
   const email = g('bizEmail'); if (email !== undefined) S.cms.email = email;
@@ -3409,10 +3679,18 @@ function saveSettings() {
   const bankNorek = g('payBankNorek'); if (bankNorek !== undefined) S.cms.payments.bank.norek = bankNorek;
   const bankPemilik = g('payBankPemilik'); if (bankPemilik !== undefined) S.cms.payments.bank.pemilik = bankPemilik;
   S.cms.notifications = [0,1,2,3,4,5].map(i => { const el = document.getElementById('notif_' + i); return el ? el.checked : true; });
-  persist();
-  applyCms();
-  addLog('Pengaturan diperbarui');
-  toast('Pengaturan tersimpan & diterapkan ke website!');
+  try {
+    await saveSiteSettingsToSupabase();
+    persist();
+    applyCms();
+    addLog('Pengaturan diperbarui');
+    toast('Pengaturan tersimpan & diterapkan ke website!');
+  } catch (error) {
+    S.cms = previous;
+    applyCms();
+    console.error('Gagal menyimpan pengaturan ke Supabase:', error);
+    toast('Pengaturan tidak tersimpan: ' + error.message, 'err');
+  }
 }
 
 /* ================= INVOICE ================= */
@@ -3541,8 +3819,8 @@ window.addEventListener('scroll', () => {
 });
 
 applyCms();
-loadVehiclesFromAPI();
-loadDriversFromAPI();
+loadVehiclesFromSupabase();
+loadPublicPromosAndSettings();
 window.addEventListener('DOMContentLoaded', () => {
   bindCustomerAuthButtons();
   window.__exportBtnAttached = true;
@@ -3770,69 +4048,6 @@ window.closeSb = window.closeSb || function() {
 })();
 
 
-// === LOAD BOOKINGS DARI SUPABASE ===
-async function loadBookingsFromSupabase() {
-  if (!window.supabaseClient) return;
-  try {
-    const res = await window.supabaseClient
-      .from("bookings")
-      .select("*")
-      .order("created_at", { ascending: false });
-    
-    if (res.error) throw res.error;
-    
-    if (res.data && Array.isArray(res.data)) {
-      BOOKINGS = res.data.map(function(b) {
-        return {
-          id: b.id,
-          user: b.user_email,
-          veh: b.veh_id,
-          cust: b.cust,
-          wa: b.wa,
-          email: b.email,
-          start: b.start,
-          end: b.end,
-          dur: b.dur,
-          type: b.type,
-          pickup: b.pickup,
-          sub: b.sub,
-          drv: b.drv,
-          disc: b.disc,
-          total: b.total,
-          method: b.method,
-          promo: b.promo,
-          status: b.status,
-          pay: { at: b.pay_at, s: b.pay_status },
-          ktp_file: b.ktp_file
-        };
-      });
-      console.log("✅ Loaded", BOOKINGS.length, "bookings dari Supabase");
-      // Guard: hanya render kalau perlu
-      if (typeof renderAdminBody === "function") renderAdminBody();
-      // renderC() dihapus — biar tidak re-render home berulang
-    }
-  } catch (e) {
-    console.warn("Load error:", e.message);
-  }
-}
-
-// Auto-load saat Supabase ready — HANYA 1x (guard anti-loop)
-if (!window.__supabaseLoadDone) {
-  window.addEventListener("supabase-ready", function() {
-    if (window.__supabaseLoadDone) {
-      console.log("⏭️ Supabase load skip — sudah pernah");
-      return;
-    }
-    window.__supabaseLoadDone = true;
-    console.log("Supabase ready — load bookings...");
-    setTimeout(loadBookingsFromSupabase, 500);
-  });
-}
-
-// Kalau Supabase sudah ready
-if (window.supabaseClient) {
-  setTimeout(loadBookingsFromSupabase, 1000);
-}
 
 
 // === Auto-close sidebar saat resize ke desktop ===
