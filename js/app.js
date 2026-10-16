@@ -10,10 +10,30 @@ window.__authReady = false;
 const API_BASE_URL = window.API_BASE_URL || 'https://azzid-rental-api-production.up.railway.app/api';
 const GOOGLE_CLIENT_ID = window.GOOGLE_CLIENT_ID || '';
 const VEHICLE_API_URL = window.VEHICLE_API_URL || `${API_BASE_URL}/vehicles`;
-const AUTH_API_URL = `${API_BASE_URL}/auth`;
-const USERS_API_URL = `${API_BASE_URL}/users`;
 const DRIVER_API_URL = `${API_BASE_URL}/drivers`;
 let ADMIN_USERS = [];
+
+async function getSupabaseClient() {
+  if (window.supabaseClient) return window.supabaseClient;
+  if (!window.supabaseReady) throw new Error('Konfigurasi Supabase belum siap.');
+  try {
+    return await window.supabaseReady;
+  } catch (error) {
+    throw new Error('Supabase tidak dapat dimuat. Periksa koneksi dan konfigurasi project.');
+  }
+}
+
+async function getAuthProfile(userId) {
+  const client = await getSupabaseClient();
+  const { data, error } = await client
+    .from('users')
+    .select('id,email,name,phone,role,status,created_at')
+    .eq('auth_user_id', userId)
+    .single();
+  if (error) throw new Error(error.message || 'Profil akun tidak dapat dimuat.');
+  if (!data) throw new Error('Profil akun belum tersedia. Hubungi administrator.');
+  return data;
+}
 
 /*
  * API helper dibuat toleran terhadap beberapa bentuk response backend:
@@ -1342,10 +1362,19 @@ async function doCustLogin(){
   if(!email||!password){showCustomerAuthError('Email dan password wajib diisi.');return}
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){showCustomerAuthError('Format email tidak valid.');return}
   try{
-    const result=await authApi('/login',{method:'POST',body:JSON.stringify({email,password})});
-    const payload=apiData(result),user=payload?.user||payload?.role&&payload||result?.user;
-    if(!user||user.role!=='user')throw new Error('Akun ini bukan akun penyewa.');
-    completeCustomerAuth(user,'',email);
+    const client=await getSupabaseClient();
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error)throw error;
+    const profile=await getAuthProfile(data.user.id);
+    if(profile.status!=='Active'){
+      await client.auth.signOut();
+      throw new Error('Akun tidak aktif. Hubungi administrator.');
+    }
+    if(profile.role!=='user'){
+      await client.auth.signOut();
+      throw new Error('Akun ini bukan akun penyewa.');
+    }
+    completeCustomerAuth(profile,'',email);
   }catch(err){showCustomerAuthError(err.message||'Email atau password salah.')}
 }
 async function doCustReg(){
@@ -1354,13 +1383,34 @@ async function doCustReg(){
   if(!n||!e||!w||p.length<6){err.textContent='Lengkapi semua field. Password minimal 6 karakter.';err.classList.remove('hidden');return}
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){err.textContent='Format email tidak valid.';err.classList.remove('hidden');return}
   try{
-    const result=await authApi('/register',{method:'POST',body:JSON.stringify({name:n,email:e,password:p,phone:w})});
-    const payload=apiData(result),user=payload?.user||(payload?.id||payload?.email?payload:null)||result?.user;
-    if(!user||(user.role&&user.role!=='user'))throw new Error('Registrasi gagal.');
-    completeCustomerAuth(user,w,e);
+    const client=await getSupabaseClient();
+    const {data,error}=await client.auth.signUp({
+      email:e,
+      password:p,
+      options:{data:{name:n,phone:w},emailRedirectTo:window.location.origin+window.location.pathname}
+    });
+    if(error)throw error;
+    if(!data.session){
+      err.textContent='Akun berhasil dibuat. Periksa email Anda untuk menyelesaikan konfirmasi sebelum login.';
+      err.classList.remove('hidden');
+      return;
+    }
+    const profile=await getAuthProfile(data.user.id);
+    if(profile.status!=='Active'||profile.role!=='user')throw new Error('Akun belum dapat digunakan. Hubungi administrator.');
+    completeCustomerAuth(profile,w,e);
   }catch(err2){err.textContent=err2.message||'Registrasi gagal.';err.classList.remove('hidden')}
 }
-async function custLogout(){try{await authApi('/logout',{method:'POST'})}catch(_){}S.custSession=null;sessionStorage.removeItem('azzid_has_session');closeModal();toast('Anda telah keluar dari akun','info');renderCNow()}
+async function custLogout(){
+  try{
+    const client=await getSupabaseClient();
+    const {error}=await client.auth.signOut();
+    if(error)throw error;
+    S.custSession=null;
+    closeModal();
+    toast('Anda telah keluar dari akun','info');
+    renderCNow();
+  }catch(error){showCustomerAuthError(error.message||'Gagal keluar dari akun.')}
+}
 function openAccount(){if(!S.custSession){openAuth('in');return}const acc=S.custSession;const hist=BOOKINGS.filter(b=>b.user===acc.email || b.email===acc.email || b.cust===acc.nama);const spend=hist.filter(b=>b.pay.s==='PAID').reduce((a,b)=>a+b.total,0);modal(`<div class="p-7"><div class="flex justify-between items-start gap-4 mb-6"><div><h3 class="font-display font-bold text-xl">${esc(acc.nama)}</h3><p class="text-[12px] text-muted mt-1">${esc(acc.email)} · ${esc(acc.phone||'-')}</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div class="grid grid-cols-2 gap-3 mb-5"><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${hist.length}</b><div class="text-[10px] text-muted uppercase">Total Booking</div></div><div class="card !bg-ink-900 p-4 text-center"><b class="font-display text-xl text-maroon-400">${fmtK(spend)}</b><div class="text-[10px] text-muted uppercase">Pengeluaran</div></div></div><div class="space-y-2 max-h-52 overflow-y-auto">${hist.length?hist.map(b=>`<div class="bg-ink-900 rounded-lg p-3 text-[12px] flex justify-between gap-2"><span>${esc(b.id)}</span>${badge(b.status)}</div>`).join(''):'<p class="text-sm text-muted">Belum ada booking.</p>'}</div><button onclick="custLogout()" class="btn btn-d btn-sm w-full mt-5">${ic('logout','w-4 h-4')} Logout</button></div>`,1)}
 
 /* ================= TRACK ================= */
@@ -1408,20 +1458,6 @@ function toggleMobNav(forceClose) {
 }
 
 /* ================= ADMIN ================= */
-async function authApi(path='',options={}){
-  let response;
-  try {
-    response=await fetch(AUTH_API_URL+path,{credentials:'include',...options,headers:{Accept:'application/json',...(options.body?{'Content-Type':'application/json'}:{}),...(options.headers||{})}});
-  } catch (e) {
-    throw new Error('API tidak dapat dihubungi: ' + AUTH_API_URL + ' — ' + (e && e.message ? e.message : 'network error'));
-  }
-  const raw=await response.text(); let payload=null;
-  try{payload=raw?JSON.parse(raw):null}catch(_){payload=raw}
-  if(!response.ok)throw new Error(payload?.message||`HTTP ${response.status}`);
-  if(payload?.success===false)throw new Error(payload.message||'Permintaan autentikasi gagal');
-  return payload;
-}
-
 function googleLoginMarkup(){
   return `<div class="my-4"><div class="flex items-center gap-3 text-[10px] text-zinc-500 uppercase tracking-widest"><span class="h-px bg-white/10 flex-1"></span><span>atau</span><span class="h-px bg-white/10 flex-1"></span></div><div id="googleLoginBtn" class="mt-4 flex justify-center min-h-[44px]" data-g-rendered="0"></div><p id="googleLoginError" role="status" class="hidden text-center text-[11px] text-muted mt-2"></p></div>`;
 }
@@ -1476,10 +1512,15 @@ function initGoogleButton(){
 }
 async function doGoogleLogin(credential){
   try{
-    const result=await authApi('/google',{method:'POST',body:JSON.stringify({credential})});
-    const payload=apiData(result),user=payload?.user||payload?.role&&payload||result?.user;
-    if(!user||user.role!=='user') throw new Error('Login Google hanya tersedia untuk akun penyewa.');
-    completeCustomerAuth(user);
+    const client=await getSupabaseClient();
+    const {data,error}=await client.auth.signInWithIdToken({provider:'google',token:credential});
+    if(error)throw error;
+    const profile=await getAuthProfile(data.user.id);
+    if(profile.status!=='Active'||profile.role!=='user'){
+      await client.auth.signOut();
+      throw new Error('Login Google hanya tersedia untuk akun penyewa aktif.');
+    }
+    completeCustomerAuth(profile);
   }catch(err){ showCustomerAuthError(err.message||'Login Google gagal.'); }
 }
 function openForgotPassword(){
@@ -1488,103 +1529,149 @@ function openForgotPassword(){
 async function doForgotPassword(){
   const email=($('forgotEmail').value||'').trim().toLowerCase(), err=$('forgotErr'); err.classList.add('hidden');
   if(!email){err.textContent='Email wajib diisi.';err.classList.remove('hidden');return;}
-  try{await authApi('/forgot-password',{method:'POST',body:JSON.stringify({email})}); modal(`<div class="p-7 text-center"><div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-300 grid place-items-center mx-auto mb-4">✓</div><h3 class="font-display font-bold text-xl mb-2">Cek email Anda</h3><p class="text-sm text-muted leading-relaxed">Jika email terdaftar, link reset password sudah dikirim. Link berlaku 30 menit.</p><button onclick="openAuth('in')" class="btn btn-m w-full mt-5">Kembali ke Login</button></div>`);}
+  try{
+    const client=await getSupabaseClient();
+    const redirectTo=window.location.origin+window.location.pathname+'?auth=recovery';
+    const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo});
+    if(error)throw error;
+    modal(`<div class="p-7 text-center"><div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-300 grid place-items-center mx-auto mb-4">✓</div><h3 class="font-display font-bold text-xl mb-2">Cek email Anda</h3><p class="text-sm text-muted leading-relaxed">Jika email terdaftar, link reset password sudah dikirim. Ikuti petunjuk di email untuk membuat password baru.</p><button onclick="openAuth('in')" class="btn btn-m w-full mt-5">Kembali ke Login</button></div>`);
+  }
   catch(e){err.textContent=e.message||'Gagal mengirim link reset.';err.classList.remove('hidden');}
 }
-function openResetPassword(token){
-  modal(`<div class="p-7"><div class="flex justify-between items-start mb-5"><div><h3 class="font-display font-bold text-xl">Buat Password Baru</h3><p class="text-[12px] text-muted mt-1">Masukkan password baru minimal 6 karakter.</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div id="resetErr" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3 py-2"></div><label class="lbl">Password Baru</label><input id="resetPass" type="password" class="inp mb-4" placeholder="Minimal 6 karakter"><button onclick="doResetPassword(${JSON.stringify(token)})" class="btn btn-m w-full">Simpan Password Baru</button></div>`);
+function openResetPassword(){
+  if(window.__passwordRecoveryOpened)return;
+  window.__passwordRecoveryOpened=true;
+  modal(`<div class="p-7"><div class="flex justify-between items-start mb-5"><div><h3 class="font-display font-bold text-xl">Buat Password Baru</h3><p class="text-[12px] text-muted mt-1">Masukkan password baru minimal 6 karakter.</p></div><button onclick="closeModal()" class="text-muted">${ic('x')}</button></div><div id="resetErr" class="hidden mb-3 rounded-lg border border-red-500/40 bg-red-500/10 text-red-300 text-[12px] px-3 py-2"></div><label class="lbl">Password Baru</label><input id="resetPass" type="password" class="inp mb-4" autocomplete="new-password" placeholder="Minimal 6 karakter"><button onclick="doResetPassword()" class="btn btn-m w-full">Simpan Password Baru</button></div>`);
 }
-async function doResetPassword(token){
+function clearRecoveryUrl(){
+  const url=new URL(window.location.href);
+  url.searchParams.delete('auth');
+  url.hash='';
+  history.replaceState({},document.title,url.pathname+url.search);
+}
+async function doResetPassword(){
   const p=$('resetPass').value, err=$('resetErr'); err.classList.add('hidden'); if(p.length<6){err.textContent='Password minimal 6 karakter.';err.classList.remove('hidden');return;}
-  try{await authApi('/reset-password',{method:'POST',body:JSON.stringify({token,password:p})}); history.replaceState({},document.title,location.pathname+location.hash); modal(`<div class="p-7 text-center"><div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-300 grid place-items-center mx-auto mb-4">✓</div><h3 class="font-display font-bold text-xl mb-2">Password berhasil diubah</h3><p class="text-sm text-muted">Silakan login menggunakan password baru Anda.</p><button onclick="openAuth('in')" class="btn btn-m w-full mt-5">Login Sekarang</button></div>`);}
+  try{
+    const client=await getSupabaseClient();
+    const {error}=await client.auth.updateUser({password:p});
+    if(error)throw error;
+    const {error:signOutError}=await client.auth.signOut();
+    if(signOutError)throw signOutError;
+    S.custSession=null;
+    S.session=null;
+    window.__passwordRecoveryOpened=false;
+    clearRecoveryUrl();
+    modal(`<div class="p-7 text-center"><div class="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-300 grid place-items-center mx-auto mb-4">✓</div><h3 class="font-display font-bold text-xl mb-2">Password berhasil diubah</h3><p class="text-sm text-muted">Silakan login menggunakan password baru Anda.</p><button onclick="openAuth('in')" class="btn btn-m w-full mt-5">Login Sekarang</button></div>`);
+  }
   catch(e){err.textContent=e.message||'Link reset tidak valid atau sudah kedaluwarsa.';err.classList.remove('hidden');}
 }
 
-async function loadAdminUsers(){try{const result=await fetch(USERS_API_URL,{credentials:'include',headers:{Accept:'application/json'}}).then(async r=>{const p=await r.json();if(!r.ok||p.success===false)throw new Error(p.message||'Gagal memuat users');return p;});const data=apiData(result);ADMIN_USERS=Array.isArray(data)?data:[]}catch(err){ADMIN_USERS=[];console.warn('Data users tidak dapat dimuat:',err.message)}}
+async function loadAdminUsers(){
+  try{
+    const client=await getSupabaseClient();
+    const {data,error}=await client.from('users').select('id,auth_user_id,email,name,role,status,created_at').order('created_at',{ascending:false});
+    if(error)throw error;
+    ADMIN_USERS=data||[];
+    renderAdminBody();
+  }catch(error){
+    ADMIN_USERS=[];
+    console.error('Gagal memuat profil pengguna:',error);
+    toast(error.message||'Gagal memuat pengguna. Periksa konfigurasi profil Supabase.','err');
+  }
+}
 async function doLogin(){
   const e = ($("lgE").value || "").trim().toLowerCase();
   const p = $("lgP").value;
-  const box = $("loginCard");
   const errBox = $("lgErr");
   if (errBox) errBox.classList.add("hidden");
-  
-  // === ADMIN DEFAULT (ubah kalau perlu) ===
-  const ADMIN_EMAIL = "admin@azzidrentcar.id";
-  const ADMIN_PASS = "admin123";
-  
-  if (e === ADMIN_EMAIL && p === ADMIN_PASS) {
-    S.session = { id: "ADMIN-1", name: "Administrator", email: ADMIN_EMAIL, role: "admin" };
-    sessionStorage.setItem("azzid_has_session", "1");
-    localStorage.setItem("azzid_session", JSON.stringify(S.session));
+  if(!e||!p){
+    if(errBox){errBox.textContent='Email dan password wajib diisi.';errBox.classList.remove('hidden');}
+    return;
+  }
+  try{
+    const client=await getSupabaseClient();
+    const {data,error}=await client.auth.signInWithPassword({email:e,password:p});
+    if(error)throw error;
+    const profile=await getAuthProfile(data.user.id);
+    if(profile.status!=='Active'||profile.role!=='admin'){
+      await client.auth.signOut();
+      throw new Error(profile.status!=='Active'?'Akun tidak aktif. Hubungi administrator.':'Akun ini tidak memiliki akses admin.');
+    }
+    S.session={id:profile.id,email:profile.email,name:profile.name,role:profile.role,status:profile.status};
+    S.custSession=null;
+    localStorage.removeItem('azzid_session');
+    sessionStorage.removeItem('azzid_has_session');
     window.__authReady = true;
     S.adminView = "overview";
     renderA();
     if (typeof syncAdminBtns === "function") syncAdminBtns();
     toast("Selamat datang, " + S.session.name);
-  } else {
-    if (box) { box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake"); }
-    if (errBox) { errBox.textContent = "Email atau password salah."; errBox.classList.remove("hidden"); }
+  }catch(error){
+    if(errBox){errBox.textContent=error.message||'Email atau password salah.';errBox.classList.remove('hidden');}
   }
 }
 async function adminLogout(){
   closeSb();
-  S.session = null;
-  sessionStorage.removeItem('azzid_has_session');
-  localStorage.removeItem('azzid_session');
-  window.__authReady = true;
-  renderA();
-  if (typeof syncAdminBtns === 'function') syncAdminBtns();
   try {
-    await authApi('/logout', { method: 'POST' });
+    const client=await getSupabaseClient();
+    const {error}=await client.auth.signOut();
+    if(error)throw error;
+    S.session = null;
+    S.custSession = null;
+    window.__authReady = true;
+    renderA();
+    if (typeof syncAdminBtns === 'function') syncAdminBtns();
     toast('Anda telah logout', 'info');
   } catch (error) {
-    console.warn('Logout admin API gagal setelah sesi lokal ditutup:', error.message);
-    toast('Sesi lokal ditutup, tetapi server tidak dapat dikonfirmasi.', 'info');
+    console.error('Logout admin gagal:',error);
+    toast(error.message||'Gagal logout. Coba lagi.','err');
   }
 }
 async function restoreAuth() {
-  // KEEP_ADMIN_HASH: jangan redirect kalau di #/admin
-  var __wasAdmin = location.hash.startsWith("#/admin");
   try {
-    // Cek admin session dari localStorage (PRIORITAS)
-    var sess = localStorage.getItem("azzid_session");
-    if (sess) {
-      try {
-        var parsed = JSON.parse(sess);
-        if (parsed && parsed.role === "admin") {
-          S.session = parsed;
-          window.__authReady = true;
-          console.log("✅ Admin session restored:", parsed.email);
-        }
-      } catch(e) {}
+    const client=await getSupabaseClient();
+    client.auth.onAuthStateChange((event)=>{
+      if(event==='PASSWORD_RECOVERY'){
+        clearRecoveryUrl();
+        setTimeout(()=>openResetPassword(),0);
+      }
+    });
+    const {data,error}=await client.auth.getSession();
+    if(error)throw error;
+    localStorage.removeItem('azzid_session');
+    sessionStorage.removeItem('azzid_has_session');
+    if(data.session){
+      const profile=await getAuthProfile(data.session.user.id);
+      if(profile.status!=='Active'){
+        const {error:signOutError}=await client.auth.signOut();
+        if(signOutError)throw signOutError;
+      }else if(profile.role==='admin'){
+        S.session={id:profile.id,email:profile.email,name:profile.name,role:profile.role,status:profile.status};
+        S.custSession=null;
+      }else{
+        S.session=null;
+        S.custSession={id:profile.id,email:profile.email,nama:profile.name,phone:profile.phone||''};
+      }
     }
-    
-    // Cek Supabase session (user)
-    if (window.supabaseClient) {
-      try {
-        var res = await window.supabaseClient.auth.getSession();
-        if (res.data && res.data.session) {
-          var u = res.data.session.user;
-          S.custSession = { id: u.id, email: u.email, nama: u.user_metadata?.name || u.email.split("@")[0], phone: u.user_metadata?.phone || "" };
-          console.log("✅ User session restored:", u.email);
-        }
-      } catch(e) {}
+    if(new URLSearchParams(location.search).get('auth')==='recovery'&&data.session){
+      setTimeout(()=>openResetPassword(),0);
     }
-    
     if (typeof syncAdminBtns === "function") syncAdminBtns();
-    
-    // Kalau di halaman admin & ada session → render dashboard
     if (location.hash.startsWith("#/admin")) {
       if (typeof renderA === "function") renderA();
     }
   } catch (e) {
-    console.warn("restoreAuth error:", e);
+    S.session=null;
+    S.custSession=null;
+    console.error("Gagal memulihkan sesi Supabase:",e);
+    if(location.hash.startsWith("#/admin")&&typeof renderA==='function')renderA();
   }
 }
 
 function setAdminView(v){ if(typeof closeSb==="function") closeSb();
   S.adminView = v;
   renderA();
+  if(v==='users')loadAdminUsers();
 }
 
 /* Struktur sidebar sesuai PRD + Kelola Sewa */
@@ -1749,7 +1836,19 @@ function areaChart(data, h = 210) {
   </svg>`;
 }
 
-async function updateUserRole(id,role){try{const response=await fetch(`${USERS_API_URL}/${id}/role-status`,{credentials:'include',method:'PATCH',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({role})});const result=await response.json();if(!response.ok||result.success===false)throw new Error(result.message||`HTTP ${response.status}`);const user=apiData(result);const i=ADMIN_USERS.findIndex(x=>String(x.id)===String(id));if(i>=0&&user)ADMIN_USERS[i]=user;toast('Role user berhasil diperbarui');renderAdminBody()}catch(err){toast(err.message||'Gagal memperbarui role','err');renderAdminBody()}}
+async function updateUserRole(id,role){
+  if(!['admin','user'].includes(role)){toast('Role tidak valid.','err');return}
+  if(String(id)===String(S.session?.id)){toast('Role akun yang sedang digunakan tidak dapat diubah.','err');renderAdminBody();return}
+  try{
+    const client=await getSupabaseClient();
+    const {data,error}=await client.from('users').update({role}).eq('id',id).select('id,auth_user_id,email,name,role,status,created_at').single();
+    if(error)throw error;
+    const i=ADMIN_USERS.findIndex(user=>String(user.id)===String(id));
+    if(i>=0)ADMIN_USERS[i]=data;
+    toast('Role user berhasil diperbarui');
+    renderAdminBody();
+  }catch(error){toast(error.message||'Gagal memperbarui role','err');renderAdminBody()}
+}
 
 function renderAdminBody() {
   const v = S.adminView;
@@ -3223,31 +3322,23 @@ function applyCms() {
   const elWa = $("footWa"); if (elWa) elWa.href = "https://wa.me/" + (S.cms.wa || "6283890354333");
 }
 
-function deleteUser(id, email){
-  if (!confirm('Hapus user ' + email + '?\n\nData akan dihapus dari local + backend.')) return;
-  
-  // Hapus dari local
-  ADMIN_USERS = ADMIN_USERS.filter(u => String(u.id) !== String(id));
-  if (typeof persist === 'function') persist();
-  toast('User ' + email + ' dihapus', 'info');
-  renderAdminBody();
-  
-  // Sinkron ke backend
-  try {
-    fetch(API_BASE_URL + '/users/' + id, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: { 'Accept': 'application/json' }
-    }).then(r => r.json()).then(res => {
-      console.log('DELETE user response:', res);
-    }).catch(e => console.warn('DELETE user error:', e.message));
-  } catch (e) { console.warn('DELETE user fail:', e.message); }
+async function deleteUser(id, email){
+  if(String(id)===String(S.session?.id)){toast('Akun admin yang sedang digunakan tidak dapat dinonaktifkan.','err');return}
+  if(!confirm('Nonaktifkan akun ' + email + '?'))return;
+  try{
+    const client=await getSupabaseClient();
+    const {data,error}=await client.from('users').update({status:'Inactive'}).eq('id',id).select('id,auth_user_id,email,name,role,status,created_at').single();
+    if(error)throw error;
+    ADMIN_USERS=ADMIN_USERS.map(user=>String(user.id)===String(id)?data:user);
+    toast('Akun ' + email + ' dinonaktifkan','info');
+    renderAdminBody();
+  }catch(error){toast(error.message||'Gagal menonaktifkan akun','err')}
 }
 
 function aUsers() {
   return `<div class="space-y-6">
     <div class="card overflow-x-auto"><table class="tbl min-w-[680px]"><thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>
-      ${ADMIN_USERS.map(u => `<tr><td class="font-semibold whitespace-nowrap">${esc(u.name)}</td><td class="text-muted whitespace-nowrap">${esc(u.email)}</td><td><select class="inp !w-36 !py-1.5 text-[12px]" onchange="updateUserRole(${u.id},this.value)"><option value="admin" ${u.role === "admin" ? "selected" : ""}>Admin</option><option value="user" ${u.role === "user" ? "selected" : ""}>User</option></select></td><td>${badge(u.status)}</td><td><button onclick="deleteUser(${u.id},'${esc(u.email)}')" class="btn btn-d btn-sm !py-1 !px-2" title="Hapus">${ic('trash', 'w-3.5 h-3.5')}</button></td></tr>`).join('')}
+      ${ADMIN_USERS.map(u => `<tr><td class="font-semibold whitespace-nowrap">${esc(u.name)}</td><td class="text-muted whitespace-nowrap">${esc(u.email)}</td><td><select class="inp !w-36 !py-1.5 text-[12px]" onchange="updateUserRole(${esc(JSON.stringify(u.id))},this.value)" ${u.status!=='Active'?'disabled':''}><option value="admin" ${u.role === "admin" ? "selected" : ""}>Admin</option><option value="user" ${u.role === "user" ? "selected" : ""}>User</option></select></td><td>${badge(u.status)}</td><td><button onclick="deleteUser(${esc(JSON.stringify(u.id))},${esc(JSON.stringify(u.email))})" class="btn btn-d btn-sm !py-1 !px-2" title="Nonaktifkan akun" ${u.status!=='Active'?'disabled':''}>${ic('trash', 'w-3.5 h-3.5')}</button></td></tr>`).join('')}
     </tbody></table></div>
     <div class="card p-6 overflow-x-auto"><h3 class="font-display font-semibold mb-4">Role Permission Matrix</h3>
       <table class="tbl min-w-[680px]"><thead><tr><th>Modul</th><th>Super Admin</th><th>Admin</th><th>Staff</th><th>Finance</th><th>Driver</th></tr></thead><tbody>
@@ -3416,19 +3507,6 @@ function route() {
   
   // === ADMIN ROUTE ===
   if (h.indexOf("#/admin") === 0) {
-    // Cek localStorage SINKRON — tidak tunggu async
-    if (!S.session) {
-      try {
-        var sess = localStorage.getItem("azzid_session");
-        if (sess) {
-          var parsed = JSON.parse(sess);
-          if (parsed && parsed.role === "admin") {
-            S.session = parsed;
-          }
-        }
-      } catch(e) {}
-    }
-    
     // Tampilkan adminApp
     var ca = document.getElementById("custApp");
     var aa = document.getElementById("adminApp");
@@ -3495,7 +3573,6 @@ window.addEventListener('DOMContentLoaded', () => {
     else renderC();
   });
 });
-const resetToken=new URLSearchParams(location.search).get('reset'); if(resetToken) setTimeout(()=>openResetPassword(resetToken),250);
 // force redeploy Mon, Sep 21, 2026 10:45:25 AM
 
 // === Auto-close dropdown bell saat klik di mana saja (capture phase) ===
@@ -3541,29 +3618,6 @@ if (document.readyState === "loading") {
 // MutationObserver — trigger saat DOM berubah
 if (typeof MutationObserver !== "undefined") {
   /* KILL MutationObserver _gTrigger — infinite loop */
-}
-
-// === Fallback restoreAuth (kalau hilang) ===
-if (typeof restoreAuth === "undefined") {
-  window.restoreAuth = async function() {
-    try {
-      const local = localStorage.getItem("azzid_session");
-      if (local) {
-        S.session = JSON.parse(local);
-        if (S.session && S.session.role === "admin") {
-          window.__authReady = true;
-          if (typeof syncAdminBtns === "function") syncAdminBtns();
-          if (location.hash.startsWith("#/admin")) renderA();
-          return;
-        }
-      }
-      S.session = null;
-      S.custSession = null;
-      if (typeof syncAdminBtns === "function") syncAdminBtns();
-    } catch (e) {
-      console.warn("restoreAuth error:", e);
-    }
-  };
 }
 
 // === Auto-add Eye Icon ke Semua Password Input ===
@@ -3936,16 +3990,6 @@ if (document.readyState === "loading") {
 // Handle saat load (setelah resource load)
 window.addEventListener("load", function() {
   /* KILL: setTimeout __forceAdminRoute */
-});
-
-// Cegah beforeunload reset
-window.addEventListener("beforeunload", function() {
-  // Jangan hapus localStorage
-  var s = localStorage.getItem("azzid_session");
-  if (s) {
-    // Pastikan tetap ada
-    localStorage.setItem("azzid_session", s);
-  }
 });
 
 console.log("✅ FINAL_HASHCHANGE aktif");
@@ -4806,12 +4850,7 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
   
   function hasActiveOrder() {
     try {
-      // Ambil session user
-      var session = null;
-      try {
-        var s = localStorage.getItem('azzid_session') || sessionStorage.getItem('azzid_session');
-        if (s) session = JSON.parse(s);
-      } catch(e) {}
+      var session = S.custSession;
       
       if (!session) return false;
       
@@ -5081,7 +5120,6 @@ console.log("✅ FORCE_SCROLL_HOME_V2 aktif");
       window.__authReady = true;
       localStorage.removeItem('azzid_session');
       sessionStorage.removeItem('azzid_has_session');
-      if (typeof authApi === 'function') authApi('/logout', { method: 'POST' }).catch(function () {});
     } catch (_) {}
   }, true);
 })();

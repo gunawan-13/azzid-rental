@@ -46,16 +46,11 @@ Azzid-Rental-F/
 - Semua URL gambar kendaraan/hero tetap menggunakan URL sumber yang sama.
 - Tidak ada npm/package installation yang diperlukan untuk versi ini; Tailwind dan font tetap memakai CDN seperti source.
 
-## Akun demo
+## Autentikasi live
 
-Admin:
-- Super Admin: `owner@azzidrentcar.id` / `owner123`
-- Admin: `admin@azzidrentcar.id` / `admin123`
-- Staff: `staff@azzidrentcar.id` / `staff123`
-- Finance: `finance@azzidrentcar.id` / `finance123`
+Login menggunakan Supabase Auth. Jalankan SQL pada `database/supabase_auth.sql`, kemudian ikuti petunjuk di [LIVE_AUTH_SETUP.md](./LIVE_AUTH_SETUP.md) untuk konfigurasi provider dan membuat akun admin.
 
-Customer:
-- `penyewa@demo.id` / `demo123`
+Jangan gunakan atau menambahkan kredensial demo/admin ke source code atau README.
 
 ## Verifikasi
 

@@ -1,19 +1,33 @@
-# Azzid Rental — LIVE Authentication
+# Supabase Authentication Setup
 
-Frontend login tidak menyimpan JWT/session ke localStorage. Session autentikasi memakai HttpOnly cookie dari backend.
+Login, pendaftaran penyewa, login Google, reset password, dan role admin menggunakan Supabase Auth. Profil dan role menggunakan tabel `public.users` yang sudah ada; password tidak disimpan di tabel aplikasi. Supabase Auth menggunakan session-nya sendiri.
 
-## Lokal
-1. Jalankan backend: `npm start` di folder Azzid-Rental-B.
-2. Jalankan frontend melalui VS Code Live Server, misalnya `http://localhost:5500`.
-3. `js/config.js` default mengarah ke `http://localhost:3000/api`.
-4. Registrasi user tersimpan ke MySQL.
-5. Login admin menggunakan akun asli yang dibuat `npm run create-admin`.
+## Siapkan Supabase
 
-## Google
-Isi `window.GOOGLE_CLIENT_ID` pada `js/config.js` dengan OAuth Web Client ID Google. Origin frontend harus didaftarkan di Google Cloud.
+1. Pastikan project sudah mempunyai tabel `public.users` dengan kolom `id`, `email`, `name`, `phone`, `role`, `status`, dan `created_at`.
+2. Buka **SQL Editor** pada project Supabase dan jalankan `database/supabase_auth.sql`. Script menambahkan relasi `auth_user_id`, mengaktifkan RLS, dan menghubungkan user Auth yang emailnya sudah terverifikasi ke baris `public.users` yang cocok. Baris pengguna yang sudah ada dan belum tertaut akan mempertahankan role/status-nya.
+3. Di Supabase **Authentication → URL Configuration**, tambahkan URL produksi frontend ke **Redirect URLs**, misalnya `https://azzid-rentcar.vercel.app/**`. Tambahkan URL Live Server yang digunakan saat development jika diperlukan.
+4. Aktifkan **Email provider** di Authentication dan wajibkan konfirmasi email. Profil lama hanya ditautkan ke akun Auth setelah email akun diverifikasi.
+5. Untuk Google login, aktifkan provider Google di Supabase Authentication dan isi OAuth Client ID/secret dari Google Cloud di pengaturan provider Supabase. Tambahkan URL callback Supabase yang ditampilkan di halaman pengaturan itu ke Google Cloud.
+6. `js/supabase.js` memakai project URL dan publishable key frontend. Publishable/anon key memang digunakan di browser; jangan pernah menaruh `service_role` key di frontend.
 
-## Lupa Password
-Fitur login user menyediakan "Lupa password?". Backend mengirim link reset jika Resend dikonfigurasi. Link berlaku 30 menit.
+## Buat akun admin
 
-## Production / Vercel
-Ganti `window.API_BASE_URL` di `js/config.js` dengan URL backend production, contoh `https://api.domainanda.com/api`. Jangan gunakan `localhost` pada website production.
+1. Daftarkan akun melalui form registrasi di aplikasi, lalu selesaikan konfirmasi email bila diminta.
+2. Di SQL Editor, promosikan email admin yang benar:
+
+```sql
+UPDATE public.profiles
+SET role = 'admin', status = 'Active'
+WHERE LOWER(email) = LOWER('email-admin-anda@example.com');
+```
+
+Pastikan query mengubah tepat satu baris. Login admin memakai email dan password akun Supabase Auth yang sama. Jangan menaruh kredensial admin di JavaScript atau README.
+
+## Migrasi akun sebelumnya
+
+Akun Auth lama akan ditautkan otomatis ketika emailnya terverifikasi jika ada baris dengan email yang sama dan belum tertaut di `public.users`. Jika akun belum ada di Supabase Auth, daftarkan/undang pengguna melalui alur Supabase Auth dengan email yang sama lalu konfirmasi emailnya. Jangan menyalin password/hash ke browser.
+
+## Catatan deployment
+
+Autentikasi tidak lagi memakai endpoint `/api/auth` atau rewrite Vercel ke Railway. Endpoint data bisnis lama (`/api/vehicles`, `/api/drivers`, dan lainnya) merupakan integrasi terpisah dan perlu backend aktif atau migrasi tersendiri ke Supabase.
