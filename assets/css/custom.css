@@ -45,6 +45,34 @@ html body #custApp main#cMain section[data-page="booking"] aside img.booking-car
   object-fit: cover !important;
 }
 
+html body #custApp main#cMain section[data-page="booking"] .booking-summary-layout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+  gap: 1.5rem;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+html body #custApp main#cMain section[data-page="booking"] .booking-summary-thumb {
+  display: block !important;
+  width: 64px !important;
+  height: 48px !important;
+  max-width: none !important;
+  flex: 0 0 64px !important;
+  object-fit: cover !important;
+}
+
+html body #custApp main#cMain section[data-page="booking"] .booking-summary-actions {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 899px) {
+  html body #custApp main#cMain section[data-page="booking"] .booking-summary-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 html body #custApp main#cMain section[data-page="booking"] {
   padding-bottom: 5rem !important;
 }

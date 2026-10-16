@@ -1153,9 +1153,8 @@ function vBooking() {
     // ============ STEP 4: RINGKASAN + DATA PENYEWA ============
     const v = c.v;
     const cu = d.cust || {};
-    body = `<div class="grid lg:grid-cols-[1fr_380px] gap-6 max-w-5xl mx-auto">
-      <div class="space-y-5 min-w-0">
-        <div class="card p-6">
+    body = `<div class="booking-summary-layout">
+      <div class="card p-5 sm:p-6 min-w-0">
           <h3 class="font-display font-semibold text-lg mb-4">Data Penyewa</h3>
           <div class="grid sm:grid-cols-2 gap-4">
             <div><label class="lbl">Nama Lengkap *</label><input id="cf_nama" autocomplete="name" class="inp" value="${esc(cu.nama || "")}" placeholder="Sesuai KTP"></div>
@@ -1166,23 +1165,27 @@ function vBooking() {
             <div class="sm:col-span-2"><label class="lbl">Tujuan Perjalanan <span class="normal-case tracking-normal font-normal text-muted">(opsional)</span></label><input id="cf_tujuan" class="inp" value="${esc(cu.tujuan || "")}" placeholder="Contoh: Bandung"></div>
             <div class="sm:col-span-2"><label class="lbl">Catatan Tambahan</label><textarea id="cf_catatan" class="inp" rows="2" placeholder="Opsional: permintaan khusus…">${esc(cu.catatan || "")}</textarea></div>
           </div>
-        </div>
-        <div class="card p-6">
-          <h3 class="font-display font-semibold text-lg mb-5">Detail Booking</h3>
-          <div class="flex gap-4 items-center pb-5 border-b border-white/5"><img src="${v.img}" class="w-24 h-16 object-cover rounded-lg shrink-0 hidden sm:block"><div class="min-w-0"><div class="font-display font-semibold">${esc(v.name)}</div><div class="text-[12px] text-muted">${dLong(d.start)} → ${dLong(d.end)}</div><div class="text-[12px] text-muted mt-0.5">${c.dur} hari · ${d.type}</div></div></div>
-        </div>
       </div>
-      <div class="card p-6 h-fit min-w-0">
-        <h4 class="font-display font-semibold mb-3">Kode Promo</h4>
+      <aside class="card p-5 sm:p-6 h-fit min-w-0">
+        <h3 class="font-display font-semibold text-lg mb-4">Detail Booking</h3>
+        <div class="flex items-center gap-3 pb-4 border-b border-white/5 min-w-0">
+          <img src="${v.img}" alt="${esc(v.name)}" class="booking-summary-thumb rounded-lg">
+          <div class="min-w-0">
+            <div class="font-display font-semibold text-sm truncate">${esc(v.name)}</div>
+            <div class="text-[11px] text-muted truncate">${dLong(d.start)} → ${dLong(d.end)}</div>
+            <div class="text-[11px] text-muted">${c.dur} hari · ${d.type}</div>
+          </div>
+        </div>
+        <h4 class="font-display font-semibold mt-4 mb-3">Kode Promo</h4>
         <div class="flex gap-2"><input id="promoInp" class="inp uppercase" placeholder="MERDEKA2026" value="${d.promo || ""}"><button onclick="applyPromo()" class="btn btn-g btn-sm shrink-0">Pakai</button></div>
         <div class="py-5 space-y-2.5 text-[14px] border-y border-white/5 mt-4">
           <div class="flex justify-between gap-3 text-muted"><span>Rental ${c.dur} hari</span><span class="text-zinc-200">${fmtIDR(c.rental)}</span></div>
           ${c.drv ? `<div class="flex justify-between gap-3 text-muted"><span>Driver</span><span class="text-zinc-200">${fmtIDR(c.drv)}</span></div>` : ""}
           ${c.disc ? `<div class="flex justify-between gap-3 text-emerald-300"><span>Diskon</span><span>−${fmtIDR(c.disc)}</span></div>` : ""}
         </div>
-        <div class="flex justify-between items-center pt-5 flex-wrap gap-2"><span class="font-display font-semibold">TOTAL</span><span class="font-display font-extrabold text-2xl text-maroon-400">${fmtIDR(c.total)}</span></div>
-      </div>
-      <div class="flex justify-center items-center gap-3 max-w-5xl mx-auto mt-6 pt-6 border-t border-white/5">
+        <div class="flex justify-between items-center pt-5 gap-2"><span class="font-display font-semibold">TOTAL</span><span class="font-display font-extrabold text-xl sm:text-2xl text-maroon-400 whitespace-nowrap">${fmtIDR(c.total)}</span></div>
+      </aside>
+      <div class="booking-summary-actions flex flex-col-reverse sm:flex-row sm:justify-end items-stretch sm:items-center gap-3 mt-1 pt-5 border-t border-white/5">
         <button onclick="bkBack()" class="btn btn-g">← Kembali</button>
         <button onclick="bkNext()" class="btn btn-m">Lanjutkan ${ic("arrR", "w-4 h-4")}</button>
       </div>
