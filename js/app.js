@@ -371,6 +371,8 @@ function normalizeVehicleFromSupabase(v) {
   };
 }
 
+let publicVehicleLoadPromise = null;
+
 async function loadVehiclesFromSupabase() {
   try {
     const client = await getSupabaseClient();
@@ -378,7 +380,7 @@ async function loadVehiclesFromSupabase() {
     if (error) throw error;
     VEHICLES = (data || []).map(normalizeVehicleFromSupabase).filter(Boolean);
     if (S.session) renderAdminBody();
-    else renderC();
+    else renderCNow();
   } catch (error) {
     console.error('Gagal memuat armada live Supabase:', error);
     VEHICLES = [];
@@ -850,7 +852,25 @@ function vKontak() {
 /* ================= BOOKING FLOW ================= */
 let bookingAuthPending = false;
 
-function openBooking(vid) {
+async function openBooking(vid) {
+  if (publicVehicleLoadPromise) await publicVehicleLoadPromise;
+  if (vid) {
+    let selectedVehicle = VEHICLES.find(vehicle => String(vehicle.id) === String(vid));
+    if (!selectedVehicle) {
+      const fallbackVehicle = DEF_VEHICLES.find(vehicle => String(vehicle.id) === String(vid));
+      if (fallbackVehicle) {
+        selectedVehicle = VEHICLES.find(vehicle =>
+          vehicle.name.trim().toLowerCase() === fallbackVehicle.name.trim().toLowerCase()
+        );
+      }
+    }
+    if (!selectedVehicle) {
+      toast('Mobil ini tidak tersedia. Silakan pilih mobil lain.', 'err');
+      location.hash = '#/armada';
+      return;
+    }
+    vid = selectedVehicle.id;
+  }
   const start = (S.draft && S.draft.start) || TODAY;
   const end = (S.draft && S.draft.end) || addDays(TODAY,2);
   const type = (S.draft && S.draft.type) || 'Lepas Kunci';
@@ -1232,7 +1252,11 @@ function vBooking() {
   if (S.step === 3) S.step = S.custSession ? 4 : 2;
   if ([4, 5].includes(S.step) && !S.custSession) S.step = 2;
   const d = S.draft;
-  const c = bkCalc();
+  let c = bkCalc();
+  if (S.step >= 2 && !c) {
+    S.step = 0;
+    c = bkCalc();
+  }
   const acc = S.custSession;
   let body = '';
   if (S.step === 0) {
@@ -3827,7 +3851,7 @@ window.addEventListener('scroll', () => {
 });
 
 applyCms();
-loadVehiclesFromSupabase();
+publicVehicleLoadPromise = loadVehiclesFromSupabase();
 loadPublicPromosAndSettings();
 window.addEventListener('DOMContentLoaded', () => {
   bindCustomerAuthButtons();
