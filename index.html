@@ -3881,6 +3881,18 @@ body.route-faq #custApp main#cMain section:has(.acc) { max-width: 80rem !importa
 }
 </style>
 
+<style id="MOBILE_HOME_HERO_SPACING">
+@media (max-width: 768px) {
+  html body.route-beranda #custApp main#cMain {
+    padding-top: 0 !important;
+  }
+
+  html body.route-beranda #custApp main#cMain > section:first-child > div.relative {
+    padding-top: 24px !important;
+  }
+}
+</style>
+
 <script id="WA_BODY_FIX">
 (function() {
   function fixWaPosition() {
