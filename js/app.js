@@ -1667,21 +1667,31 @@ function initGoogleButton(){
     return;
   }
   if (!window.google || !window.google.accounts || !window.google.accounts.id) {
-    console.warn("initGoogleButton: Google script belum ready, retry...");
-    if (!window._gWaitTimer) {
-      var tries = 0;
-      window._gWaitTimer = setInterval(function(){
-        tries++;
-        if (window.google && window.google.accounts && window.google.accounts.id) {
-          clearInterval(window._gWaitTimer); window._gWaitTimer = null;
-          initGoogleButton();
-        } else if (tries > 50) {
-          clearInterval(window._gWaitTimer); window._gWaitTimer = null;
-          console.warn("initGoogleButton: Google script tidak load setelah 10 detik");
-          var loadError = document.getElementById("googleLoginError");
-          if (loadError) { loadError.textContent = "Login Google tidak tersedia. Periksa koneksi internet lalu coba lagi."; loadError.classList.remove("hidden"); }
-        }
-      }, 200);
+    if (el.dataset.gWaiting === '1') return;
+    el.dataset.gWaiting = '1';
+    el.innerHTML = '<span class="text-[12px] text-muted">Menyiapkan login Google…</span>';
+    const retry = () => {
+      const currentButton = document.getElementById('googleLoginBtn');
+      if (currentButton) delete currentButton.dataset.gWaiting;
+      if (window.google && window.google.accounts && window.google.accounts.id) {
+        initGoogleButton();
+        return;
+      }
+      const loadError = document.getElementById("googleLoginError");
+      if (loadError) {
+        loadError.textContent = "Login Google tidak tersedia. Periksa koneksi internet lalu coba lagi.";
+        loadError.classList.remove("hidden");
+      }
+    };
+    window.addEventListener('google-identity-ready', retry, { once: true });
+    window.addEventListener('google-identity-error', retry, { once: true });
+    if (window.googleIdentityLoadState === 'ready' || window.googleIdentityLoadState === 'error') {
+      delete el.dataset.gWaiting;
+      const loadError = document.getElementById("googleLoginError");
+      if (loadError) {
+        loadError.textContent = "Login Google tidak tersedia. Periksa koneksi internet lalu coba lagi.";
+        loadError.classList.remove("hidden");
+      }
     }
     return;
   }
@@ -1852,8 +1862,13 @@ async function restoreAuth() {
     if(new URLSearchParams(location.search).get('auth')==='recovery'&&data.session){
       setTimeout(()=>openResetPassword(),0);
     }
-    if (S.session) await loadAdminLiveData(true);
-    else if (S.custSession) await loadCustomerBookingsFromSupabase();
+    if (S.session) {
+      loadAdminLiveData(true).catch(error => {
+        console.error('Gagal memuat data admin di latar belakang:', error);
+      });
+    } else if (S.custSession) {
+      loadCustomerBookingsFromSupabase();
+    }
     if (typeof syncAdminBtns === "function") syncAdminBtns();
     if (location.hash.startsWith("#/admin")) {
       if (typeof renderA === "function") renderA();
@@ -3953,6 +3968,8 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
   window.__authReady = false;
+  if (location.hash.startsWith('#/admin')) renderA();
+  else renderCNow();
   restoreAuth().then(() => {
     // FORCE_ADMIN_LOAD
     if (location.hash.indexOf('#/admin') === 0) {
@@ -3967,7 +3984,7 @@ window.addEventListener('DOMContentLoaded', () => {
     window.__authReady = true;document.body.classList.add('ready');
     syncAdminBtns();
     if (location.hash.startsWith('#/admin')) renderA();
-    else renderC();
+    else renderCNow();
   });
 });
 // force redeploy Mon, Sep 21, 2026 10:45:25 AM
