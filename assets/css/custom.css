@@ -77,6 +77,20 @@ html body #custApp main#cMain section[data-page="booking"] {
   padding-bottom: 5rem !important;
 }
 
+@media (max-width: 767px) {
+  #userNotifD:not(.hidden) {
+    position: fixed !important;
+    inset: 102px 8px auto !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100vh - 118px) !important;
+    max-height: calc(100dvh - 118px) !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    z-index: 60 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   #adminApp .chart-line {
     stroke-dashoffset: 0;
@@ -85,10 +99,17 @@ html body #custApp main#cMain section[data-page="booking"] {
 }
 
 @media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
   html,
   body {
     background: #fff !important;
     color: #111 !important;
+    max-width: none !important;
+    overflow: visible !important;
   }
 
   body {
@@ -97,15 +118,20 @@ html body #custApp main#cMain section[data-page="booking"] {
   }
 
   #printSheet {
-    position: absolute;
-    inset: 0 auto auto 0;
-    width: 100%;
-    min-height: 100vh;
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    overflow: visible !important;
     background: #fff !important;
     color: #111 !important;
   }
 
   #printSheet > div {
+    width: 100% !important;
+    max-width: 700px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
     background: #fff !important;
   }
 }
