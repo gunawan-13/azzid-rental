@@ -1425,11 +1425,11 @@ function vBooking() {
         <div class="flex justify-between items-center gap-2"><span class="text-muted">Status pembayaran</span>${badge(b.pay.s)}</div>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-        <button onclick="openInvoice('${b.id}')" class="btn btn-g">${ic('dl', 'w-4 h-4')} Ringkasan Booking</button>
+        <button onclick="openInvoice('${b.id}')" class="btn btn-g">${ic('dl', 'w-4 h-4')} Unduh PDF</button>
         <a target="_blank" rel="noopener" href="${waLink(`Halo AZZID RENTCAR,\nSaya sudah transfer untuk booking dan mohon verifikasi:\nMobil: ${v.name}\nTanggal: ${dLong(b.start)} – ${dLong(b.end)}\nBooking ID: ${b.id}`)}" class="btn btn-m">Hubungi Admin</a>
       </div>
       ${S.custSession ? `<button onclick="openAccount()" class="btn btn-g btn-sm w-full mt-3">${ic('user', 'w-4 h-4')} Lihat di Akun Saya</button>` : ''}
-      <a href="#/" class="inline-block text-sm text-muted hover:text-white mt-6">← Kembali ke Beranda</a>
+      <a href="#/" class="inline-block text-sm text-muted hover:text-white mt-8 mb-2">← Kembali ke Beranda</a>
     </div>`;
   }
   const _vis = [['Jadwal', 2], ['Data Diri', 4], ['Pembayaran', 5], ['Status', 6]];
@@ -2500,7 +2500,7 @@ async function openBookingDetail(id) {
   const v = veh(b.veh) || { name: '—' };
   const cu = CUSTOMERS.find(c => c.name === b.cust) || {};
   modal(`<div class="p-7">
-    <div class="flex items-start justify-between mb-6 gap-3"><div class="min-w-0"><div class="font-mono text-maroon-400 text-[13px]">${b.id}</div><h3 class="font-display font-bold text-xl mt-1 truncate">${esc(v.name)}</h3><div class="flex gap-2 mt-2 flex-wrap">${badge(b.status)}${badge(b.pay.s)}${b.user ? '<span class="badge bg-emerald-400/10 border-emerald-400/30 text-emerald-300">Akun Penyewa</span>' : ''}</div></div> <button onclick="closeModal()" class="text-muted hover:text-white shrink-0">${ic('x')}</button></div>
+    <div class="flex items-start justify-between mb-6 gap-3"><div class="min-w-0"><div class="font-mono text-maroon-400 text-[13px]">${b.id}</div><h3 class="font-display font-bold text-xl mt-1 truncate">${esc(v.name)}</h3><div class="flex gap-2 mt-2 flex-wrap">${badge(b.status)}${badge(b.pay.s)}<span class="badge ${b.ktp_file ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300' : 'bg-zinc-400/10 border-zinc-400/30 text-zinc-300'}">Identitas ${b.ktp_file ? 'tersedia' : 'belum ada'}</span>${b.user ? '<span class="badge bg-emerald-400/10 border-emerald-400/30 text-emerald-300">Akun Penyewa</span>' : ''}</div></div> <button onclick="closeModal()" class="text-muted hover:text-white shrink-0">${ic('x')}</button></div>
     <div class="grid sm:grid-cols-2 gap-4 mb-6 text-[13px]">
       <div class="card !bg-ink-900 p-4 min-w-0"><h4 class="lbl !mb-3">Customer</h4><p class="font-semibold truncate">${esc(b.cust)}</p><p class="text-muted mt-1 truncate">${cu.wa || '0812-0000-0000'} · ${cu.email || b.user || '-'}</p><div class="mt-3">${b.ktp_file ? `<img src="${b.ktp_file}" alt="KTP" class="max-w-full sm:max-w-xs rounded-lg border border-white/10 cursor-pointer hover:border-maroon-500 transition" onclick="window.open(this.src)"><p class="text-[11px] text-emerald-300 mt-1">✓ Foto identitas terupload — klik untuk perbesar</p>` : '<p class="text-muted text-[11px] mt-1">📷 Belum ada foto identitas</p>'}</div></div>
       <div class="card !bg-ink-900 p-4 min-w-0"><h4 class="lbl !mb-3">Rental</h4><p>${dLong(b.start)} → ${dLong(b.end)}</p><p class="text-muted mt-1">${daysDiff(b.start, b.end)} hari · ${b.type}</p><p class="text-muted mt-1 break-words">${esc(b.pickup)}</p><p class="text-muted">Driver: <b class="text-zinc-200">${b.driver && drv(b.driver) ? drv(b.driver).name : '—'}</b></p></div>
@@ -2513,7 +2513,7 @@ async function openBookingDetail(id) {
       <button onclick="closeModal();bookingForm('${b.id}')" class="btn btn-g btn-sm">${ic('edit', 'w-4 h-4')} Edit</button>
       <button onclick="openAssignDriver('${b.id}')" class="btn btn-g btn-sm">${ic('wheel', 'w-4 h-4')} Assign Driver</button>
       <select class="inp !py-2 text-[12px]" onchange="bAct('${b.id}','status',this.value)">${['Pending', 'Confirmed', 'Ongoing', 'Completed', 'Cancelled', 'Expired'].map(s => `<option ${b.status === s ? 'selected' : ''}>${s}</option>`).join('')}</select>
-      <button onclick="openInvoice('${b.id}')" class="btn btn-g btn-sm">${ic('print', 'w-4 h-4')} Print Invoice</button>
+      <button onclick="openInvoice('${b.id}')" class="btn btn-g btn-sm">${ic('dl', 'w-4 h-4')} Unduh PDF</button>
       ${b.status !== 'Cancelled' ? `<button onclick="bAct('${b.id}','cancel')" class="btn btn-d btn-sm">${ic('x', 'w-4 h-4')} Cancel</button>` : ''}
       <button onclick="closeModal();delBooking('${b.id}')" class="btn btn-d btn-sm">${ic('trash', 'w-4 h-4')} Hapus</button>
     </div>
@@ -3749,33 +3749,86 @@ async function saveSettings() {
 /* ================= INVOICE ================= */
 function openInvoice(id) {
   const b = BOOKINGS.find(x => x.id === id);
+  if (!b) {
+    toast('Data booking tidak ditemukan untuk membuat invoice.', 'err');
+    return;
+  }
   const v = veh(b.veh) || { name: '—' };
   const bank = S.cms.payments?.bank || {};
-  $('printSheet').innerHTML = `<div style="font-family:Arial,sans-serif;color:#111;max-width:700px;margin:0;padding:32px">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #7F1D1D;padding-bottom:16px;gap:12px">
-      <div style="display:flex;align-items:center;gap:12px">
-        <img src="assets/img/azzid-removebg-preview.png" alt="Logo AZZID RENTCAR" style="width:64px;height:64px;object-fit:contain">
-        <div><div style="font-size:22px;font-weight:800;color:#7F1D1D">${esc(S.cms.namaBisnis || 'AZZID RENTCAR')}</div><div style="font-size:11px;color:#555">${esc(S.cms.alamat || '')} · ${esc(S.cms.telepon || '')} · ${esc(S.cms.email || '')}</div></div>
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    toast('Izinkan pop-up di browser untuk mengunduh PDF invoice.', 'err');
+    return;
+  }
+  const invoiceHtml = `<div class="invoice">
+    <header class="invoice-header">
+      <div class="business">
+        <img src="${new URL('assets/img/azzid-removebg-preview.png', window.location.href).href}" alt="Logo AZZID RENTCAR">
+        <div><div class="business-name">${esc(S.cms.namaBisnis || 'AZZID RENTCAR')}</div><div class="business-contact">${esc(S.cms.alamat || '')} · ${esc(S.cms.telepon || '')} · ${esc(S.cms.email || '')}</div></div>
       </div>
-      <div style="text-align:right"><div style="font-size:16px;font-weight:700">INVOICE</div><div style="font-size:12px">${b.id}</div><div style="font-size:11px;color:#555">Tanggal: ${dLong(b.pay.at || TODAY)}</div></div>
-    </div>
-    <table style="width:100%;margin-top:20px;font-size:13px"><tr><td style="vertical-align:top"><b>Tagihan Kepada</b><br>${esc(b.cust)}<br><span style="color:#555">${esc(b.pickup)}</span></td>
-      <td style="vertical-align:top;text-align:right"><b>Detail Rental</b><br>${dLong(b.start)} – ${dLong(b.end)}<br><span style="color:#555">${daysDiff(b.start, b.end)} hari · ${b.type}</span></td></tr></table>
-    <table style="width:100%;margin-top:24px;border-collapse:collapse;font-size:13px">
-      <tr style="background:#7F1D1D;color:#fff"><th style="text-align:left;padding:8px">Deskripsi</th><th style="text-align:right;padding:8px">Jumlah</th></tr>
-      <tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Rental ${esc(v.name)} — ${daysDiff(b.start, b.end)} hari</td><td style="text-align:right;padding:8px">${fmtIDR(b.sub)}</td></tr>
-      ${b.drv ? `<tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Layanan Driver profesional</td><td style="text-align:right;padding:8px">${fmtIDR(b.drv)}</td></tr>` : ''}
-      ${b.disc ? `<tr style="border-bottom:1px solid #ddd"><td style="padding:8px">Diskon promo</td><td style="text-align:right;padding:8px">−${fmtIDR(b.disc)}</td></tr>` : ''}
-      <tr><td style="padding:10px 8px;font-weight:800;font-size:15px">TOTAL</td><td style="text-align:right;padding:10px 8px;font-weight:800;font-size:15px;color:#7F1D1D">${fmtIDR(b.total)}</td></tr>
+      <div class="invoice-meta"><strong>INVOICE</strong><span>${esc(b.id)}</span><span>Tanggal: ${esc(dLong(b.pay.at || TODAY))}</span></div>
+    </header>
+    <section class="details">
+      <div><b>Tagihan Kepada</b><span>${esc(b.cust)}</span><span class="muted">${esc(b.pickup || '')}</span></div>
+      <div class="rental"><b>Detail Rental</b><span>${esc(dLong(b.start))} – ${esc(dLong(b.end))}</span><span class="muted">${daysDiff(b.start, b.end)} hari · ${esc(b.type)}</span></div>
+    </section>
+    <table class="items">
+      <colgroup><col class="description"><col class="amount"></colgroup>
+      <thead><tr><th>Deskripsi</th><th>Jumlah</th></tr></thead>
+      <tbody>
+        <tr><td>Rental ${esc(v.name)} — ${daysDiff(b.start, b.end)} hari</td><td>${fmtIDR(b.sub)}</td></tr>
+        ${b.drv ? `<tr><td>Layanan Driver profesional</td><td>${fmtIDR(b.drv)}</td></tr>` : ''}
+        ${b.disc ? `<tr><td>Diskon promo</td><td>−${fmtIDR(b.disc)}</td></tr>` : ''}
+        <tr class="total"><td>TOTAL</td><td>${fmtIDR(b.total)}</td></tr>
+      </tbody>
     </table>
-    <p style="margin-top:14px;font-size:12px">Status Pembayaran: <b style="color:${b.pay.s === 'PAID' ? '#059669' : '#b45309'}">${b.pay.s}</b> · Metode: ${b.pay.m} · TX: ${b.pay.tx}</p>
-    <div style="margin-top:22px;padding:14px 16px;background:#f5f5f5;border-left:4px solid #7F1D1D">
-      <div style="font-size:13px;font-weight:700;margin-bottom:6px">Informasi Transfer Bank</div>
-      <div style="font-size:12px;line-height:1.6">Bank: <b>${esc(bank.nama || 'Belum diatur')}</b><br>Nomor Rekening: <b>${esc(bank.norek || 'Belum diatur')}</b><br>Atas Nama: <b>${esc(bank.pemilik || 'Belum diatur')}</b></div>
-    </div>
-    <p style="margin-top:22px;font-size:11px;color:#555">Terima kasih telah percaya pada ${esc(S.cms.namaBisnis || 'AZZID RENTCAR')} — Nyaman Berkendara, Tenang Bepergian.</p>
+    <p class="payment">Status Pembayaran: <b class="${b.pay.s === 'PAID' ? 'paid' : 'pending'}">${esc(b.pay.s)}</b> · Metode: ${esc(b.pay.m)} · TX: ${esc(b.pay.tx)}</p>
+    <section class="bank">
+      <strong>Informasi Transfer Bank</strong>
+      <span>Bank: <b>${esc(bank.nama || 'Belum diatur')}</b></span>
+      <span>Nomor Rekening: <b>${esc(bank.norek || 'Belum diatur')}</b></span>
+      <span>Atas Nama: <b>${esc(bank.pemilik || 'Belum diatur')}</b></span>
+    </section>
+    <p class="thanks">Terima kasih telah percaya pada ${esc(S.cms.namaBisnis || 'AZZID RENTCAR')} — Nyaman Berkendara, Tenang Bepergian.</p>
   </div>`;
-  window.print();
+  printWindow.document.open();
+  printWindow.document.write(`<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Invoice ${esc(b.id)}</title>
+    <style>
+      *{box-sizing:border-box}
+      @page{size:A4 portrait;margin:14mm}
+      html,body{margin:0;padding:0;width:100%;background:#fff;color:#111;font-family:Arial,sans-serif}
+      body{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+      .invoice{width:100%;max-width:182mm;margin:0 auto;padding:3mm;color:#111}
+      .invoice-header{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:8mm;border-bottom:3px solid #7F1D1D;padding:0 0 5mm}
+      .business{display:flex;align-items:center;gap:3mm;min-width:0}
+      .business img{width:17mm;height:17mm;object-fit:contain;flex:none}
+      .business-name{font-size:18pt;line-height:1.15;font-weight:800;color:#7F1D1D}
+      .business-contact{margin-top:1.5mm;font-size:8.5pt;line-height:1.4;color:#555;overflow-wrap:anywhere}
+      .invoice-meta{display:flex;flex-direction:column;align-items:flex-end;gap:1mm;max-width:56mm;text-align:right;overflow-wrap:anywhere;font-size:9pt}
+      .invoice-meta strong{font-size:13pt}
+      .details{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8mm;margin-top:7mm;font-size:9.5pt;line-height:1.55}
+      .details>div{display:flex;flex-direction:column;min-width:0;overflow-wrap:anywhere}
+      .details .rental{text-align:right}
+      .muted{color:#555}
+      .items{width:100%;table-layout:fixed;margin-top:8mm;border-collapse:collapse;font-size:9.5pt}
+      .items .description{width:68%}
+      .items .amount{width:32%}
+      .items th,.items td{padding:3mm 2.5mm;overflow-wrap:anywhere}
+      .items th{background:#7F1D1D;color:#fff;text-align:left}
+      .items th:last-child,.items td:last-child{text-align:right}
+      .items tbody tr:not(.total) td{border-bottom:1px solid #ddd}
+      .items .total td{padding-top:4mm;font-size:11pt;font-weight:800}
+      .items .total td:last-child{color:#7F1D1D}
+      .payment{margin:6mm 0 0;font-size:9pt;line-height:1.5;overflow-wrap:anywhere}
+      .paid{color:#059669}.pending{color:#b45309}
+      .bank{display:flex;flex-direction:column;gap:1.5mm;margin-top:6mm;padding:4mm 5mm;background:#f5f5f5;border-left:4px solid #7F1D1D;font-size:9pt;line-height:1.4}
+      .bank strong{margin-bottom:1mm;font-size:10pt}
+      .thanks{margin:7mm 0 0;font-size:8.5pt;line-height:1.5;color:#555}
+      @media screen{body{padding:16px;background:#f3f4f6}.invoice{max-width:760px;min-height:280mm;padding:14mm;background:#fff;box-shadow:0 4px 24px #0002}}
+      @media print{.invoice{max-width:none;padding:0}.invoice-header,.details,.items,.bank{break-inside:avoid}}
+      @media(max-width:520px){.invoice-header{grid-template-columns:minmax(0,1fr);gap:4mm}.invoice-meta{align-items:flex-start;text-align:left}.details{grid-template-columns:minmax(0,1fr);gap:4mm}.details .rental{text-align:left}}
+    </style></head><body>${invoiceHtml}<script>window.addEventListener('load',function(){setTimeout(function(){window.focus();window.print()},300)})</script></body></html>`);
+  printWindow.document.close();
 }
 
 /* ================= ROUTER ================= */
