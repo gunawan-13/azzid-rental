@@ -216,6 +216,25 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.admin_notifs, public.bookings,
   public.customers, public.drivers, public.promos, public.settings, public.vehicles
 TO authenticated;
 
+CREATE OR REPLACE FUNCTION public.is_active_booking_owner(booking_email TEXT)
+RETURNS BOOLEAN
+LANGUAGE SQL
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.users AS profile
+    WHERE profile.auth_user_id = (SELECT auth.uid())
+      AND profile.status = 'Active'
+      AND LOWER(BTRIM(profile.email)) = LOWER(BTRIM(booking_email))
+  );
+$$;
+
+REVOKE ALL ON FUNCTION public.is_active_booking_owner(TEXT) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.is_active_booking_owner(TEXT) TO authenticated;
+
 CREATE POLICY "Public can read visible vehicles"
   ON public.vehicles FOR SELECT TO anon
   USING (status <> 'inactive');
@@ -231,13 +250,13 @@ CREATE POLICY "Customers can read their own bookings"
   ON public.bookings FOR SELECT TO authenticated
   USING (
     public.is_active_admin()
-    OR LOWER(user_email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+    OR public.is_active_booking_owner(user_email)
   );
 CREATE POLICY "Customers can create their own bookings"
   ON public.bookings FOR INSERT TO authenticated
   WITH CHECK (
     public.is_active_admin()
-    OR LOWER(user_email) = LOWER(COALESCE((SELECT auth.jwt() ->> 'email'), ''))
+    OR public.is_active_booking_owner(user_email)
   );
 CREATE POLICY "Active admins update bookings"
   ON public.bookings FOR UPDATE TO authenticated

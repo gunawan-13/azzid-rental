@@ -1186,33 +1186,58 @@ async function doPay() {
   const v = c.v;
   const id = "BKG-" + Date.now().toString(36).toUpperCase();
 
-  // Simpan booking
-  const booking = {
-    id: id,
-    user: S.custSession?.email || d.cust?.email || "",
-    userId: S.custSession?.id || null,
-    veh: d.veh,
-    cust: d.cust?.nama || "Tamu",
-    wa: d.cust?.wa || "",
-    email: d.cust?.email || "",
-    start: d.start,
-    end: d.end,
-    dur: c.dur,
-    type: d.type,
-    pickup: d.pickup,
-    sub: c.rental,
-    drv: c.drv,
-    disc: c.disc,
-    total: c.total,
-    method: d.method,
-    promo: d.promo,
-    ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
-    ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
-    status: "Pending",
-    pay: { m: d.method, tx: id, s: "PENDING", at: null, submitted_at: new Date().toISOString() }
-  };
-
   try {
+    const client = await getSupabaseClient();
+    const { data: authData, error: authError } = await client.auth.getUser();
+    if (authError && authError.name !== 'AuthSessionMissingError' &&
+      authError.code !== 'session_not_found' && authError.status !== 401) {
+      throw authError;
+    }
+    if (!authData?.user?.email) {
+      S.custSession = null;
+      S.step = 3;
+      renderCNow();
+      openAuth('in');
+      toast("Sesi login berakhir. Silakan masuk kembali sebelum mengonfirmasi booking.", "err");
+      return;
+    }
+
+    const profile = await getAuthProfile(authData.user.id);
+    if (profile.status !== 'Active') {
+      throw new Error('Akun tidak aktif. Hubungi administrator.');
+    }
+    S.custSession = {
+      id: profile.id,
+      email: profile.email,
+      nama: profile.name,
+      phone: profile.phone || ''
+    };
+
+    const booking = {
+      id: id,
+      user: profile.email,
+      userId: profile.id,
+      veh: d.veh,
+      cust: d.cust?.nama || "Tamu",
+      wa: d.cust?.wa || "",
+      email: d.cust?.email || "",
+      start: d.start,
+      end: d.end,
+      dur: c.dur,
+      type: d.type,
+      pickup: d.pickup,
+      sub: c.rental,
+      drv: c.drv,
+      disc: c.disc,
+      total: c.total,
+      method: d.method,
+      promo: d.promo,
+      ktp_file: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
+      ktp: (d.cust && d.cust.ktp_file) || window._ktpBase64 || "",
+      status: "Pending",
+      pay: { m: d.method, tx: id, s: "PENDING", at: null, submitted_at: new Date().toISOString() }
+    };
+
     const savedBooking = await saveBookingToSupabase(booking, { includeKtp: true });
     Object.assign(booking, savedBooking);
     BOOKINGS.unshift(booking);
@@ -1224,7 +1249,11 @@ async function doPay() {
     persist();
   } catch (error) {
     console.error('Booking gagal disimpan di Supabase:', error);
-    toast('Booking belum tersimpan. Silakan coba lagi: ' + error.message, 'err');
+    if (error.code === '42501' || /row-level security policy/i.test(error.message || '')) {
+      toast('Booking belum tersimpan karena sesi akun tidak cocok. Keluar, masuk kembali, lalu coba lagi.', 'err');
+    } else {
+      toast('Booking belum tersimpan. Silakan coba lagi: ' + error.message, 'err');
+    }
     return;
   }
 
