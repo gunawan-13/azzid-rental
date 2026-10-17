@@ -83,3 +83,29 @@ html body #custApp main#cMain section[data-page="booking"] {
     animation: none !important;
   }
 }
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #printSheet {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    min-height: 100vh;
+    background: #fff !important;
+    color: #111 !important;
+  }
+
+  #printSheet > div {
+    background: #fff !important;
+  }
+}
