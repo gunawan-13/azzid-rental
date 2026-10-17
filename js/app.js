@@ -1893,7 +1893,7 @@ function renderA() {
       </div>
       <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">${menu.map(m => `<button onclick="setAdminView('${m[0]}');closeSb()" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13px] font-medium transition ${S.adminView === m[0] ? 'bg-gradient-to-r from-maroon-600 to-maroon-800 text-white shadow-glow' : 'text-zinc-400 hover:bg-white/5 hover:text-white'}">${ic(m[2], 'w-[18px] shrink-0')}<span class="grow text-left">${m[1]}</span>${m[0] === 'rental' && ong ? `<span class="badge bg-sky-400/20 border-sky-400/40 text-sky-300">${ong}</span>` : ''}${m[0] === 'booking' && pend ? `<span class="badge bg-sky-400/20 border-sky-400/40 text-sky-300">${pend}</span>` : ''}</button>`).join('')}</nav>
       <div class="p-4 border-t border-white/5 space-y-1">
-        <a href="#/" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-zinc-400 hover:bg-white/5 hover:text-white">${ic('globe', 'w-[18px]')} Lihat Website</a>
+        <a href="/" class="flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-zinc-400 hover:bg-white/5 hover:text-white">${ic('globe', 'w-[18px]')} Lihat Website</a>
         <button type="button" onclick="adminLogout()" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-lg text-[13px] text-red-300 hover:bg-red-500/10" aria-label="Logout admin">${ic('logout', 'w-[18px]')} Logout</button>
       </div>
     </aside>
