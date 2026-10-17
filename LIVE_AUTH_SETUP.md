@@ -8,10 +8,11 @@ Login, pendaftaran penyewa, login Google, reset password, dan role admin menggun
 2. Buka **SQL Editor** pada project Supabase dan jalankan `database/supabase_auth.sql`. Script menambahkan relasi `auth_user_id`, mengaktifkan RLS, dan menghubungkan user Auth yang emailnya sudah terverifikasi ke baris `public.users` yang cocok. Baris pengguna yang sudah ada dan belum tertaut akan mempertahankan role/status-nya.
 3. Untuk instalasi baru, setelah migrasi autentikasi berhasil, jalankan `database/supabase_live_data.sql` dari **SQL Editor**. Script ini mengatur akses RLS untuk tabel bisnis, menghubungkan data booking ke customer dan notifikasi, serta mengisi kendaraan, promo, dan settings awal hanya jika tabel masing-masing kosong. Script tidak membuat driver contoh.
 4. Untuk project yang sudah menjalankan `supabase_live_data.sql`, jangan jalankan ulang seluruh script. Jalankan `database/supabase_booking_rls_fix.sql` agar akun aktif hanya dapat membuat/membaca booking dengan email profil Auth yang tertaut.
-5. Di Supabase **Authentication → URL Configuration**, tambahkan URL produksi frontend ke **Redirect URLs**, misalnya `https://azzid-rentcar.vercel.app/**`. Tambahkan URL Live Server yang digunakan saat development jika diperlukan.
-6. Aktifkan **Email provider** di Authentication dan wajibkan konfirmasi email. Profil lama hanya ditautkan ke akun Auth setelah email akun diverifikasi.
-7. Untuk Google login, aktifkan provider Google di Supabase Authentication dan isi OAuth Client ID/secret dari Google Cloud di pengaturan provider Supabase. Tambahkan URL callback Supabase yang ditampilkan di halaman pengaturan itu ke Google Cloud.
-8. `js/supabase.js` memakai project URL dan publishable key frontend. Publishable/anon key memang digunakan di browser; jangan pernah menaruh `service_role` key di frontend.
+5. Untuk project yang sudah memakai migrasi live-data dan ingin melihat status dokumen identitas langsung di daftar booking, jalankan `database/supabase_booking_identity_status.sql`. Script menambahkan indikator boolean saja; foto KTP tidak dimuat ke daftar.
+6. Di Supabase **Authentication → URL Configuration**, tambahkan URL produksi frontend ke **Redirect URLs**, misalnya `https://azzid-rentcar.vercel.app/**`. Tambahkan URL Live Server yang digunakan saat development jika diperlukan.
+7. Aktifkan **Email provider** di Authentication dan wajibkan konfirmasi email. Profil lama hanya ditautkan ke akun Auth setelah email akun diverifikasi.
+8. Untuk Google login, aktifkan provider Google di Supabase Authentication dan isi OAuth Client ID/secret dari Google Cloud di pengaturan provider Supabase. Tambahkan URL callback Supabase yang ditampilkan di halaman pengaturan itu ke Google Cloud.
+9. `js/supabase.js` memakai project URL dan publishable key frontend. Publishable/anon key memang digunakan di browser; jangan pernah menaruh `service_role` key di frontend.
 
 ## Buat akun admin
 

@@ -3,7 +3,9 @@
 
 ALTER TABLE public.bookings
   ADD COLUMN IF NOT EXISTS booking_code TEXT,
-  ADD COLUMN IF NOT EXISTS driver_id UUID;
+  ADD COLUMN IF NOT EXISTS driver_id UUID,
+  ADD COLUMN IF NOT EXISTS ktp_available BOOLEAN
+    GENERATED ALWAYS AS (NULLIF(BTRIM(ktp_file), '') IS NOT NULL) STORED;
 
 UPDATE public.bookings
 SET booking_code = 'AZR-' || UPPER(SUBSTRING(REPLACE(id::TEXT, '-', '') FROM 1 FOR 12))

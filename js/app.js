@@ -63,7 +63,8 @@ function mapSupabaseBooking(row) {
       s: row.pay_status || 'UNPAID',
       at: row.pay_at || null
     },
-    catatan: row.catatan || ''
+    catatan: row.catatan || '',
+    hasIdentity: row.ktp_available === true
   };
 }
 
@@ -145,7 +146,7 @@ async function saveSiteSettingsToSupabase() {
   if (error) throw error;
 }
 
-const BOOKING_SELECT_COLUMNS = 'id,booking_code,driver_id,user_email,veh_id,cust,wa,email,start,end,dur,type,pickup,sub,drv,disc,total,method,promo,status,pay_status,pay_at,catatan,created_at';
+const BOOKING_SELECT_COLUMNS = 'id,booking_code,driver_id,user_email,veh_id,cust,wa,email,start,end,dur,type,pickup,sub,drv,disc,total,method,promo,status,pay_status,pay_at,catatan,ktp_available,created_at';
 
 function bookingToSupabaseRow(booking) {
   return {
@@ -261,7 +262,7 @@ async function loadAdminLiveData(force = false) {
     const client = await getSupabaseClient();
     const results = await Promise.all([
       client.from('bookings')
-        .select('id,booking_code,driver_id,user_email,veh_id,cust,wa,email,start,end,dur,type,pickup,sub,drv,disc,total,method,promo,status,pay_status,pay_at,catatan,created_at')
+        .select('id,booking_code,driver_id,user_email,veh_id,cust,wa,email,start,end,dur,type,pickup,sub,drv,disc,total,method,promo,status,pay_status,pay_at,catatan,ktp_available,created_at')
         .order('created_at', { ascending: false }),
       client.from('customers')
         .select('id,name,wa,email,addr,total,spend,last,status,created_at')
@@ -2409,7 +2410,7 @@ async function hardDelBooking(id) {
 
 function bkRow(b) {
   const v = veh(b.veh);
-  return `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400 whitespace-nowrap">${b.id}</td><td class="whitespace-nowrap">${esc(b.cust)}${b.user ? `<span class="block text-[9.5px] text-emerald-300">via akun</span>` : ''}</td><td class="whitespace-nowrap">${esc(v ? v.name : '—')}</td><td class="whitespace-nowrap">${dShort(b.start)}–${dShort(b.end)} Agu</td><td class="font-semibold whitespace-nowrap">${fmtK(b.total)}</td><td>${badge(b.pay.s)}</td><td>${badge(b.status)}</td><td><div class="flex gap-1 whitespace-nowrap" onclick="event.stopPropagation()">
+  return `<tr class="cursor-pointer" onclick="openBookingDetail('${b.id}')"><td class="font-mono text-maroon-400 whitespace-nowrap">${b.id}</td><td class="whitespace-nowrap">${esc(b.cust)}${b.user ? `<span class="block text-[9.5px] text-emerald-300">via akun</span>` : ''}</td><td class="whitespace-nowrap">${esc(v ? v.name : '—')}</td><td class="whitespace-nowrap">${dShort(b.start)}–${dShort(b.end)} Agu</td><td class="font-semibold whitespace-nowrap">${fmtK(b.total)}</td><td>${badge(b.pay.s)}</td><td>${badge(b.status)}</td><td><span class="badge ${b.hasIdentity ? 'bg-emerald-400/10 border-emerald-400/30 text-emerald-300' : 'bg-zinc-400/10 border-zinc-400/30 text-zinc-300'}">${b.hasIdentity ? 'Identitas tersedia' : 'Belum ada identitas'}</span></td><td><div class="flex gap-1 whitespace-nowrap" onclick="event.stopPropagation()">
     <button onclick="bookingForm('${b.id}')" class="p-1.5 text-zinc-400 hover:text-white" title="Edit">${ic('edit', 'w-4 h-4')}</button>
     <button onclick="delBooking('${b.id}')" class="p-1.5 text-red-400/70 hover:text-red-300" title="Hapus">${ic('trash', 'w-4 h-4')}</button>
   </div></td></tr>`;
@@ -2423,7 +2424,7 @@ function refreshBk() {
   if (q) list = list.filter(b => (b.id + b.cust + (veh(b.veh) ? veh(b.veh).name : '')).toLowerCase().includes(q));
   if (S._bst) list = list.filter(b => b.status === S._bst);
   if (S._bps) list = list.filter(b => b.pay.s === S._bps);
-  tb.innerHTML = list.length ? list.map(bkRow).join('') : `<tr><td colspan="8" class="text-center py-10 text-muted">Tidak ada booking yang cocok.</td></tr>`;
+  tb.innerHTML = list.length ? list.map(bkRow).join('') : `<tr><td colspan="9" class="text-center py-10 text-muted">Tidak ada booking yang cocok.</td></tr>`;
   const cnt = $('bkCnt');
   if (cnt) cnt.textContent = list.length + ' booking';
 }
@@ -2439,7 +2440,7 @@ function aBookings() {
       <span id="bkCnt" class="text-[12px] text-muted"></span>
       <button onclick="bookingForm()" class="btn btn-m btn-sm ml-auto">${ic('plus', 'w-4 h-4')} Buat Booking</button>
     </div>
-    <div class="card overflow-x-auto"><table class="tbl min-w-[900px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Payment</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="bkTbody"></tbody></table></div>
+    <div class="card overflow-x-auto"><table class="tbl min-w-[1040px]"><thead><tr><th>Booking ID</th><th>Customer</th><th>Mobil</th><th>Tanggal</th><th>Total</th><th>Payment</th><th>Status</th><th>Identitas</th><th>Aksi</th></tr></thead><tbody id="bkTbody"></tbody></table></div>
   </div>`;
 }
 
@@ -2491,6 +2492,7 @@ async function openBookingDetail(id) {
         .single();
       if (error) throw error;
       b.ktp_file = data.ktp_file;
+      b.hasIdentity = typeof data.ktp_file === 'string' && Boolean(data.ktp_file.trim());
     } catch (error) {
       console.error('Gagal memuat dokumen booking dari Supabase:', error);
       toast('Dokumen identitas tidak dapat dimuat: ' + error.message, 'err');
